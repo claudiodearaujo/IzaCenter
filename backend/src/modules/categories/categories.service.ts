@@ -2,7 +2,7 @@
 
 import { prisma } from '../../config/database';
 import { NotFoundException, BadRequestException } from '../../utils/errors';
-import slugify from 'slugify';
+import { generateSlug } from '../../utils';
 
 interface CreateCategoryDTO {
   name: string;
@@ -71,7 +71,7 @@ export class CategoriesService {
   }
 
   async create(data: CreateCategoryDTO) {
-    const slug = slugify(data.name, { lower: true, strict: true });
+    const slug = generateSlug(data.name);
 
     const existingSlug = await prisma.productCategory.findUnique({ where: { slug } });
     if (existingSlug) {
@@ -107,7 +107,7 @@ export class CategoriesService {
     const updateData: any = { ...data };
 
     if (data.name && data.name !== category.name) {
-      updateData.slug = slugify(data.name, { lower: true, strict: true });
+      updateData.slug = generateSlug(data.name);
 
       const existingSlug = await prisma.productCategory.findFirst({
         where: {

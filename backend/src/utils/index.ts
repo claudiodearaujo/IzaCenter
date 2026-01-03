@@ -3,6 +3,7 @@
 export { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, generateTokenPair } from './jwt.util';
 export { hashPassword, comparePassword, generateToken, generateResetToken, hashToken } from './password.util';
 export { 
+  generateFileName,
   generateOrderNumber, 
   generateSlug, 
   formatCurrency, 

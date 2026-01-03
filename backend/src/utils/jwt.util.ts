@@ -1,6 +1,6 @@
 // apps/backend/src/utils/jwt.util.ts
 
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { env } from '../config/env';
 import { JwtPayload } from '../types';
 
@@ -12,6 +12,7 @@ export function generateAccessToken(payload: {
   email: string;
   role: 'CLIENT' | 'ADMIN';
 }): string {
+  const options: SignOptions = { expiresIn: env.JWT_EXPIRES_IN as any };
   return jwt.sign(
     {
       sub: payload.id,
@@ -19,7 +20,7 @@ export function generateAccessToken(payload: {
       role: payload.role,
     },
     env.JWT_SECRET,
-    { expiresIn: env.JWT_EXPIRES_IN }
+    options
   );
 }
 
@@ -27,10 +28,11 @@ export function generateAccessToken(payload: {
  * Generate refresh token
  */
 export function generateRefreshToken(userId: string): string {
+  const options: SignOptions = { expiresIn: env.JWT_REFRESH_EXPIRES_IN as any };
   return jwt.sign(
     { sub: userId },
     env.JWT_REFRESH_SECRET,
-    { expiresIn: env.JWT_REFRESH_EXPIRES_IN }
+    options
   );
 }
 

@@ -43,19 +43,19 @@ export class DashboardService {
 
       // Revenue
       prisma.order.aggregate({
-        where: { paymentStatus: 'PAID' },
+        where: { paymentStatus: 'SUCCEEDED' },
         _sum: { total: true },
       }),
       prisma.order.aggregate({
         where: {
-          paymentStatus: 'PAID',
+          paymentStatus: 'SUCCEEDED',
           createdAt: { gte: startOfMonth },
         },
         _sum: { total: true },
       }),
       prisma.order.aggregate({
         where: {
-          paymentStatus: 'PAID',
+          paymentStatus: 'SUCCEEDED',
           createdAt: { gte: startOfLastMonth, lte: endOfLastMonth },
         },
         _sum: { total: true },
@@ -98,8 +98,8 @@ export class DashboardService {
       ? ((thisMonthOrders - lastMonthOrders) / lastMonthOrders) * 100
       : 0;
 
-    const thisMonthRevenueValue = thisMonthRevenue._sum.total || 0;
-    const lastMonthRevenueValue = lastMonthRevenue._sum.total || 0;
+    const thisMonthRevenueValue = Number(thisMonthRevenue._sum?.total || 0);
+    const lastMonthRevenueValue = Number(lastMonthRevenue._sum?.total || 0);
     const revenueGrowth = lastMonthRevenueValue > 0
       ? ((thisMonthRevenueValue - lastMonthRevenueValue) / lastMonthRevenueValue) * 100
       : 0;
@@ -113,7 +113,7 @@ export class DashboardService {
           growth: ordersGrowth,
         },
         revenue: {
-          total: totalRevenue._sum.total || 0,
+          total: Number(totalRevenue._sum?.total || 0),
           thisMonth: thisMonthRevenueValue,
           growth: revenueGrowth,
         },
@@ -143,7 +143,7 @@ export class DashboardService {
   async getRecentOrders(limit = 5) {
     const orders = await prisma.order.findMany({
       include: {
-        user: {
+        client: {
           select: {
             id: true,
             fullName: true,
@@ -217,7 +217,7 @@ export class DashboardService {
 
     const orders = await prisma.order.findMany({
       where: {
-        paymentStatus: 'PAID',
+        paymentStatus: 'SUCCEEDED',
         createdAt: { gte: startDate },
       },
       select: {
@@ -274,19 +274,19 @@ export class DashboardService {
       take: limit,
     });
 
-    const productIds = products.map((p) => p.productId);
+    const productIds = products.map((p: { productId: string }) => p.productId);
     const productDetails = await prisma.product.findMany({
       where: { id: { in: productIds } },
       select: {
         id: true,
         name: true,
-        imageUrl: true,
+        coverImageUrl: true,
         price: true,
       },
     });
 
-    const result = products.map((p) => {
-      const product = productDetails.find((pd) => pd.id === p.productId);
+    const result = products.map((p: { productId: string; _sum: { quantity: number | null } }) => {
+      const product = productDetails.find((pd: { id: string }) => pd.id === p.productId);
       return {
         ...product,
         totalSold: p._sum.quantity || 0,

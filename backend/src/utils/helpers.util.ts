@@ -1,6 +1,15 @@
 // apps/backend/src/utils/helpers.util.ts
 
-import { randomBytes } from 'crypto';
+import { randomBytes, randomUUID } from 'crypto';
+
+/**
+ * Generate unique file name
+ */
+export function generateFileName(originalName: string): string {
+  const ext = originalName.split('.').pop();
+  const uniqueId = randomUUID();
+  return `${uniqueId}.${ext}`;
+}
 
 /**
  * Generate order number with prefix and date

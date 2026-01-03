@@ -2,7 +2,7 @@
 
 import { prisma } from '../../config/database';
 import { NotFoundException, BadRequestException } from '../../utils/errors';
-import { sendEmail } from '../../utils/email';
+import { sendEmail, emailTemplates } from '../../utils/email.util';
 
 interface UpdateReadingDTO {
   title?: string;
@@ -223,11 +223,14 @@ export class ReadingsService {
         await sendEmail({
           to: reading.client.email,
           subject: 'Sua Leitura está Pronta! - Izabela Tarot',
-          template: 'reading-published',
-          data: {
-            clientName: reading.client.fullName,
-            readingTitle: reading.title,
-          },
+          html: `
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+              <h2>Olá, ${reading.client.fullName}!</h2>
+              <p>Sua leitura "${reading.title || 'Leitura de Tarot'}" está pronta!</p>
+              <p>Acesse sua área de cliente para visualizar todos os detalhes.</p>
+              <p>Com carinho,<br>Izabela Tarot</p>
+            </div>
+          `,
         });
       }
     }

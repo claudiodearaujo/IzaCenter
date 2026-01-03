@@ -1,7 +1,8 @@
 // apps/backend/src/modules/appointments/appointments.service.ts
 
 import { prisma } from '../../config/database';
-import { sendEmail } from '../../utils';
+import { sendEmail, emailTemplates } from '../../utils';
+import { NotFoundException, BadRequestException } from '../../utils/errors';
 
 interface CreateAppointmentDTO {
   userId: string;
@@ -187,16 +188,20 @@ export class AppointmentsService {
 
     // Send confirmation email
     if (appointment.client.email) {
+      const formattedDate = new Date(appointment.scheduledDate).toLocaleDateString('pt-BR');
       await sendEmail({
         to: appointment.client.email,
         subject: 'Agendamento Confirmado - Izabela Tarot',
-        template: 'appointment-confirmation',
-        data: {
-          clientName: appointment.client.fullName,
-          date: appointment.scheduledDate,
-          startTime: appointment.startTime,
-          endTime: appointment.endTime,
-        },
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>Olá, ${appointment.client.fullName}!</h2>
+            <p>Seu agendamento foi confirmado com sucesso.</p>
+            <p><strong>Data:</strong> ${formattedDate}</p>
+            <p><strong>Horário:</strong> ${appointment.startTime} - ${appointment.endTime}</p>
+            <p>Aguardamos você!</p>
+            <p>Com carinho,<br>Izabela Tarot</p>
+          </div>
+        `,
       });
     }
 
@@ -228,16 +233,20 @@ export class AppointmentsService {
 
       // Send status update email
       if (appointment.client.email) {
+        const formattedDate = new Date(appointment.scheduledDate).toLocaleDateString('pt-BR');
         await sendEmail({
           to: appointment.client.email,
           subject: `Atualização de Agendamento - Izabela Tarot`,
-          template: 'appointment-status-update',
-          data: {
-            clientName: appointment.client.fullName,
-            date: appointment.scheduledDate,
-            startTime: appointment.startTime,
-            status: data.status,
-          },
+          html: `
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+              <h2>Olá, ${appointment.client.fullName}!</h2>
+              <p>Seu agendamento foi atualizado.</p>
+              <p><strong>Data:</strong> ${formattedDate}</p>
+              <p><strong>Horário:</strong> ${appointment.startTime}</p>
+              <p><strong>Status:</strong> ${data.status}</p>
+              <p>Com carinho,<br>Izabela Tarot</p>
+            </div>
+          `,
         });
       }
     }
@@ -280,17 +289,20 @@ export class AppointmentsService {
 
     // Send reschedule email
     if (appointment.client.email) {
+      const oldFormattedDate = new Date(appointment.scheduledDate).toLocaleDateString('pt-BR');
+      const newFormattedDate = newDate.toLocaleDateString('pt-BR');
       await sendEmail({
         to: appointment.client.email,
         subject: 'Agendamento Reagendado - Izabela Tarot',
-        template: 'appointment-rescheduled',
-        data: {
-          clientName: appointment.client.fullName,
-          oldDate: appointment.scheduledDate,
-          oldTime: appointment.startTime,
-          newDate: newDate,
-          newTime: newStartTime,
-        },
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>Olá, ${appointment.client.fullName}!</h2>
+            <p>Seu agendamento foi reagendado.</p>
+            <p><strong>Data anterior:</strong> ${oldFormattedDate} às ${appointment.startTime}</p>
+            <p><strong>Nova data:</strong> ${newFormattedDate} às ${newStartTime}</p>
+            <p>Com carinho,<br>Izabela Tarot</p>
+          </div>
+        `,
       });
     }
 
@@ -318,16 +330,19 @@ export class AppointmentsService {
 
     // Send cancellation email
     if (appointment.client.email) {
+      const formattedDate = new Date(appointment.scheduledDate).toLocaleDateString('pt-BR');
       await sendEmail({
         to: appointment.client.email,
         subject: 'Agendamento Cancelado - Izabela Tarot',
-        template: 'appointment-cancelled',
-        data: {
-          clientName: appointment.client.fullName,
-          date: appointment.scheduledDate,
-          startTime: appointment.startTime,
-          reason,
-        },
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>Olá, ${appointment.client.fullName}!</h2>
+            <p>Seu agendamento foi cancelado.</p>
+            <p><strong>Data:</strong> ${formattedDate} às ${appointment.startTime}</p>
+            ${reason ? `<p><strong>Motivo:</strong> ${reason}</p>` : ''}
+            <p>Com carinho,<br>Izabela Tarot</p>
+          </div>
+        `,
       });
     }
 

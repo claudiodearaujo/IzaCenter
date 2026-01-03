@@ -1,6 +1,6 @@
 // apps/backend/src/utils/password.util.ts
 
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
 const SALT_ROUNDS = 12;

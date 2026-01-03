@@ -33,11 +33,10 @@ export class TestimonialsController {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id;
-      const { productId, content, rating } = req.body;
+      const { content, rating } = req.body;
 
       const result = await testimonialsService.create({
         userId,
-        productId,
         content,
         rating,
       });
