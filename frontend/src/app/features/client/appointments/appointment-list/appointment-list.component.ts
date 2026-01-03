@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-import { Tabs } from 'primeng/tabs';
+import { Tabs, TabsModule } from 'primeng/tabs';
 import { DialogModule } from 'primeng/dialog';
 
 import { AppointmentsService, Appointment } from '../../../../core/services/appointments.service';
@@ -20,7 +20,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
     RouterLink,
     ButtonModule,
     SkeletonModule,
-    Tabs,
+    TabsModule,
     DialogModule,
   ],
   templateUrl: './appointment-list.component.html',

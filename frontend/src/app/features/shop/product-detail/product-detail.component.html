@@ -180,8 +180,13 @@
 
       <!-- Tabs with Description -->
       <div class="mt-16">
-        <p-tabView>
-          <p-tabPanel header="Descrição Completa">
+        <p-tabs value="0">
+          <p-tablist>
+            <p-tab value="0">Descrição Completa</p-tab>
+            <p-tab value="1">Como Funciona</p-tab>
+          </p-tablist>
+          <p-tabpanels>
+          <p-tabpanel value="0">
             <div class="prose prose-invert max-w-none py-6">
               @if (product()?.fullDescription) {
                 <div [innerHTML]="product()?.fullDescription"></div>
@@ -189,8 +194,8 @@
                 <p class="text-secondary">{{ product()?.shortDescription }}</p>
               }
             </div>
-          </p-tabPanel>
-          <p-tabPanel header="Como Funciona">
+          </p-tabpanel>
+          <p-tabpanel value="1">
             <div class="py-6">
               <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div class="text-center">
@@ -223,8 +228,9 @@
                 </div>
               </div>
             </div>
-          </p-tabPanel>
-        </p-tabView>
+          </p-tabpanel>
+          </p-tabpanels>
+        </p-tabs>
       </div>
 
       <!-- Related Products -->

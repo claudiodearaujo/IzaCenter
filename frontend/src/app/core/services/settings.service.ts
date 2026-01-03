@@ -9,9 +9,10 @@ export interface GeneralSettings {
   siteDescription: string;
   logoUrl?: string;
   faviconUrl?: string;
-  enableShop: boolean;
-  enableAppointments: boolean;
-  enableTestimonials: boolean;
+  enableShop?: boolean;
+  enableAppointments?: boolean;
+  enableTestimonials?: boolean;
+  maintenanceMode?: boolean;
 }
 
 export interface ContactSettings {
@@ -23,6 +24,10 @@ export interface ContactSettings {
   facebook?: string;
   youtube?: string;
   tiktok?: string;
+  // Aliases for backward compatibility
+  instagramUrl?: string;
+  facebookUrl?: string;
+  youtubeUrl?: string;
 }
 
 export interface BusinessHour {
@@ -34,17 +39,24 @@ export interface BusinessHour {
 }
 
 export interface ContentSettings {
-  heroTitle: string;
-  heroSubtitle: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
   aboutTitle?: string;
   aboutContent?: string;
   footerText?: string;
+  // Aliases for backward compatibility
+  homeTitle?: string;
+  homeSubtitle?: string;
+  aboutText?: string;
+  privacyPolicy?: string;
+  termsOfService?: string;
 }
 
 export interface AnalyticsSettings {
   googleAnalyticsId?: string;
   facebookPixelId?: string;
-  enableAnalytics: boolean;
+  hotjarId?: string;
+  enableAnalytics?: boolean;
 }
 
 export interface AllSettings {
@@ -129,5 +141,26 @@ export class SettingsService {
 
   updateAnalytics(data: Partial<AnalyticsSettings>): Observable<ApiResponse<AnalyticsSettings>> {
     return this.api.put<ApiResponse<AnalyticsSettings>>('/admin/settings/analytics', data);
+  }
+
+  // Alias methods for backward compatibility
+  getAllSettings(): Observable<ApiResponse<AllSettings>> {
+    return this.getAll();
+  }
+
+  updateGeneralSettings(data: Partial<GeneralSettings>): Observable<ApiResponse<GeneralSettings>> {
+    return this.updateGeneral(data);
+  }
+
+  updateContactSettings(data: Partial<ContactSettings>): Observable<ApiResponse<ContactSettings>> {
+    return this.updateContact(data);
+  }
+
+  updateContentSettings(data: Partial<ContentSettings>): Observable<ApiResponse<ContentSettings>> {
+    return this.updateContent(data);
+  }
+
+  updateAnalyticsSettings(data: Partial<AnalyticsSettings>): Observable<ApiResponse<AnalyticsSettings>> {
+    return this.updateAnalytics(data);
   }
 }

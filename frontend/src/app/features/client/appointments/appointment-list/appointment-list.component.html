@@ -23,9 +23,14 @@
         }
       </div>
     } @else {
-      <p-tabView>
+      <p-tabs value="0">
+        <p-tablist>
+          <p-tab value="0">Próximos</p-tab>
+          <p-tab value="1">Histórico</p-tab>
+        </p-tablist>
+        <p-tabpanels>
         <!-- Upcoming Tab -->
-        <p-tabPanel header="Próximos">
+        <p-tabpanel value="0">
           @if (upcomingAppointments().length === 0) {
             <div class="glass-card p-12 text-center">
               <div class="w-24 h-24 bg-gradient-mystical rounded-full flex items-center justify-center mx-auto mb-6">
@@ -161,8 +166,9 @@
               }
             </div>
           }
-        </p-tabPanel>
-      </p-tabView>
+        </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
     }
 
     <!-- Info Section -->

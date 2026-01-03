@@ -31,9 +31,17 @@
         </div>
       </div>
     } @else {
-      <p-tabView [(activeIndex)]="activeTab">
+      <p-tabs [(value)]="activeTab">
+        <p-tablist>
+          <p-tab value="0"><i class="pi pi-home mr-2"></i>Geral</p-tab>
+          <p-tab value="1"><i class="pi pi-phone mr-2"></i>Contato</p-tab>
+          <p-tab value="2"><i class="pi pi-clock mr-2"></i>Horários</p-tab>
+          <p-tab value="3"><i class="pi pi-file-edit mr-2"></i>Conteúdo</p-tab>
+          <p-tab value="4"><i class="pi pi-chart-bar mr-2"></i>Analytics</p-tab>
+        </p-tablist>
+        <p-tabpanels>
         <!-- General Tab -->
-        <p-tabPanel header="Geral" leftIcon="pi pi-home">
+        <p-tabpanel value="0">
           <div class="space-y-6 p-4">
             <!-- Site Identity -->
             <div class="glass-card p-6">
@@ -190,10 +198,10 @@
               </div>
             </div>
           </div>
-        </p-tabPanel>
+        </p-tabpanel>
 
         <!-- Contact Tab -->
-        <p-tabPanel header="Contato" leftIcon="pi pi-phone">
+        <p-tabpanel value="1">
           <div class="space-y-6 p-4">
             <div class="glass-card p-6">
               <h3 class="heading-3 text-primary mb-4">Informações de Contato</h3>
@@ -290,10 +298,10 @@
               </div>
             </div>
           </div>
-        </p-tabPanel>
+        </p-tabpanel>
 
         <!-- Business Tab -->
-        <p-tabPanel header="Horários" leftIcon="pi pi-clock">
+        <p-tabpanel value="2">
           <div class="space-y-6 p-4">
             <div class="glass-card p-6">
               <h3 class="heading-3 text-primary mb-4">Horário de Funcionamento</h3>
@@ -329,10 +337,10 @@
               </div>
             </div>
           </div>
-        </p-tabPanel>
+        </p-tabpanel>
 
         <!-- Content Tab -->
-        <p-tabPanel header="Conteúdo" leftIcon="pi pi-file-edit">
+        <p-tabpanel value="3">
           <div class="space-y-6 p-4">
             <div class="glass-card p-6">
               <h3 class="heading-3 text-primary mb-4">Página Inicial</h3>
@@ -368,10 +376,10 @@
               />
             </div>
           </div>
-        </p-tabPanel>
+        </p-tabpanel>
 
         <!-- Analytics Tab -->
-        <p-tabPanel header="Analytics" leftIcon="pi pi-chart-bar">
+        <p-tabpanel value="4">
           <div class="space-y-6 p-4">
             <div class="glass-card p-6">
               <h3 class="heading-3 text-primary mb-4">Rastreamento</h3>
@@ -409,8 +417,9 @@
               </button>
             </div>
           </div>
-        </p-tabPanel>
-      </p-tabView>
+        </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
 
       <!-- Save Button (bottom) -->
       <div class="mt-6 text-center">

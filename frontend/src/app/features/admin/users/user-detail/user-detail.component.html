@@ -100,9 +100,15 @@
 
       <!-- Tabs -->
       <div class="glass-card p-6">
-        <p-tabView>
+        <p-tabs value="0">
+          <p-tablist>
+            <p-tab value="0">Informações</p-tab>
+            <p-tab value="1">Pedidos</p-tab>
+            <p-tab value="2">Leituras</p-tab>
+          </p-tablist>
+          <p-tabpanels>
           <!-- Info Tab -->
-          <p-tabPanel header="Informações">
+          <p-tabpanel value="0">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
               <div>
                 <label class="text-secondary text-sm">Nome Completo</label>
@@ -129,10 +135,10 @@
                 <p class="text-primary font-medium">{{ getRoleLabel(user()!.role) }}</p>
               </div>
             </div>
-          </p-tabPanel>
+          </p-tabpanel>
 
           <!-- Orders Tab -->
-          <p-tabPanel header="Pedidos">
+          <p-tabpanel value="1">
             @if (user()?.orders && user()!.orders.length > 0) {
               <div class="space-y-3 py-4">
                 @for (order of user()!.orders; track order.id) {
@@ -154,10 +160,10 @@
             } @else {
               <p class="text-secondary text-center py-8">Nenhum pedido encontrado</p>
             }
-          </p-tabPanel>
+          </p-tabpanel>
 
           <!-- Readings Tab -->
-          <p-tabPanel header="Leituras">
+          <p-tabpanel value="2">
             @if (user()?.readings && user()!.readings.length > 0) {
               <div class="space-y-3 py-4">
                 @for (reading of user()!.readings; track reading.id) {
@@ -176,8 +182,9 @@
             } @else {
               <p class="text-secondary text-center py-8">Nenhuma leitura encontrada</p>
             }
-          </p-tabPanel>
-        </p-tabView>
+          </p-tabpanel>
+          </p-tabpanels>
+        </p-tabs>
       </div>
     }
   </div>

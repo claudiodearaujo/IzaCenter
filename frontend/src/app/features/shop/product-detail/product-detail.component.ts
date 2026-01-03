@@ -6,8 +6,8 @@ import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
-import { Textarea, TextareaModule } from 'primeng/textarea';
-import { Tabs, TabsModule } from 'primeng/tabs';
+import { TextareaModule } from 'primeng/textarea';
+import {  TabsModule } from 'primeng/tabs';
 import { SkeletonModule } from 'primeng/skeleton';
 import { GalleriaModule } from 'primeng/galleria';
 
