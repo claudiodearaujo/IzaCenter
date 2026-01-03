@@ -1,0 +1,44 @@
+/* apps/frontend/src/app/features/client/orders/order-detail/order-detail.component.css */
+
+:host {
+  display: block;
+}
+
+/* Status badges */
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+/* Gradient background */
+.bg-gradient-mystical {
+  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+}
+
+/* Dark background */
+.bg-dark\/30 {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Border colors */
+.border-primary\/10 {
+  border-color: rgba(201, 167, 235, 0.1);
+}
+
+/* Card hover */
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+/* Image */
+img {
+  object-fit: cover;
+}
+
+/* Skeleton styling */
+:host ::ng-deep .p-skeleton {
+  background-color: rgba(201, 167, 235, 0.1);
+}

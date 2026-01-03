@@ -3,6 +3,21 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
+// Response types
+export interface ApiResponse<T> {
+  data: T;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,12 +25,12 @@ export class ApiService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  get<T>(endpoint: string, params?: Record<string, any>): Observable<T> {
+  get<T>(endpoint: string, options?: { params?: Record<string, any> }): Observable<T> {
     let httpParams = new HttpParams();
-    if (params) {
-      Object.keys(params).forEach(key => {
-        if (params[key] !== null && params[key] !== undefined) {
-          httpParams = httpParams.set(key, params[key]);
+    if (options?.params) {
+      Object.keys(options.params).forEach(key => {
+        if (options.params![key] !== null && options.params![key] !== undefined) {
+          httpParams = httpParams.set(key, options.params![key]);
         }
       });
     }

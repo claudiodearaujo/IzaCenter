@@ -1,0 +1,185 @@
+<!-- apps/frontend/src/app/features/admin/readings/reading-list/reading-list.component.html -->
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">
+          <i class="pi pi-book mr-3"></i>
+          Leituras
+        </h1>
+        <p class="text-secondary">Gerencie as leituras de tarot dos clientes</p>
+      </div>
+      <a routerLink="/admin/cartas" class="btn-outline">
+        <i class="pi pi-th-large mr-2"></i>
+        Gerenciar Cartas
+      </a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-clock text-xl text-yellow-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ pendingCount() }}
+          </p>
+          <p class="text-secondary text-sm">Aguardando</p>
+        </div>
+      </div>
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-spin pi-spinner text-xl text-blue-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ inProgressCount() }}
+          </p>
+          <p class="text-secondary text-sm">Em Andamento</p>
+        </div>
+      </div>
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-check-circle text-xl text-green-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ publishedCount() }}
+          </p>
+          <p class="text-secondary text-sm">Publicadas</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card p-4 mb-6">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-search"></i>
+            <input 
+              pInputText 
+              [(ngModel)]="searchTerm"
+              placeholder="Buscar por cliente ou produto..."
+              class="w-full"
+              (keyup.enter)="onSearch()"
+            />
+          </span>
+        </div>
+        <div class="w-full md:w-48">
+          <p-select 
+            [options]="statusOptions" 
+            [(ngModel)]="selectedStatus"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Status"
+            (onChange)="onSearch()"
+            styleClass="w-full"
+          />
+        </div>
+        <button pButton class="btn-primary" (click)="onSearch()">
+          <i class="pi pi-search mr-2"></i>
+          Buscar
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card overflow-hidden">
+      <p-table 
+        [value]="readings()" 
+        [loading]="loading()"
+        [paginator]="true"
+        [rows]="10"
+        [totalRecords]="totalRecords()"
+        [lazy]="true"
+        (onLazyLoad)="loadReadings($event)"
+        [rowHover]="true"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Cliente</th>
+            <th>Produto</th>
+            <th>Perguntas</th>
+            <th>Status</th>
+            <th>Aguardando</th>
+            <th>Criado em</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-reading>
+          <tr [class.bg-yellow-500/5]="reading.status === 'PENDING'">
+            <td>
+              <div>
+                <p class="text-primary font-medium">{{ reading.client?.fullName }}</p>
+                <p class="text-secondary text-xs">{{ reading.client?.email }}</p>
+              </div>
+            </td>
+            <td class="text-primary">{{ reading.orderItem?.product?.name }}</td>
+            <td>
+              @if (reading.orderItem?.clientQuestions && reading.orderItem.clientQuestions.length > 0) {
+                <span 
+                  class="text-secondary text-sm cursor-help"
+                  [pTooltip]="reading.orderItem.clientQuestions.join(' | ')"
+                  tooltipPosition="top"
+                >
+                  {{ reading.orderItem.clientQuestions.length }} pergunta(s)
+                </span>
+              } @else {
+                <span class="text-secondary/50 text-sm">-</span>
+              }
+            </td>
+            <td>
+              <p-tag 
+                [value]="getStatusLabel(reading.status)" 
+                [severity]="getStatusSeverity(reading.status)"
+              />
+            </td>
+            <td>
+              @if (reading.status !== 'PUBLISHED') {
+                <span 
+                  class="text-sm"
+                  [class]="reading.status === 'PENDING' ? 'text-yellow-400' : 'text-blue-400'"
+                >
+                  {{ getTimeSinceCreation(reading.createdAt) }}
+                </span>
+              } @else {
+                <span class="text-green-400 text-sm">
+                  <i class="pi pi-check mr-1"></i>
+                  Concluída
+                </span>
+              }
+            </td>
+            <td class="text-secondary text-sm">{{ formatDate(reading.createdAt) }}</td>
+            <td>
+              <a 
+                [routerLink]="['/admin/leituras', reading.id]"
+                class="btn-primary text-sm py-2 px-4"
+              >
+                @if (reading.status === 'PUBLISHED') {
+                  <i class="pi pi-eye mr-1"></i>
+                  Ver
+                } @else {
+                  <i class="pi pi-pencil mr-1"></i>
+                  {{ reading.status === 'PENDING' ? 'Iniciar' : 'Continuar' }}
+                }
+              </a>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7" class="text-center py-8">
+              <i class="pi pi-book text-4xl text-secondary/30 mb-4"></i>
+              <p class="text-secondary">Nenhuma leitura encontrada</p>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</section>

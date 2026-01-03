@@ -1,0 +1,147 @@
+<!-- apps/frontend/src/app/features/shop/product-list/product-list.component.html -->
+
+<section class="py-12 md:py-20">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="heading-1 text-primary mb-4">
+        <i class="pi pi-shopping-bag mr-3"></i>
+        Loja
+      </h1>
+      <p class="text-body text-secondary max-w-2xl mx-auto">
+        Escolha sua consulta de Tarot Cigano e receba orientações 
+        personalizadas para iluminar seu caminho.
+      </p>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card p-6 mb-8">
+      <div class="flex flex-wrap gap-4 items-center justify-between">
+        <!-- Search -->
+        <div class="flex-1 min-w-[250px]">
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-search"></i>
+            <input 
+              type="text" 
+              pInputText 
+              [(ngModel)]="searchTerm"
+              (keyup.enter)="onSearch()"
+              placeholder="Buscar serviços..."
+              class="w-full"
+            />
+          </span>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="min-w-[200px]">
+          <p-select
+            [options]="categories()"
+            [(ngModel)]="selectedCategory"
+            (onChange)="onCategoryChange($event.value)"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Todas as categorias"
+            [showClear]="true"
+            styleClass="w-full"
+          />
+        </div>
+
+        <!-- Sort -->
+        <div class="min-w-[180px]">
+          <p-select
+            [options]="sortOptions"
+            [(ngModel)]="sortOption"
+            (onChange)="onSortChange()"
+            optionLabel="label"
+            optionValue="value"
+            styleClass="w-full"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (item of [1,2,3,4,5,6]; track item) {
+          <div class="glass-card p-6">
+            <p-skeleton height="200px" styleClass="mb-4" />
+            <p-skeleton height="24px" styleClass="mb-2" />
+            <p-skeleton height="16px" width="60%" styleClass="mb-4" />
+            <p-skeleton height="32px" width="40%" />
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Products Grid -->
+    @if (!loading() && products().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (product of products(); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!loading() && products().length === 0) {
+      <div class="text-center py-16">
+        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
+          <i class="pi pi-search text-4xl text-primary"></i>
+        </div>
+        <h3 class="heading-3 text-primary mb-4">Nenhum serviço encontrado</h3>
+        <p class="text-secondary mb-8">
+          Tente buscar com outros termos ou remova os filtros.
+        </p>
+        <button 
+          class="btn-secondary"
+          (click)="selectedCategory.set(null); searchTerm.set(''); loadProducts()"
+        >
+          Limpar filtros
+        </button>
+      </div>
+    }
+
+    <!-- Why Choose Section -->
+    <div class="mt-20">
+      <h2 class="heading-2 text-center text-primary mb-12">
+        Por que escolher minhas leituras?
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="glass-card p-8 text-center">
+          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-primary flex items-center justify-center">
+            <i class="pi pi-heart text-2xl text-white"></i>
+          </div>
+          <h3 class="heading-4 text-primary mb-4">Leitura Personalizada</h3>
+          <p class="text-secondary">
+            Cada consulta é única e focada nas suas questões específicas. 
+            Não utilizo interpretações genéricas.
+          </p>
+        </div>
+
+        <div class="glass-card p-8 text-center">
+          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-primary flex items-center justify-center">
+            <i class="pi pi-clock text-2xl text-white"></i>
+          </div>
+          <h3 class="heading-4 text-primary mb-4">Entrega Rápida</h3>
+          <p class="text-secondary">
+            Sua leitura é preparada com cuidado e entregue em até 
+            48 horas úteis após a confirmação do pagamento.
+          </p>
+        </div>
+
+        <div class="glass-card p-8 text-center">
+          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-primary flex items-center justify-center">
+            <i class="pi pi-lock text-2xl text-white"></i>
+          </div>
+          <h3 class="heading-4 text-primary mb-4">100% Confidencial</h3>
+          <p class="text-secondary">
+            Suas perguntas e leituras são completamente privadas 
+            e tratadas com total sigilo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

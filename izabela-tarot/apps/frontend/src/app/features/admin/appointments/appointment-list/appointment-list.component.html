@@ -1,0 +1,373 @@
+<!-- apps/frontend/src/app/features/admin/appointments/appointment-list/appointment-list.component.html -->
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">
+          <i class="pi pi-calendar mr-3"></i>
+          Agendamentos
+        </h1>
+        <p class="text-secondary">Gerencie as consultas ao vivo agendadas</p>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-clock text-xl text-blue-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ upcomingCount() }}
+          </p>
+          <p class="text-secondary text-sm">Próximos</p>
+        </div>
+      </div>
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-star text-xl text-yellow-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ todayCount() }}
+          </p>
+          <p class="text-secondary text-sm">Hoje</p>
+        </div>
+      </div>
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-check-circle text-xl text-green-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ completedCount() }}
+          </p>
+          <p class="text-secondary text-sm">Concluídos</p>
+        </div>
+      </div>
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-times-circle text-xl text-red-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ cancelledCount() }}
+          </p>
+          <p class="text-secondary text-sm">Cancelados</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card p-4 mb-6">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-search"></i>
+            <input 
+              pInputText 
+              [(ngModel)]="searchTerm"
+              placeholder="Buscar por cliente..."
+              class="w-full"
+              (keyup.enter)="onSearch()"
+            />
+          </span>
+        </div>
+        <div class="w-full md:w-48">
+          <p-select 
+            [options]="statusOptions" 
+            [(ngModel)]="selectedStatus"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Status"
+            (onChange)="onSearch()"
+            styleClass="w-full"
+          />
+        </div>
+        <button pButton class="btn-primary" (click)="onSearch()">
+          <i class="pi pi-search mr-2"></i>
+          Buscar
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card overflow-hidden">
+      <p-table 
+        [value]="appointments()" 
+        [loading]="loading()"
+        [paginator]="true"
+        [rows]="10"
+        [totalRecords]="totalRecords()"
+        [lazy]="true"
+        (onLazyLoad)="loadAppointments($event)"
+        [rowHover]="true"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Cliente</th>
+            <th>Serviço</th>
+            <th>Data/Hora</th>
+            <th>Duração</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-appointment>
+          <tr [class.bg-yellow-500/5]="isToday(appointment.scheduledDate)">
+            <td>
+              <div>
+                <p class="text-primary font-medium">{{ appointment.client?.fullName }}</p>
+                <p class="text-secondary text-xs">{{ appointment.client?.email }}</p>
+                @if (appointment.client?.phone) {
+                  <p class="text-secondary/60 text-xs">{{ appointment.client?.phone }}</p>
+                }
+              </div>
+            </td>
+            <td class="text-primary">{{ appointment.orderItem?.product?.name }}</td>
+            <td>
+              <div class="flex items-center gap-2">
+                @if (isToday(appointment.scheduledDate)) {
+                  <span class="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded">
+                    HOJE
+                  </span>
+                }
+                <span class="text-primary">{{ formatDateTime(appointment.scheduledDate) }}</span>
+              </div>
+            </td>
+            <td class="text-secondary">{{ appointment.durationMinutes }} min</td>
+            <td>
+              <p-tag 
+                [value]="getStatusLabel(appointment.status)" 
+                [severity]="getStatusSeverity(appointment.status)"
+              />
+            </td>
+            <td>
+              <div class="flex gap-1">
+                @switch (appointment.status) {
+                  @case ('SCHEDULED') {
+                    <button 
+                      pButton 
+                      class="p-button-success p-button-sm"
+                      pTooltip="Confirmar"
+                      (click)="confirmAppointment(appointment)"
+                    >
+                      <i class="pi pi-check"></i>
+                    </button>
+                    <button 
+                      pButton 
+                      class="p-button-outlined p-button-sm"
+                      pTooltip="Reagendar"
+                      (click)="openRescheduleDialog(appointment)"
+                    >
+                      <i class="pi pi-calendar"></i>
+                    </button>
+                    <button 
+                      pButton 
+                      class="p-button-danger p-button-sm"
+                      pTooltip="Cancelar"
+                      (click)="cancelAppointment(appointment)"
+                    >
+                      <i class="pi pi-times"></i>
+                    </button>
+                  }
+                  @case ('CONFIRMED') {
+                    <button 
+                      pButton 
+                      class="p-button-warning p-button-sm"
+                      pTooltip="Iniciar Consulta"
+                      (click)="startAppointment(appointment)"
+                    >
+                      <i class="pi pi-play"></i>
+                    </button>
+                    @if (appointment.meetingUrl) {
+                      <a 
+                        [href]="appointment.meetingUrl"
+                        target="_blank"
+                        class="p-button p-button-outlined p-button-sm"
+                        pTooltip="Abrir reunião"
+                      >
+                        <i class="pi pi-video"></i>
+                      </a>
+                    }
+                    <button 
+                      pButton 
+                      class="p-button-outlined p-button-sm"
+                      pTooltip="Reagendar"
+                      (click)="openRescheduleDialog(appointment)"
+                    >
+                      <i class="pi pi-calendar"></i>
+                    </button>
+                  }
+                  @case ('IN_PROGRESS') {
+                    <button 
+                      pButton 
+                      class="p-button-success p-button-sm"
+                      pTooltip="Concluir"
+                      (click)="completeAppointment(appointment)"
+                    >
+                      <i class="pi pi-check-circle"></i>
+                    </button>
+                    @if (appointment.meetingUrl) {
+                      <a 
+                        [href]="appointment.meetingUrl"
+                        target="_blank"
+                        class="p-button p-button-outlined p-button-sm"
+                        pTooltip="Abrir reunião"
+                      >
+                        <i class="pi pi-video"></i>
+                      </a>
+                    }
+                    <button 
+                      pButton 
+                      class="p-button-secondary p-button-sm"
+                      pTooltip="Não compareceu"
+                      (click)="markNoShow(appointment)"
+                    >
+                      <i class="pi pi-user-minus"></i>
+                    </button>
+                  }
+                  @default {
+                    <button 
+                      pButton 
+                      class="p-button-text p-button-sm"
+                      pTooltip="Anotações"
+                      (click)="openNotesDialog(appointment)"
+                    >
+                      <i class="pi pi-file-edit"></i>
+                    </button>
+                  }
+                }
+                <button 
+                  pButton 
+                  class="p-button-text p-button-sm"
+                  pTooltip="Anotações"
+                  (click)="openNotesDialog(appointment)"
+                >
+                  <i class="pi pi-file-edit"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center py-8">
+              <i class="pi pi-calendar text-4xl text-secondary/30 mb-4"></i>
+              <p class="text-secondary">Nenhum agendamento encontrado</p>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</section>
+
+<!-- Reschedule Dialog -->
+<p-dialog 
+  [(visible)]="rescheduleDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{width: '400px'}"
+  header="Reagendar Consulta"
+>
+  <div class="space-y-4 p-2">
+    @if (selectedAppointment()) {
+      <div class="p-4 bg-dark/30 rounded-lg">
+        <p class="text-primary font-medium">{{ selectedAppointment()?.client?.fullName }}</p>
+        <p class="text-secondary text-sm">{{ selectedAppointment()?.orderItem?.product?.name }}</p>
+      </div>
+    }
+
+    <div>
+      <label class="block text-secondary text-sm mb-2">Nova Data e Hora</label>
+      <p-datepicker 
+        [(ngModel)]="newDateTime"
+        [showTime]="true"
+        [showButtonBar]="true"
+        dateFormat="dd/mm/yy"
+        [minDate]="minDate"
+        styleClass="w-full"
+      />
+    </div>
+
+    <p class="text-secondary/60 text-sm">
+      <i class="pi pi-info-circle mr-1"></i>
+      O cliente será notificado sobre a mudança de horário.
+    </p>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 pt-4">
+      <button pButton class="btn-outline" (click)="rescheduleDialogVisible.set(false)">
+        Cancelar
+      </button>
+      <button 
+        pButton 
+        class="btn-primary"
+        [loading]="saving()"
+        (click)="reschedule()"
+      >
+        <i class="pi pi-calendar mr-2"></i>
+        Reagendar
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Notes Dialog -->
+<p-dialog 
+  [(visible)]="notesDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{width: '500px'}"
+  header="Anotações da Consulta"
+>
+  <div class="space-y-4 p-2">
+    @if (selectedAppointment()) {
+      <div class="p-4 bg-dark/30 rounded-lg">
+        <p class="text-primary font-medium">{{ selectedAppointment()?.client?.fullName }}</p>
+        <p class="text-secondary text-sm">
+          {{ formatDateTime(selectedAppointment()!.scheduledDate) }}
+        </p>
+      </div>
+    }
+
+    <div>
+      <label class="block text-secondary text-sm mb-2">Anotações</label>
+      <textarea 
+        pInputTextarea 
+        [(ngModel)]="notes"
+        [rows]="6"
+        class="w-full"
+        placeholder="Anotações sobre a consulta..."
+      ></textarea>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 pt-4">
+      <button pButton class="btn-outline" (click)="notesDialogVisible.set(false)">
+        Cancelar
+      </button>
+      <button 
+        pButton 
+        class="btn-primary"
+        [loading]="saving()"
+        (click)="saveNotes()"
+      >
+        <i class="pi pi-save mr-2"></i>
+        Salvar
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog 
+  styleClass="custom-confirm-dialog"
+  [style]="{width: '400px'}"
+/>

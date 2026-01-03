@@ -89,11 +89,13 @@ export class AuthService {
     return this.api.post('/auth/reset-password', { token, password });
   }
 
-  refreshToken(): Observable<{ accessToken: string } | null> {
+  refreshToken(): Observable<{ data: { accessToken: string } } | null> {
     return this.api.post<{ data: { accessToken: string } }>('/auth/refresh-token', {}).pipe(
       tap(response => {
-        this.accessTokenSignal.set(response.data.accessToken);
-        this.storage.set('accessToken', response.data.accessToken);
+        if (response?.data?.accessToken) {
+          this.accessTokenSignal.set(response.data.accessToken);
+          this.storage.set('accessToken', response.data.accessToken);
+        }
       }),
       catchError(() => {
         this.logout();

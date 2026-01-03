@@ -1,0 +1,277 @@
+<!-- apps/frontend/src/app/features/admin/products/product-form/product-form.component.html -->
+
+<section class="py-8">
+  <div class="container-custom max-w-4xl">
+    <!-- Back Button -->
+    <a routerLink="/admin/produtos" class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6">
+      <i class="pi pi-arrow-left mr-2"></i>
+      Voltar para produtos
+    </a>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="heading-1 text-primary mb-2">
+        {{ isEditing() ? 'Editar Produto' : 'Novo Produto' }}
+      </h1>
+      <p class="text-secondary">
+        {{ isEditing() ? 'Atualize as informações do produto' : 'Preencha os dados para criar um novo produto' }}
+      </p>
+    </div>
+
+    @if (loading()) {
+      <div class="glass-card p-8">
+        <div class="animate-pulse space-y-4">
+          <div class="h-10 bg-primary/10 rounded"></div>
+          <div class="h-32 bg-primary/10 rounded"></div>
+          <div class="h-10 bg-primary/10 rounded"></div>
+        </div>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Form -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Basic Info -->
+          <div class="glass-card p-6">
+            <h3 class="heading-3 text-primary mb-6">Informações Básicas</h3>
+
+            <div class="space-y-4">
+              <div>
+                <label for="name" class="block text-secondary text-sm mb-2">
+                  Nome do Produto *
+                </label>
+                <input 
+                  pInputText 
+                  id="name"
+                  [(ngModel)]="form.name"
+                  class="w-full"
+                  placeholder="Ex: Tiragem de 3 Cartas"
+                />
+              </div>
+
+              <div>
+                <label for="shortDescription" class="block text-secondary text-sm mb-2">
+                  Descrição Curta
+                </label>
+                <input 
+                  pInputText 
+                  id="shortDescription"
+                  [(ngModel)]="form.shortDescription"
+                  class="w-full"
+                  placeholder="Breve descrição para listagem"
+                />
+              </div>
+
+              <div>
+                <label for="description" class="block text-secondary text-sm mb-2">
+                  Descrição Completa
+                </label>
+                <p-editor 
+                  [(ngModel)]="form.fullDescription"
+                  [style]="{'height':'200px'}"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Type & Category -->
+          <div class="glass-card p-6">
+            <h3 class="heading-3 text-primary mb-6">Tipo e Categoria</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="type" class="block text-secondary text-sm mb-2">
+                  Tipo de Produto *
+                </label>
+                <p-select 
+                  id="type"
+                  [options]="typeOptions" 
+                  [(ngModel)]="form.productType"
+                  optionLabel="label"
+                  optionValue="value"
+                  styleClass="w-full"
+                />
+              </div>
+
+              <div>
+                <label for="category" class="block text-secondary text-sm mb-2">
+                  Categoria
+                </label>
+                <p-select 
+                  id="category"
+                  [options]="categories()" 
+                  [(ngModel)]="form.categoryId"
+                  optionLabel="name"
+                  optionValue="id"
+                  placeholder="Selecione..."
+                  [showClear]="true"
+                  styleClass="w-full"
+                />
+              </div>
+
+              @if (form.productType === 'QUESTION') {
+                <div>
+                  <label for="questionCount" class="block text-secondary text-sm mb-2">
+                    Número de Perguntas
+                  </label>
+                  <p-inputNumber 
+                    id="questionCount"
+                    [(ngModel)]="form.numQuestions"
+                    [min]="1"
+                    [max]="10"
+                    styleClass="w-full"
+                  />
+                </div>
+              }
+
+              @if (form.productType === 'SESSION') {
+                <div>
+                  <label for="duration" class="block text-secondary text-sm mb-2">
+                    Duração (minutos)
+                  </label>
+                  <p-inputNumber 
+                    id="duration"
+                    [(ngModel)]="form.sessionDurationMinutes"
+                    [min]="15"
+                    [step]="15"
+                    suffix=" min"
+                    styleClass="w-full"
+                  />
+                </div>
+              }
+
+              <div>
+                <label for="deliveryTime" class="block text-secondary text-sm mb-2">
+                  Prazo de Entrega
+                </label>
+                <input 
+                  pInputText 
+                  id="deliveryTime"
+                  [(ngModel)]="form.validityDays"
+                  class="w-full"
+                  placeholder="Ex: 48 horas"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Metadata will go here in future -->
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+          <!-- Pricing -->
+          <div class="glass-card p-6">
+            <h3 class="heading-3 text-primary mb-6">Preço</h3>
+
+            <div class="space-y-4">
+              <div>
+                <label for="price" class="block text-secondary text-sm mb-2">
+                  Preço *
+                </label>
+                <p-inputNumber 
+                  id="price"
+                  [(ngModel)]="form.price"
+                  mode="currency"
+                  currency="BRL"
+                  locale="pt-BR"
+                  styleClass="w-full"
+                />
+              </div>
+
+              <div>
+                <label for="originalPrice" class="block text-secondary text-sm mb-2">
+                  Preço Original (opcional)
+                </label>
+                <p-inputNumber 
+                  id="originalPrice"
+                  [(ngModel)]="form.originalPrice"
+                  mode="currency"
+                  currency="BRL"
+                  locale="pt-BR"
+                  styleClass="w-full"
+                />
+                <p class="text-secondary/60 text-xs mt-1">
+                  Exibido como "de R$ X por R$ Y"
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image -->
+          <div class="glass-card p-6">
+            <h3 class="heading-3 text-primary mb-6">Imagem</h3>
+
+            @if (coverImageUrl()) {
+              <div class="mb-4">
+                <img 
+                  [src]="coverImageUrl()" 
+                  alt="Cover"
+                  class="w-full rounded-lg"
+                />
+              </div>
+            }
+
+            <p-fileUpload 
+              mode="basic" 
+              name="cover"
+              accept="image/*"
+              [maxFileSize]="5000000"
+              [auto]="true"
+              chooseLabel="Selecionar Imagem"
+              [customUpload]="true"
+              (uploadHandler)="onImageUpload($event)"
+              [disabled]="!isEditing()"
+              styleClass="w-full"
+            />
+            @if (!isEditing()) {
+              <p class="text-secondary/60 text-xs mt-2">
+                Salve o produto primeiro para adicionar imagem
+              </p>
+            }
+          </div>
+
+          <!-- Status -->
+          <div class="glass-card p-6">
+            <h3 class="heading-3 text-primary mb-6">Status</h3>
+
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <p-checkbox 
+                  [(ngModel)]="form.isActive"
+                  [binary]="true"
+                  inputId="isActive"
+                />
+                <label for="isActive" class="text-primary">Produto Ativo</label>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <p-checkbox 
+                  [(ngModel)]="form.isFeatured"
+                  [binary]="true"
+                  inputId="isFeatured"
+                />
+                <label for="isFeatured" class="text-primary">Em Destaque</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="glass-card p-6">
+            <button 
+              pButton 
+              class="btn-primary w-full mb-3"
+              [loading]="saving()"
+              (click)="save()"
+            >
+              <i class="pi pi-check mr-2"></i>
+              {{ isEditing() ? 'Salvar Alterações' : 'Criar Produto' }}
+            </button>
+            <a routerLink="/admin/produtos" class="btn-outline w-full block text-center">
+              Cancelar
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>

@@ -1,0 +1,254 @@
+<!-- apps/frontend/src/app/features/admin/dashboard/dashboard.component.html -->
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">Dashboard</h1>
+        <p class="text-secondary">Visão geral do sistema</p>
+      </div>
+      <div class="flex gap-4">
+        <a routerLink="/admin/leituras" class="btn-outline">
+          <i class="pi pi-book mr-2"></i>
+          Leituras Pendentes
+        </a>
+        <a routerLink="/admin/pedidos" class="btn-primary">
+          <i class="pi pi-shopping-bag mr-2"></i>
+          Ver Pedidos
+        </a>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Revenue -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-mystical rounded-lg flex items-center justify-center">
+            <i class="pi pi-dollar text-xl text-white"></i>
+          </div>
+          @if (stats()?.revenueToday) {
+            <span class="text-green-400 text-sm">
+              +{{ formatCurrency(stats()!.revenueToday!) }} hoje
+            </span>
+          }
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
+          <p-skeleton height="1rem" width="40%" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">
+            {{ formatCurrency(stats()?.totalRevenue || 0) }}
+          </p>
+          <p class="text-secondary text-sm">Faturamento Total</p>
+        }
+      </div>
+
+      <!-- Total Orders -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-gold rounded-lg flex items-center justify-center">
+            <i class="pi pi-shopping-bag text-xl text-white"></i>
+          </div>
+          @if (stats()?.ordersToday) {
+            <span class="text-green-400 text-sm">
+              +{{ stats()!.ordersToday }} hoje
+            </span>
+          }
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
+          <p-skeleton height="1rem" width="40%" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalOrders || 0 }}</p>
+          <p class="text-secondary text-sm">Total de Pedidos</p>
+        }
+      </div>
+
+      <!-- Total Users -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-400 rounded-lg flex items-center justify-center">
+            <i class="pi pi-users text-xl text-white"></i>
+          </div>
+          @if (stats()?.newUsersToday) {
+            <span class="text-green-400 text-sm">
+              +{{ stats()!.newUsersToday }} hoje
+            </span>
+          }
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
+          <p-skeleton height="1rem" width="40%" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalUsers || 0 }}</p>
+          <p class="text-secondary text-sm">Usuários Cadastrados</p>
+        }
+      </div>
+
+      <!-- Pending Readings -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-orange-400 rounded-lg flex items-center justify-center">
+            <i class="pi pi-clock text-xl text-white"></i>
+          </div>
+          @if (stats()?.upcomingAppointments) {
+            <span class="text-accent text-sm">
+              {{ stats()!.upcomingAppointments }} agendamentos
+            </span>
+          }
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
+          <p-skeleton height="1rem" width="40%" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.pendingReadings || 0 }}</p>
+          <p class="text-secondary text-sm">Leituras Pendentes</p>
+        }
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <!-- Revenue Chart -->
+      <div class="glass-card p-6">
+        <h3 class="heading-3 text-primary mb-6">Faturamento (6 meses)</h3>
+        <div class="h-64">
+          <p-chart type="line" [data]="revenueChartData" [options]="revenueChartOptions" />
+        </div>
+      </div>
+
+      <!-- Orders by Type Chart -->
+      <div class="glass-card p-6">
+        <h3 class="heading-3 text-primary mb-6">Pedidos por Tipo</h3>
+        <div class="h-64">
+          <p-chart type="doughnut" [data]="ordersChartData" [options]="ordersChartOptions" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Tables Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Recent Orders -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="heading-3 text-primary">Pedidos Recentes</h3>
+          <a routerLink="/admin/pedidos" class="text-accent hover:text-accent-light transition-colors text-sm">
+            Ver todos <i class="pi pi-arrow-right ml-1"></i>
+          </a>
+        </div>
+
+        @if (loading()) {
+          <div class="space-y-4">
+            @for (_ of [1, 2, 3]; track $index) {
+              <p-skeleton height="3rem" />
+            }
+          </div>
+        } @else if (recentOrders().length === 0) {
+          <p class="text-secondary text-center py-8">Nenhum pedido encontrado</p>
+        } @else {
+          <div class="space-y-3">
+            @for (order of recentOrders(); track order.id) {
+              <a 
+                [routerLink]="['/admin/pedidos', order.id]"
+                class="flex items-center justify-between p-3 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
+              >
+                <div>
+                  <p class="text-primary font-medium">#{{ order.orderNumber }}</p>
+                  <p class="text-secondary text-xs">{{ order.user.fullName }}</p>
+                </div>
+                <div class="text-right">
+                  <span 
+                    class="inline-block px-2 py-1 rounded text-xs font-medium mb-1"
+                    [class]="getStatusClass(order.status)"
+                  >
+                    {{ getStatusLabel(order.status) }}
+                  </span>
+                  <p class="text-accent text-sm font-bold">{{ order.total | currencyBrl }}</p>
+                </div>
+              </a>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Pending Readings -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="heading-3 text-primary">Leituras Pendentes</h3>
+          <a routerLink="/admin/leituras" class="text-accent hover:text-accent-light transition-colors text-sm">
+            Ver todas <i class="pi pi-arrow-right ml-1"></i>
+          </a>
+        </div>
+
+        @if (loading()) {
+          <div class="space-y-4">
+            @for (_ of [1, 2, 3]; track $index) {
+              <p-skeleton height="3rem" />
+            }
+          </div>
+        } @else if (pendingReadings().length === 0) {
+          <div class="text-center py-8">
+            <i class="pi pi-check-circle text-3xl text-green-400 mb-2"></i>
+            <p class="text-secondary">Todas as leituras em dia! 🎉</p>
+          </div>
+        } @else {
+          <div class="space-y-3">
+            @for (reading of pendingReadings(); track reading.id) {
+              <a 
+                [routerLink]="['/admin/leituras', reading.id]"
+                class="flex items-center justify-between p-3 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
+              >
+                <div>
+                  <p class="text-primary font-medium">{{ reading.orderItem?.product?.name || 'Produto N/A' }}</p>
+                  <p class="text-secondary text-xs">{{ reading.client?.fullName || 'Cliente N/A' }}</p>
+                </div>
+                <div class="text-right">
+                  <span 
+                    class="inline-block px-2 py-1 rounded text-xs font-medium mb-1"
+                    [class]="getStatusClass(reading.status)"
+                  >
+                    {{ getStatusLabel(reading.status) }}
+                  </span>
+                  <p class="text-secondary text-xs">{{ formatDate(reading.createdAt) }}</p>
+                </div>
+              </a>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="glass-card p-6 mt-8">
+      <h3 class="heading-3 text-primary mb-6">Ações Rápidas</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <a routerLink="/admin/produtos/novo" class="quick-action-btn">
+          <i class="pi pi-plus-circle text-2xl mb-2"></i>
+          <span class="text-sm">Novo Produto</span>
+        </a>
+        <a routerLink="/admin/leituras" class="quick-action-btn">
+          <i class="pi pi-book text-2xl mb-2"></i>
+          <span class="text-sm">Leituras</span>
+        </a>
+        <a routerLink="/admin/agendamentos" class="quick-action-btn">
+          <i class="pi pi-calendar text-2xl mb-2"></i>
+          <span class="text-sm">Agendamentos</span>
+        </a>
+        <a routerLink="/admin/usuarios" class="quick-action-btn">
+          <i class="pi pi-users text-2xl mb-2"></i>
+          <span class="text-sm">Usuários</span>
+        </a>
+        <a routerLink="/admin/depoimentos" class="quick-action-btn">
+          <i class="pi pi-star text-2xl mb-2"></i>
+          <span class="text-sm">Depoimentos</span>
+        </a>
+        <a routerLink="/admin/configuracoes" class="quick-action-btn">
+          <i class="pi pi-cog text-2xl mb-2"></i>
+          <span class="text-sm">Configurações</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

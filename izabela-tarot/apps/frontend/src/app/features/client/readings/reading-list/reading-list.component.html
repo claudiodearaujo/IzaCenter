@@ -1,0 +1,174 @@
+<!-- apps/frontend/src/app/features/client/readings/reading-list/reading-list.component.html -->
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="heading-1 text-primary mb-4">
+        <i class="pi pi-book mr-3"></i>
+        Minhas Leituras
+      </h1>
+      <p class="text-secondary max-w-2xl mx-auto">
+        Aqui você encontra todas as suas leituras de tarot. Leia e releia 
+        quantas vezes quiser para absorver cada mensagem.
+      </p>
+    </div>
+
+    <!-- Filter -->
+    <div class="flex justify-center mb-8">
+      <p-selectButton 
+        [options]="filterOptions" 
+        [(ngModel)]="selectedFilter"
+        optionLabel="label" 
+        optionValue="value"
+        (onChange)="onFilterChange()"
+      />
+    </div>
+
+    <!-- Readings Grid -->
+    @if (loading()) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (_ of [1, 2, 3, 4, 5, 6]; track $index) {
+          <div class="glass-card p-6">
+            <p-skeleton height="10rem" styleClass="mb-4" />
+            <p-skeleton height="1.5rem" width="70%" styleClass="mb-2" />
+            <p-skeleton height="1rem" width="50%" />
+          </div>
+        }
+      </div>
+    } @else if (readings().length === 0) {
+      <div class="glass-card p-12 text-center max-w-lg mx-auto">
+        <div class="w-24 h-24 bg-gradient-mystical rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="pi pi-book text-4xl text-white"></i>
+        </div>
+        <h2 class="heading-2 text-primary mb-4">Nenhuma leitura encontrada</h2>
+        @if (selectedFilter() === 'all') {
+          <p class="text-secondary mb-6">
+            Você ainda não possui leituras. Após adquirir uma consulta, 
+            sua leitura aparecerá aqui quando for publicada.
+          </p>
+          <a routerLink="/loja" class="btn-primary inline-block">
+            <i class="pi pi-shopping-cart mr-2"></i>
+            Explorar Consultas
+          </a>
+        } @else {
+          <p class="text-secondary mb-6">
+            Nenhuma leitura com o filtro selecionado.
+          </p>
+          <button class="btn-outline" (click)="selectedFilter.set('all'); onFilterChange()">
+            Ver todas as leituras
+          </button>
+        }
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (reading of readings(); track reading.id) {
+          <a 
+            [routerLink]="['/cliente/leituras', reading.id]"
+            class="glass-card overflow-hidden group"
+            [class.cursor-default]="reading.status !== 'PUBLISHED'"
+            [class.opacity-80]="reading.status !== 'PUBLISHED'"
+          >
+            <!-- Image -->
+            <div class="relative h-48 overflow-hidden">
+              @if (reading.product.coverImageUrl) {
+                <img 
+                  [src]="reading.product.coverImageUrl" 
+                  [alt]="reading.product.name"
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+              } @else {
+                <div class="w-full h-full bg-gradient-mystical flex items-center justify-center">
+                  <i class="pi pi-star text-4xl text-white/50"></i>
+                </div>
+              }
+              <!-- Status Badge -->
+              <div class="absolute top-3 right-3">
+                <span 
+                  class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium"
+                  [class]="getStatusClass(reading.status)"
+                >
+                  <i class="pi" [class]="getStatusIcon(reading.status)"></i>
+                  {{ getStatusLabel(reading.status) }}
+                </span>
+              </div>
+              <!-- Overlay for non-published -->
+              @if (reading.status !== 'PUBLISHED') {
+                <div class="absolute inset-0 bg-dark/50 flex items-center justify-center">
+                  <div class="text-center">
+                    <i class="pi" [class]="getStatusIcon(reading.status)" class="text-3xl text-primary mb-2"></i>
+                    <p class="text-primary text-sm">{{ getStatusLabel(reading.status) }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Content -->
+            <div class="p-6">
+              <h3 class="heading-4 text-primary mb-2 group-hover:text-accent transition-colors">
+                {{ reading.title || reading.product.name }}
+              </h3>
+              <p class="text-secondary text-sm mb-3">
+                {{ reading.product.name }}
+              </p>
+
+              @if (reading.orderItem.questions && reading.orderItem.questions[0]) {
+                <p class="text-secondary/70 text-sm italic truncate mb-3">
+                  "{{ reading.orderItem.questions[0] }}"
+                </p>
+              }
+
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-secondary">
+                  @if (reading.status === 'PUBLISHED' && reading.publishedAt) {
+                    Publicada em {{ formatDate(reading.publishedAt) }}
+                  } @else {
+                    Solicitada em {{ formatDate(reading.createdAt) }}
+                  }
+                </span>
+                @if (reading.status === 'PUBLISHED') {
+                  <span class="text-accent">
+                    Ler <i class="pi pi-arrow-right ml-1"></i>
+                  </span>
+                }
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    }
+
+    <!-- Info Section -->
+    <div class="glass-card p-8 mt-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div>
+          <div class="w-14 h-14 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="pi pi-clock text-2xl text-yellow-400"></i>
+          </div>
+          <h4 class="text-primary font-bold mb-2">Aguardando</h4>
+          <p class="text-secondary text-sm">
+            Sua consulta está na fila e será respondida em breve
+          </p>
+        </div>
+        <div>
+          <div class="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="pi pi-spinner text-2xl text-blue-400"></i>
+          </div>
+          <h4 class="text-primary font-bold mb-2">Em Andamento</h4>
+          <p class="text-secondary text-sm">
+            Estou preparando sua leitura com muito carinho
+          </p>
+        </div>
+        <div>
+          <div class="w-14 h-14 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="pi pi-check-circle text-2xl text-green-400"></i>
+          </div>
+          <h4 class="text-primary font-bold mb-2">Publicada</h4>
+          <p class="text-secondary text-sm">
+            Sua leitura está pronta! Clique para acessar
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

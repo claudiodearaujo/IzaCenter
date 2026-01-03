@@ -96,15 +96,15 @@ export const routes: Routes = [
       },
       {
         path: 'agendamentos',
-        loadComponent: () => import('./features/client/appointments/my-appointments/my-appointments.component').then(m => m.MyAppointmentsComponent)
-      },
-      {
-        path: 'agendar',
-        loadComponent: () => import('./features/client/appointments/schedule/schedule.component').then(m => m.ScheduleComponent)
+        loadComponent: () => import('./features/client/appointments/appointment-list/appointment-list.component').then(m => m.AppointmentListComponent)
       },
       {
         path: 'pedidos',
-        loadComponent: () => import('./features/client/payment-history/payment-history.component').then(m => m.PaymentHistoryComponent)
+        loadComponent: () => import('./features/client/orders/order-list/order-list.component').then(m => m.OrderListComponent)
+      },
+      {
+        path: 'pedidos/:id',
+        loadComponent: () => import('./features/client/orders/order-detail/order-detail.component').then(m => m.OrderDetailComponent)
       },
       {
         path: 'perfil',
@@ -121,35 +121,23 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(m => m.DashboardComponent)
+        loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(m => m.AdminDashboardComponent)
       },
       {
         path: 'leituras',
-        loadComponent: () => import('./features/admin/readings/pending-readings/pending-readings.component').then(m => m.PendingReadingsComponent)
+        loadComponent: () => import('./features/admin/readings/reading-list/reading-list.component').then(m => m.AdminReadingListComponent)
       },
       {
         path: 'leituras/:id',
-        loadComponent: () => import('./features/admin/readings/reading-editor/reading-editor.component').then(m => m.ReadingEditorComponent)
+        loadComponent: () => import('./features/admin/readings/reading-form/reading-form.component').then(m => m.ReadingFormComponent)
       },
       {
         path: 'agendamentos',
-        loadComponent: () => import('./features/admin/schedule/appointments/appointments.component').then(m => m.AppointmentsComponent)
-      },
-      {
-        path: 'disponibilidade',
-        loadComponent: () => import('./features/admin/schedule/availability/availability.component').then(m => m.AvailabilityComponent)
-      },
-      {
-        path: 'pedidos',
-        loadComponent: () => import('./features/admin/orders/order-list/order-list.component').then(m => m.OrderListComponent)
-      },
-      {
-        path: 'pedidos/:id',
-        loadComponent: () => import('./features/admin/orders/order-detail/order-detail.component').then(m => m.OrderDetailComponent)
+        loadComponent: () => import('./features/admin/appointments/appointment-list/appointment-list.component').then(m => m.AdminAppointmentListComponent)
       },
       {
         path: 'produtos',
-        loadComponent: () => import('./features/admin/products/product-list/product-list.component').then(m => m.ProductListComponent)
+        loadComponent: () => import('./features/admin/products/product-list/product-list.component').then(m => m.AdminProductListComponent)
       },
       {
         path: 'produtos/novo',
@@ -160,12 +148,28 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/products/product-form/product-form.component').then(m => m.ProductFormComponent)
       },
       {
-        path: 'clientes',
-        loadComponent: () => import('./features/admin/clients/clients.component').then(m => m.ClientsComponent)
+        path: 'categorias',
+        loadComponent: () => import('./features/admin/categories/category-list/category-list.component').then(m => m.CategoryListComponent)
       },
       {
-        path: 'relatorios',
-        loadComponent: () => import('./features/admin/reports/reports.component').then(m => m.ReportsComponent)
+        path: 'cartas',
+        loadComponent: () => import('./features/admin/cards/card-list/card-list.component').then(m => m.CardListComponent)
+      },
+      {
+        path: 'usuarios',
+        loadComponent: () => import('./features/admin/users/user-list/user-list.component').then(m => m.UserListComponent)
+      },
+      {
+        path: 'usuarios/:id',
+        loadComponent: () => import('./features/admin/users/user-detail/user-detail.component').then(m => m.UserDetailComponent)
+      },
+      {
+        path: 'depoimentos',
+        loadComponent: () => import('./features/admin/testimonials/testimonial-list/testimonial-list.component').then(m => m.TestimonialListComponent)
+      },
+      {
+        path: 'configuracoes',
+        loadComponent: () => import('./features/admin/settings/settings.component').then(m => m.SettingsComponent)
       }
     ]
   },

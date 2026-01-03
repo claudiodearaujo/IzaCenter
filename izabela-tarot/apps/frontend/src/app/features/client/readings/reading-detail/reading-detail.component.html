@@ -1,0 +1,215 @@
+<!-- apps/frontend/src/app/features/client/readings/reading-detail/reading-detail.component.html -->
+
+<section class="py-8 print:py-0">
+  <div class="container-custom max-w-4xl">
+    <!-- Back Button - hide on print -->
+    <a routerLink="/cliente/leituras" class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6 print:hidden">
+      <i class="pi pi-arrow-left mr-2"></i>
+      Voltar para leituras
+    </a>
+
+    @if (loading()) {
+      <!-- Loading State -->
+      <div class="glass-card p-8">
+        <p-skeleton height="3rem" width="60%" styleClass="mb-4" />
+        <p-skeleton height="1rem" width="40%" styleClass="mb-8" />
+        <p-skeleton height="12rem" styleClass="mb-4" />
+        <p-skeleton height="12rem" />
+      </div>
+    } @else if (error()) {
+      <!-- Error State -->
+      <div class="glass-card p-12 text-center">
+        <i class="pi pi-exclamation-triangle text-5xl text-red-400 mb-4"></i>
+        <h2 class="heading-2 text-primary mb-4">Erro ao carregar leitura</h2>
+        <p class="text-secondary mb-6">{{ error() }}</p>
+        <a routerLink="/cliente/leituras" class="btn-primary inline-block">
+          Voltar para Leituras
+        </a>
+      </div>
+    } @else if (reading()) {
+      <!-- Reading Header -->
+      <div class="glass-card p-8 mb-8 text-center">
+        <div class="w-20 h-20 bg-gradient-mystical rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="pi pi-star text-3xl text-white"></i>
+        </div>
+        <h1 class="heading-1 text-primary mb-3">
+          {{ reading()?.title || reading()?.product.name }}
+        </h1>
+        <p class="text-secondary mb-2">{{ reading()?.product.name }}</p>
+        @if (reading()?.publishedAt) {
+          <p class="text-secondary/60 text-sm">
+            Publicada em {{ formatDate(reading()!.publishedAt!) }}
+          </p>
+        }
+
+        <!-- Questions -->
+        @if (reading()?.orderItem.questions && reading()!.orderItem.questions.length > 0) {
+          <div class="mt-6 p-4 bg-dark/30 rounded-lg max-w-lg mx-auto">
+            <p class="text-secondary text-sm mb-2">Sua(s) pergunta(s):</p>
+            @for (question of reading()!.orderItem.questions; track $index) {
+              <p class="text-primary italic">"{{ question }}"</p>
+            }
+          </div>
+        }
+
+        <!-- Actions - hide on print -->
+        <div class="flex justify-center gap-4 mt-6 print:hidden">
+          @if (reading()?.audioUrl) {
+            <button class="btn-outline" (click)="audioPlaying.set(!audioPlaying())">
+              <i class="pi" [class]="audioPlaying() ? 'pi-pause' : 'pi-play'" class="mr-2"></i>
+              {{ audioPlaying() ? 'Pausar' : 'Ouvir' }} Áudio
+            </button>
+          }
+          <button class="btn-outline" (click)="printReading()">
+            <i class="pi pi-print mr-2"></i>
+            Imprimir
+          </button>
+        </div>
+
+        <!-- Audio Player -->
+        @if (reading()?.audioUrl && audioPlaying()) {
+          <div class="mt-6 print:hidden">
+            <audio 
+              [src]="reading()?.audioUrl" 
+              controls 
+              autoplay
+              class="w-full max-w-md mx-auto"
+            ></audio>
+          </div>
+        }
+      </div>
+
+      <!-- Introduction -->
+      @if (reading()?.introduction) {
+        <div class="glass-card p-8 mb-8">
+          <h2 class="heading-3 text-primary mb-4 flex items-center gap-3">
+            <i class="pi pi-star-fill text-accent"></i>
+            Introdução
+          </h2>
+          <p class="text-secondary leading-relaxed whitespace-pre-line">
+            {{ reading()?.introduction }}
+          </p>
+        </div>
+      }
+
+      <!-- Cards -->
+      @if (reading()?.cards && reading()!.cards.length > 0) {
+        <div class="glass-card p-8 mb-8">
+          <h2 class="heading-3 text-primary mb-6 flex items-center gap-3">
+            <i class="pi pi-th-large text-accent"></i>
+            As Cartas
+          </h2>
+
+          <div class="space-y-8">
+            @for (card of reading()!.cards; track card.id) {
+              <div class="card-item">
+                <div class="flex flex-col md:flex-row gap-6">
+                  <!-- Card Image -->
+                  <div class="flex-shrink-0 w-full md:w-40">
+                    @if (card.card.imageUrl) {
+                      <img 
+                        [src]="card.card.imageUrl" 
+                        [alt]="card.card.name"
+                        class="w-full max-w-[160px] mx-auto rounded-lg shadow-lg"
+                      />
+                    } @else {
+                      <div class="w-[160px] h-[280px] mx-auto bg-gradient-mystical rounded-lg flex items-center justify-center">
+                        <i class="pi pi-star text-3xl text-white/50"></i>
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Card Content -->
+                  <div class="flex-1">
+                    <div class="flex items-start justify-between mb-3">
+                      <div>
+                        <span class="text-accent text-sm">{{ card.positionName || 'Posição ' + card.position }}</span>
+                        <h3 class="heading-4 text-primary">{{ card.card.name }}</h3>
+                      </div>
+                    </div>
+
+                    @if (card.card.keywords && card.card.keywords.length > 0) {
+                      <div class="flex flex-wrap gap-2 mb-4">
+                        @for (keyword of card.card.keywords; track keyword) {
+                          <span class="px-2 py-1 bg-primary/10 text-primary text-xs rounded">
+                            {{ keyword }}
+                          </span>
+                        }
+                      </div>
+                    }
+
+                    <p class="text-secondary leading-relaxed whitespace-pre-line">
+                      {{ card.interpretation }}
+                    </p>
+                  </div>
+                </div>
+
+                @if (!$last) {
+                  <p-divider styleClass="my-8" />
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- General Interpretation -->
+      <div class="glass-card p-8 mb-8">
+        <h2 class="heading-3 text-primary mb-4 flex items-center gap-3">
+          <i class="pi pi-eye text-accent"></i>
+          Visão Geral
+        </h2>
+        <p class="text-secondary leading-relaxed whitespace-pre-line">
+          {{ reading()?.generalInterpretation }}
+        </p>
+      </div>
+
+      <!-- Advice -->
+      @if (reading()?.advice) {
+        <div class="glass-card p-8 mb-8 bg-gradient-to-r from-accent/10 to-purple-600/10">
+          <h2 class="heading-3 text-primary mb-4 flex items-center gap-3">
+            <i class="pi pi-lightbulb text-accent"></i>
+            Conselho
+          </h2>
+          <p class="text-secondary leading-relaxed whitespace-pre-line">
+            {{ reading()?.advice }}
+          </p>
+        </div>
+      }
+
+      <!-- Conclusion -->
+      @if (reading()?.conclusion) {
+        <div class="glass-card p-8 mb-8">
+          <h2 class="heading-3 text-primary mb-4 flex items-center gap-3">
+            <i class="pi pi-heart-fill text-accent"></i>
+            Conclusão
+          </h2>
+          <p class="text-secondary leading-relaxed whitespace-pre-line">
+            {{ reading()?.conclusion }}
+          </p>
+        </div>
+      }
+
+      <!-- Signature -->
+      <div class="glass-card p-8 text-center">
+        <p class="text-secondary italic mb-4">
+          "Que as estrelas iluminem seu caminho e as cartas guiem sua jornada."
+        </p>
+        <p class="text-primary font-medium">Com amor e luz,</p>
+        <p class="text-accent text-xl font-heading">Izabela</p>
+      </div>
+
+      <!-- Bottom Actions - hide on print -->
+      <div class="flex justify-center gap-4 mt-8 print:hidden">
+        <a routerLink="/cliente/leituras" class="btn-outline">
+          <i class="pi pi-arrow-left mr-2"></i>
+          Voltar para Leituras
+        </a>
+        <a routerLink="/loja" class="btn-primary">
+          <i class="pi pi-shopping-cart mr-2"></i>
+          Nova Consulta
+        </a>
+      </div>
+    }
+  </div>
+</section>

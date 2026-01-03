@@ -1,0 +1,73 @@
+/* apps/frontend/src/app/features/shop/checkout/checkout.component.css */
+
+:host {
+  display: block;
+}
+
+/* Processing overlay */
+.fixed.inset-0 {
+  backdrop-filter: blur(4px);
+}
+
+/* Glass card styling */
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+/* Item cards */
+.bg-dark\/30 {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Border styling */
+.border-primary\/10 {
+  border-color: rgba(201, 167, 235, 0.1);
+}
+
+/* Sticky summary */
+.sticky {
+  position: sticky;
+}
+
+.top-24 {
+  top: 6rem;
+}
+
+/* Checkbox styling */
+:host ::ng-deep .p-checkbox .p-checkbox-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(201, 167, 235, 0.3);
+}
+
+:host ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Payment method icons */
+.pi {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Disabled button */
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .glass-card.sticky {
+    position: relative;
+    top: 0;
+  }
+}
+
+/* Truncate text */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}

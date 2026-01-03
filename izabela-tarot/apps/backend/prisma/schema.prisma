@@ -1,0 +1,445 @@
+// Prisma Schema for Izabela Tarot
+// apps/backend/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================
+// ENUMS
+// =============================================
+
+enum UserRole {
+  CLIENT
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum ReadingStatus {
+  PENDING
+  IN_PROGRESS
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum ProductType {
+  QUESTION
+  SESSION
+  MONTHLY
+  SPECIAL
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+// =============================================
+// MODELS
+// =============================================
+
+model User {
+  id                   String    @id @default(uuid())
+  email                String    @unique
+  passwordHash         String    @map("password_hash")
+  fullName             String    @map("full_name")
+  phone                String?
+  birthDate            DateTime? @map("birth_date")
+  avatarUrl            String?   @map("avatar_url")
+  role                 UserRole  @default(CLIENT)
+  preferredLanguage    String    @default("pt-BR") @map("preferred_language")
+  notificationEmail    Boolean   @default(true) @map("notification_email")
+  notificationWhatsapp Boolean   @default(true) @map("notification_whatsapp")
+  notes                String?
+  stripeCustomerId     String?   @map("stripe_customer_id")
+  
+  resetToken           String?   @map("reset_token")
+  resetTokenExpiry     DateTime? @map("reset_token_expiry")
+  
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  lastLoginAt          DateTime? @map("last_login_at")
+
+  orders               Order[]
+  readings             Reading[]
+  appointments         Appointment[]
+  notifications        Notification[]
+  testimonials         Testimonial[]
+
+  @@map("users")
+}
+
+model ProductCategory {
+  id           String    @id @default(uuid())
+  name         String
+  slug         String    @unique
+  description  String?
+  icon         String?
+  displayOrder Int       @default(0) @map("display_order")
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  products     Product[]
+
+  @@map("product_categories")
+}
+
+model Product {
+  id                     String          @id @default(uuid())
+  categoryId             String?         @map("category_id")
+  name                   String
+  slug                   String          @unique
+  shortDescription       String?         @map("short_description")
+  fullDescription        String?         @map("full_description")
+  productType            ProductType     @map("product_type")
+  
+  price                  Decimal         @db.Decimal(10, 2)
+  originalPrice          Decimal?        @db.Decimal(10, 2) @map("original_price")
+  
+  numQuestions           Int?            @map("num_questions")
+  sessionDurationMinutes Int?            @map("session_duration_minutes")
+  numCards               Int?            @map("num_cards")
+  validityDays           Int             @default(365) @map("validity_days")
+  
+  coverImageUrl          String?         @map("cover_image_url")
+  galleryUrls            String[]        @map("gallery_urls")
+  
+  isActive               Boolean         @default(true) @map("is_active")
+  isFeatured             Boolean         @default(false) @map("is_featured")
+  requiresScheduling     Boolean         @default(false) @map("requires_scheduling")
+  maxPerClient           Int?            @map("max_per_client")
+  
+  metaTitle              String?         @map("meta_title")
+  metaDescription        String?         @map("meta_description")
+  
+  availableFrom          DateTime?       @map("available_from")
+  availableUntil         DateTime?       @map("available_until")
+  
+  createdAt              DateTime        @default(now()) @map("created_at")
+  updatedAt              DateTime        @updatedAt @map("updated_at")
+
+  category               ProductCategory? @relation(fields: [categoryId], references: [id])
+  attachments            ProductAttachment[]
+  orderItems             OrderItem[]
+
+  @@map("products")
+}
+
+model ProductAttachment {
+  id           String   @id @default(uuid())
+  productId    String   @map("product_id")
+  name         String
+  fileUrl      String   @map("file_url")
+  fileType     String?  @map("file_type")
+  fileSize     Int?     @map("file_size")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_attachments")
+}
+
+model Order {
+  id                       String        @id @default(uuid())
+  orderNumber              String        @unique @map("order_number")
+  clientId                 String        @map("client_id")
+  
+  subtotal                 Decimal       @db.Decimal(10, 2)
+  discount                 Decimal       @default(0) @db.Decimal(10, 2)
+  total                    Decimal       @db.Decimal(10, 2)
+  
+  stripeCheckoutSessionId  String?       @map("stripe_checkout_session_id")
+  stripePaymentIntentId    String?       @map("stripe_payment_intent_id")
+  
+  status                   OrderStatus   @default(PENDING)
+  paymentStatus            PaymentStatus @default(PENDING) @map("payment_status")
+  
+  clientNotes              String?       @map("client_notes")
+  adminNotes               String?       @map("admin_notes")
+  
+  paidAt                   DateTime?     @map("paid_at")
+  completedAt              DateTime?     @map("completed_at")
+  cancelledAt              DateTime?     @map("cancelled_at")
+  createdAt                DateTime      @default(now()) @map("created_at")
+  updatedAt                DateTime      @updatedAt @map("updated_at")
+
+  client                   User          @relation(fields: [clientId], references: [id])
+  items                    OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id              String      @id @default(uuid())
+  orderId         String      @map("order_id")
+  productId       String      @map("product_id")
+  
+  productName     String      @map("product_name")
+  productType     ProductType @map("product_type")
+  unitPrice       Decimal     @db.Decimal(10, 2) @map("unit_price")
+  quantity        Int         @default(1)
+  totalPrice      Decimal     @db.Decimal(10, 2) @map("total_price")
+  
+  clientQuestions String[]    @map("client_questions")
+  
+  createdAt       DateTime    @default(now()) @map("created_at")
+
+  order           Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product         Product     @relation(fields: [productId], references: [id])
+  reading         Reading?
+  appointment     Appointment?
+
+  @@map("order_items")
+}
+
+model CiganoCard {
+  id              String   @id @default(uuid())
+  number          Int      @unique
+  name            String
+  nameEn          String?  @map("name_en")
+  nameEs          String?  @map("name_es")
+  nameFr          String?  @map("name_fr")
+  keywords        String[]
+  generalMeaning  String?  @map("general_meaning")
+  loveMeaning     String?  @map("love_meaning")
+  careerMeaning   String?  @map("career_meaning")
+  healthMeaning   String?  @map("health_meaning")
+  advice          String?
+  imageUrl        String   @map("image_url")
+  isPositive      Boolean? @map("is_positive")
+  element         String?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  readingCards    ReadingCard[]
+
+  @@map("cigano_cards")
+}
+
+model Reading {
+  id              String        @id @default(uuid())
+  orderItemId     String        @unique @map("order_item_id")
+  clientId        String        @map("client_id")
+  
+  title           String
+  status          ReadingStatus @default(PENDING)
+  
+  clientQuestion  String?       @map("client_question")
+  focusArea       String?       @map("focus_area")
+  
+  introduction    String?
+  generalGuidance String?       @map("general_guidance")
+  recommendations String?
+  goals           String?
+  closingMessage  String?       @map("closing_message")
+  
+  audioUrl        String?       @map("audio_url")
+  videoUrl        String?       @map("video_url")
+  
+  readingDate     DateTime?     @map("reading_date")
+  publishedAt     DateTime?     @map("published_at")
+  expiresAt       DateTime?     @map("expires_at")
+  
+  pdfUrl          String?       @map("pdf_url")
+  pdfGeneratedAt  DateTime?     @map("pdf_generated_at")
+  
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  orderItem       OrderItem     @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  client          User          @relation(fields: [clientId], references: [id])
+  cards           ReadingCard[]
+
+  @@map("readings")
+}
+
+model ReadingCard {
+  id             String     @id @default(uuid())
+  readingId      String     @map("reading_id")
+  cardId         String     @map("card_id")
+  
+  position       Int
+  positionName   String?    @map("position_name")
+  isReversed     Boolean    @default(false) @map("is_reversed")
+  
+  interpretation String?
+  
+  createdAt      DateTime   @default(now()) @map("created_at")
+
+  reading        Reading    @relation(fields: [readingId], references: [id], onDelete: Cascade)
+  card           CiganoCard @relation(fields: [cardId], references: [id])
+
+  @@map("reading_cards")
+}
+
+model ScheduleSettings {
+  id                   String    @id @default(uuid())
+  
+  mondayStart          String?   @map("monday_start")
+  mondayEnd            String?   @map("monday_end")
+  mondayEnabled        Boolean   @default(true) @map("monday_enabled")
+  
+  tuesdayStart         String?   @map("tuesday_start")
+  tuesdayEnd           String?   @map("tuesday_end")
+  tuesdayEnabled       Boolean   @default(true) @map("tuesday_enabled")
+  
+  wednesdayStart       String?   @map("wednesday_start")
+  wednesdayEnd         String?   @map("wednesday_end")
+  wednesdayEnabled     Boolean   @default(true) @map("wednesday_enabled")
+  
+  thursdayStart        String?   @map("thursday_start")
+  thursdayEnd          String?   @map("thursday_end")
+  thursdayEnabled      Boolean   @default(true) @map("thursday_enabled")
+  
+  fridayStart          String?   @map("friday_start")
+  fridayEnd            String?   @map("friday_end")
+  fridayEnabled        Boolean   @default(true) @map("friday_enabled")
+  
+  saturdayStart        String?   @map("saturday_start")
+  saturdayEnd          String?   @map("saturday_end")
+  saturdayEnabled      Boolean   @default(false) @map("saturday_enabled")
+  
+  sundayStart          String?   @map("sunday_start")
+  sundayEnd            String?   @map("sunday_end")
+  sundayEnabled        Boolean   @default(false) @map("sunday_enabled")
+  
+  slotDurationMinutes  Int       @default(30) @map("slot_duration_minutes")
+  bufferMinutes        Int       @default(15) @map("buffer_minutes")
+  advanceBookingDays   Int       @default(30) @map("advance_booking_days")
+  minNoticeHours       Int       @default(24) @map("min_notice_hours")
+  
+  blockedDates         DateTime[] @map("blocked_dates")
+  
+  timezone             String    @default("America/Sao_Paulo")
+  
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  @@map("schedule_settings")
+}
+
+model Appointment {
+  id                 String            @id @default(uuid())
+  orderItemId        String?           @unique @map("order_item_id")
+  clientId           String            @map("client_id")
+  
+  scheduledDate      DateTime          @map("scheduled_date")
+  startTime          String            @map("start_time")
+  endTime            String            @map("end_time")
+  durationMinutes    Int               @map("duration_minutes")
+  
+  status             AppointmentStatus @default(SCHEDULED)
+  
+  clientNotes        String?           @map("client_notes")
+  adminNotes         String?           @map("admin_notes")
+  
+  meetingUrl         String?           @map("meeting_url")
+  meetingPassword    String?           @map("meeting_password")
+  
+  reminderSentAt     DateTime?         @map("reminder_sent_at")
+  confirmedAt        DateTime?         @map("confirmed_at")
+  
+  cancelledAt        DateTime?         @map("cancelled_at")
+  cancellationReason String?           @map("cancellation_reason")
+  
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+
+  orderItem          OrderItem?        @relation(fields: [orderItemId], references: [id])
+  client             User              @relation(fields: [clientId], references: [id])
+
+  @@map("appointments")
+}
+
+model BlockedSlot {
+  id          String   @id @default(uuid())
+  blockedDate DateTime @map("blocked_date")
+  startTime   String?  @map("start_time")
+  endTime     String?  @map("end_time")
+  isFullDay   Boolean  @default(false) @map("is_full_day")
+  reason      String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("blocked_slots")
+}
+
+model Testimonial {
+  id              String   @id @default(uuid())
+  clientId        String?  @map("client_id")
+  clientName      String   @map("client_name")
+  clientAvatarUrl String?  @map("client_avatar_url")
+  content         String
+  rating          Int?
+  isApproved      Boolean  @default(false) @map("is_approved")
+  isFeatured      Boolean  @default(false) @map("is_featured")
+  displayOrder    Int      @default(0) @map("display_order")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  client          User?    @relation(fields: [clientId], references: [id])
+
+  @@map("testimonials")
+}
+
+model Coupon {
+  id            String    @id @default(uuid())
+  code          String    @unique
+  description   String?
+  discountType  String    @map("discount_type")
+  discountValue Decimal   @db.Decimal(10, 2) @map("discount_value")
+  minOrderValue Decimal?  @db.Decimal(10, 2) @map("min_order_value")
+  maxUses       Int?      @map("max_uses")
+  usesCount     Int       @default(0) @map("uses_count")
+  validFrom     DateTime? @map("valid_from")
+  validUntil    DateTime? @map("valid_until")
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@map("coupons")
+}
+
+model SiteSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  title       String
+  message     String
+  type        String?
+  referenceId String?  @map("reference_id")
+  isRead      Boolean  @default(false) @map("is_read")
+  readAt      DateTime? @map("read_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}

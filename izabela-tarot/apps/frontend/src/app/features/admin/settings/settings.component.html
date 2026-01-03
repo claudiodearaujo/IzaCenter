@@ -1,0 +1,429 @@
+<!-- apps/frontend/src/app/features/admin/settings/settings.component.html -->
+
+<section class="py-8">
+  <div class="container-custom max-w-4xl">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">
+          <i class="pi pi-cog mr-3"></i>
+          Configurações
+        </h1>
+        <p class="text-secondary">Configure o site e suas funcionalidades</p>
+      </div>
+      <button 
+        pButton 
+        class="btn-primary"
+        [loading]="saving()"
+        (click)="saveSettings()"
+      >
+        <i class="pi pi-save mr-2"></i>
+        Salvar Alterações
+      </button>
+    </div>
+
+    @if (loading()) {
+      <div class="glass-card p-8">
+        <div class="animate-pulse space-y-4">
+          <div class="h-10 bg-primary/10 rounded w-1/3"></div>
+          <div class="h-32 bg-primary/10 rounded"></div>
+          <div class="h-32 bg-primary/10 rounded"></div>
+        </div>
+      </div>
+    } @else {
+      <p-tabView [(activeIndex)]="activeTab">
+        <!-- General Tab -->
+        <p-tabPanel header="Geral" leftIcon="pi pi-home">
+          <div class="space-y-6 p-4">
+            <!-- Site Identity -->
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Identidade do Site</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Nome do Site *</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.siteName"
+                    class="w-full"
+                    placeholder="Izabela Tarot"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Palavras-chave (SEO)</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.siteKeywords"
+                    class="w-full"
+                    placeholder="tarot, cigano, leitura..."
+                  />
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <label class="block text-secondary text-sm mb-2">Descrição do Site</label>
+                <textarea 
+                  pInputTextarea 
+                  [(ngModel)]="settings.siteDescription"
+                  [rows]="3"
+                  class="w-full"
+                  placeholder="Breve descrição do site para SEO..."
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Logo & Favicon -->
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Logo e Favicon</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Logo</label>
+                  <div class="flex items-center gap-4">
+                    @if (logoPreview()) {
+                      <img 
+                        [src]="logoPreview()" 
+                        alt="Logo"
+                        class="h-16 object-contain"
+                      />
+                    } @else {
+                      <div class="h-16 w-32 bg-dark/30 rounded flex items-center justify-center">
+                        <span class="text-secondary/50">Sem logo</span>
+                      </div>
+                    }
+                    <p-fileUpload 
+                      mode="basic" 
+                      name="logo"
+                      accept="image/*"
+                      [maxFileSize]="2000000"
+                      chooseLabel="Enviar"
+                      [customUpload]="true"
+                      (uploadHandler)="onLogoUpload($event)"
+                      [auto]="true"
+                    />
+                  </div>
+                  <p class="text-secondary/60 text-xs mt-2">Recomendado: PNG transparente, 200x60px</p>
+                </div>
+
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Favicon</label>
+                  <div class="flex items-center gap-4">
+                    @if (faviconPreview()) {
+                      <img 
+                        [src]="faviconPreview()" 
+                        alt="Favicon"
+                        class="h-8 w-8 object-contain"
+                      />
+                    } @else {
+                      <div class="h-8 w-8 bg-dark/30 rounded flex items-center justify-center">
+                        <i class="pi pi-image text-secondary/50"></i>
+                      </div>
+                    }
+                    <p-fileUpload 
+                      mode="basic" 
+                      name="favicon"
+                      accept="image/png,image/ico"
+                      [maxFileSize]="500000"
+                      chooseLabel="Enviar"
+                      [customUpload]="true"
+                      (uploadHandler)="onFaviconUpload($event)"
+                      [auto]="true"
+                    />
+                  </div>
+                  <p class="text-secondary/60 text-xs mt-2">PNG ou ICO, 32x32px</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Features -->
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Funcionalidades</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
+                  <div>
+                    <p class="text-primary">Modo Manutenção</p>
+                    <p class="text-secondary/60 text-xs">Site offline para visitantes</p>
+                  </div>
+                  <p-toggleButton 
+                    [(ngModel)]="settings.maintenanceMode"
+                    onLabel="Ativo"
+                    offLabel="Inativo"
+                  />
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
+                  <div>
+                    <p class="text-primary">Permitir Cadastro</p>
+                    <p class="text-secondary/60 text-xs">Novos usuários podem se registrar</p>
+                  </div>
+                  <p-toggleButton 
+                    [(ngModel)]="settings.allowRegistration"
+                    onLabel="Sim"
+                    offLabel="Não"
+                  />
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
+                  <div>
+                    <p class="text-primary">Permitir Depoimentos</p>
+                    <p class="text-secondary/60 text-xs">Clientes podem enviar depoimentos</p>
+                  </div>
+                  <p-toggleButton 
+                    [(ngModel)]="settings.allowTestimonials"
+                    onLabel="Sim"
+                    offLabel="Não"
+                  />
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
+                  <div>
+                    <p class="text-primary">Pagamento Online</p>
+                    <p class="text-secondary/60 text-xs">Aceitar pagamentos via Stripe</p>
+                  </div>
+                  <p-toggleButton 
+                    [(ngModel)]="settings.allowOnlinePayment"
+                    onLabel="Sim"
+                    offLabel="Não"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Contact Tab -->
+        <p-tabPanel header="Contato" leftIcon="pi pi-phone">
+          <div class="space-y-6 p-4">
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Informações de Contato</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Email *</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.email"
+                    type="email"
+                    class="w-full"
+                    placeholder="contato@izabelatarot.com.br"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Telefone *</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.phone"
+                    class="w-full"
+                    placeholder="(11) 99999-9999"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">WhatsApp</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.whatsapp"
+                    class="w-full"
+                    placeholder="5511999999999"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Endereço</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.address"
+                    class="w-full"
+                    placeholder="São Paulo, SP"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Redes Sociais</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">
+                    <i class="pi pi-instagram mr-1"></i> Instagram
+                  </label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.instagramUrl"
+                    class="w-full"
+                    placeholder="https://instagram.com/izabelatarot"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">
+                    <i class="pi pi-facebook mr-1"></i> Facebook
+                  </label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.facebookUrl"
+                    class="w-full"
+                    placeholder="https://facebook.com/izabelatarot"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">
+                    <i class="pi pi-youtube mr-1"></i> YouTube
+                  </label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.youtubeUrl"
+                    class="w-full"
+                    placeholder="https://youtube.com/@izabelatarot"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">
+                    TikTok
+                  </label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.tiktokUrl"
+                    class="w-full"
+                    placeholder="https://tiktok.com/@izabelatarot"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Business Tab -->
+        <p-tabPanel header="Horários" leftIcon="pi pi-clock">
+          <div class="space-y-6 p-4">
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Horário de Funcionamento</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Horário de Atendimento</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.businessHours"
+                    class="w-full"
+                    placeholder="09:00 - 18:00"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Dias de Funcionamento</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.workingDays"
+                    class="w-full"
+                    placeholder="Segunda a Sexta"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Antecedência para Agendamento</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.appointmentNotice"
+                    class="w-full"
+                    placeholder="24 horas"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Content Tab -->
+        <p-tabPanel header="Conteúdo" leftIcon="pi pi-file-edit">
+          <div class="space-y-6 p-4">
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Página Inicial</h3>
+              
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Título do Hero</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.homeHeroTitle"
+                    class="w-full"
+                    placeholder="Descubra seu Destino"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Subtítulo do Hero</label>
+                  <textarea 
+                    pInputTextarea 
+                    [(ngModel)]="settings.homeHeroSubtitle"
+                    [rows]="2"
+                    class="w-full"
+                    placeholder="Leituras de tarot cigano..."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Texto Sobre</h3>
+              <p-editor 
+                [(ngModel)]="settings.aboutText"
+                [style]="{'height':'200px'}"
+              />
+            </div>
+          </div>
+        </p-tabPanel>
+
+        <!-- Analytics Tab -->
+        <p-tabPanel header="Analytics" leftIcon="pi pi-chart-bar">
+          <div class="space-y-6 p-4">
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Rastreamento</h3>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Google Analytics ID</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.googleAnalyticsId"
+                    class="w-full"
+                    placeholder="G-XXXXXXXXXX"
+                  />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Facebook Pixel ID</label>
+                  <input 
+                    pInputText 
+                    [(ngModel)]="settings.facebookPixelId"
+                    class="w-full"
+                    placeholder="XXXXXXXXXXXXXXX"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Manutenção</h3>
+              <p class="text-secondary mb-4">
+                Limpe o cache do sistema para aplicar alterações imediatamente.
+              </p>
+              <button pButton class="btn-outline" (click)="clearCache()">
+                <i class="pi pi-refresh mr-2"></i>
+                Limpar Cache
+              </button>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+
+      <!-- Save Button (bottom) -->
+      <div class="mt-6 text-center">
+        <button 
+          pButton 
+          class="btn-primary px-8"
+          [loading]="saving()"
+          (click)="saveSettings()"
+        >
+          <i class="pi pi-save mr-2"></i>
+          Salvar Todas as Alterações
+        </button>
+      </div>
+    }
+  </div>
+</section>

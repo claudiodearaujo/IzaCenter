@@ -1,0 +1,230 @@
+<!-- apps/frontend/src/app/features/shop/cart/cart.component.html -->
+
+<section class="py-12 md:py-20">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="heading-1 text-primary mb-4">
+        <i class="pi pi-shopping-cart mr-3"></i>
+        Carrinho
+      </h1>
+      <p class="text-body text-secondary">
+        Revise seus itens antes de finalizar a compra
+      </p>
+    </div>
+
+    <!-- Empty Cart -->
+    @if (isEmpty) {
+      <div class="text-center py-16">
+        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
+          <i class="pi pi-shopping-cart text-4xl text-primary"></i>
+        </div>
+        <h2 class="heading-3 text-primary mb-4">Seu carrinho está vazio</h2>
+        <p class="text-secondary mb-8 max-w-md mx-auto">
+          Explore nossa loja e encontre a leitura perfeita para você.
+        </p>
+        <a routerLink="/loja" class="btn-primary inline-flex items-center gap-2">
+          <i class="pi pi-shopping-bag"></i>
+          Ver Produtos
+        </a>
+      </div>
+    }
+
+    <!-- Cart Content -->
+    @if (!isEmpty) {
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Cart Items -->
+        <div class="lg:col-span-2 space-y-6">
+          @for (item of items(); track item.productId) {
+            <div class="glass-card p-6">
+              <div class="flex gap-6">
+                <!-- Product Image -->
+                <div class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32">
+                  @if (item.coverImageUrl) {
+                    <img 
+                      [src]="item.coverImageUrl" 
+                      [alt]="item.productName"
+                      class="w-full h-full object-cover rounded-lg"
+                    />
+                  } @else {
+                    <div class="w-full h-full bg-gradient-mystical rounded-lg flex items-center justify-center">
+                      <i class="pi pi-star text-2xl text-white/50"></i>
+                    </div>
+                  }
+                </div>
+
+                <!-- Product Info -->
+                <div class="flex-1">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <a 
+                        [routerLink]="['/loja', item.productSlug]"
+                        class="heading-4 text-primary hover:text-primary-light transition-colors"
+                      >
+                        {{ item.productName }}
+                      </a>
+                      <span class="ml-2 text-sm text-secondary">
+                        ({{ getProductTypeLabel(item.productType) }})
+                      </span>
+                    </div>
+                    <button 
+                      class="text-secondary hover:text-red-500 transition-colors p-2"
+                      (click)="removeItem(item.productId)"
+                      title="Remover item"
+                    >
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  </div>
+
+                  <!-- Price -->
+                  <div class="flex items-baseline gap-2 mb-4">
+                    <span class="text-xl font-bold text-accent">
+                      {{ item.price | currencyBrl }}
+                    </span>
+                    @if (item.originalPrice) {
+                      <span class="text-sm text-secondary line-through">
+                        {{ item.originalPrice | currencyBrl }}
+                      </span>
+                    }
+                  </div>
+
+                  <!-- Quantity -->
+                  <div class="flex items-center gap-4 mb-4">
+                    <label class="text-secondary text-sm">Quantidade:</label>
+                    <div class="flex items-center gap-2">
+                      <button 
+                        class="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center justify-center"
+                        (click)="updateQuantity(item, item.quantity - 1)"
+                        [disabled]="item.quantity <= 1"
+                      >
+                        <i class="pi pi-minus text-sm"></i>
+                      </button>
+                      <span class="w-8 text-center text-primary font-medium">
+                        {{ item.quantity }}
+                      </span>
+                      <button 
+                        class="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center justify-center"
+                        (click)="updateQuantity(item, item.quantity + 1)"
+                      >
+                        <i class="pi pi-plus text-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Question Input -->
+                  <div>
+                    <label class="text-secondary text-sm block mb-2">
+                      Sua pergunta (opcional):
+                    </label>
+                    <textarea 
+                      pInputTextarea
+                      [rows]="2"
+                      [ngModel]="item.questions?.[0] || ''"
+                      (ngModelChange)="updateQuestions(item, $event)"
+                      placeholder="Descreva sua situação ou pergunta..."
+                      class="w-full text-sm"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Clear Cart -->
+          <div class="text-right">
+            <button 
+              class="text-secondary hover:text-red-500 transition-colors text-sm"
+              (click)="clearCart()"
+            >
+              <i class="pi pi-trash mr-2"></i>
+              Limpar carrinho
+            </button>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+          <div class="glass-card p-6 sticky top-24">
+            <h3 class="heading-3 text-primary mb-6">Resumo do Pedido</h3>
+
+            <!-- Coupon -->
+            <div class="mb-6">
+              <label class="text-secondary text-sm block mb-2">Cupom de desconto:</label>
+              <div class="flex gap-2">
+                <input 
+                  type="text" 
+                  pInputText 
+                  [(ngModel)]="couponCode"
+                  placeholder="Digite o cupom"
+                  class="flex-1"
+                />
+                <button 
+                  pButton
+                  class="btn-secondary"
+                  [loading]="applyingCoupon()"
+                  (click)="applyCoupon()"
+                  [disabled]="!couponCode()"
+                >
+                  Aplicar
+                </button>
+              </div>
+            </div>
+
+            <!-- Totals -->
+            <div class="space-y-4 py-6 border-y border-primary/10">
+              <div class="flex justify-between">
+                <span class="text-secondary">Subtotal:</span>
+                <span class="text-primary">{{ subtotal() | currencyBrl }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-secondary">Desconto:</span>
+                <span class="text-accent">R$ 0,00</span>
+              </div>
+            </div>
+
+            <div class="flex justify-between py-6">
+              <span class="text-primary font-bold text-lg">Total:</span>
+              <span class="text-accent font-bold text-2xl">{{ total() | currencyBrl }}</span>
+            </div>
+
+            <!-- Checkout Button -->
+            <button 
+              pButton 
+              class="btn-primary w-full mb-4"
+              (click)="proceedToCheckout()"
+            >
+              <i class="pi pi-credit-card mr-2"></i>
+              Finalizar Compra
+            </button>
+
+            <a 
+              routerLink="/loja" 
+              class="btn-outline w-full text-center flex items-center justify-center gap-2"
+            >
+              <i class="pi pi-arrow-left"></i>
+              Continuar Comprando
+            </a>
+
+            <!-- Trust Badges -->
+            <div class="mt-6 pt-6 border-t border-primary/10">
+              <div class="flex flex-wrap justify-center gap-4 text-secondary text-sm">
+                <div class="flex items-center gap-1">
+                  <i class="pi pi-lock text-accent"></i>
+                  <span>Seguro</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="pi pi-shield text-accent"></i>
+                  <span>Privado</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <i class="pi pi-check-circle text-accent"></i>
+                  <span>Garantido</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>

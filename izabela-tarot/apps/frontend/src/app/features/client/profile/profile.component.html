@@ -1,0 +1,243 @@
+<!-- apps/frontend/src/app/features/client/profile/profile.component.html -->
+
+<section class="py-8">
+  <div class="container-custom max-w-3xl">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="heading-1 text-primary mb-4">
+        <i class="pi pi-user mr-3"></i>
+        Meu Perfil
+      </h1>
+      <p class="text-secondary">
+        Gerencie suas informações pessoais e configurações de conta
+      </p>
+    </div>
+
+    <!-- Avatar Section -->
+    <div class="glass-card p-8 mb-8 text-center">
+      <div class="relative inline-block mb-6">
+        @if (user()?.avatarUrl) {
+          <img 
+            [src]="user()?.avatarUrl" 
+            alt="Avatar"
+            class="w-32 h-32 rounded-full object-cover border-4 border-primary/30"
+          />
+        } @else {
+          <div class="w-32 h-32 rounded-full bg-gradient-mystical flex items-center justify-center text-4xl text-white">
+            {{ user()?.fullName?.charAt(0).toUpperCase() || 'U' }}
+          </div>
+        }
+      </div>
+
+      <h2 class="heading-2 text-primary mb-2">{{ user()?.fullName }}</h2>
+      <p class="text-secondary mb-6">{{ user()?.email }}</p>
+
+      <p-fileUpload 
+        mode="basic" 
+        name="avatar"
+        accept="image/*"
+        [maxFileSize]="5000000"
+        [auto]="true"
+        chooseLabel="Alterar foto"
+        [customUpload]="true"
+        (uploadHandler)="onAvatarUpload($event)"
+        [disabled]="uploadingAvatar()"
+        styleClass="mx-auto"
+      />
+      <p class="text-secondary text-xs mt-2">JPG, PNG ou GIF. Máximo 5MB.</p>
+    </div>
+
+    <!-- Profile Form -->
+    <div class="glass-card p-8 mb-8">
+      <h3 class="heading-3 text-primary mb-6 flex items-center gap-2">
+        <i class="pi pi-id-card"></i>
+        Informações Pessoais
+      </h3>
+
+      <div class="space-y-6">
+        <!-- Full Name -->
+        <div>
+          <label for="fullName" class="block text-secondary text-sm mb-2">
+            Nome Completo *
+          </label>
+          <input 
+            pInputText 
+            id="fullName"
+            [(ngModel)]="profileForm.fullName"
+            class="w-full"
+            placeholder="Seu nome completo"
+          />
+        </div>
+
+        <!-- Email (read-only) -->
+        <div>
+          <label for="email" class="block text-secondary text-sm mb-2">
+            Email
+          </label>
+          <input 
+            pInputText 
+            id="email"
+            [value]="user()?.email"
+            class="w-full"
+            [disabled]="true"
+          />
+          <p class="text-secondary/60 text-xs mt-1">
+            O email não pode ser alterado
+          </p>
+        </div>
+
+        <!-- Phone -->
+        <div>
+          <label for="phone" class="block text-secondary text-sm mb-2">
+            Telefone
+          </label>
+          <input 
+            pInputText 
+            id="phone"
+            [(ngModel)]="profileForm.phone"
+            class="w-full"
+            placeholder="(00) 00000-0000"
+          />
+        </div>
+
+        <!-- Birth Date -->
+        <div>
+          <label for="birthDate" class="block text-secondary text-sm mb-2">
+            Data de Nascimento
+          </label>
+          <input 
+            pInputText 
+            id="birthDate"
+            type="date"
+            [(ngModel)]="profileForm.birthDate"
+            class="w-full"
+          />
+          <p class="text-secondary/60 text-xs mt-1">
+            Sua data de nascimento ajuda em leituras personalizadas
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <button 
+          pButton 
+          class="btn-primary"
+          [loading]="savingProfile()"
+          (click)="saveProfile()"
+        >
+          <i class="pi pi-check mr-2"></i>
+          Salvar Alterações
+        </button>
+      </div>
+    </div>
+
+    <!-- Password Form -->
+    <div class="glass-card p-8 mb-8">
+      <h3 class="heading-3 text-primary mb-6 flex items-center gap-2">
+        <i class="pi pi-lock"></i>
+        Alterar Senha
+      </h3>
+
+      <div class="space-y-6">
+        <!-- Current Password -->
+        <div>
+          <label for="currentPassword" class="block text-secondary text-sm mb-2">
+            Senha Atual
+          </label>
+          <p-password 
+            id="currentPassword"
+            [(ngModel)]="passwordForm.currentPassword"
+            [feedback]="false"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            placeholder="Digite sua senha atual"
+          />
+        </div>
+
+        <p-divider />
+
+        <!-- New Password -->
+        <div>
+          <label for="newPassword" class="block text-secondary text-sm mb-2">
+            Nova Senha
+          </label>
+          <p-password 
+            id="newPassword"
+            [(ngModel)]="passwordForm.newPassword"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            placeholder="Digite a nova senha"
+            promptLabel="Escolha uma senha"
+            weakLabel="Fraca"
+            mediumLabel="Média"
+            strongLabel="Forte"
+          />
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <label for="confirmPassword" class="block text-secondary text-sm mb-2">
+            Confirmar Nova Senha
+          </label>
+          <p-password 
+            id="confirmPassword"
+            [(ngModel)]="passwordForm.confirmPassword"
+            [feedback]="false"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            placeholder="Confirme a nova senha"
+          />
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <button 
+          pButton 
+          class="btn-outline"
+          [loading]="savingPassword()"
+          (click)="changePassword()"
+        >
+          <i class="pi pi-key mr-2"></i>
+          Alterar Senha
+        </button>
+      </div>
+    </div>
+
+    <!-- Account Info -->
+    <div class="glass-card p-8">
+      <h3 class="heading-3 text-primary mb-6 flex items-center gap-2">
+        <i class="pi pi-info-circle"></i>
+        Informações da Conta
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <p class="text-secondary text-sm">Membro desde:</p>
+          <p class="text-primary font-medium">{{ formatDate(user()?.createdAt) }}</p>
+        </div>
+        <div>
+          <p class="text-secondary text-sm">Tipo de conta:</p>
+          <p class="text-primary font-medium">
+            {{ user()?.role === 'ADMIN' ? 'Administrador' : 'Cliente' }}
+          </p>
+        </div>
+      </div>
+
+      <p-divider />
+
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-primary font-medium">Precisa de ajuda?</p>
+          <p class="text-secondary text-sm">Entre em contato conosco</p>
+        </div>
+        <a routerLink="/contato" class="btn-outline">
+          <i class="pi pi-envelope mr-2"></i>
+          Contato
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,63 @@
+/* apps/frontend/src/app/features/client/orders/order-list/order-list.component.css */
+
+:host {
+  display: block;
+}
+
+/* Table styling */
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+}
+
+/* Status badges */
+.rounded-full {
+  border-radius: 9999px;
+}
+
+/* Row hover */
+.hover\:bg-dark\/30:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Border colors */
+.border-primary\/10 {
+  border-color: rgba(201, 167, 235, 0.1);
+}
+
+.border-primary\/5 {
+  border-color: rgba(201, 167, 235, 0.05);
+}
+
+/* Gradient background */
+.bg-gradient-mystical {
+  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+}
+
+/* Mobile card hover */
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Paginator styling */
+:host ::ng-deep .p-paginator {
+  background: transparent;
+  border: none;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+  color: var(--primary);
+  border-radius: 0.5rem;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: var(--primary);
+  color: var(--dark);
+}

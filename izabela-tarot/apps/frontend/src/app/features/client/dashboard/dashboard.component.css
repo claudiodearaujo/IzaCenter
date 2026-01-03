@@ -1,0 +1,58 @@
+/* apps/frontend/src/app/features/client/dashboard/dashboard.component.css */
+
+:host {
+  display: block;
+}
+
+/* Stats cards */
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+/* Gradient backgrounds */
+.bg-gradient-mystical {
+  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+}
+
+.bg-gradient-gold {
+  background: linear-gradient(135deg, #f59e0b 0%, #fcd34d 100%);
+}
+
+/* List items */
+.bg-dark\/30 {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.hover\:bg-dark\/50:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Status badges */
+.rounded-full {
+  border-radius: 9999px;
+}
+
+/* Quick action buttons */
+.btn-outline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* Skeleton adjustments */
+:host ::ng-deep .p-skeleton {
+  background-color: rgba(201, 167, 235, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

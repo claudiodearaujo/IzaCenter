@@ -1,0 +1,196 @@
+<!-- apps/frontend/src/app/features/admin/categories/category-list/category-list.component.html -->
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">
+          <i class="pi pi-folder mr-3"></i>
+          Categorias
+        </h1>
+        <p class="text-secondary">Gerencie as categorias de produtos</p>
+      </div>
+      <button pButton class="btn-primary" (click)="openDialog()">
+        <i class="pi pi-plus mr-2"></i>
+        Nova Categoria
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card overflow-hidden">
+      <p-table 
+        [value]="categories()" 
+        [loading]="loading()"
+        [rowHover]="true"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 80px">Ordem</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th style="width: 100px">Produtos</th>
+            <th style="width: 100px">Status</th>
+            <th style="width: 180px">Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-category let-rowIndex="rowIndex">
+          <tr>
+            <td class="text-center">
+              <div class="flex flex-col gap-1">
+                <button 
+                  pButton 
+                  class="p-button-text p-button-sm"
+                  [disabled]="rowIndex === 0"
+                  (click)="moveUp(category)"
+                >
+                  <i class="pi pi-chevron-up"></i>
+                </button>
+                <span class="text-secondary font-medium">{{ category.order + 1 }}</span>
+                <button 
+                  pButton 
+                  class="p-button-text p-button-sm"
+                  [disabled]="rowIndex === categories().length - 1"
+                  (click)="moveDown(category)"
+                >
+                  <i class="pi pi-chevron-down"></i>
+                </button>
+              </div>
+            </td>
+            <td>
+              <span class="text-primary font-medium">{{ category.name }}</span>
+              <p class="text-secondary/60 text-xs">{{ category.slug }}</p>
+            </td>
+            <td class="text-secondary">
+              {{ category.description || '-' }}
+            </td>
+            <td class="text-center">
+              <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                {{ category._count?.products || 0 }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button 
+                pButton 
+                [class]="category.isActive ? 'p-button-success p-button-sm' : 'p-button-secondary p-button-sm'"
+                (click)="toggleActive(category)"
+              >
+                {{ category.isActive ? 'Ativa' : 'Inativa' }}
+              </button>
+            </td>
+            <td>
+              <div class="flex justify-center gap-2">
+                <button 
+                  pButton 
+                  class="p-button-outlined p-button-sm"
+                  (click)="openDialog(category)"
+                >
+                  <i class="pi pi-pencil"></i>
+                </button>
+                <button 
+                  pButton 
+                  class="p-button-outlined p-button-danger p-button-sm"
+                  (click)="confirmDelete(category)"
+                >
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center py-8">
+              <i class="pi pi-folder text-4xl text-secondary/30 mb-4"></i>
+              <p class="text-secondary">Nenhuma categoria cadastrada</p>
+              <button pButton class="btn-outline mt-4" (click)="openDialog()">
+                <i class="pi pi-plus mr-2"></i>
+                Criar primeira categoria
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</section>
+
+<!-- Edit/Create Dialog -->
+<p-dialog 
+  [(visible)]="dialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{width: '90vw', maxWidth: '500px'}"
+  [header]="editingCategory() ? 'Editar Categoria' : 'Nova Categoria'"
+  (onHide)="closeDialog()"
+>
+  <div class="space-y-4 p-2">
+    <div>
+      <label class="block text-secondary text-sm mb-1">Nome *</label>
+      <input 
+        pInputText 
+        [(ngModel)]="form.name"
+        class="w-full"
+        placeholder="Ex: Leituras Especiais"
+      />
+    </div>
+
+    <div>
+      <label class="block text-secondary text-sm mb-1">Descrição</label>
+      <textarea 
+        pInputTextarea 
+        [(ngModel)]="form.description"
+        [rows]="3"
+        class="w-full"
+        placeholder="Uma breve descrição da categoria..."
+      ></textarea>
+    </div>
+
+    <div>
+      <label class="block text-secondary text-sm mb-1">Ordem</label>
+      <input 
+        pInputText 
+        type="number"
+        [(ngModel)]="form.displayOrder"
+        class="w-full"
+        min="0"
+      />
+    </div>
+
+    <div class="flex items-center gap-3">
+      <p-toggleButton 
+        [(ngModel)]="form.isActive"
+        onLabel="Ativa"
+        offLabel="Inativa"
+        onIcon="pi pi-check"
+        offIcon="pi pi-times"
+      />
+      <span class="text-secondary text-sm">
+        {{ form.isActive ? 'Categoria visível no site' : 'Categoria oculta' }}
+      </span>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 pt-4">
+      <button pButton class="btn-outline" (click)="closeDialog()">
+        Cancelar
+      </button>
+      <button 
+        pButton 
+        class="btn-primary"
+        [loading]="saving()"
+        (click)="saveCategory()"
+      >
+        <i class="pi pi-save mr-2"></i>
+        {{ editingCategory() ? 'Atualizar' : 'Criar' }}
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog 
+  styleClass="custom-confirm-dialog"
+  [style]="{width: '400px'}"
+/>

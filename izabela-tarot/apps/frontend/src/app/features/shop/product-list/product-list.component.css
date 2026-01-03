@@ -1,0 +1,65 @@
+/* apps/frontend/src/app/features/shop/product-list/product-list.component.css */
+
+:host {
+  display: block;
+}
+
+/* Filter card styling */
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+/* Search input icon */
+.p-input-icon-left > i {
+  color: var(--primary);
+}
+
+/* Dropdown styling */
+:host ::ng-deep .p-dropdown {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(201, 167, 235, 0.2);
+}
+
+:host ::ng-deep .p-dropdown:hover {
+  border-color: var(--primary);
+}
+
+/* Product grid animation */
+.grid > * {
+  animation: fadeInUp 0.5s ease forwards;
+  opacity: 0;
+}
+
+.grid > *:nth-child(1) { animation-delay: 0.1s; }
+.grid > *:nth-child(2) { animation-delay: 0.2s; }
+.grid > *:nth-child(3) { animation-delay: 0.3s; }
+.grid > *:nth-child(4) { animation-delay: 0.4s; }
+.grid > *:nth-child(5) { animation-delay: 0.5s; }
+.grid > *:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Benefits section icons */
+.bg-gradient-primary {
+  box-shadow: 0 8px 32px rgba(201, 167, 235, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .flex-wrap {
+    flex-direction: column;
+  }
+  
+  .flex-wrap > * {
+    width: 100%;
+  }
+}

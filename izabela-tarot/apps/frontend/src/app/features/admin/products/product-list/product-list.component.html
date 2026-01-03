@@ -1,0 +1,169 @@
+<!-- apps/frontend/src/app/features/admin/products/product-list/product-list.component.html -->
+
+<p-confirmDialog />
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">
+          <i class="pi pi-box mr-3"></i>
+          Produtos
+        </h1>
+        <p class="text-secondary">Gerencie os produtos e consultas</p>
+      </div>
+      <div class="flex gap-4">
+        <a routerLink="/admin/categorias" class="btn-outline">
+          <i class="pi pi-folder mr-2"></i>
+          Categorias
+        </a>
+        <a routerLink="/admin/produtos/novo" class="btn-primary">
+          <i class="pi pi-plus mr-2"></i>
+          Novo Produto
+        </a>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card p-4 mb-6">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-search"></i>
+            <input 
+              pInputText 
+              [(ngModel)]="searchTerm"
+              placeholder="Buscar produtos..."
+              class="w-full"
+              (keyup.enter)="onSearch()"
+            />
+          </span>
+        </div>
+        <div class="w-full md:w-48">
+          <p-select 
+            [options]="categories()" 
+            [(ngModel)]="selectedCategory"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Categoria"
+            (onChange)="onSearch()"
+            styleClass="w-full"
+          />
+        </div>
+        <button pButton class="btn-primary" (click)="onSearch()">
+          <i class="pi pi-search mr-2"></i>
+          Buscar
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card overflow-hidden">
+      <p-table 
+        [value]="products()" 
+        [loading]="loading()"
+        [paginator]="true"
+        [rows]="10"
+        [totalRecords]="totalRecords()"
+        [lazy]="true"
+        (onLazyLoad)="loadProducts($event)"
+        [rowHover]="true"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Produto</th>
+            <th>Tipo</th>
+            <th>Categoria</th>
+            <th>Preço</th>
+            <th>Vendas</th>
+            <th>Status</th>
+            <th>Destaque</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>
+              <div class="flex items-center gap-3">
+                @if (product.coverImageUrl) {
+                  <img 
+                    [src]="product.coverImageUrl" 
+                    [alt]="product.name"
+                    class="w-12 h-12 rounded object-cover"
+                  />
+                } @else {
+                  <div class="w-12 h-12 rounded bg-gradient-mystical flex items-center justify-center">
+                    <i class="pi pi-star text-white text-sm"></i>
+                  </div>
+                }
+                <span class="text-primary font-medium">{{ product.name }}</span>
+              </div>
+            </td>
+            <td>
+              <p-tag 
+                [value]="getTypeLabel(product.type)" 
+                [severity]="getTypeSeverity(product.type)"
+              />
+            </td>
+            <td class="text-secondary">{{ product.category?.name || '-' }}</td>
+            <td class="text-accent font-bold">{{ product.price | currencyBrl }}</td>
+            <td class="text-secondary">{{ product._count?.orderItems || 0 }}</td>
+            <td>
+              <button 
+                pButton 
+                [class]="product.isActive ? 'p-button-success p-button-text' : 'p-button-secondary p-button-text'"
+                (click)="toggleActive(product)"
+                [pTooltip]="product.isActive ? 'Ativo - Clique para desativar' : 'Inativo - Clique para ativar'"
+              >
+                <i class="pi" [class]="product.isActive ? 'pi-check-circle' : 'pi-times-circle'"></i>
+              </button>
+            </td>
+            <td>
+              <button 
+                pButton 
+                [class]="product.isFeatured ? 'p-button-warning p-button-text' : 'p-button-secondary p-button-text'"
+                (click)="toggleFeatured(product)"
+                [pTooltip]="product.isFeatured ? 'Em destaque - Clique para remover' : 'Adicionar aos destaques'"
+              >
+                <i class="pi" [class]="product.isFeatured ? 'pi-star-fill' : 'pi-star'"></i>
+              </button>
+            </td>
+            <td>
+              <div class="flex items-center gap-2">
+                <a 
+                  [routerLink]="['/admin/produtos', product.id]"
+                  class="p-button p-button-text p-button-info"
+                  pTooltip="Editar"
+                >
+                  <i class="pi pi-pencil"></i>
+                </a>
+                <button 
+                  pButton 
+                  class="p-button-text p-button-danger"
+                  (click)="deleteProduct(product)"
+                  pTooltip="Excluir"
+                >
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" class="text-center py-8">
+              <i class="pi pi-box text-4xl text-secondary/30 mb-4"></i>
+              <p class="text-secondary">Nenhum produto encontrado</p>
+              <a routerLink="/admin/produtos/novo" class="btn-primary inline-block mt-4">
+                <i class="pi pi-plus mr-2"></i>
+                Criar Produto
+              </a>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</section>

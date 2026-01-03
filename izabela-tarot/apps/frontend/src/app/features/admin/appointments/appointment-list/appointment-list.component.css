@@ -1,0 +1,267 @@
+/* apps/frontend/src/app/features/admin/appointments/appointment-list/appointment-list.component.css */
+
+:host {
+  display: block;
+}
+
+/* Table styling */
+:host ::ng-deep .p-datatable {
+  background: transparent;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--secondary);
+  border: none;
+  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+  padding: 1rem;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
+  background: transparent;
+  color: var(--primary);
+  transition: background 0.2s;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background: rgba(201, 167, 235, 0.05);
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  border: none;
+  border-bottom: 1px solid rgba(201, 167, 235, 0.05);
+  padding: 1rem;
+}
+
+:host ::ng-deep .p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Highlight today rows */
+.bg-yellow-500\/5 {
+  background: rgba(245, 158, 11, 0.05) !important;
+}
+
+/* Paginator styling */
+:host ::ng-deep .p-paginator {
+  background: transparent;
+  border: none;
+  padding: 1rem;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+  color: var(--primary);
+}
+
+:host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: var(--primary);
+  color: var(--dark);
+}
+
+/* Input styling */
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-inputtextarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(201, 167, 235, 0.2);
+  color: var(--primary);
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus,
+:host ::ng-deep .p-inputtextarea:enabled:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(201, 167, 235, 0.2);
+}
+
+/* Input icon */
+:host ::ng-deep .p-input-icon-left > i {
+  color: var(--secondary);
+}
+
+/* Dropdown styling */
+:host ::ng-deep .p-dropdown {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(201, 167, 235, 0.2);
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-label {
+  color: var(--primary);
+}
+
+/* Stats cards colors */
+.bg-blue-500\/20 {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.bg-yellow-500\/20 {
+  background: rgba(245, 158, 11, 0.2);
+}
+
+.bg-green-500\/20 {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.bg-red-500\/20 {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* Small buttons */
+:host ::ng-deep .p-button-sm {
+  padding: 0.4rem 0.6rem;
+}
+
+/* Button variants */
+:host ::ng-deep .p-button-success {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #22c55e;
+}
+
+:host ::ng-deep .p-button-success:enabled:hover {
+  background: rgba(34, 197, 94, 0.3);
+}
+
+:host ::ng-deep .p-button-warning {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.5);
+  color: #f59e0b;
+}
+
+:host ::ng-deep .p-button-warning:enabled:hover {
+  background: rgba(245, 158, 11, 0.3);
+}
+
+:host ::ng-deep .p-button-danger {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+}
+
+:host ::ng-deep .p-button-danger:enabled:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+:host ::ng-deep .p-button-secondary {
+  background: rgba(156, 163, 175, 0.2);
+  border-color: rgba(156, 163, 175, 0.5);
+  color: #9ca3af;
+}
+
+:host ::ng-deep .p-button-secondary:enabled:hover {
+  background: rgba(156, 163, 175, 0.3);
+}
+
+:host ::ng-deep .p-button-outlined {
+  background: transparent;
+  border: 1px solid rgba(201, 167, 235, 0.3);
+  color: var(--primary);
+}
+
+:host ::ng-deep .p-button-outlined:enabled:hover {
+  background: rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-button-text {
+  background: transparent;
+  border: none;
+  color: var(--secondary);
+}
+
+:host ::ng-deep .p-button-text:enabled:hover {
+  background: rgba(201, 167, 235, 0.1);
+  color: var(--primary);
+}
+
+/* Dialog styling */
+:host ::ng-deep .p-dialog {
+  background: linear-gradient(145deg, 
+    rgba(26, 11, 46, 0.98) 0%, 
+    rgba(13, 5, 24, 0.98) 100%);
+  border: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header {
+  background: transparent;
+  color: var(--primary);
+  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  background: transparent;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-footer {
+  background: transparent;
+  border-top: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+/* Calendar styling */
+:host ::ng-deep .p-calendar {
+  width: 100%;
+}
+
+:host ::ng-deep .p-calendar .p-inputtext {
+  width: 100%;
+}
+
+:host ::ng-deep .p-datepicker {
+  background: linear-gradient(145deg, 
+    rgba(26, 11, 46, 0.98) 0%, 
+    rgba(13, 5, 24, 0.98) 100%);
+  border: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-datepicker .p-datepicker-header {
+  background: transparent;
+  color: var(--primary);
+  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-datepicker table td > span {
+  color: var(--primary);
+}
+
+:host ::ng-deep .p-datepicker table td.p-datepicker-today > span {
+  background: rgba(201, 167, 235, 0.2);
+}
+
+:host ::ng-deep .p-datepicker table td > span.p-highlight {
+  background: var(--primary);
+  color: var(--dark);
+}
+
+/* Confirm dialog */
+:host ::ng-deep .custom-confirm-dialog {
+  background: linear-gradient(145deg, 
+    rgba(26, 11, 46, 0.98) 0%, 
+    rgba(13, 5, 24, 0.98) 100%);
+  border: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .custom-confirm-dialog .p-dialog-header {
+  background: transparent;
+  color: var(--primary);
+}
+
+:host ::ng-deep .custom-confirm-dialog .p-dialog-content {
+  background: transparent;
+  color: var(--secondary);
+}
+
+:host ::ng-deep .custom-confirm-dialog .p-dialog-footer {
+  background: transparent;
+}
+
+/* Dark background */
+.bg-dark\/30 {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Today badge */
+.bg-yellow-500\/20 {
+  background: rgba(245, 158, 11, 0.2);
+}
+
+/* Space utilities */
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}

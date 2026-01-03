@@ -1,0 +1,83 @@
+/* apps/frontend/src/app/features/shop/cart/cart.component.css */
+
+:host {
+  display: block;
+}
+
+/* Glass card hover effect */
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(201, 167, 235, 0.3);
+}
+
+/* Quantity buttons */
+button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Textarea styling */
+:host ::ng-deep textarea.p-inputtextarea {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(201, 167, 235, 0.2);
+  color: var(--text-primary);
+  resize: none;
+}
+
+:host ::ng-deep textarea.p-inputtextarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(201, 167, 235, 0.2);
+}
+
+/* Input styling */
+:host ::ng-deep input.p-inputtext {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(201, 167, 235, 0.2);
+  color: var(--text-primary);
+}
+
+:host ::ng-deep input.p-inputtext:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(201, 167, 235, 0.2);
+}
+
+/* Sticky summary */
+.sticky {
+  position: sticky;
+}
+
+.top-24 {
+  top: 6rem;
+}
+
+/* Border styling */
+.border-primary\/10 {
+  border-color: rgba(201, 167, 235, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .glass-card.sticky {
+    position: relative;
+    top: 0;
+  }
+}
+
+/* Item animation */
+.glass-card {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,92 @@
+/* apps/frontend/src/app/features/client/appointments/appointment-list/appointment-list.component.css */
+
+:host {
+  display: block;
+}
+
+/* Gradient backgrounds */
+.bg-gradient-mystical {
+  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+}
+
+/* Dark background */
+.bg-dark\/30 {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.bg-dark\/50 {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Status badges */
+.rounded-full {
+  border-radius: 9999px;
+}
+
+/* Opacity */
+.opacity-80 {
+  opacity: 0.8;
+}
+
+/* TabView styling */
+:host ::ng-deep .p-tabview .p-tabview-nav {
+  background: transparent;
+  border: none;
+}
+
+:host ::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  background: transparent;
+  border: none;
+  color: var(--secondary);
+  padding: 1rem 1.5rem;
+}
+
+:host ::ng-deep .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+}
+
+:host ::ng-deep .p-tabview .p-tabview-panels {
+  background: transparent;
+  padding: 1.5rem 0;
+}
+
+/* Dialog styling */
+:host ::ng-deep .p-dialog {
+  background: linear-gradient(145deg, 
+    rgba(26, 11, 46, 0.98) 0%, 
+    rgba(13, 5, 24, 0.98) 100%);
+  border: 1px solid rgba(201, 167, 235, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header {
+  background: transparent;
+  color: var(--primary);
+  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  background: transparent;
+  color: var(--secondary);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-footer {
+  background: transparent;
+  border-top: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+/* Card hover */
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+/* Skeleton styling */
+:host ::ng-deep .p-skeleton {
+  background-color: rgba(201, 167, 235, 0.1);
+}
+
+/* Info section */
+.bg-primary\/20 {
+  background: rgba(201, 167, 235, 0.2);
+}

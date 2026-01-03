@@ -1,0 +1,137 @@
+<!-- apps/frontend/src/app/features/admin/users/user-list/user-list.component.html -->
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">
+          <i class="pi pi-users mr-3"></i>
+          Usuários
+        </h1>
+        <p class="text-secondary">Gerencie os usuários do sistema</p>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card p-4 mb-6">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-search"></i>
+            <input 
+              pInputText 
+              [(ngModel)]="searchTerm"
+              placeholder="Buscar por nome ou email..."
+              class="w-full"
+              (keyup.enter)="onSearch()"
+            />
+          </span>
+        </div>
+        <div class="w-full md:w-48">
+          <p-select 
+            [options]="roleOptions" 
+            [(ngModel)]="selectedRole"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Filtrar por tipo"
+            (onChange)="onRoleChange()"
+            styleClass="w-full"
+          />
+        </div>
+        <button pButton class="btn-primary" (click)="onSearch()">
+          <i class="pi pi-search mr-2"></i>
+          Buscar
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card overflow-hidden">
+      <p-table 
+        [value]="users()" 
+        [loading]="loading()"
+        [paginator]="true"
+        [rows]="10"
+        [totalRecords]="totalRecords()"
+        [lazy]="true"
+        (onLazyLoad)="loadUsers($event)"
+        [rowHover]="true"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Usuário</th>
+            <th>Email</th>
+            <th>Tipo</th>
+            <th>Pedidos</th>
+            <th>Leituras</th>
+            <th>Cadastro</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+          <tr>
+            <td>
+              <div class="flex items-center gap-3">
+                @if (user.avatarUrl) {
+                  <img 
+                    [src]="user.avatarUrl" 
+                    [alt]="user.fullName"
+                    class="w-10 h-10 rounded-full object-cover"
+                  />
+                } @else {
+                  <div class="w-10 h-10 rounded-full bg-gradient-mystical flex items-center justify-center text-white text-sm">
+                    {{ user.fullName?.charAt(0).toUpperCase() || 'U' }}
+                  </div>
+                }
+                <span class="text-primary font-medium">{{ user.fullName }}</span>
+              </div>
+            </td>
+            <td class="text-secondary">{{ user.email }}</td>
+            <td>
+              <p-tag 
+                [value]="getRoleLabel(user.role)" 
+                [severity]="getRoleSeverity(user.role)"
+              />
+            </td>
+            <td class="text-secondary">{{ user._count?.orders || 0 }}</td>
+            <td class="text-secondary">{{ user._count?.readings || 0 }}</td>
+            <td class="text-secondary">{{ formatDate(user.createdAt) }}</td>
+            <td>
+              @if (user.isActive) {
+                <span class="inline-flex items-center gap-1 text-green-400 text-sm">
+                  <i class="pi pi-check-circle"></i>
+                  Ativo
+                </span>
+              } @else {
+                <span class="inline-flex items-center gap-1 text-red-400 text-sm">
+                  <i class="pi pi-times-circle"></i>
+                  Inativo
+                </span>
+              }
+            </td>
+            <td>
+              <a 
+                [routerLink]="['/admin/usuarios', user.id]"
+                class="text-accent hover:text-accent-light transition-colors"
+              >
+                <i class="pi pi-eye mr-1"></i>
+                Ver
+              </a>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" class="text-center py-8">
+              <i class="pi pi-users text-4xl text-secondary/30 mb-4"></i>
+              <p class="text-secondary">Nenhum usuário encontrado</p>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</section>

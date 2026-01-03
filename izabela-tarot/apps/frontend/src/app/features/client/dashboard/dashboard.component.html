@@ -1,0 +1,222 @@
+<!-- apps/frontend/src/app/features/client/dashboard/dashboard.component.html -->
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Welcome Header -->
+    <div class="mb-8">
+      <h1 class="heading-1 text-primary mb-2">
+        Olá, {{ user()?.fullName?.split(' ')[0] || 'Cliente' }}! ✨
+      </h1>
+      <p class="text-secondary">
+        Bem-vinda ao seu espaço de conexão com o místico
+      </p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <!-- Total Orders -->
+      <div class="glass-card p-6 text-center hover:scale-105 transition-transform">
+        <div class="w-16 h-16 bg-gradient-mystical rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="pi pi-shopping-bag text-2xl text-white"></i>
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mx-auto mb-2" />
+          <p-skeleton height="1rem" width="80%" styleClass="mx-auto" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalOrders || 0 }}</p>
+          <p class="text-secondary text-sm">Pedidos realizados</p>
+        }
+      </div>
+
+      <!-- Pending Readings -->
+      <div class="glass-card p-6 text-center hover:scale-105 transition-transform">
+        <div class="w-16 h-16 bg-gradient-gold rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="pi pi-clock text-2xl text-white"></i>
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mx-auto mb-2" />
+          <p-skeleton height="1rem" width="80%" styleClass="mx-auto" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.pendingReadings || 0 }}</p>
+          <p class="text-secondary text-sm">Leituras pendentes</p>
+        }
+      </div>
+
+      <!-- Completed Readings -->
+      <div class="glass-card p-6 text-center hover:scale-105 transition-transform">
+        <div class="w-16 h-16 bg-gradient-to-br from-green-600 to-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="pi pi-check-circle text-2xl text-white"></i>
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mx-auto mb-2" />
+          <p-skeleton height="1rem" width="80%" styleClass="mx-auto" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.completedReadings || 0 }}</p>
+          <p class="text-secondary text-sm">Leituras concluídas</p>
+        }
+      </div>
+
+      <!-- Upcoming Appointments -->
+      <div class="glass-card p-6 text-center hover:scale-105 transition-transform">
+        <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="pi pi-calendar text-2xl text-white"></i>
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mx-auto mb-2" />
+          <p-skeleton height="1rem" width="80%" styleClass="mx-auto" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.upcomingAppointments || 0 }}</p>
+          <p class="text-secondary text-sm">Agendamentos</p>
+        }
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="glass-card p-6 mb-12">
+      <h2 class="heading-3 text-primary mb-6">Ações Rápidas</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a routerLink="/loja" class="btn-outline text-center py-4">
+          <i class="pi pi-shopping-cart block mb-2 text-xl"></i>
+          Nova Consulta
+        </a>
+        <a routerLink="/cliente/leituras" class="btn-outline text-center py-4">
+          <i class="pi pi-book block mb-2 text-xl"></i>
+          Minhas Leituras
+        </a>
+        <a routerLink="/cliente/agendamentos" class="btn-outline text-center py-4">
+          <i class="pi pi-calendar block mb-2 text-xl"></i>
+          Agendamentos
+        </a>
+        <a routerLink="/cliente/perfil" class="btn-outline text-center py-4">
+          <i class="pi pi-user block mb-2 text-xl"></i>
+          Meu Perfil
+        </a>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Recent Orders -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="heading-3 text-primary">
+            <i class="pi pi-shopping-bag mr-2"></i>
+            Pedidos Recentes
+          </h2>
+          <a routerLink="/cliente/pedidos" class="text-accent hover:text-accent-light transition-colors text-sm">
+            Ver todos <i class="pi pi-arrow-right ml-1"></i>
+          </a>
+        </div>
+
+        @if (loading()) {
+          <div class="space-y-4">
+            @for (_ of [1, 2, 3]; track $index) {
+              <p-skeleton height="4rem" />
+            }
+          </div>
+        } @else if (recentOrders().length === 0) {
+          <div class="text-center py-8">
+            <i class="pi pi-shopping-bag text-4xl text-secondary/30 mb-4"></i>
+            <p class="text-secondary">Você ainda não fez nenhum pedido</p>
+            <a routerLink="/loja" class="btn-primary inline-block mt-4">
+              Explorar Consultas
+            </a>
+          </div>
+        } @else {
+          <div class="space-y-4">
+            @for (order of recentOrders(); track order.id) {
+              <a 
+                [routerLink]="['/cliente/pedidos', order.id]"
+                class="flex items-center justify-between p-4 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
+              >
+                <div>
+                  <p class="text-primary font-medium">#{{ order.orderNumber }}</p>
+                  <p class="text-secondary text-sm">{{ formatDate(order.createdAt) }}</p>
+                </div>
+                <div class="text-right">
+                  <span 
+                    class="inline-block px-3 py-1 rounded-full text-xs font-medium mb-1"
+                    [class]="getStatusClass(order.status)"
+                  >
+                    {{ getStatusLabel(order.status) }}
+                  </span>
+                  <p class="text-accent font-bold">{{ order.total | currencyBrl }}</p>
+                </div>
+              </a>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Recent Readings -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="heading-3 text-primary">
+            <i class="pi pi-book mr-2"></i>
+            Leituras Recentes
+          </h2>
+          <a routerLink="/cliente/leituras" class="text-accent hover:text-accent-light transition-colors text-sm">
+            Ver todas <i class="pi pi-arrow-right ml-1"></i>
+          </a>
+        </div>
+
+        @if (loading()) {
+          <div class="space-y-4">
+            @for (_ of [1, 2, 3]; track $index) {
+              <p-skeleton height="4rem" />
+            }
+          </div>
+        } @else if (recentReadings().length === 0) {
+          <div class="text-center py-8">
+            <i class="pi pi-book text-4xl text-secondary/30 mb-4"></i>
+            <p class="text-secondary">Nenhuma leitura ainda</p>
+            <p class="text-secondary text-sm mt-2">
+              Suas leituras aparecerão aqui quando forem publicadas
+            </p>
+          </div>
+        } @else {
+          <div class="space-y-4">
+            @for (reading of recentReadings(); track reading.id) {
+              <a 
+                [routerLink]="['/cliente/leituras', reading.id]"
+                class="flex items-center justify-between p-4 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
+              >
+                <div>
+                  <p class="text-primary font-medium">{{ reading.title || reading.product.name }}</p>
+                  <p class="text-secondary text-sm">{{ reading.product.name }}</p>
+                </div>
+                <div class="text-right">
+                  <span 
+                    class="inline-block px-3 py-1 rounded-full text-xs font-medium"
+                    [class]="getStatusClass(reading.status)"
+                  >
+                    {{ getStatusLabel(reading.status) }}
+                  </span>
+                  @if (reading.publishedAt) {
+                    <p class="text-secondary text-xs mt-1">{{ formatDate(reading.publishedAt) }}</p>
+                  }
+                </div>
+              </a>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="glass-card p-8 mt-12 text-center">
+      <div class="w-20 h-20 bg-gradient-mystical rounded-full flex items-center justify-center mx-auto mb-6">
+        <i class="pi pi-star text-3xl text-white"></i>
+      </div>
+      <h3 class="heading-2 text-primary mb-4">Dicas para sua Jornada</h3>
+      <p class="text-secondary max-w-2xl mx-auto mb-6">
+        Para uma experiência mais profunda com suas leituras, recomendo que você as leia 
+        em um momento tranquilo, em um ambiente calmo. Reflita sobre cada carta e mensagem, 
+        deixando que a intuição guie sua interpretação pessoal.
+      </p>
+      <a routerLink="/faq" class="btn-outline inline-block">
+        <i class="pi pi-question-circle mr-2"></i>
+        Perguntas Frequentes
+      </a>
+    </div>
+  </div>
+</section>

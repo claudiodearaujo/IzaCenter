@@ -1,0 +1,260 @@
+<!-- apps/frontend/src/app/features/shop/product-detail/product-detail.component.html -->
+
+<section class="py-12 md:py-20">
+  <div class="container-custom">
+    <!-- Breadcrumb -->
+    <nav class="mb-8">
+      <ol class="flex items-center gap-2 text-sm">
+        <li>
+          <a routerLink="/" class="text-secondary hover:text-primary transition-colors">Home</a>
+        </li>
+        <li class="text-secondary">/</li>
+        <li>
+          <a routerLink="/loja" class="text-secondary hover:text-primary transition-colors">Loja</a>
+        </li>
+        @if (product()) {
+          <li class="text-secondary">/</li>
+          <li class="text-primary">{{ product()?.name }}</li>
+        }
+      </ol>
+    </nav>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <p-skeleton height="400px" styleClass="rounded-2xl" />
+        <div>
+          <p-skeleton height="40px" styleClass="mb-4" />
+          <p-skeleton height="24px" width="60%" styleClass="mb-6" />
+          <p-skeleton height="100px" styleClass="mb-6" />
+          <p-skeleton height="48px" width="40%" />
+        </div>
+      </div>
+    }
+
+    <!-- Product Content -->
+    @if (!loading() && product()) {
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Product Image -->
+        <div class="relative">
+          @if (product()?.coverImageUrl) {
+            <img 
+              [src]="product()?.coverImageUrl" 
+              [alt]="product()?.name"
+              class="w-full rounded-2xl shadow-mystical object-cover aspect-square"
+            />
+          } @else {
+            <div class="w-full aspect-square rounded-2xl bg-gradient-mystical flex items-center justify-center">
+              <i class="pi pi-star text-6xl text-white/50"></i>
+            </div>
+          }
+
+          <!-- Discount Badge -->
+          @if (getDiscountPercentage() > 0) {
+            <div class="absolute top-4 right-4 badge-discount">
+              -{{ getDiscountPercentage() }}%
+            </div>
+          }
+
+          <!-- Product Type Badge -->
+          <div class="absolute top-4 left-4 badge-featured">
+            {{ getProductTypeLabel(product()?.productType || '') }}
+          </div>
+        </div>
+
+        <!-- Product Info -->
+        <div>
+          <h1 class="heading-1 text-primary mb-4">{{ product()?.name }}</h1>
+          
+          <p class="text-body text-secondary mb-6">
+            {{ product()?.shortDescription }}
+          </p>
+
+          <!-- Price -->
+          <div class="flex items-baseline gap-4 mb-8">
+            <span class="text-4xl font-bold text-accent">
+              {{ product()?.price | currencyBrl }}
+            </span>
+            @if (product()?.originalPrice) {
+              <span class="text-xl text-secondary line-through">
+                {{ product()?.originalPrice | currencyBrl }}
+              </span>
+            }
+          </div>
+
+          <!-- Features -->
+          <div class="glass-card p-6 mb-8">
+            <h3 class="heading-4 text-primary mb-4">O que está incluso:</h3>
+            <ul class="space-y-3">
+              @if (product()?.numQuestions) {
+                <li class="flex items-center gap-3">
+                  <i class="pi pi-check-circle text-accent"></i>
+                  <span class="text-secondary">
+                    {{ product()?.numQuestions }} pergunta(s) respondida(s)
+                  </span>
+                </li>
+              }
+              @if (product()?.numCards) {
+                <li class="flex items-center gap-3">
+                  <i class="pi pi-check-circle text-accent"></i>
+                  <span class="text-secondary">
+                    Tiragem com {{ product()?.numCards }} cartas
+                  </span>
+                </li>
+              }
+              @if (product()?.sessionDurationMinutes) {
+                <li class="flex items-center gap-3">
+                  <i class="pi pi-check-circle text-accent"></i>
+                  <span class="text-secondary">
+                    Sessão de {{ product()?.sessionDurationMinutes }} minutos
+                  </span>
+                </li>
+              }
+              <li class="flex items-center gap-3">
+                <i class="pi pi-check-circle text-accent"></i>
+                <span class="text-secondary">Interpretação detalhada em texto</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <i class="pi pi-check-circle text-accent"></i>
+                <span class="text-secondary">Acesso por {{ product()?.validityDays }} dias</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Question Input -->
+          <div class="mb-8">
+            <label class="block text-primary font-medium mb-2">
+              Sua pergunta (opcional):
+            </label>
+            <textarea 
+              pInputTextarea
+              [(ngModel)]="question"
+              [rows]="3"
+              placeholder="Descreva sua situação ou pergunta para a leitura..."
+              class="w-full"
+            ></textarea>
+            <p class="text-sm text-secondary mt-2">
+              Você pode adicionar ou modificar sua pergunta após a compra.
+            </p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap gap-4">
+            <button 
+              pButton 
+              class="btn-primary flex-1"
+              [loading]="addingToCart()"
+              (click)="buyNow()"
+            >
+              <i class="pi pi-shopping-cart mr-2"></i>
+              Comprar Agora
+            </button>
+            <button 
+              pButton 
+              class="btn-secondary"
+              [loading]="addingToCart()"
+              (click)="addToCart()"
+            >
+              <i class="pi pi-plus mr-2"></i>
+              Adicionar ao Carrinho
+            </button>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="flex flex-wrap gap-6 mt-8 pt-8 border-t border-primary/10">
+            <div class="flex items-center gap-2 text-secondary">
+              <i class="pi pi-lock text-accent"></i>
+              <span class="text-sm">Pagamento Seguro</span>
+            </div>
+            <div class="flex items-center gap-2 text-secondary">
+              <i class="pi pi-shield text-accent"></i>
+              <span class="text-sm">100% Confidencial</span>
+            </div>
+            <div class="flex items-center gap-2 text-secondary">
+              <i class="pi pi-clock text-accent"></i>
+              <span class="text-sm">Entrega em 48h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs with Description -->
+      <div class="mt-16">
+        <p-tabView>
+          <p-tabPanel header="Descrição Completa">
+            <div class="prose prose-invert max-w-none py-6">
+              @if (product()?.fullDescription) {
+                <div [innerHTML]="product()?.fullDescription"></div>
+              } @else {
+                <p class="text-secondary">{{ product()?.shortDescription }}</p>
+              }
+            </div>
+          </p-tabPanel>
+          <p-tabPanel header="Como Funciona">
+            <div class="py-6">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="text-center">
+                  <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
+                    <span class="text-primary font-bold">1</span>
+                  </div>
+                  <h4 class="text-primary font-medium mb-2">Escolha</h4>
+                  <p class="text-secondary text-sm">Selecione o serviço e adicione sua pergunta</p>
+                </div>
+                <div class="text-center">
+                  <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
+                    <span class="text-primary font-bold">2</span>
+                  </div>
+                  <h4 class="text-primary font-medium mb-2">Pagamento</h4>
+                  <p class="text-secondary text-sm">Finalize com PIX, cartão ou boleto</p>
+                </div>
+                <div class="text-center">
+                  <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
+                    <span class="text-primary font-bold">3</span>
+                  </div>
+                  <h4 class="text-primary font-medium mb-2">Leitura</h4>
+                  <p class="text-secondary text-sm">Realizo sua leitura com carinho</p>
+                </div>
+                <div class="text-center">
+                  <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
+                    <span class="text-primary font-bold">4</span>
+                  </div>
+                  <h4 class="text-primary font-medium mb-2">Entrega</h4>
+                  <p class="text-secondary text-sm">Receba na sua área de cliente</p>
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+
+      <!-- Related Products -->
+      @if (relatedProducts().length > 0) {
+        <div class="mt-16">
+          <h2 class="heading-2 text-center text-primary mb-8">
+            Você também pode gostar
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            @for (related of relatedProducts(); track related.id) {
+              <div class="glass-card p-6 text-center cursor-pointer hover-lift" 
+                   [routerLink]="['/loja', related.slug]">
+                @if (related.coverImageUrl) {
+                  <img 
+                    [src]="related.coverImageUrl" 
+                    [alt]="related.name"
+                    class="w-full h-48 object-cover rounded-lg mb-4"
+                  />
+                } @else {
+                  <div class="w-full h-48 bg-gradient-mystical rounded-lg mb-4 flex items-center justify-center">
+                    <i class="pi pi-star text-4xl text-white/50"></i>
+                  </div>
+                }
+                <h3 class="heading-4 text-primary mb-2">{{ related.name }}</h3>
+                <p class="text-accent font-bold">{{ related.price | currencyBrl }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>
+</section>

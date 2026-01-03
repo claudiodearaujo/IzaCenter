@@ -1,0 +1,138 @@
+<!-- apps/frontend/src/app/features/client/orders/order-list/order-list.component.html -->
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">
+          <i class="pi pi-shopping-bag mr-3"></i>
+          Meus Pedidos
+        </h1>
+        <p class="text-secondary">
+          Acompanhe o histórico e status dos seus pedidos
+        </p>
+      </div>
+      <a routerLink="/loja" class="btn-primary hidden md:inline-flex">
+        <i class="pi pi-plus mr-2"></i>
+        Nova Consulta
+      </a>
+    </div>
+
+    <!-- Orders List -->
+    @if (loading()) {
+      <div class="space-y-4">
+        @for (_ of [1, 2, 3, 4, 5]; track $index) {
+          <div class="glass-card p-6">
+            <p-skeleton height="4rem" />
+          </div>
+        }
+      </div>
+    } @else if (orders().length === 0) {
+      <div class="glass-card p-12 text-center">
+        <div class="w-24 h-24 bg-gradient-mystical rounded-full flex items-center justify-center mx-auto mb-6">
+          <i class="pi pi-shopping-bag text-4xl text-white"></i>
+        </div>
+        <h2 class="heading-2 text-primary mb-4">Nenhum pedido encontrado</h2>
+        <p class="text-secondary mb-6 max-w-md mx-auto">
+          Você ainda não realizou nenhum pedido. Explore nossas consultas e 
+          comece sua jornada de autoconhecimento.
+        </p>
+        <a routerLink="/loja" class="btn-primary inline-block">
+          <i class="pi pi-shopping-cart mr-2"></i>
+          Explorar Consultas
+        </a>
+      </div>
+    } @else {
+      <!-- Desktop Table -->
+      <div class="glass-card overflow-hidden hidden md:block">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-primary/10">
+              <th class="text-left p-4 text-secondary font-medium">Pedido</th>
+              <th class="text-left p-4 text-secondary font-medium">Data</th>
+              <th class="text-left p-4 text-secondary font-medium">Itens</th>
+              <th class="text-left p-4 text-secondary font-medium">Status</th>
+              <th class="text-right p-4 text-secondary font-medium">Total</th>
+              <th class="text-right p-4 text-secondary font-medium">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of orders(); track order.id) {
+              <tr class="border-b border-primary/5 hover:bg-dark/30 transition-colors">
+                <td class="p-4">
+                  <span class="text-primary font-medium">#{{ order.orderNumber }}</span>
+                </td>
+                <td class="p-4">
+                  <span class="text-secondary">{{ formatDate(order.createdAt) }}</span>
+                </td>
+                <td class="p-4">
+                  <span class="text-secondary">{{ order._count?.items || 1 }} item(s)</span>
+                </td>
+                <td class="p-4">
+                  <span 
+                    class="inline-block px-3 py-1 rounded-full text-xs font-medium"
+                    [class]="getStatusClass(order.status)"
+                  >
+                    {{ getStatusLabel(order.status) }}
+                  </span>
+                </td>
+                <td class="p-4 text-right">
+                  <span class="text-accent font-bold">{{ order.total | currencyBrl }}</span>
+                </td>
+                <td class="p-4 text-right">
+                  <a 
+                    [routerLink]="['/cliente/pedidos', order.id]"
+                    class="text-accent hover:text-accent-light transition-colors"
+                  >
+                    Ver detalhes <i class="pi pi-arrow-right ml-1"></i>
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Cards -->
+      <div class="md:hidden space-y-4">
+        @for (order of orders(); track order.id) {
+          <a 
+            [routerLink]="['/cliente/pedidos', order.id]"
+            class="glass-card p-6 block"
+          >
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <p class="text-primary font-bold">#{{ order.orderNumber }}</p>
+                <p class="text-secondary text-sm">{{ formatDate(order.createdAt) }}</p>
+              </div>
+              <span 
+                class="inline-block px-3 py-1 rounded-full text-xs font-medium"
+                [class]="getStatusClass(order.status)"
+              >
+                {{ getStatusLabel(order.status) }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-secondary">{{ order._count?.items || 1 }} item(s)</span>
+              <span class="text-accent font-bold text-lg">{{ order.total | currencyBrl }}</span>
+            </div>
+          </a>
+        }
+      </div>
+
+      <!-- Pagination -->
+      @if (totalRecords() > pageSize) {
+        <div class="mt-6 flex justify-center">
+          <p-paginator 
+            [rows]="pageSize" 
+            [totalRecords]="totalRecords()" 
+            [first]="(currentPage() - 1) * pageSize"
+            (onPageChange)="onPageChange($event)"
+            [showFirstLastIcon]="true"
+          />
+        </div>
+      }
+    }
+  </div>
+</section>

@@ -1,0 +1,100 @@
+/* apps/frontend/src/app/features/client/readings/reading-detail/reading-detail.component.css */
+
+:host {
+  display: block;
+}
+
+/* Gradient backgrounds */
+.bg-gradient-mystical {
+  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+}
+
+/* Dark background */
+.bg-dark\/30 {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Card image */
+.card-item img {
+  box-shadow: 0 10px 30px rgba(147, 51, 234, 0.3);
+}
+
+/* Keywords */
+.bg-primary\/10 {
+  background: rgba(201, 167, 235, 0.1);
+}
+
+/* Advice gradient */
+.bg-gradient-to-r {
+  background: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+.from-accent\/10 {
+  --tw-gradient-from: rgba(217, 176, 255, 0.1);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-purple-600\/10 {
+  --tw-gradient-to: rgba(147, 51, 234, 0.1);
+}
+
+/* Whitespace */
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+
+/* Audio player */
+audio {
+  border-radius: 0.5rem;
+}
+
+/* Print styles */
+@media print {
+  .glass-card {
+    background: white !important;
+    color: black !important;
+    border: 1px solid #ddd;
+    box-shadow: none !important;
+  }
+
+  .text-primary,
+  .text-accent,
+  .text-secondary {
+    color: black !important;
+  }
+
+  .bg-gradient-mystical,
+  .bg-dark\/30 {
+    background: #f5f5f5 !important;
+  }
+
+  .heading-1,
+  .heading-2,
+  .heading-3,
+  .heading-4 {
+    color: black !important;
+  }
+
+  .card-item img {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .print\:py-0 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+/* Skeleton styling */
+:host ::ng-deep .p-skeleton {
+  background-color: rgba(201, 167, 235, 0.1);
+}
+
+/* Divider styling */
+:host ::ng-deep .p-divider.p-divider-horizontal {
+  border-top: 1px solid rgba(201, 167, 235, 0.1);
+}

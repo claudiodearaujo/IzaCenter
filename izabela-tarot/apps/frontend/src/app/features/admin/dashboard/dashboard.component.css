@@ -1,0 +1,83 @@
+/* apps/frontend/src/app/features/admin/dashboard/dashboard.component.css */
+
+:host {
+  display: block;
+}
+
+/* Gradient backgrounds */
+.bg-gradient-mystical {
+  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+}
+
+.bg-gradient-gold {
+  background: linear-gradient(135deg, #f59e0b 0%, #fcd34d 100%);
+}
+
+/* Dark background */
+.bg-dark\/30 {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.hover\:bg-dark\/50:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Chart container */
+.h-64 {
+  height: 16rem;
+}
+
+:host ::ng-deep .p-chart {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Quick action buttons */
+.quick-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 167, 235, 0.1);
+  border-radius: 0.5rem;
+  color: var(--secondary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.quick-action-btn:hover {
+  background: rgba(201, 167, 235, 0.1);
+  border-color: rgba(201, 167, 235, 0.3);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.quick-action-btn i {
+  color: var(--primary);
+}
+
+/* Status badges */
+.rounded {
+  border-radius: 0.25rem;
+}
+
+/* Cards hover */
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+/* Skeleton styling */
+:host ::ng-deep .p-skeleton {
+  background-color: rgba(201, 167, 235, 0.1);
+}
+
+/* Space utilities */
+.space-y-3 > * + * {
+  margin-top: 0.75rem;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}

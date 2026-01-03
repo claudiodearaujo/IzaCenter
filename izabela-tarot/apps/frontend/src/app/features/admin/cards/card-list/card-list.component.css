@@ -1,0 +1,162 @@
+/* apps/frontend/src/app/features/admin/cards/card-list/card-list.component.css */
+
+:host {
+  display: block;
+}
+
+/* Card grid item */
+.glass-card.group {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.glass-card.group:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 40px rgba(147, 51, 234, 0.2);
+}
+
+/* Gradient background for cards without image */
+.bg-gradient-mystical {
+  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+}
+
+/* Input styling */
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-inputtextarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(201, 167, 235, 0.2);
+  color: var(--primary);
+  padding: 0.75rem 1rem;
+  width: 100%;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus,
+:host ::ng-deep .p-inputtextarea:enabled:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(201, 167, 235, 0.2);
+}
+
+/* Input icon */
+:host ::ng-deep .p-input-icon-left > i {
+  color: var(--secondary);
+}
+
+/* Chips styling */
+:host ::ng-deep .p-chips {
+  width: 100%;
+}
+
+:host ::ng-deep .p-chips .p-chips-multiple-container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(201, 167, 235, 0.2);
+  padding: 0.5rem;
+  width: 100%;
+}
+
+:host ::ng-deep .p-chips .p-chips-multiple-container:not(.p-disabled):hover {
+  border-color: rgba(201, 167, 235, 0.4);
+}
+
+:host ::ng-deep .p-chips .p-chips-multiple-container:not(.p-disabled).p-focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(201, 167, 235, 0.2);
+}
+
+:host ::ng-deep .p-chips .p-chips-token {
+  background: var(--primary);
+  color: var(--dark);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+:host ::ng-deep .p-chips .p-chips-input-token input {
+  color: var(--primary);
+}
+
+/* Dialog styling */
+:host ::ng-deep .p-dialog {
+  background: linear-gradient(145deg, 
+    rgba(26, 11, 46, 0.98) 0%, 
+    rgba(13, 5, 24, 0.98) 100%);
+  border: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header {
+  background: transparent;
+  color: var(--primary);
+  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  background: transparent;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-footer {
+  background: transparent;
+  border-top: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+/* Confirm dialog */
+:host ::ng-deep .custom-confirm-dialog {
+  background: linear-gradient(145deg, 
+    rgba(26, 11, 46, 0.98) 0%, 
+    rgba(13, 5, 24, 0.98) 100%);
+  border: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .custom-confirm-dialog .p-dialog-header {
+  background: transparent;
+  color: var(--primary);
+}
+
+:host ::ng-deep .custom-confirm-dialog .p-dialog-content {
+  background: transparent;
+  color: var(--secondary);
+}
+
+:host ::ng-deep .custom-confirm-dialog .p-dialog-footer {
+  background: transparent;
+}
+
+/* File upload */
+:host ::ng-deep .p-fileupload-basic {
+  width: 100%;
+}
+
+:host ::ng-deep .p-fileupload-basic .p-button {
+  width: 100%;
+  background: rgba(201, 167, 235, 0.1);
+  border: 1px solid rgba(201, 167, 235, 0.3);
+  color: var(--primary);
+}
+
+/* Space utilities */
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+/* Rounded buttons */
+:host ::ng-deep .p-button-rounded {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+}
+
+:host ::ng-deep .p-button-rounded.p-button-outlined {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+}
+
+:host ::ng-deep .p-button-rounded.p-button-outlined:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+}
+
+:host ::ng-deep .p-button-rounded.p-button-danger.p-button-outlined {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+:host ::ng-deep .p-button-rounded.p-button-danger.p-button-outlined:hover {
+  background: rgba(239, 68, 68, 0.1);
+}

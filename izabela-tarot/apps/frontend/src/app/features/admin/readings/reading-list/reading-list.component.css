@@ -1,0 +1,99 @@
+/* apps/frontend/src/app/features/admin/readings/reading-list/reading-list.component.css */
+
+:host {
+  display: block;
+}
+
+/* Table styling */
+:host ::ng-deep .p-datatable {
+  background: transparent;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--secondary);
+  border: none;
+  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+  padding: 1rem;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
+  background: transparent;
+  color: var(--primary);
+  transition: background 0.2s;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background: rgba(201, 167, 235, 0.05);
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  border: none;
+  border-bottom: 1px solid rgba(201, 167, 235, 0.05);
+  padding: 1rem;
+}
+
+:host ::ng-deep .p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Highlight waiting rows */
+.bg-yellow-500\/5 {
+  background: rgba(245, 158, 11, 0.05) !important;
+}
+
+/* Paginator styling */
+:host ::ng-deep .p-paginator {
+  background: transparent;
+  border: none;
+  padding: 1rem;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+  color: var(--primary);
+}
+
+:host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: var(--primary);
+  color: var(--dark);
+}
+
+/* Input styling */
+:host ::ng-deep .p-inputtext {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(201, 167, 235, 0.2);
+  color: var(--primary);
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(201, 167, 235, 0.2);
+}
+
+/* Dropdown styling */
+:host ::ng-deep .p-dropdown {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(201, 167, 235, 0.2);
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-label {
+  color: var(--primary);
+}
+
+/* Stats cards */
+.bg-yellow-500\/20 {
+  background: rgba(245, 158, 11, 0.2);
+}
+
+.bg-blue-500\/20 {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.bg-green-500\/20 {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+/* Input icon */
+:host ::ng-deep .p-input-icon-left > i {
+  color: var(--secondary);
+}

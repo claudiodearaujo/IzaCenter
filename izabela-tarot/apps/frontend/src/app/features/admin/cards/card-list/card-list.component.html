@@ -1,0 +1,274 @@
+<!-- apps/frontend/src/app/features/admin/cards/card-list/card-list.component.html -->
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">
+          <i class="pi pi-th-large mr-3"></i>
+          Baralho Cigano
+        </h1>
+        <p class="text-secondary">Gerencie as 36 cartas do baralho Cigano</p>
+      </div>
+      <div class="flex gap-3">
+        <button pButton class="btn-outline" (click)="generateDeck()">
+          <i class="pi pi-sync mr-2"></i>
+          Gerar Baralho
+        </button>
+        <button pButton class="btn-primary" (click)="openDialog()">
+          <i class="pi pi-plus mr-2"></i>
+          Nova Carta
+        </button>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="glass-card p-4 mb-6">
+      <span class="p-input-icon-left w-full max-w-md">
+        <i class="pi pi-search"></i>
+        <input 
+          pInputText 
+          [(ngModel)]="searchTerm"
+          placeholder="Buscar carta por nome, número ou palavra-chave..."
+          class="w-full"
+        />
+      </span>
+    </div>
+
+    <!-- Cards Grid -->
+    @if (loading()) {
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        @for (i of [1,2,3,4,5,6,7,8,9,10,11,12]; track i) {
+          <div class="glass-card animate-pulse">
+            <div class="aspect-[2/3] bg-primary/10"></div>
+            <div class="p-3">
+              <div class="h-4 bg-primary/10 rounded mb-2"></div>
+              <div class="h-3 bg-primary/10 rounded w-2/3"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else if (filteredCards.length === 0) {
+      <div class="glass-card p-12 text-center">
+        <i class="pi pi-th-large text-5xl text-secondary/30 mb-4"></i>
+        @if (searchTerm) {
+          <p class="text-secondary">Nenhuma carta encontrada para "{{ searchTerm }}"</p>
+        } @else {
+          <p class="text-secondary mb-4">Nenhuma carta cadastrada ainda</p>
+          <button pButton class="btn-primary" (click)="generateDeck()">
+            <i class="pi pi-sync mr-2"></i>
+            Gerar Baralho Cigano
+          </button>
+        }
+      </div>
+    } @else {
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        @for (card of filteredCards; track card.id) {
+          <div class="glass-card overflow-hidden group cursor-pointer" (click)="openDialog(card)">
+            <!-- Card Image -->
+            <div class="relative">
+              @if (card.imageUrl) {
+                <img 
+                  [src]="card.imageUrl" 
+                  [alt]="card.name"
+                  class="w-full aspect-[2/3] object-cover"
+                />
+              } @else {
+                <div class="w-full aspect-[2/3] bg-gradient-mystical flex items-center justify-center">
+                  <div class="text-center">
+                    <span class="text-4xl font-bold text-white">{{ card.number }}</span>
+                    <p class="text-white/60 text-sm mt-2">Sem imagem</p>
+                  </div>
+                </div>
+              }
+
+              <!-- Overlay on hover -->
+              <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                <button 
+                  pButton 
+                  class="p-button-rounded p-button-outlined"
+                  (click)="openDialog(card); $event.stopPropagation()"
+                >
+                  <i class="pi pi-pencil"></i>
+                </button>
+                <button 
+                  pButton 
+                  class="p-button-rounded p-button-danger p-button-outlined"
+                  (click)="confirmDelete(card); $event.stopPropagation()"
+                >
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+
+              <!-- Number badge -->
+              <div class="absolute top-2 left-2 w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                <span class="text-dark font-bold text-sm">{{ card.number }}</span>
+              </div>
+            </div>
+
+            <!-- Card Info -->
+            <div class="p-3">
+              <h3 class="text-primary font-medium truncate">{{ card.name }}</h3>
+              <p class="text-secondary text-xs truncate">
+                {{ card.isPositive ? 'Positiva' : 'Negativa' }}
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Edit/Create Dialog -->
+<p-dialog 
+  [(visible)]="dialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{width: '90vw', maxWidth: '700px'}"
+  [header]="editingCard() ? 'Editar Carta' : 'Nova Carta'"
+  (onHide)="closeDialog()"
+>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
+    <!-- Image -->
+    <div class="flex flex-col items-center">
+      <div class="w-full max-w-48 mb-4">
+        @if (imagePreview()) {
+          <img 
+            [src]="imagePreview()" 
+            alt="Preview"
+            class="w-full rounded-lg"
+          />
+        } @else {
+          <div class="w-full aspect-[2/3] bg-gradient-mystical rounded-lg flex items-center justify-center">
+            <i class="pi pi-image text-4xl text-white/50"></i>
+          </div>
+        }
+      </div>
+
+      <p-fileUpload 
+        mode="basic" 
+        name="image"
+        accept="image/*"
+        [maxFileSize]="5000000"
+        chooseLabel="Escolher Imagem"
+        [auto]="false"
+        (onSelect)="onImageSelect($event)"
+        styleClass="w-full"
+      />
+      <p class="text-secondary/60 text-xs mt-2">PNG ou JPG. Máximo 5MB.</p>
+    </div>
+
+    <!-- Form -->
+    <div class="space-y-4">
+      <div>
+        <label class="block text-secondary text-sm mb-1">Número *</label>
+        <input 
+          pInputText 
+          type="number"
+          [(ngModel)]="form.number"
+          class="w-full"
+          min="1"
+          max="36"
+        />
+      </div>
+
+      <div>
+        <label class="block text-secondary text-sm mb-1">Nome *</label>
+        <input 
+          pInputText 
+          [(ngModel)]="form.name"
+          class="w-full"
+          placeholder="Ex: O Cavaleiro"
+        />
+      </div>
+
+      <div class="flex items-center gap-2">
+        <p-checkbox 
+          [(ngModel)]="form.isPositive" 
+          [binary]="true"
+          inputId="isPositive"
+        />
+        <label for="isPositive" class="text-secondary text-sm">Carta Positiva</label>
+      </div>
+
+      <div>
+        <label class="block text-secondary text-sm mb-1">Significado Geral</label>
+        <textarea 
+          pInputTextarea 
+          [(ngModel)]="form.generalMeaning"
+          [rows]="3"
+          class="w-full"
+          placeholder="Descrição geral da carta..."
+        ></textarea>
+      </div>
+
+      <div>
+        <label class="block text-secondary text-sm mb-1">Significado no Amor</label>
+        <textarea 
+          pInputTextarea 
+          [(ngModel)]="form.loveMeaning"
+          [rows]="2"
+          class="w-full"
+          placeholder="Interpretação para questões de amor..."
+        ></textarea>
+      </div>
+
+      <div>
+        <label class="block text-secondary text-sm mb-1">Significado no Trabalho</label>
+        <textarea 
+          pInputTextarea 
+          [(ngModel)]="form.workMeaning"
+          [rows]="2"
+          class="w-full"
+          placeholder="Interpretação para questões profissionais..."
+        ></textarea>
+      </div>
+
+      <div>
+        <label class="block text-secondary text-sm mb-1">Significado na Saúde</label>
+        <textarea 
+          pInputTextarea 
+          [(ngModel)]="form.healthMeaning"
+          [rows]="2"
+          class="w-full"
+          placeholder="Interpretação para questões de saúde..."
+        ></textarea>
+      </div>
+
+      <div>
+        <label class="block text-secondary text-sm mb-1">Significado no Dinheiro</label>
+        <textarea 
+          pInputTextarea 
+          [(ngModel)]="form.moneyMeaning"
+          [rows]="2"
+          class="w-full"
+          placeholder="Interpretação para questões financeiras..."
+        ></textarea>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 pt-4">
+      <button pButton class="btn-outline" (click)="closeDialog()">
+        Cancelar
+      </button>
+      <button 
+        pButton 
+        class="btn-primary"
+        [loading]="saving()"
+        (click)="saveCard()"
+      >
+        <i class="pi pi-save mr-2"></i>
+        {{ editingCard() ? 'Atualizar' : 'Criar' }}
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog 
+  styleClass="custom-confirm-dialog"
+  [style]="{width: '400px'}"
+/>

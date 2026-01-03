@@ -43,6 +43,23 @@ export class NotificationService {
     });
   }
 
+  // Aliases for convenience
+  success(message: string, title?: string): void {
+    this.showSuccess(message, title);
+  }
+
+  error(message: string, title?: string): void {
+    this.showError(message, title);
+  }
+
+  warning(message: string, title?: string): void {
+    this.showWarning(message, title);
+  }
+
+  info(message: string, title?: string): void {
+    this.showInfo(message, title);
+  }
+
   clear(): void {
     this.messageService.clear();
   }

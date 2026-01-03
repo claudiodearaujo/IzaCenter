@@ -1,0 +1,72 @@
+/* apps/frontend/src/app/features/client/readings/reading-list/reading-list.component.css */
+
+:host {
+  display: block;
+}
+
+/* Card styling */
+.glass-card {
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+}
+
+.glass-card.cursor-default:hover {
+  transform: none;
+  cursor: default;
+}
+
+/* Image hover effect */
+.group:hover img {
+  transform: scale(1.1);
+}
+
+/* Gradient background */
+.bg-gradient-mystical {
+  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+}
+
+/* Status badges */
+.rounded-full {
+  border-radius: 9999px;
+}
+
+/* Truncate */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* SelectButton styling */
+:host ::ng-deep .p-selectbutton {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 167, 235, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+}
+
+:host ::ng-deep .p-selectbutton .p-button {
+  background: transparent;
+  border: none;
+  color: var(--secondary);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+:host ::ng-deep .p-selectbutton .p-button:hover {
+  background: rgba(201, 167, 235, 0.1);
+  color: var(--primary);
+}
+
+:host ::ng-deep .p-selectbutton .p-button.p-highlight {
+  background: var(--primary);
+  color: var(--dark);
+}
+
+/* Skeleton styling */
+:host ::ng-deep .p-skeleton {
+  background-color: rgba(201, 167, 235, 0.1);
+}

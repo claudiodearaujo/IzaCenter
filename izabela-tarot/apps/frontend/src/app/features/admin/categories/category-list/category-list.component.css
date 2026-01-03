@@ -1,0 +1,178 @@
+/* apps/frontend/src/app/features/admin/categories/category-list/category-list.component.css */
+
+:host {
+  display: block;
+}
+
+/* Table styling */
+:host ::ng-deep .p-datatable {
+  background: transparent;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--secondary);
+  border: none;
+  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+  padding: 1rem;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
+  background: transparent;
+  color: var(--primary);
+  transition: background 0.2s;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background: rgba(201, 167, 235, 0.05);
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  border: none;
+  border-bottom: 1px solid rgba(201, 167, 235, 0.05);
+  padding: 1rem;
+}
+
+:host ::ng-deep .p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Small buttons */
+:host ::ng-deep .p-button-sm {
+  padding: 0.5rem 0.75rem;
+}
+
+:host ::ng-deep .p-button-text {
+  padding: 0.25rem;
+  color: var(--secondary);
+}
+
+:host ::ng-deep .p-button-text:enabled:hover {
+  background: rgba(201, 167, 235, 0.1);
+  color: var(--primary);
+}
+
+/* Status buttons */
+:host ::ng-deep .p-button-success {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #22c55e;
+}
+
+:host ::ng-deep .p-button-success:enabled:hover {
+  background: rgba(34, 197, 94, 0.3);
+}
+
+:host ::ng-deep .p-button-secondary {
+  background: rgba(156, 163, 175, 0.2);
+  border-color: rgba(156, 163, 175, 0.5);
+  color: #9ca3af;
+}
+
+:host ::ng-deep .p-button-secondary:enabled:hover {
+  background: rgba(156, 163, 175, 0.3);
+}
+
+/* Outlined buttons */
+:host ::ng-deep .p-button-outlined {
+  background: transparent;
+  border: 1px solid rgba(201, 167, 235, 0.3);
+  color: var(--primary);
+}
+
+:host ::ng-deep .p-button-outlined:enabled:hover {
+  background: rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-button-danger.p-button-outlined {
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+}
+
+:host ::ng-deep .p-button-danger.p-button-outlined:enabled:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Badge */
+.bg-primary\/10 {
+  background: rgba(201, 167, 235, 0.1);
+}
+
+/* Dialog styling */
+:host ::ng-deep .p-dialog {
+  background: linear-gradient(145deg, 
+    rgba(26, 11, 46, 0.98) 0%, 
+    rgba(13, 5, 24, 0.98) 100%);
+  border: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header {
+  background: transparent;
+  color: var(--primary);
+  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  background: transparent;
+}
+
+:host ::ng-deep .p-dialog .p-dialog-footer {
+  background: transparent;
+  border-top: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+/* Form inputs */
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-inputtextarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(201, 167, 235, 0.2);
+  color: var(--primary);
+  padding: 0.75rem 1rem;
+  width: 100%;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus,
+:host ::ng-deep .p-inputtextarea:enabled:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(201, 167, 235, 0.2);
+}
+
+/* Toggle button */
+:host ::ng-deep .p-togglebutton {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(201, 167, 235, 0.2);
+  color: var(--secondary);
+}
+
+:host ::ng-deep .p-togglebutton.p-highlight {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--dark);
+}
+
+/* Confirm dialog */
+:host ::ng-deep .custom-confirm-dialog {
+  background: linear-gradient(145deg, 
+    rgba(26, 11, 46, 0.98) 0%, 
+    rgba(13, 5, 24, 0.98) 100%);
+  border: 1px solid rgba(201, 167, 235, 0.1);
+}
+
+:host ::ng-deep .custom-confirm-dialog .p-dialog-header {
+  background: transparent;
+  color: var(--primary);
+}
+
+:host ::ng-deep .custom-confirm-dialog .p-dialog-content {
+  background: transparent;
+  color: var(--secondary);
+}
+
+:host ::ng-deep .custom-confirm-dialog .p-dialog-footer {
+  background: transparent;
+}
+
+/* Space utilities */
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
