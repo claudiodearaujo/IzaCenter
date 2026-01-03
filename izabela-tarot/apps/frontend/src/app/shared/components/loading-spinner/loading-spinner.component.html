@@ -1,0 +1,21 @@
+@if (overlay) {
+  <div class="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-white rounded-2xl p-8 shadow-xl flex flex-col items-center gap-4">
+      <div class="spinner" [class.sm]="size === 'sm'" [class.lg]="size === 'lg'">
+        <div class="spinner-inner"></div>
+      </div>
+      @if (message) {
+        <p class="text-neutral-700 font-medium">{{ message }}</p>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="flex flex-col items-center justify-center gap-3 py-8">
+    <div class="spinner" [class.sm]="size === 'sm'" [class.lg]="size === 'lg'">
+      <div class="spinner-inner"></div>
+    </div>
+    @if (message) {
+      <p class="text-neutral-600 text-sm">{{ message }}</p>
+    }
+  </div>
+}

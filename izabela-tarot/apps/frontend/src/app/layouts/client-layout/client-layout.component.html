@@ -1,0 +1,89 @@
+<div class="min-h-screen bg-neutral-50">
+  <!-- Mobile Header -->
+  <header class="lg:hidden sticky top-0 z-40 bg-white shadow-sm">
+    <div class="flex items-center justify-between px-4 py-3">
+      <button (click)="toggleSidebar()" class="p-2 text-neutral-700">
+        <i class="pi pi-bars text-xl"></i>
+      </button>
+      <a routerLink="/" class="flex items-center gap-2">
+        <span class="text-xl font-decorative text-primary-700">✨</span>
+        <span class="font-serif font-semibold text-primary-800">Izabela Tarot</span>
+      </a>
+      <div class="w-10"></div>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar Overlay (Mobile) -->
+    @if (isSidebarOpen()) {
+      <div class="lg:hidden fixed inset-0 bg-black/50 z-40" (click)="closeSidebar()"></div>
+    }
+
+    <!-- Sidebar -->
+    <aside class="fixed lg:sticky top-0 left-0 z-50 lg:z-0 h-screen w-72 bg-white shadow-lg transform transition-transform duration-300"
+           [class.-translate-x-full]="!isSidebarOpen()"
+           [class.translate-x-0]="isSidebarOpen()"
+           [class.lg:translate-x-0]="true">
+      
+      <!-- Logo -->
+      <div class="p-6 border-b border-neutral-100">
+        <a routerLink="/" class="flex items-center gap-2">
+          <span class="text-2xl">✨</span>
+          <span class="text-xl font-serif font-semibold text-primary-800">Izabela Tarot</span>
+        </a>
+      </div>
+
+      <!-- User Info -->
+      <div class="p-6 border-b border-neutral-100">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-semibold text-lg">
+            {{ currentUser()?.fullName?.charAt(0) || 'U' }}
+          </div>
+          <div>
+            <p class="font-semibold text-neutral-800">{{ currentUser()?.fullName }}</p>
+            <p class="text-sm text-neutral-500">{{ currentUser()?.email }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="p-4">
+        <ul class="space-y-1">
+          @for (item of menuItems; track item.route) {
+            <li>
+              <a [routerLink]="item.route" 
+                 routerLinkActive="bg-primary-50 text-primary-700"
+                 [routerLinkActiveOptions]="{exact: item.route === '/cliente'}"
+                 (click)="closeSidebar()"
+                 class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-600 hover:bg-neutral-50 transition-colors">
+                <i class="pi" [class]="item.icon"></i>
+                {{ item.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <!-- Bottom Actions -->
+      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-neutral-100">
+        <a routerLink="/" class="flex items-center gap-3 px-4 py-3 text-neutral-600 hover:text-neutral-800">
+          <i class="pi pi-arrow-left"></i>
+          Voltar ao Site
+        </a>
+        <button (click)="logout()" class="flex items-center gap-3 px-4 py-3 text-red-600 hover:text-red-700 w-full">
+          <i class="pi pi-sign-out"></i>
+          Sair
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-h-screen lg:ml-0">
+      <div class="p-6 lg:p-8">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+</div>
+
+<p-toast position="top-right" />
