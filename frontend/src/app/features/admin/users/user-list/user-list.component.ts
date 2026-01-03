@@ -12,7 +12,6 @@ import { Select } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 
 import { UsersService, User } from '../../../../core/services/users.service';
-import { CurrencyBrlPipe } from '../../../../shared/pipes/currency-brl.pipe';
 
 @Component({
   selector: 'app-user-list',
@@ -26,7 +25,6 @@ import { CurrencyBrlPipe } from '../../../../shared/pipes/currency-brl.pipe';
     TableModule,
     Select,
     TagModule,
-    CurrencyBrlPipe,
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',

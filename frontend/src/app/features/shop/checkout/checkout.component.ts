@@ -85,11 +85,7 @@ export class CheckoutComponent implements OnInit {
     this.processing.set(true);
 
     const orderData = {
-      items: this.items().map((item) => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        questions: item.questions,
-      })),
+      items: this.cartService.getItemsForCheckout(),
     };
 
     this.api.post<{ data: { checkoutUrl: string } }>('/orders', orderData).subscribe({

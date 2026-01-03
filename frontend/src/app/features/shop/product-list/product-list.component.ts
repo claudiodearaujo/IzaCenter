@@ -2,7 +2,7 @@
 
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import {  ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { Select } from 'primeng/select';
@@ -18,7 +18,7 @@ import { Product, ProductCategory } from '../../../core/models/product.model';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
+    
     FormsModule,
     Select,
     InputTextModule,

@@ -21,7 +21,7 @@
         </div>
         <div>
           <p class="text-2xl font-bold text-primary">
-            {{ testimonials().filter(t => t.status === 'PENDING').length }}
+            {{ pendingCount() }}
           </p>
           <p class="text-secondary text-sm">Pendentes</p>
         </div>
@@ -32,7 +32,7 @@
         </div>
         <div>
           <p class="text-2xl font-bold text-primary">
-            {{ testimonials().filter(t => t.status === 'APPROVED').length }}
+            {{ approvedCount() }}
           </p>
           <p class="text-secondary text-sm">Aprovados</p>
         </div>
@@ -43,7 +43,7 @@
         </div>
         <div>
           <p class="text-2xl font-bold text-primary">
-            {{ testimonials().filter(t => t.isHighlighted).length }}
+            {{ featuredCount() }}
           </p>
           <p class="text-secondary text-sm">Destacados</p>
         </div>
@@ -152,7 +152,6 @@
               <p-rating 
                 [(ngModel)]="testimonial.rating" 
                 [readonly]="true"
-                [cancel]="false"
               />
             </td>
             <td>
@@ -165,11 +164,11 @@
               @if (testimonial.isApproved) {
                 <button 
                   pButton 
-                  [class]="testimonial.isHighlighted ? 'p-button-warning' : 'p-button-text'"
+                  [class]="testimonial.isFeatured ? 'p-button-warning' : 'p-button-text'"
                   (click)="toggleHighlight(testimonial)"
-                  pTooltip="{{ testimonial.isHighlighted ? 'Remover destaque' : 'Destacar' }}"
+                  pTooltip="{{ testimonial.isFeatured ? 'Remover destaque' : 'Destacar' }}"
                 >
-                  <i class="pi pi-star{{ testimonial.isHighlighted ? '-fill' : '' }}"></i>
+                  <i class="pi pi-star{{ testimonial.isFeatured ? '-fill' : '' }}"></i>
                 </button>
               } @else {
                 <span class="text-secondary/30">-</span>
@@ -186,7 +185,7 @@
                 >
                   <i class="pi pi-eye"></i>
                 </button>
-                @if (testimonial.status === 'PENDING') {
+                @if (!testimonial.isApproved) {
                   <button 
                     pButton 
                     class="p-button-success p-button-sm"
@@ -250,7 +249,7 @@
         } @else {
           <div class="w-16 h-16 rounded-full bg-gradient-mystical flex items-center justify-center">
             <span class="text-white font-bold text-xl">
-              {{ (selectedTestimonial()?.clientName || selectedTestimonial()?.client?.fullName)?.charAt(0).toUpperCase() }}
+              {{ (selectedTestimonial()?.clientName ?? selectedTestimonial()?.client?.fullName ?? '')?.charAt(0)?.toUpperCase() }}
             </span>
           </div>
         }
@@ -267,7 +266,6 @@
         <p-rating 
           [ngModel]="selectedTestimonial()?.rating" 
           [readonly]="true"
-          [cancel]="false"
         />
         <span class="text-secondary">({{ selectedTestimonial()?.rating }}/5)</span>
       </div>
@@ -282,16 +280,16 @@
       <!-- Meta -->
       <div class="flex items-center justify-between text-secondary text-sm">
         <span>
-          Enviado em {{ formatDate(selectedTestimonial()!.createdAt) }}
+          Enviado em {{ selectedTestimonial() ? formatDate(selectedTestimonial()!.createdAt) : '' }}
         </span>
         <p-tag 
-          [value]="getStatusLabel(selectedTestimonial()!.status)" 
-          [severity]="getStatusSeverity(selectedTestimonial()!.status)"
+          [value]="getStatusLabel(selectedTestimonial()!)" 
+          [severity]="getStatusSeverity(selectedTestimonial()!)"
         />
       </div>
 
       <!-- Actions -->
-      @if (selectedTestimonial()?.status === 'PENDING') {
+      @if (!selectedTestimonial()?.isApproved) {
         <div class="flex gap-3 pt-4 border-t border-primary/10">
           <button 
             pButton 

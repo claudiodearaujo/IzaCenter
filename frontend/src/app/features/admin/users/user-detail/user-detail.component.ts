@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
-import { Tabs } from 'primeng/tabs';
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
@@ -33,6 +33,10 @@ interface UserDetail extends User {
     SkeletonModule,
     TagModule,
     Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel,
     ToggleButtonModule,
     ConfirmDialogModule,
     CurrencyBrlPipe,
@@ -118,6 +122,29 @@ export class UserDetailComponent implements OnInit {
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
+    });
+  }
+
+  toggleActive() {
+    if (!this.user()) return;
+
+    const newStatus = !this.user()!.isActive;
+
+    this.confirmationService.confirm({
+      message: `Tem certeza que deseja ${newStatus ? 'ativar' : 'desativar'} este usuário?`,
+      header: 'Confirmar Alteração',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.usersService.update(this.user()!.id, { isActive: newStatus } as any).subscribe({
+          next: () => {
+            this.user.update((u) => (u ? { ...u, isActive: newStatus } : null));
+            this.notification.success(`Usuário ${newStatus ? 'ativado' : 'desativado'}`);
+          },
+          error: () => {
+            this.notification.error('Erro ao atualizar status');
+          },
+        });
+      },
     });
   }
 }

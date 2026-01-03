@@ -12,6 +12,7 @@ export interface User {
   birthDate?: Date;
   avatarUrl?: string;
   role: 'CLIENT' | 'ADMIN';
+  isActive: boolean;
   preferredLanguage: string;
   notificationEmail: boolean;
   notificationWhatsapp: boolean;

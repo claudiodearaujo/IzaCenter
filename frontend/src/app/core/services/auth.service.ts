@@ -38,6 +38,7 @@ export class AuthService {
   private accessTokenSignal = signal<string | null>(null);
 
   readonly currentUser = this.currentUserSignal.asReadonly();
+  readonly user = this.currentUser; // Alias for backward compatibility
   readonly isAuthenticated = computed(() => !!this.currentUserSignal());
   readonly isAdmin = computed(() => this.currentUserSignal()?.role === 'ADMIN');
 
@@ -120,5 +121,19 @@ export class AuthService {
       this.currentUserSignal.set(updatedUser);
       this.storage.set('user', updatedUser);
     }
+  }
+
+  refreshProfile(): void {
+    this.api.get<{ data: User }>('/users/me').subscribe({
+      next: (response) => {
+        if (response.data) {
+          this.currentUserSignal.set(response.data);
+          this.storage.set('user', response.data);
+        }
+      },
+      error: () => {
+        // Ignore errors silently
+      }
+    });
   }
 }

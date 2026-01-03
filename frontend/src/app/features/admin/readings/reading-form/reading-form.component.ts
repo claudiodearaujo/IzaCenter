@@ -251,7 +251,7 @@ export class ReadingFormComponent implements OnInit {
   onAudioUpload(event: FileUploadHandlerEvent) {
     if (event.files && event.files.length > 0) {
       const file = event.files[0];
-      this.readingsService.updateAudio(this.readingId()!, file).subscribe({
+      this.readingsService.uploadAudio(this.readingId()!, file).subscribe({
         next: (response) => {
           this.reading.update((r) =>
             r ? { ...r, audioUrl: response.data.audioUrl } : null

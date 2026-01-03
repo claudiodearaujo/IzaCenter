@@ -32,7 +32,7 @@ interface RecentReading {
   title: string;
   status: string;
   publishedAt?: string;
-  product: {
+  product?: {
     name: string;
   };
 }
@@ -86,7 +86,7 @@ export class DashboardComponent implements OnInit {
 
     // Load recent orders
     this.api
-      .get<{ data: RecentOrder[] }>('/users/me/orders', { limit: 5 })
+      .get<{ data: RecentOrder[] }>('/users/me/orders', { params: { limit: 5 } })
       .subscribe({
         next: (response) => {
           this.recentOrders.set(response.data);
@@ -98,7 +98,7 @@ export class DashboardComponent implements OnInit {
 
     // Load recent readings
     this.api
-      .get<{ data: RecentReading[] }>('/users/me/readings', { limit: 5 })
+      .get<{ data: RecentReading[] }>('/users/me/readings', { params: { limit: 5 } })
       .subscribe({
         next: (response) => {
           this.recentReadings.set(response.data);

@@ -58,11 +58,11 @@ export class CartComponent {
 
   updateQuantity(item: CartItem, quantity: number) {
     if (quantity < 1) return;
-    this.cartService.updateQuantity(item.productId, quantity);
+    this.cartService.updateQuantity(item.product.id, quantity);
   }
 
   updateQuestions(item: CartItem, questions: string) {
-    this.cartService.updateQuestions(item.productId, questions ? [questions] : []);
+    this.cartService.updateQuestions(item.product.id, questions ? [questions] : []);
   }
 
   removeItem(productId: string) {

@@ -35,15 +35,15 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Cart Items -->
         <div class="lg:col-span-2 space-y-6">
-          @for (item of items(); track item.productId) {
+          @for (item of items(); track item.product.id) {
             <div class="glass-card p-6">
               <div class="flex gap-6">
                 <!-- Product Image -->
                 <div class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32">
-                  @if (item.coverImageUrl) {
+                  @if (item.product.coverImageUrl) {
                     <img 
-                      [src]="item.coverImageUrl" 
-                      [alt]="item.productName"
+                      [src]="item.product.coverImageUrl" 
+                      [alt]="item.product.name"
                       class="w-full h-full object-cover rounded-lg"
                     />
                   } @else {
@@ -58,18 +58,18 @@
                   <div class="flex justify-between items-start mb-2">
                     <div>
                       <a 
-                        [routerLink]="['/loja', item.productSlug]"
+                        [routerLink]="['/loja', item.product.slug]"
                         class="heading-4 text-primary hover:text-primary-light transition-colors"
                       >
-                        {{ item.productName }}
+                        {{ item.product.name }}
                       </a>
                       <span class="ml-2 text-sm text-secondary">
-                        ({{ getProductTypeLabel(item.productType) }})
+                        ({{ getProductTypeLabel(item.product.productType) }})
                       </span>
                     </div>
                     <button 
                       class="text-secondary hover:text-red-500 transition-colors p-2"
-                      (click)="removeItem(item.productId)"
+                      (click)="removeItem(item.product.id)"
                       title="Remover item"
                     >
                       <i class="pi pi-trash"></i>
@@ -79,11 +79,11 @@
                   <!-- Price -->
                   <div class="flex items-baseline gap-2 mb-4">
                     <span class="text-xl font-bold text-accent">
-                      {{ item.price | currencyBrl }}
+                      {{ item.product.price | currencyBrl }}
                     </span>
-                    @if (item.originalPrice) {
+                    @if (item.product.originalPrice) {
                       <span class="text-sm text-secondary line-through">
-                        {{ item.originalPrice | currencyBrl }}
+                        {{ item.product.originalPrice | currencyBrl }}
                       </span>
                     }
                   </div>

@@ -34,7 +34,7 @@
             />
           } @else {
             <div class="w-24 h-24 rounded-full bg-gradient-mystical flex items-center justify-center text-3xl text-white">
-              {{ user()?.fullName?.charAt(0).toUpperCase() || 'U' }}
+              {{ (user()?.fullName ?? 'U').charAt(0).toUpperCase() }}
             </div>
           }
 
@@ -43,8 +43,8 @@
             <div class="flex items-center gap-3 mb-2">
               <h1 class="heading-1 text-primary">{{ user()?.fullName }}</h1>
               <p-tag 
-                [value]="getRoleLabel(user()!.role)" 
-                [severity]="getRoleSeverity(user()!.role)"
+                [value]="getRoleLabel(user()?.role ?? 'CLIENT')" 
+                [severity]="getRoleSeverity(user()?.role ?? 'CLIENT')"
               />
             </div>
             <p class="text-secondary">{{ user()?.email }}</p>
@@ -128,20 +128,20 @@
               </div>
               <div>
                 <label class="text-secondary text-sm">Data de Cadastro</label>
-                <p class="text-primary font-medium">{{ formatDateTime(user()!.createdAt) }}</p>
+                <p class="text-primary font-medium">{{ formatDateTime(user()?.createdAt ?? '') }}</p>
               </div>
               <div>
                 <label class="text-secondary text-sm">Tipo de Conta</label>
-                <p class="text-primary font-medium">{{ getRoleLabel(user()!.role) }}</p>
+                <p class="text-primary font-medium">{{ getRoleLabel(user()?.role ?? 'CLIENT') }}</p>
               </div>
             </div>
           </p-tabpanel>
 
           <!-- Orders Tab -->
           <p-tabpanel value="1">
-            @if (user()?.orders && user()!.orders.length > 0) {
+            @if (user()?.orders?.length) {
               <div class="space-y-3 py-4">
-                @for (order of user()!.orders; track order.id) {
+                @for (order of user()?.orders ?? []; track order.id) {
                   <a 
                     [routerLink]="['/admin/pedidos', order.id]"
                     class="flex items-center justify-between p-4 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
@@ -164,9 +164,9 @@
 
           <!-- Readings Tab -->
           <p-tabpanel value="2">
-            @if (user()?.readings && user()!.readings.length > 0) {
+            @if (user()?.readings?.length) {
               <div class="space-y-3 py-4">
-                @for (reading of user()!.readings; track reading.id) {
+                @for (reading of user()?.readings ?? []; track reading.id) {
                   <a 
                     [routerLink]="['/admin/leituras', reading.id]"
                     class="flex items-center justify-between p-4 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"

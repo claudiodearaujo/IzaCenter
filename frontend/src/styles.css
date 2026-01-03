@@ -1,6 +1,7 @@
 /* Tailwind CSS */
 @import "tailwindcss";
-
+/* PrimeIcons */
+@import "primeicons/primeicons.css";
 /* PrimeNG Theme */
 @layer base {
   :root {
@@ -45,8 +46,7 @@
   }
 }
 
-/* Tipografia */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
+
 
 body {
   font-family: 'Nunito', 'Open Sans', sans-serif;
@@ -65,5 +65,3 @@ h1, h2, h3, h4, h5, h6 {
 /* CSS Layers for PrimeNG */
 @layer base, primeng, components;
 
-/* PrimeIcons */
-@import "primeicons/primeicons.css";

@@ -26,12 +26,12 @@
                 Leitura para {{ reading()?.client?.fullName }}
               </h1>
               <p-tag 
-                [value]="getStatusLabel(reading()!.status)" 
-                [severity]="getStatusSeverity(reading()!.status)"
+                [value]="getStatusLabel(reading()?.status ?? 'DRAFT')" 
+                [severity]="getStatusSeverity(reading()?.status ?? 'DRAFT')"
               />
             </div>
             <p class="text-secondary">{{ reading()?.orderItem?.product?.name }}</p>
-            <p class="text-secondary/60 text-sm">Criado em {{ formatDate(reading()!.createdAt) }}</p>
+            <p class="text-secondary/60 text-sm">Criado em {{ formatDate(reading()?.createdAt ?? '') }}</p>
           </div>
 
           <div class="flex gap-3">
@@ -60,14 +60,14 @@
       </div>
 
       <!-- Questions -->
-      @if (reading()?.orderItem?.clientQuestions && reading()!.orderItem!.clientQuestions.length > 0) {
+      @if (reading()?.orderItem?.clientQuestions?.length) {
         <div class="glass-card p-6 mb-6 bg-gradient-to-r from-accent/10 to-purple-600/10">
           <h3 class="heading-3 text-primary mb-4 flex items-center gap-2">
             <i class="pi pi-question-circle"></i>
             Perguntas do Cliente
           </h3>
           <div class="space-y-3">
-            @for (question of reading()!.orderItem!.clientQuestions; track $index) {
+            @for (question of reading()?.orderItem?.clientQuestions ?? []; track $index) {
               <div class="p-4 bg-dark/30 rounded-lg">
                 <span class="text-accent text-sm">Pergunta {{ $index + 1 }}:</span>
                 <p class="text-primary italic mt-1">"{{ question }}"</p>
@@ -149,8 +149,8 @@
                       <div class="flex-shrink-0 w-24">
                         @if (card.card?.imageUrl) {
                           <img 
-                            [src]="card.card.imageUrl" 
-                            [alt]="card.card.name"
+                            [src]="card.card?.imageUrl" 
+                            [alt]="card.card?.name"
                             class="w-full rounded-lg cursor-pointer"
                             (click)="openCardDialog($index)"
                           />

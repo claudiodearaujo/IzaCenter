@@ -1,6 +1,6 @@
 // apps/frontend/src/app/features/admin/testimonials/testimonial-list/testimonial-list.component.ts
 
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -14,6 +14,7 @@ import { RatingModule } from 'primeng/rating';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { CheckboxModule } from 'primeng/checkbox';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { TestimonialsService, Testimonial } from '../../../../core/services/testimonials.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -33,6 +34,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
     RatingModule,
     ConfirmDialogModule,
     CheckboxModule,
+    TooltipModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './testimonial-list.component.html',
@@ -47,8 +49,21 @@ export class TestimonialListComponent implements OnInit {
   loading = signal(true);
   totalRecords = signal(0);
 
+  // Computed signals for counts
+  pendingCount = computed(() => this.testimonials().filter(t => !t.isApproved).length);
+  approvedCount = computed(() => this.testimonials().filter(t => t.isApproved).length);
+  featuredCount = computed(() => this.testimonials().filter(t => t.isFeatured).length);
+
   selectedFilter: string | null = null;
   searchTerm = '';
+  selectedStatus: string | null = null;
+
+  statusOptions = [
+    { label: 'Todos', value: null },
+    { label: 'Pendentes', value: 'pending' },
+    { label: 'Aprovados', value: 'approved' },
+    { label: 'Destacados', value: 'featured' },
+  ];
 
   filterOptions = [
     { label: 'Todos', value: null },
@@ -116,12 +131,16 @@ export class TestimonialListComponent implements OnInit {
     return 'warn';
   }
 
-  formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
+  formatDate(date: Date | string): string {
+    return new Date(date).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
     });
+  }
+
+  toggleHighlight(testimonial: Testimonial) {
+    this.toggleFeatured(testimonial);
   }
 
   truncateContent(content: string, length = 100): string {
@@ -219,7 +238,7 @@ export class TestimonialListComponent implements OnInit {
   getAverageRating(): number {
     const approved = this.testimonials().filter((t) => t.isApproved);
     if (approved.length === 0) return 0;
-    const sum = approved.reduce((acc, t) => acc + t.rating, 0);
+    const sum = approved.reduce((acc, t) => acc + (t.rating ?? 0), 0);
     return Math.round((sum / approved.length) * 10) / 10;
   }
 }

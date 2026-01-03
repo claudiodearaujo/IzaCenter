@@ -65,14 +65,14 @@
           </h2>
 
           <div class="space-y-4">
-            @for (item of items(); track item.productId) {
+            @for (item of items(); track item.product.id) {
               <div class="flex gap-4 p-4 bg-dark/30 rounded-lg">
                 <!-- Image -->
                 <div class="flex-shrink-0 w-16 h-16">
-                  @if (item.coverImageUrl) {
+                  @if (item.product.coverImageUrl) {
                     <img 
-                      [src]="item.coverImageUrl" 
-                      [alt]="item.productName"
+                      [src]="item.product.coverImageUrl" 
+                      [alt]="item.product.name"
                       class="w-full h-full object-cover rounded"
                     />
                   } @else {
@@ -84,9 +84,9 @@
 
                 <!-- Info -->
                 <div class="flex-1">
-                  <h4 class="text-primary font-medium">{{ item.productName }}</h4>
+                  <h4 class="text-primary font-medium">{{ item.product.name }}</h4>
                   <p class="text-secondary text-sm">
-                    {{ getProductTypeLabel(item.productType) }} • Qtd: {{ item.quantity }}
+                    {{ getProductTypeLabel(item.product.productType) }} • Qtd: {{ item.quantity }}
                   </p>
                   @if (item.questions && item.questions[0]) {
                     <p class="text-secondary text-xs mt-1 italic truncate">
@@ -97,7 +97,7 @@
 
                 <!-- Price -->
                 <div class="text-right">
-                  <p class="text-accent font-bold">{{ item.price * item.quantity | currencyBrl }}</p>
+                  <p class="text-accent font-bold">{{ item.product.price * item.quantity | currencyBrl }}</p>
                 </div>
               </div>
             }
@@ -150,10 +150,10 @@
 
           <!-- Items Summary -->
           <div class="space-y-3 pb-6 border-b border-primary/10">
-            @for (item of items(); track item.productId) {
+            @for (item of items(); track item.product.id) {
               <div class="flex justify-between text-secondary text-sm">
-                <span>{{ item.productName }} (x{{ item.quantity }})</span>
-                <span>{{ item.price * item.quantity | currencyBrl }}</span>
+                <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                <span>{{ item.product.price * item.quantity | currencyBrl }}</span>
               </div>
             }
           </div>

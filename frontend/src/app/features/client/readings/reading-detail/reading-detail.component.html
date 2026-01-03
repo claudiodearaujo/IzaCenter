@@ -33,9 +33,9 @@
           <i class="pi pi-star text-3xl text-white"></i>
         </div>
         <h1 class="heading-1 text-primary mb-3">
-          {{ reading()?.title || reading()?.product.name }}
+          {{ reading()?.title || reading()?.product?.name }}
         </h1>
-        <p class="text-secondary mb-2">{{ reading()?.product.name }}</p>
+        <p class="text-secondary mb-2">{{ reading()?.product?.name }}</p>
         @if (reading()?.publishedAt) {
           <p class="text-secondary/60 text-sm">
             Publicada em {{ formatDate(reading()!.publishedAt!) }}
@@ -43,10 +43,10 @@
         }
 
         <!-- Questions -->
-        @if (reading()?.orderItem.questions && reading()!.orderItem.questions.length > 0) {
+        @if (reading()?.orderItem?.questions?.length) {
           <div class="mt-6 p-4 bg-dark/30 rounded-lg max-w-lg mx-auto">
             <p class="text-secondary text-sm mb-2">Sua(s) pergunta(s):</p>
-            @for (question of reading()!.orderItem.questions; track $index) {
+            @for (question of reading()?.orderItem?.questions ?? []; track $index) {
               <p class="text-primary italic">"{{ question }}"</p>
             }
           </div>
@@ -93,7 +93,7 @@
       }
 
       <!-- Cards -->
-      @if (reading()?.cards && reading()!.cards.length > 0) {
+      @if (reading()?.cards?.length) {
         <div class="glass-card p-8 mb-8">
           <h2 class="heading-3 text-primary mb-6 flex items-center gap-3">
             <i class="pi pi-th-large text-accent"></i>
@@ -101,7 +101,7 @@
           </h2>
 
           <div class="space-y-8">
-            @for (card of reading()!.cards; track card.id) {
+            @for (card of reading()?.cards ?? []; track card.id) {
               <div class="card-item">
                 <div class="flex flex-col md:flex-row gap-6">
                   <!-- Card Image -->

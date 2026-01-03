@@ -95,6 +95,10 @@ export class ReadingsService {
     return this.api.patch<ApiResponse<Reading>>(`/admin/readings/${id}/audio`, { audioUrl });
   }
 
+  uploadAudio(id: string, file: File): Observable<ApiResponse<Reading>> {
+    return this.api.upload<ApiResponse<Reading>>(`/admin/readings/${id}/upload-audio`, file);
+  }
+
   delete(id: string): Observable<{ message: string }> {
     return this.api.delete<{ message: string }>(`/admin/readings/${id}`);
   }

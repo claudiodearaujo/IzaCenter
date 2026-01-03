@@ -24,7 +24,7 @@
           />
         } @else {
           <div class="w-32 h-32 rounded-full bg-gradient-mystical flex items-center justify-center text-4xl text-white">
-            {{ user()?.fullName?.charAt(0).toUpperCase() || 'U' }}
+            {{ (user()?.fullName ?? 'U').charAt(0).toUpperCase() }}
           </div>
         }
       </div>

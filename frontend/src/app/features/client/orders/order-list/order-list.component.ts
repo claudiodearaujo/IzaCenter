@@ -64,8 +64,10 @@ export class OrderListComponent implements OnInit {
 
     this.api
       .get<OrdersResponse>('/users/me/orders', {
-        page: this.currentPage(),
-        limit: this.pageSize,
+        params: {
+          page: this.currentPage(),
+          limit: this.pageSize,
+        }
       })
       .subscribe({
         next: (response) => {

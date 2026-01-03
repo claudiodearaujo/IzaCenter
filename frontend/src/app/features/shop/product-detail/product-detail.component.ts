@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
-import {  TabsModule } from 'primeng/tabs';
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { SkeletonModule } from 'primeng/skeleton';
 import { GalleriaModule } from 'primeng/galleria';
 
@@ -26,7 +26,11 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
     FormsModule,
     ButtonModule,
     TextareaModule,
-    TabsModule,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel,
     SkeletonModule,
     GalleriaModule,
     CurrencyBrlPipe,
@@ -77,8 +81,7 @@ export class ProductDetailComponent implements OnInit {
     if (!categoryId) return;
 
     this.api.get<{ data: Product[] }>('/products/public', {
-      categoryId,
-      limit: 4,
+      params: { categoryId, limit: 4 },
     }).subscribe({
       next: (response) => {
         const filtered = response.data.filter(p => p.id !== this.product()?.id);
@@ -93,17 +96,11 @@ export class ProductDetailComponent implements OnInit {
 
     this.addingToCart.set(true);
 
-    this.cartService.addItem({
-      productId: prod.id,
-      productName: prod.name,
-      productSlug: prod.slug,
-      productType: prod.productType,
-      price: prod.price,
-      originalPrice: prod.originalPrice,
-      coverImageUrl: prod.coverImageUrl,
-      quantity: 1,
-      questions: this.question() ? [this.question()] : [],
-    });
+    this.cartService.addItem(
+      prod,
+      1,
+      this.question() ? [this.question()] : []
+    );
 
     this.notification.success('Produto adicionado ao carrinho!');
     this.addingToCart.set(false);
