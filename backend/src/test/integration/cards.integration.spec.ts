@@ -35,7 +35,7 @@ describe('Cards Integration Tests', () => {
       expect(card.name).toBe('O Sol');
 
       // Verify in database
-      const dbCard = await testPrisma.card.findUnique({
+      const dbCard = await testPrisma.ciganoCard.findUnique({
         where: { id: card.id },
       });
       expect(dbCard).not.toBeNull();
@@ -48,7 +48,7 @@ describe('Cards Integration Tests', () => {
       await createTestCard({ number: 3, name: 'A Estrela' });
 
       // Act
-      const cards = await testPrisma.card.findMany({
+      const cards = await testPrisma.ciganoCard.findMany({
         orderBy: { number: 'asc' },
       });
 
@@ -61,7 +61,7 @@ describe('Cards Integration Tests', () => {
       const createdCard = await createTestCard({ number: 99, name: 'Carta Teste' });
 
       // Act
-      const card = await testPrisma.card.findFirst({
+      const card = await testPrisma.ciganoCard.findFirst({
         where: { number: 99 },
       });
 
@@ -75,7 +75,7 @@ describe('Cards Integration Tests', () => {
       const card = await createTestCard({ number: 100, name: 'Carta Original' });
 
       // Act
-      const updatedCard = await testPrisma.card.update({
+      const updatedCard = await testPrisma.ciganoCard.update({
         where: { id: card.id },
         data: { name: 'Carta Atualizada' },
       });
@@ -89,12 +89,12 @@ describe('Cards Integration Tests', () => {
       const card = await createTestCard({ number: 101, name: 'Carta Para Deletar' });
 
       // Act
-      await testPrisma.card.delete({
+      await testPrisma.ciganoCard.delete({
         where: { id: card.id },
       });
 
       // Assert
-      const deletedCard = await testPrisma.card.findUnique({
+      const deletedCard = await testPrisma.ciganoCard.findUnique({
         where: { id: card.id },
       });
       expect(deletedCard).toBeNull();

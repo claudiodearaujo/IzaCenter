@@ -5,7 +5,7 @@
  * Make sure to have a TEST_DATABASE_URL environment variable set.
  */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, ProductType } from '@prisma/client';
 
 // Use a separate Prisma instance for integration tests
 export const testPrisma = new PrismaClient({
@@ -54,7 +54,6 @@ export async function createTestUser(data: {
       fullName: data.fullName || 'Test User',
       role: data.role || 'CLIENT',
       passwordHash: data.password || 'hashedpassword123',
-      isVerified: true,
     },
   });
 }
@@ -81,10 +80,10 @@ export async function createTestProduct(data: {
     data: {
       name: data.name || `Test Product ${Date.now()}`,
       slug: `test-product-${Date.now()}`,
-      description: 'Test product description',
+      shortDescription: 'Test product description',
       price: data.price || 100,
       categoryId: data.categoryId,
-      productType: 'SERVICE',
+      productType: ProductType.QUESTION,
       isActive: true,
     },
   });
@@ -94,7 +93,7 @@ export async function createTestCard(data: {
   number?: number;
   name?: string;
 }) {
-  return testPrisma.card.create({
+  return testPrisma.ciganoCard.create({
     data: {
       number: data.number || Math.floor(Math.random() * 1000),
       name: data.name || `Test Card ${Date.now()}`,
@@ -106,7 +105,7 @@ export async function createTestCard(data: {
 
 export async function createTestOrder(data: {
   clientId: string;
-  items: Array<{ productId: string; quantity: number; unitPrice: number }>;
+  items: Array<{ productId: string; productName: string; quantity: number; unitPrice: number }>;
 }) {
   const total = data.items.reduce(
     (sum, item) => sum + item.quantity * item.unitPrice,
@@ -117,14 +116,18 @@ export async function createTestOrder(data: {
     data: {
       orderNumber: `ORD-TEST-${Date.now()}`,
       clientId: data.clientId,
+      subtotal: total,
       total,
       status: 'PENDING',
       paymentStatus: 'PENDING',
       items: {
         create: data.items.map((item) => ({
           productId: item.productId,
+          productName: item.productName,
+          productType: ProductType.QUESTION,
           quantity: item.quantity,
           unitPrice: item.unitPrice,
+          totalPrice: item.quantity * item.unitPrice,
         })),
       },
     },
