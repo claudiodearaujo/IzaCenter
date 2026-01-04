@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f3e8ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fce7f3;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="skinGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fcd5ce;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f8b4a8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="hairGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b4513;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#654321;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9333ea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="150" cy="150" r="140" fill="url(#bgGradient)"/>
+  
+  <!-- Decorative elements -->
+  <g opacity="0.3">
+    <circle cx="80" cy="80" r="20" fill="#c4b5fd"/>
+    <circle cx="230" cy="100" r="15" fill="#fbcfe8"/>
+    <circle cx="210" cy="220" r="18" fill="#c4b5fd"/>
+  </g>
+  
+  <!-- Hair back -->
+  <ellipse cx="150" cy="130" rx="70" ry="80" fill="url(#hairGradient)"/>
+  
+  <!-- Neck -->
+  <rect x="130" y="170" width="40" height="40" rx="5" fill="url(#skinGradient)"/>
+  
+  <!-- Dress/Shoulders -->
+  <path d="M80 280 Q80 210, 150 200 Q220 210, 220 280 Z" fill="url(#dressGradient)"/>
+  
+  <!-- Necklace -->
+  <ellipse cx="150" cy="215" rx="30" ry="8" fill="none" stroke="#d4af37" stroke-width="3"/>
+  <circle cx="150" cy="223" r="8" fill="#d4af37"/>
+  <polygon points="150,223 145,235 155,235" fill="#d4af37"/>
+  
+  <!-- Face -->
+  <ellipse cx="150" cy="130" rx="55" ry="60" fill="url(#skinGradient)"/>
+  
+  <!-- Hair front -->
+  <path d="M95 100 Q95 70, 150 65 Q205 70, 205 100 Q200 85, 150 80 Q100 85, 95 100 Z" fill="url(#hairGradient)"/>
+  <path d="M85 130 Q80 100, 95 80" stroke="url(#hairGradient)" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <path d="M215 130 Q220 100, 205 80" stroke="url(#hairGradient)" stroke-width="20" fill="none" stroke-linecap="round"/>
+  
+  <!-- Eyes -->
+  <ellipse cx="125" cy="125" rx="12" ry="8" fill="#3d2914"/>
+  <ellipse cx="175" cy="125" rx="12" ry="8" fill="#3d2914"/>
+  <circle cx="127" cy="123" r="3" fill="white"/>
+  <circle cx="177" cy="123" r="3" fill="white"/>
+  
+  <!-- Eyebrows -->
+  <path d="M110 110 Q125 105, 140 110" stroke="#5d4037" stroke-width="2" fill="none"/>
+  <path d="M160 110 Q175 105, 190 110" stroke="#5d4037" stroke-width="2" fill="none"/>
+  
+  <!-- Nose -->
+  <path d="M150 130 Q148 140, 150 150 Q147 152, 150 152" stroke="#e8a090" stroke-width="2" fill="none"/>
+  
+  <!-- Smile -->
+  <path d="M130 165 Q150 180, 170 165" stroke="#c76e6e" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Blush -->
+  <ellipse cx="115" cy="145" rx="10" ry="6" fill="#ffc0cb" opacity="0.4"/>
+  <ellipse cx="185" cy="145" rx="10" ry="6" fill="#ffc0cb" opacity="0.4"/>
+  
+  <!-- Earrings -->
+  <circle cx="90" cy="135" r="5" fill="#d4af37"/>
+  <circle cx="210" cy="135" r="5" fill="#d4af37"/>
+  
+  <!-- Sparkle decoration -->
+  <g fill="#d4af37" opacity="0.8">
+    <polygon points="250,50 252,56 258,56 253,60 255,66 250,62 245,66 247,60 242,56 248,56"/>
+    <polygon points="50,200 51,204 55,204 52,207 53,211 50,208 47,211 48,207 45,204 49,204"/>
+  </g>
+</svg>

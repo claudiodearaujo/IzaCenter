@@ -71,3 +71,7 @@ button[disabled] {
   white-space: nowrap;
   max-width: 200px;
 }
+section{
+  padding-top: 25px;
+  padding-bottom: 25px;
+}

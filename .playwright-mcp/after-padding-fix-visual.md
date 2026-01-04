@@ -1,0 +1,222 @@
+### Page state
+- Page URL: http://localhost:4200/
+- Page Title: Frontend
+- Page Snapshot:
+```yaml
+- generic [ref=e4]:
+  - banner [ref=e6]:
+    - navigation [ref=e7]:
+      - generic [ref=e8]:
+        - link "✨ Izabela Tarot" [ref=e9] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e10]: ✨
+          - generic [ref=e11]: Izabela Tarot
+        - generic [ref=e12]:
+          - link "Início" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Sobre" [ref=e14] [cursor=pointer]:
+            - /url: /sobre
+          - link "Serviços" [ref=e15] [cursor=pointer]:
+            - /url: /servicos
+          - link "Loja" [ref=e16] [cursor=pointer]:
+            - /url: /loja
+          - link "Depoimentos" [ref=e17] [cursor=pointer]:
+            - /url: /depoimentos
+          - link "Contato" [ref=e18] [cursor=pointer]:
+            - /url: /contato
+        - generic [ref=e19]:
+          - link "" [ref=e20] [cursor=pointer]:
+            - /url: /carrinho
+            - generic [ref=e21]: 
+          - generic [ref=e22]:
+            - link "Painel Admin" [ref=e23] [cursor=pointer]:
+              - /url: /admin
+            - button "Sair" [ref=e24]
+        - text: 
+  - main [ref=e25]:
+    - generic [ref=e26]:
+      - generic [ref=e27]:
+        - generic [ref=e30]:
+          - img "Bola de cristal" [ref=e31]
+          - heading "Descubra os caminhos do seu destino" [level=1] [ref=e32]
+          - paragraph [ref=e33]: Leituras de tarot terapêutico com o baralho cigano Lenormand. Orientação para sua jornada de autoconhecimento e crescimento pessoal.
+          - generic [ref=e34]:
+            - link " Ver Serviços" [ref=e35] [cursor=pointer]:
+              - /url: /loja
+              - button " Ver Serviços" [ref=e37]:
+                - generic [ref=e38]: 
+                - generic [ref=e39]: Ver Serviços
+            - link "Conheça a Izabela" [ref=e40] [cursor=pointer]:
+              - /url: /sobre
+              - button "Conheça a Izabela" [ref=e42]:
+                - generic [ref=e43]: Conheça a Izabela
+        - generic [ref=e45]: 
+      - generic [ref=e48]:
+        - img "Izabela Santos" [ref=e51]
+        - generic [ref=e53]:
+          - text: Sobre Mim
+          - heading "Olá, eu sou a Izabela Santos" [level=2] [ref=e54]
+          - paragraph [ref=e55]: Taróloga e estudante de Psicologia Analítica Junguiana, com formação em Administração de Empresas e Terapias Integrativas Naturais.
+          - paragraph [ref=e56]: Utilizo o baralho cigano Lenormand (36 cartas) para oferecer orientação em áreas como profissional, saúde e relacionamentos.
+          - generic [ref=e57]:
+            - generic [ref=e58]: 🇧🇷 Português
+            - generic [ref=e59]: 🇺🇸 English
+            - generic [ref=e60]: 🇫🇷 Français
+            - generic [ref=e61]: 🇪🇸 Español
+          - link " Saiba Mais" [ref=e62] [cursor=pointer]:
+            - /url: /sobre
+            - button " Saiba Mais" [ref=e64]:
+              - generic [ref=e65]: 
+              - generic [ref=e66]: Saiba Mais
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - text: Serviços
+          - heading "Escolha sua forma de consulta" [level=2] [ref=e70]
+        - generic [ref=e71]:
+          - link "Leitura por Perguntas Leitura por Perguntas Respostas claras e objetivas para suas questões mais importantes. Saiba mais " [ref=e72] [cursor=pointer]:
+            - /url: /loja
+            - img "Leitura por Perguntas" [ref=e73]
+            - heading "Leitura por Perguntas" [level=3] [ref=e74]
+            - paragraph [ref=e75]: Respostas claras e objetivas para suas questões mais importantes.
+            - generic [ref=e76]:
+              - text: Saiba mais
+              - generic [ref=e77]: 
+          - link "Sessão Online ao Vivo Sessão Online ao Vivo Consulta personalizada por videochamada com orientação em tempo real. Saiba mais " [ref=e78] [cursor=pointer]:
+            - /url: /loja
+            - img "Sessão Online ao Vivo" [ref=e79]
+            - heading "Sessão Online ao Vivo" [level=3] [ref=e80]
+            - paragraph [ref=e81]: Consulta personalizada por videochamada com orientação em tempo real.
+            - generic [ref=e82]:
+              - text: Saiba mais
+              - generic [ref=e83]: 
+          - link "Jogo Mensal Jogo Mensal Acompanhamento mensal com previsões e orientações para o mês. Saiba mais " [ref=e84] [cursor=pointer]:
+            - /url: /loja
+            - img "Jogo Mensal" [ref=e85]
+            - heading "Jogo Mensal" [level=3] [ref=e86]
+            - paragraph [ref=e87]: Acompanhamento mensal com previsões e orientações para o mês.
+            - generic [ref=e88]:
+              - text: Saiba mais
+              - generic [ref=e89]: 
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - text: Depoimentos
+          - heading "O que dizem minhas clientes" [level=2] [ref=e93]
+        - generic [ref=e94]:
+          - generic [ref=e96]:
+            - img [ref=e98]
+            - paragraph [ref=e100]: "\"A leitura da Izabela foi transformadora. Me ajudou a entender melhor meu momento profissional.\""
+            - generic [ref=e101]:
+              - generic [ref=e102]: 
+              - generic [ref=e103]: 
+              - generic [ref=e104]: 
+              - generic [ref=e105]: 
+              - generic [ref=e106]: 
+            - generic [ref=e107]:
+              - generic [ref=e108]: MS
+              - generic [ref=e109]:
+                - paragraph [ref=e110]: Maria Silva
+                - paragraph [ref=e111]: Cliente
+          - generic [ref=e113]:
+            - img [ref=e115]
+            - paragraph [ref=e117]: "\"Clareza e acolhimento em cada palavra. Recomendo demais!\""
+            - generic [ref=e118]:
+              - generic [ref=e119]: 
+              - generic [ref=e120]: 
+              - generic [ref=e121]: 
+              - generic [ref=e122]: 
+              - generic [ref=e123]: 
+            - generic [ref=e124]:
+              - generic [ref=e125]: AP
+              - generic [ref=e126]:
+                - paragraph [ref=e127]: Ana Paula
+                - paragraph [ref=e128]: Cliente
+          - generic [ref=e130]:
+            - img [ref=e132]
+            - paragraph [ref=e134]: "\"Encontrei orientação e paz. A Izabela tem um dom especial.\""
+            - generic [ref=e135]:
+              - generic [ref=e136]: 
+              - generic [ref=e137]: 
+              - generic [ref=e138]: 
+              - generic [ref=e139]: 
+              - generic [ref=e140]: 
+            - generic [ref=e141]:
+              - generic [ref=e142]: JC
+              - generic [ref=e143]:
+                - paragraph [ref=e144]: Juliana Costa
+                - paragraph [ref=e145]: Cliente
+        - link "Ver Todos os Depoimentos" [ref=e147] [cursor=pointer]:
+          - /url: /depoimentos
+          - button "Ver Todos os Depoimentos" [ref=e149]:
+            - generic [ref=e150]: Ver Todos os Depoimentos
+      - generic [ref=e152]:
+        - heading "Pronta para descobrir seu caminho?" [level=2] [ref=e153]
+        - paragraph [ref=e154]: Agende sua leitura e receba orientação para sua jornada de autoconhecimento.
+        - link " Agendar Consulta" [ref=e155] [cursor=pointer]:
+          - /url: /loja
+          - button " Agendar Consulta" [ref=e157]:
+            - generic [ref=e158]: 
+            - generic [ref=e159]: Agendar Consulta
+  - contentinfo [ref=e161]:
+    - generic [ref=e162]:
+      - generic [ref=e163]:
+        - generic [ref=e164]:
+          - generic [ref=e165]:
+            - generic [ref=e166]: ✨
+            - generic [ref=e167]: Izabela Tarot
+          - paragraph [ref=e168]: Leituras de tarot terapêutico para orientação em sua jornada de autoconhecimento e crescimento pessoal.
+          - generic [ref=e169]:
+            - link "Instagram" [ref=e170] [cursor=pointer]:
+              - /url: https://instagram.com/izabela.tarot
+              - generic [ref=e171]: 
+            - link "WhatsApp" [ref=e172] [cursor=pointer]:
+              - /url: https://wa.me/5531999999999
+              - generic [ref=e173]: 
+            - link "Email" [ref=e174] [cursor=pointer]:
+              - /url: mailto:izabela.ayurvida@gmail.com
+              - generic [ref=e175]: 
+        - generic [ref=e176]:
+          - heading "Links Rápidos" [level=3] [ref=e177]
+          - list [ref=e178]:
+            - listitem [ref=e179]:
+              - link "Início" [ref=e180] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e181]:
+              - link "Sobre" [ref=e182] [cursor=pointer]:
+                - /url: /sobre
+            - listitem [ref=e183]:
+              - link "Serviços" [ref=e184] [cursor=pointer]:
+                - /url: /servicos
+            - listitem [ref=e185]:
+              - link "Loja" [ref=e186] [cursor=pointer]:
+                - /url: /loja
+            - listitem [ref=e187]:
+              - link "Contato" [ref=e188] [cursor=pointer]:
+                - /url: /contato
+        - generic [ref=e189]:
+          - heading "Informações" [level=3] [ref=e190]
+          - list [ref=e191]:
+            - listitem [ref=e192]:
+              - link "Termos de Uso" [ref=e193] [cursor=pointer]:
+                - /url: /termos
+            - listitem [ref=e194]:
+              - link "Política de Privacidade" [ref=e195] [cursor=pointer]:
+                - /url: /privacidade
+            - listitem [ref=e196]:
+              - link "FAQ" [ref=e197] [cursor=pointer]:
+                - /url: /faq
+        - generic [ref=e198]:
+          - heading "Contato" [level=3] [ref=e199]
+          - generic [ref=e200]:
+            - paragraph [ref=e201]:
+              - generic [ref=e202]: 
+              - text: Belo Horizonte, MG
+            - paragraph [ref=e203]:
+              - generic [ref=e204]: 
+              - text: izabela.ayurvida@gmail.com
+            - paragraph [ref=e205]:
+              - generic [ref=e206]: 
+              - text: "Seg - Sex: 9h às 18h"
+      - generic [ref=e207]:
+        - paragraph [ref=e208]: © 2026 Izabela Tarot. Todos os direitos reservados.
+        - paragraph [ref=e209]: Tarot é uma ferramenta de autoconhecimento e não substitui orientação médica ou psicológica profissional.
+```

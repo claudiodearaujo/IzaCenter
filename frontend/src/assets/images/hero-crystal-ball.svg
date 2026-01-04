@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="ballGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c4b5fd;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a78bfa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="baseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4af37;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b8860b;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="glowGradient" cx="30%" cy="30%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Base -->
+  <ellipse cx="100" cy="175" rx="50" ry="12" fill="url(#baseGradient)"/>
+  <path d="M60 165 Q60 175, 100 175 Q140 175, 140 165 L140 160 Q140 170, 100 170 Q60 170, 60 160 Z" fill="url(#baseGradient)"/>
+  
+  <!-- Crystal Ball -->
+  <circle cx="100" cy="100" r="65" fill="url(#ballGradient)" opacity="0.9"/>
+  
+  <!-- Inner glow -->
+  <circle cx="85" cy="85" r="40" fill="url(#glowGradient)"/>
+  
+  <!-- Stars inside -->
+  <g fill="#fef3c7" opacity="0.9">
+    <polygon points="80,70 82,76 88,76 83,80 85,86 80,82 75,86 77,80 72,76 78,76" />
+    <polygon points="115,95 116,99 120,99 117,102 118,106 115,103 112,106 113,102 110,99 114,99" />
+    <polygon points="95,115 96,118 99,118 97,120 98,123 95,121 92,123 93,120 91,118 94,118" />
+  </g>
+  
+  <!-- Sparkles around -->
+  <g fill="#c4b5fd">
+    <circle cx="45" cy="60" r="3"/>
+    <circle cx="155" cy="50" r="2"/>
+    <circle cx="160" cy="120" r="2.5"/>
+    <circle cx="35" cy="130" r="2"/>
+  </g>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="sparkleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef3c7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d4af37;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main star -->
+  <polygon points="50,5 56,35 85,40 60,55 65,85 50,65 35,85 40,55 15,40 44,35" fill="url(#sparkleGradient)"/>
+  
+  <!-- Inner glow -->
+  <circle cx="50" cy="45" r="10" fill="white" opacity="0.6"/>
+  
+  <!-- Small stars around -->
+  <g fill="#fef3c7">
+    <polygon points="20,15 21,19 25,19 22,22 23,26 20,23 17,26 18,22 15,19 19,19" opacity="0.8"/>
+    <polygon points="85,20 86,23 89,23 87,25 88,28 85,26 82,28 83,25 81,23 84,23" opacity="0.7"/>
+    <polygon points="80,75 81,78 84,78 82,80 83,83 80,81 77,83 78,80 76,78 79,78" opacity="0.8"/>
+    <polygon points="15,70 16,73 19,73 17,75 18,78 15,76 12,78 13,75 11,73 14,73" opacity="0.6"/>
+  </g>
+  
+  <!-- Dots -->
+  <circle cx="30" cy="50" r="2" fill="#fef3c7" opacity="0.5"/>
+  <circle cx="70" cy="30" r="1.5" fill="#fef3c7" opacity="0.6"/>
+  <circle cx="75" cy="60" r="2" fill="#fef3c7" opacity="0.4"/>
+</svg>

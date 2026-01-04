@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="#faf5ff"/>
+  
+  <!-- Laptop/screen -->
+  <rect x="20" y="25" width="80" height="55" rx="5" fill="#1e1b4b" stroke="#d4af37" stroke-width="2"/>
+  <rect x="25" y="30" width="70" height="45" rx="3" fill="url(#screenGradient)"/>
+  
+  <!-- Person on screen -->
+  <circle cx="60" cy="48" r="12" fill="#fcd5ce"/>
+  <ellipse cx="60" cy="70" rx="15" ry="10" fill="#9333ea"/>
+  
+  <!-- Video call icons -->
+  <circle cx="35" cy="65" r="5" fill="#22c55e"/>
+  <rect x="80" y="60" width="10" height="10" rx="2" fill="#ef4444"/>
+  
+  <!-- Laptop base -->
+  <path d="M15 80 L25 80 L25 82 L95 82 L95 80 L105 80 L105 85 Q105 88, 100 88 L20 88 Q15 88, 15 85 Z" fill="#374151"/>
+  
+  <!-- Sparkles -->
+  <g fill="#d4af37">
+    <polygon points="100,20 101,24 105,24 102,27 103,31 100,28 97,31 98,27 95,24 99,24"/>
+    <polygon points="20,95 21,98 24,98 22,100 23,103 20,101 17,103 18,100 16,98 19,98"/>
+  </g>
+  
+  <!-- Connection waves -->
+  <g stroke="#c4b5fd" stroke-width="1.5" fill="none">
+    <path d="M10 45 Q5 50, 10 55" opacity="0.6"/>
+    <path d="M5 42 Q-2 50, 5 58" opacity="0.4"/>
+    <path d="M110 45 Q115 50, 110 55" opacity="0.6"/>
+    <path d="M115 42 Q122 50, 115 58" opacity="0.4"/>
+  </g>
+</svg>

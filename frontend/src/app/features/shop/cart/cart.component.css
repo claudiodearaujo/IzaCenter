@@ -81,3 +81,7 @@ button[disabled] {
     transform: translateY(0);
   }
 }
+section{
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
