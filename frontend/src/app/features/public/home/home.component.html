@@ -1,0 +1,138 @@
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex items-center overflow-hidden px-4 sm:px-6 lg:px-8" style="background: linear-gradient(to bottom right, #faf5ff, white, #fdf2f8);">
+  <!-- Background decorations -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-20 left-10 w-64 h-64 rounded-full blur-3xl" style="background: rgba(233, 213, 255, 0.3);"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl" style="background: rgba(251, 207, 232, 0.3);"></div>
+    <img src="assets/images/hero-crystal-ball.svg" alt="" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[28rem] h-[28rem] opacity-10 pointer-events-none" />
+  </div>
+
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+    <div class="max-w-3xl mx-auto text-center" @fadeInUp>
+      <img src="assets/images/hero-crystal-ball.svg" alt="Bola de cristal" class="inline-block w-24 h-24 mb-6" />
+      <h1 class="text-4xl md:text-6xl font-serif font-bold text-neutral-900 mb-6 leading-tight">
+        Descubra os caminhos do seu
+        <span class="text-primary-600">destino</span>
+      </h1>
+      <p class="text-lg md:text-xl text-neutral-600 mb-8 leading-relaxed">
+        Leituras de tarot terapêutico com o baralho cigano Lenormand. 
+        Orientação para sua jornada de autoconhecimento e crescimento pessoal.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a routerLink="/loja">
+          <p-button label="Ver Serviços" icon="pi pi-arrow-right" iconPos="right" size="large" />
+        </a>
+        <a routerLink="/sobre">
+          <p-button label="Conheça a Izabela" [outlined]="true" size="large" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+    <i class="pi pi-chevron-down text-2xl text-primary-400"></i>
+  </div>
+</section>
+
+<!-- About Preview -->
+<section class="py-28 px-4 sm:px-6 lg:px-8 bg-white mb-0">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div class="relative">
+        <div class="aspect-square rounded-3xl overflow-hidden flex items-center justify-center" style="background: linear-gradient(to bottom right, #f3e8ff, #fce7f3);">
+          <img src="assets/images/izabela-profile.svg" alt="Izabela Santos" class="w-full h-full object-cover" />
+        </div>
+          </div>
+      <div>
+        <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">Sobre Mim</span>
+        <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2 mb-6">
+          Olá, eu sou a Izabela Santos
+        </h2>
+        <p class="text-neutral-600 mb-4 leading-relaxed">
+          Taróloga e estudante de Psicologia Analítica Junguiana, com formação em 
+          Administração de Empresas e Terapias Integrativas Naturais.
+        </p>
+        <p class="text-neutral-600 mb-6 leading-relaxed">
+          Utilizo o baralho cigano Lenormand (36 cartas) para oferecer orientação 
+          em áreas como profissional, saúde e relacionamentos.
+        </p>
+        <div class="flex flex-wrap gap-3 mb-6">
+          <span class="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm">🇧🇷 Português</span>
+          <span class="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm">🇺🇸 English</span>
+          <span class="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm">🇫🇷 Français</span>
+          <span class="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm">🇪🇸 Español</span>
+        </div>
+        <a routerLink="/sobre">
+          <p-button label="Saiba Mais" icon="pi pi-arrow-right" iconPos="right" [outlined]="true" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="py-28 px-4 sm:px-6 lg:px-8" style="background: linear-gradient(to bottom, #fafafa, white);" mb-0>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">Serviços</span>
+      <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2">
+        Escolha sua forma de consulta
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8" @listAnimation>
+      @for (service of services; track service.title) {
+        <a [routerLink]="service.link" 
+           class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 text-center">
+          <img [src]="service.icon" [alt]="service.title" class="w-20 h-20 mx-auto mb-4 group-hover:scale-110 transition-transform" />
+          <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-3">{{ service.title }}</h3>
+          <p class="text-neutral-600 mb-4">{{ service.description }}</p>
+          <span class="text-primary-600 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+            Saiba mais <i class="pi pi-arrow-right text-sm"></i>
+          </span>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-28 px-4 sm:px-6 lg:px-8 bg-white mb-0">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">Depoimentos</span>
+      <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2">
+        O que dizem minhas clientes
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      @for (testimonial of testimonials(); track testimonial.id) {
+        <app-testimonial-card [testimonial]="testimonial" />
+      }
+    </div>
+
+    <div class="text-center mt-10">
+      <a routerLink="/depoimentos">
+        <p-button label="Ver Todos os Depoimentos" [outlined]="true" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-28 px-4 sm:px-6 lg:px-8 text-white mb-0" style="background: linear-gradient(to right, #7c3aed, #9333ea, #7c3aed);">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <img src="assets/images/cta-sparkle.svg" alt="" class="w-16 h-16 mx-auto mb-6" />
+    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">
+      Pronta para descobrir seu caminho?
+    </h2>
+    <p class="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+      Agende sua leitura e receba orientação para sua jornada de autoconhecimento.
+    </p>
+    <a routerLink="/loja">
+      <p-button label="Agendar Consulta" icon="pi pi-calendar" size="large" severity="secondary" />
+    </a>
+  </div>
+</section>

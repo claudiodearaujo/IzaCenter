@@ -1,0 +1,19 @@
+<div class="py-16">
+  <div class="container mx-auto px-4 max-w-3xl">
+    <div class="text-center mb-16">
+      <span class="text-5xl block mb-4">❓</span>
+      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">Perguntas Frequentes</h1>
+      <p class="text-xl text-neutral-600">Tire suas dúvidas sobre as leituras de tarot.</p>
+    </div>
+    <p-accordion [multiple]="true">
+      @for (faq of faqs(); track faq.question) {
+        <p-accordion-panel>
+          <p-accordion-header>{{ faq.question }}</p-accordion-header>
+          <p-accordion-content>
+            <p class="text-neutral-600 leading-relaxed">{{ faq.answer }}</p>
+          </p-accordion-content>
+        </p-accordion-panel>
+      }
+    </p-accordion>
+  </div>
+</div>

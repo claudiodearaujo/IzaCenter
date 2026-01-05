@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+
+.font-serif {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-25%) translateX(-50%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0) translateX(-50%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+section{
+  padding-top: 25px;
+  padding-bottom: 25px;
+}

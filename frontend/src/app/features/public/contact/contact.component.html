@@ -1,0 +1,92 @@
+<div class="py-16">
+  <div class="container mx-auto px-4">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <span class="text-5xl block mb-4">💌</span>
+      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">
+        Contato
+      </h1>
+      <p class="text-xl text-neutral-600 max-w-2xl mx-auto">
+        Entre em contato para tirar dúvidas ou agendar sua consulta.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-12">
+      <!-- Contact Form -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm">
+        <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-6">
+          Envie uma mensagem
+        </h2>
+        
+        <form (ngSubmit)="onSubmit()" class="space-y-6">
+          <div>
+            <label for="name" class="block text-sm font-medium text-neutral-700 mb-2">Nome</label>
+            <input pInputText id="name" [(ngModel)]="form.name" name="name" 
+                   class="w-full" placeholder="Seu nome" required />
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">Email</label>
+            <input pInputText id="email" [(ngModel)]="form.email" name="email" type="email"
+                   class="w-full" placeholder="seu@email.com" required />
+          </div>
+
+          <div>
+            <label for="subject" class="block text-sm font-medium text-neutral-700 mb-2">Assunto</label>
+            <input pInputText id="subject" [(ngModel)]="form.subject" name="subject"
+                   class="w-full" placeholder="Sobre o que deseja falar?" required />
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-medium text-neutral-700 mb-2">Mensagem</label>
+            <textarea pTextarea id="message" [(ngModel)]="form.message" name="message"
+                      class="w-full" rows="5" placeholder="Escreva sua mensagem..." required></textarea>
+          </div>
+
+          <p-button type="submit" label="Enviar Mensagem" icon="pi pi-send" 
+                    [loading]="isLoading()" styleClass="w-full" />
+        </form>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="space-y-8">
+        <div class="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-3xl p-8">
+          <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-6">
+            Informações de Contato
+          </h2>
+          
+          <div class="space-y-6">
+            @for (info of contactInfo; track info.label) {
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                  <i class="pi text-primary-600 text-lg" [class]="info.icon"></i>
+                </div>
+                <div>
+                  <p class="text-sm text-neutral-500">{{ info.label }}</p>
+                  <p class="text-neutral-800 font-medium">{{ info.value }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        <div class="bg-white rounded-3xl p-8 shadow-sm">
+          <h3 class="text-xl font-serif font-semibold text-neutral-900 mb-4">
+            Redes Sociais
+          </h3>
+          <div class="flex gap-4">
+            <a href="https://instagram.com/izabela.tarot" target="_blank" rel="noopener"
+               class="w-12 h-12 bg-primary-100 hover:bg-primary-200 rounded-xl flex items-center justify-center transition-colors">
+              <i class="pi pi-instagram text-primary-700 text-xl"></i>
+            </a>
+            <a href="https://wa.me/5531999999999" target="_blank" rel="noopener"
+               class="w-12 h-12 bg-green-100 hover:bg-green-200 rounded-xl flex items-center justify-center transition-colors">
+              <i class="pi pi-whatsapp text-green-700 text-xl"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

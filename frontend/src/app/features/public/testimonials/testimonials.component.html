@@ -1,0 +1,14 @@
+<div class="py-16">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <span class="text-5xl block mb-4">💜</span>
+      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">Depoimentos</h1>
+      <p class="text-xl text-neutral-600 max-w-2xl mx-auto">Veja o que minhas clientes dizem sobre as leituras.</p>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      @for (testimonial of testimonials(); track testimonial.id) {
+        <app-testimonial-card [testimonial]="testimonial" />
+      }
+    </div>
+  </div>
+</div>

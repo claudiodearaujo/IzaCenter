@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+.font-serif {
+  font-family: 'Cormorant Garamond', serif;
+}
+section{
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
