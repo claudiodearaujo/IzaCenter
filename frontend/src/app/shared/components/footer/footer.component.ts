@@ -23,7 +23,8 @@ export class FooterComponent {
     { label: 'Sobre', route: '/sobre' },
     { label: 'Serviços', route: '/servicos' },
     { label: 'Loja', route: '/loja' },
-    { label: 'Contato', route: '/contato' }
+    { label: 'Contato', route: '/contato' },
+       { label: 'Admin', route: '/admin' }
   ];
 
   legalLinks = [

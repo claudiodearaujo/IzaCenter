@@ -4,6 +4,25 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
+// =============================================
+// HELPER FUNCTIONS
+// =============================================
+function daysAgo(days: number): Date {
+  return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+}
+
+function daysFromNow(days: number): Date {
+  return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+}
+
+function hoursAgo(hours: number): Date {
+  return new Date(Date.now() - hours * 60 * 60 * 1000);
+}
+
+function generateOrderNumber(index: number): string {
+  return `ORD-2025-${String(index).padStart(3, '0')}`;
+}
+
 async function main() {
   console.log('🌱 Starting database seed...\n');
 
@@ -25,6 +44,33 @@ async function main() {
     },
   });
   console.log(`   ✅ Admin created: ${admin.email}\n`);
+
+  // =============================================
+  // 1b. CREATE CLIENT USER (for testing)
+  // =============================================
+  console.log('👤 Creating client user...');
+  const clientPassword = await bcrypt.hash('Client@123', 12);
+
+  const client = await prisma.user.upsert({
+    where: { email: 'client@izabelatarot.com.br' },
+    update: {},
+    create: {
+      email: 'client@izabelatarot.com.br',
+      passwordHash: clientPassword,
+      fullName: 'Maria Silva Santos',
+      role: 'CLIENT',
+      phone: '(11) 98765-4321',
+      birthDate: new Date('1988-05-15'),
+      avatarUrl: '/avatars/client-maria.jpg',
+      preferredLanguage: 'pt-BR',
+      notificationEmail: true,
+      notificationWhatsapp: true,
+      notes: 'Cliente fiel desde 2023. Prefere leituras de amor e carreira.',
+      stripeCustomerId: 'cus_test_maria_silva',
+      lastLoginAt: daysAgo(2),
+    },
+  });
+  console.log(`   ✅ Client created: ${client.email}\n`);
 
   // =============================================
   // 2. CREATE CIGANO TAROT CARDS (36 cards)
@@ -842,7 +888,7 @@ async function main() {
     const existing = await prisma.testimonial.findFirst({
       where: { clientName: testimonial.clientName },
     });
-    
+
     if (!existing) {
       await prisma.testimonial.create({
         data: testimonial,
@@ -851,15 +897,853 @@ async function main() {
   }
   console.log(`   ✅ ${testimonials.length} testimonials created\n`);
 
-  console.log('✨ Database seed completed successfully!\n');
+  // =============================================
+  // 8. CREATE TEST DATA FOR CLIENT USER
+  // =============================================
+  console.log('🧪 Creating test data for client user...\n');
+
+  // Fetch products for orders
+  const perguntaUnica = await prisma.product.findUnique({ where: { slug: 'pergunta-unica' } });
+  const tresPerguntas = await prisma.product.findUnique({ where: { slug: 'tres-perguntas' } });
+  const consulta30 = await prisma.product.findUnique({ where: { slug: 'consulta-online-30min' } });
+  const acompanhamento = await prisma.product.findUnique({ where: { slug: 'acompanhamento-mensal' } });
+  const anoNovo = await prisma.product.findUnique({ where: { slug: 'leitura-ano-novo' } });
+
+  // =============================================
+  // 8a. CREATE ORDERS
+  // =============================================
+  console.log('📦 Creating orders for client...');
+
+  // Order 1: Pergunta Única - COMPLETED
+  const order1 = await prisma.order.create({
+    data: {
+      orderNumber: generateOrderNumber(1),
+      clientId: client.id,
+      subtotal: perguntaUnica!.price,
+      discount: 0,
+      total: perguntaUnica!.price,
+      status: 'COMPLETED',
+      paymentStatus: 'SUCCEEDED',
+      stripeCheckoutSessionId: 'cs_test_order1',
+      stripePaymentIntentId: 'pi_test_order1',
+      paidAt: daysAgo(15),
+      completedAt: daysAgo(12),
+      createdAt: daysAgo(15),
+    },
+  });
+
+  // Order 2: Três Perguntas - PROCESSING
+  const order2 = await prisma.order.create({
+    data: {
+      orderNumber: generateOrderNumber(2),
+      clientId: client.id,
+      subtotal: tresPerguntas!.price,
+      discount: 0,
+      total: tresPerguntas!.price,
+      status: 'PROCESSING',
+      paymentStatus: 'SUCCEEDED',
+      stripeCheckoutSessionId: 'cs_test_order2',
+      stripePaymentIntentId: 'pi_test_order2',
+      paidAt: daysAgo(3),
+      createdAt: daysAgo(3),
+    },
+  });
+
+  // Order 3: Consulta 30min - PROCESSING
+  const order3 = await prisma.order.create({
+    data: {
+      orderNumber: generateOrderNumber(3),
+      clientId: client.id,
+      subtotal: consulta30!.price,
+      discount: 0,
+      total: consulta30!.price,
+      status: 'PROCESSING',
+      paymentStatus: 'SUCCEEDED',
+      stripeCheckoutSessionId: 'cs_test_order3',
+      stripePaymentIntentId: 'pi_test_order3',
+      paidAt: daysAgo(7),
+      createdAt: daysAgo(7),
+    },
+  });
+
+  // Order 4: Acompanhamento Mensal - COMPLETED
+  const order4 = await prisma.order.create({
+    data: {
+      orderNumber: generateOrderNumber(4),
+      clientId: client.id,
+      subtotal: acompanhamento!.price,
+      discount: 0,
+      total: acompanhamento!.price,
+      status: 'COMPLETED',
+      paymentStatus: 'SUCCEEDED',
+      stripeCheckoutSessionId: 'cs_test_order4',
+      stripePaymentIntentId: 'pi_test_order4',
+      paidAt: daysAgo(60),
+      completedAt: daysAgo(30),
+      createdAt: daysAgo(60),
+    },
+  });
+
+  // Order 5: Leitura de Ano Novo - COMPLETED
+  const order5 = await prisma.order.create({
+    data: {
+      orderNumber: generateOrderNumber(5),
+      clientId: client.id,
+      subtotal: anoNovo!.price,
+      discount: 0,
+      total: anoNovo!.price,
+      status: 'COMPLETED',
+      paymentStatus: 'SUCCEEDED',
+      stripeCheckoutSessionId: 'cs_test_order5',
+      stripePaymentIntentId: 'pi_test_order5',
+      paidAt: daysAgo(30),
+      completedAt: daysAgo(25),
+      createdAt: daysAgo(30),
+    },
+  });
+
+  console.log('   ✅ 5 orders created\n');
+
+  // =============================================
+  // 8b. CREATE ORDER ITEMS
+  // =============================================
+  console.log('📋 Creating order items...');
+
+  // Order 1 Item - Pergunta Única
+  const orderItem1 = await prisma.orderItem.create({
+    data: {
+      orderId: order1.id,
+      productId: perguntaUnica!.id,
+      productName: perguntaUnica!.name,
+      productType: perguntaUnica!.productType,
+      unitPrice: perguntaUnica!.price,
+      quantity: 1,
+      totalPrice: perguntaUnica!.price,
+      clientQuestions: ['Como está a energia do meu relacionamento atual? Há perspectivas de evolução?'],
+      createdAt: daysAgo(15),
+    },
+  });
+
+  // Order 2 Items - Três Perguntas (3 items)
+  const orderItem2a = await prisma.orderItem.create({
+    data: {
+      orderId: order2.id,
+      productId: tresPerguntas!.id,
+      productName: `${tresPerguntas!.name} - Pergunta 1`,
+      productType: tresPerguntas!.productType,
+      unitPrice: tresPerguntas!.price,
+      quantity: 1,
+      totalPrice: tresPerguntas!.price,
+      clientQuestions: ['Devo aceitar a nova proposta de emprego ou permanecer na empresa atual?'],
+      createdAt: daysAgo(3),
+    },
+  });
+
+  const orderItem2b = await prisma.orderItem.create({
+    data: {
+      orderId: order2.id,
+      productId: tresPerguntas!.id,
+      productName: `${tresPerguntas!.name} - Pergunta 2`,
+      productType: tresPerguntas!.productType,
+      unitPrice: 0,
+      quantity: 1,
+      totalPrice: 0,
+      clientQuestions: ['Como posso melhorar minha energia e disposição neste momento?'],
+      createdAt: daysAgo(3),
+    },
+  });
+
+  const orderItem2c = await prisma.orderItem.create({
+    data: {
+      orderId: order2.id,
+      productId: tresPerguntas!.id,
+      productName: `${tresPerguntas!.name} - Pergunta 3`,
+      productType: tresPerguntas!.productType,
+      unitPrice: 0,
+      quantity: 1,
+      totalPrice: 0,
+      clientQuestions: ['Qual é a melhor forma de resolver o conflito familiar que estou vivendo?'],
+      createdAt: daysAgo(3),
+    },
+  });
+
+  // Order 3 Item - Consulta 30min
+  const orderItem3 = await prisma.orderItem.create({
+    data: {
+      orderId: order3.id,
+      productId: consulta30!.id,
+      productName: consulta30!.name,
+      productType: consulta30!.productType,
+      unitPrice: consulta30!.price,
+      quantity: 1,
+      totalPrice: consulta30!.price,
+      clientQuestions: [],
+      createdAt: daysAgo(7),
+    },
+  });
+
+  // Order 4 Items - Acompanhamento Mensal (4 leituras semanais)
+  const orderItem4a = await prisma.orderItem.create({
+    data: {
+      orderId: order4.id,
+      productId: acompanhamento!.id,
+      productName: `${acompanhamento!.name} - Semana 1`,
+      productType: acompanhamento!.productType,
+      unitPrice: acompanhamento!.price,
+      quantity: 1,
+      totalPrice: acompanhamento!.price,
+      clientQuestions: ['Como estão as energias para esta semana?'],
+      createdAt: daysAgo(60),
+    },
+  });
+
+  const orderItem4b = await prisma.orderItem.create({
+    data: {
+      orderId: order4.id,
+      productId: acompanhamento!.id,
+      productName: `${acompanhamento!.name} - Semana 2`,
+      productType: acompanhamento!.productType,
+      unitPrice: 0,
+      quantity: 1,
+      totalPrice: 0,
+      clientQuestions: ['O que preciso saber para esta segunda semana?'],
+      createdAt: daysAgo(53),
+    },
+  });
+
+  const orderItem4c = await prisma.orderItem.create({
+    data: {
+      orderId: order4.id,
+      productId: acompanhamento!.id,
+      productName: `${acompanhamento!.name} - Semana 3`,
+      productType: acompanhamento!.productType,
+      unitPrice: 0,
+      quantity: 1,
+      totalPrice: 0,
+      clientQuestions: ['Quais são os desafios da terceira semana?'],
+      createdAt: daysAgo(46),
+    },
+  });
+
+  const orderItem4d = await prisma.orderItem.create({
+    data: {
+      orderId: order4.id,
+      productId: acompanhamento!.id,
+      productName: `${acompanhamento!.name} - Semana 4`,
+      productType: acompanhamento!.productType,
+      unitPrice: 0,
+      quantity: 1,
+      totalPrice: 0,
+      clientQuestions: ['Como encerro este mês da melhor forma?'],
+      createdAt: daysAgo(39),
+    },
+  });
+
+  // Order 5 Item - Leitura de Ano Novo
+  const orderItem5 = await prisma.orderItem.create({
+    data: {
+      orderId: order5.id,
+      productId: anoNovo!.id,
+      productName: anoNovo!.name,
+      productType: anoNovo!.productType,
+      unitPrice: anoNovo!.price,
+      quantity: 1,
+      totalPrice: anoNovo!.price,
+      clientQuestions: ['Quais são as previsões e orientações para os próximos 12 meses?'],
+      createdAt: daysAgo(30),
+    },
+  });
+
+  console.log('   ✅ 10 order items created\n');
+
+  // =============================================
+  // 8c. CREATE READINGS
+  // =============================================
+  console.log('📖 Creating readings...');
+
+  // Reading 1: Order 1 - PUBLISHED (Amor)
+  const reading1 = await prisma.reading.create({
+    data: {
+      orderItemId: orderItem1.id,
+      clientId: client.id,
+      title: 'Leitura sobre Amor',
+      status: 'PUBLISHED',
+      clientQuestion: 'Como está a energia do meu relacionamento atual? Há perspectivas de evolução?',
+      focusArea: 'Amor',
+      introduction: 'Querida Maria, que alegria fazer esta leitura para você! Vamos ver o que as cartas revelam sobre seu relacionamento atual.',
+      generalGuidance: 'As cartas mostram um momento de transição positiva em seu relacionamento. O Cavaleiro traz notícias e novidades que estão a caminho, indicando que mudanças benéficas se aproximam. O Coração, no centro da leitura, confirma que o amor verdadeiro está presente e forte. Por fim, O Sol ilumina o futuro com alegria e sucesso, mostrando que sim, há excelentes perspectivas de evolução para vocês dois.',
+      recommendations: '1. Mantenha-se aberta para as novidades que estão chegando\n2. Cultive a comunicação honesta com seu parceiro\n3. Celebre as pequenas conquistas do dia a dia\n4. Confie no amor que vocês construíram juntos',
+      closingMessage: 'O caminho está iluminado pelo Sol! Acredite no amor de vocês e permita que ele floresça ainda mais. As energias estão favoráveis para uma evolução linda em seu relacionamento.',
+      audioUrl: '/readings/audio-001.mp3',
+      readingDate: daysAgo(14),
+      publishedAt: daysAgo(13),
+      expiresAt: daysFromNow(17),
+      createdAt: daysAgo(15),
+    },
+  });
+
+  // Reading 2: Order 2a - PUBLISHED (Carreira)
+  const reading2 = await prisma.reading.create({
+    data: {
+      orderItemId: orderItem2a.id,
+      clientId: client.id,
+      title: 'Leitura sobre Carreira',
+      status: 'PUBLISHED',
+      clientQuestion: 'Devo aceitar a nova proposta de emprego ou permanecer na empresa atual?',
+      focusArea: 'Carreira',
+      introduction: 'Maria, vamos consultar as cartas sobre esta importante decisão profissional.',
+      generalGuidance: 'A Cigana representa você neste momento, mostrando que você está no centro desta decisão e tem o poder de escolha. A Montanha aparece como desafio, indicando que ambas as opções têm seus obstáculos. A Chave traz a solução: a resposta está em olhar para onde você terá mais crescimento a longo prazo. A Estrela mostra que seguir sua inspiração e intuição será fundamental. Os Peixes no resultado indicam prosperidade financeira, especialmente se você escolher o caminho que oferece mais abundância e reconhecimento.',
+      recommendations: '1. Analise qual opção oferece mais crescimento profissional\n2. Considere os aspectos financeiros com atenção\n3. Confie em sua intuição - ela está aguçada\n4. Não tenha medo dos desafios - eles fazem parte do crescimento',
+      closingMessage: 'A decisão é sua, mas as cartas mostram que a prosperidade virá quando você escolher com coragem e visão de futuro. Confie em si mesma!',
+      readingDate: daysAgo(2),
+      publishedAt: daysAgo(1),
+      expiresAt: daysFromNow(59),
+      createdAt: daysAgo(3),
+    },
+  });
+
+  // Reading 3: Order 2b - PUBLISHED (Saúde)
+  const reading3 = await prisma.reading.create({
+    data: {
+      orderItemId: orderItem2b.id,
+      clientId: client.id,
+      title: 'Leitura sobre Saúde e Energia',
+      status: 'PUBLISHED',
+      clientQuestion: 'Como posso melhorar minha energia e disposição neste momento?',
+      focusArea: 'Saúde',
+      introduction: 'Vamos ver o que as cartas aconselham sobre sua energia vital e bem-estar.',
+      generalGuidance: 'A Árvore aparece como carta central, representando sua saúde e vitalidade. Ela pede que você cultive suas raízes - ou seja, cuide dos fundamentos: alimentação, sono, exercícios. O Trevo traz a boa notícia de que pequenas mudanças podem trazer grandes melhorias. O Buquê sugere que buscar alegria e beleza no dia a dia será transformador. O Jardim indica que atividades sociais e ao ar livre farão muito bem. O Sol no resultado mostra que você recuperará plenamente sua energia e vitalidade.',
+      recommendations: '1. Estabeleça uma rotina saudável de sono\n2. Inclua mais alimentos naturais em sua dieta\n3. Pratique atividades ao ar livre regularmente\n4. Busque momentos de alegria e leveza\n5. Conecte-se com amigos e natureza',
+      closingMessage: 'Sua energia vital está pronta para florescer novamente! Comece com pequenos passos e você verá grandes resultados.',
+      readingDate: daysAgo(1),
+      publishedAt: hoursAgo(18),
+      expiresAt: daysFromNow(59),
+      createdAt: daysAgo(3),
+    },
+  });
+
+  // Reading 4: Order 2c - IN_PROGRESS (Família)
+  const reading4 = await prisma.reading.create({
+    data: {
+      orderItemId: orderItem2c.id,
+      clientId: client.id,
+      title: 'Leitura sobre Conflito Familiar',
+      status: 'IN_PROGRESS',
+      clientQuestion: 'Qual é a melhor forma de resolver o conflito familiar que estou vivendo?',
+      focusArea: 'Família',
+      introduction: null,
+      generalGuidance: null,
+      recommendations: null,
+      closingMessage: null,
+      readingDate: null,
+      publishedAt: null,
+      expiresAt: daysFromNow(57),
+      createdAt: daysAgo(3),
+    },
+  });
+
+  // Reading 5: Order 4a - PUBLISHED (Acompanhamento Semana 1)
+  const reading5 = await prisma.reading.create({
+    data: {
+      orderItemId: orderItem4a.id,
+      clientId: client.id,
+      title: 'Acompanhamento Mensal - Semana 1',
+      status: 'PUBLISHED',
+      clientQuestion: 'Como estão as energias para esta semana?',
+      focusArea: 'Geral',
+      introduction: 'Bem-vinda ao seu acompanhamento mensal, Maria! Vamos ver as energias da primeira semana.',
+      generalGuidance: 'Esta semana começa com O Cavaleiro trazendo notícias importantes. A Estrela ilumina seu caminho com esperança e inspiração. O Coração mostra que decisões tomadas com amor serão as mais acertadas.',
+      recommendations: '1. Esteja atenta às mensagens e sinais\n2. Mantenha-se esperançosa e positiva\n3. Deixe o amor guiar suas escolhas',
+      closingMessage: 'Uma semana promissora se inicia! Aproveite as oportunidades.',
+      readingDate: daysAgo(59),
+      publishedAt: daysAgo(58),
+      expiresAt: daysAgo(28),
+      createdAt: daysAgo(60),
+    },
+  });
+
+  // Reading 6: Order 4b - PUBLISHED (Acompanhamento Semana 2)
+  const reading6 = await prisma.reading.create({
+    data: {
+      orderItemId: orderItem4b.id,
+      clientId: client.id,
+      title: 'Acompanhamento Mensal - Semana 2',
+      status: 'PUBLISHED',
+      clientQuestion: 'O que preciso saber para esta segunda semana?',
+      focusArea: 'Geral',
+      introduction: 'Segunda semana do seu acompanhamento mensal!',
+      generalGuidance: 'Os Caminhos aparecem pedindo uma decisão importante. A Chave indica que a solução está mais próxima do que imagina. O Sol garante um desfecho positivo.',
+      recommendations: '1. Não tenha medo de decidir\n2. Confie em sua intuição\n3. O sucesso está garantido',
+      closingMessage: 'Escolha com confiança - você está no caminho certo!',
+      readingDate: daysAgo(52),
+      publishedAt: daysAgo(51),
+      expiresAt: daysAgo(21),
+      createdAt: daysAgo(53),
+    },
+  });
+
+  // Reading 7: Order 4c - PUBLISHED (Acompanhamento Semana 3)
+  const reading7 = await prisma.reading.create({
+    data: {
+      orderItemId: orderItem4c.id,
+      clientId: client.id,
+      title: 'Acompanhamento Mensal - Semana 3',
+      status: 'PUBLISHED',
+      clientQuestion: 'Quais são os desafios da terceira semana?',
+      focusArea: 'Geral',
+      introduction: 'Terceira semana - vamos ver os desafios e oportunidades!',
+      generalGuidance: 'A Montanha surge como desafio temporário. A Âncora pede persistência. O Trevo traz a sorte necessária para superar obstáculos.',
+      recommendations: '1. Seja persistente diante dos desafios\n2. Mantenha a calma e a paciência\n3. A sorte está ao seu lado',
+      closingMessage: 'Os obstáculos são temporários. Continue firme!',
+      readingDate: daysAgo(45),
+      publishedAt: daysAgo(44),
+      expiresAt: daysAgo(14),
+      createdAt: daysAgo(46),
+    },
+  });
+
+  // Reading 8: Order 4d - PUBLISHED (Acompanhamento Semana 4)
+  const reading8 = await prisma.reading.create({
+    data: {
+      orderItemId: orderItem4d.id,
+      clientId: client.id,
+      title: 'Acompanhamento Mensal - Semana 4',
+      status: 'PUBLISHED',
+      clientQuestion: 'Como encerro este mês da melhor forma?',
+      focusArea: 'Geral',
+      introduction: 'Última semana do acompanhamento - vamos fechar com chave de ouro!',
+      generalGuidance: 'O Buquê traz celebração e alegria. Os Peixes indicam abundância chegando. O Sol ilumina o encerramento deste ciclo mensal com sucesso.',
+      recommendations: '1. Celebre suas conquistas do mês\n2. Agradeça pela abundância\n3. Prepare-se para novos inícios',
+      closingMessage: 'Que mês maravilhoso! Você cresceu e prosperou. Parabéns!',
+      readingDate: daysAgo(38),
+      publishedAt: daysAgo(37),
+      expiresAt: daysAgo(7),
+      createdAt: daysAgo(39),
+    },
+  });
+
+  // Reading 9: Order 5 - PUBLISHED (Ano Novo - 12 meses)
+  const reading9 = await prisma.reading.create({
+    data: {
+      orderItemId: orderItem5.id,
+      clientId: client.id,
+      title: 'Leitura de Ano Novo - 12 Meses',
+      status: 'PUBLISHED',
+      clientQuestion: 'Quais são as previsões e orientações para os próximos 12 meses?',
+      focusArea: 'Anual',
+      introduction: 'Maria, que honra fazer sua leitura anual! Vamos ver mês a mês o que o universo reserva para você.',
+      generalGuidance: 'Seu ano será marcado por transformações positivas, crescimento pessoal e muitas bênçãos. Cada mês traz suas lições e oportunidades. Janeiro começa com O Cavaleiro trazendo novidades. Fevereiro com O Coração convida ao amor. Março com A Estrela traz inspiração. Abril com A Chave abre portas importantes. Maio com Os Peixes traz abundância. Junho com O Sol ilumina conquistas. Julho com A Lua aprofunda intuição. Agosto com O Trevo traz sorte. Setembro com O Buquê celebra alegrias. Outubro com A Âncora estabiliza. Novembro com Os Lírios traz paz. Dezembro com A Cruz fecha ciclos importantes.',
+      recommendations: '1. Confie no processo do ano\n2. Cada mês tem seu presente\n3. Mantenha-se aberta e receptiva\n4. Celebre cada etapa do caminho\n5. Agradeça pelas bênçãos recebidas',
+      closingMessage: 'Que ano abençoado se desenha para você, Maria! Caminhe com fé, amor e gratidão. O universo conspira a seu favor!',
+      audioUrl: '/readings/audio-ano-novo.mp3',
+      readingDate: daysAgo(29),
+      publishedAt: daysAgo(28),
+      expiresAt: daysFromNow(337),
+      createdAt: daysAgo(30),
+    },
+  });
+
+  console.log('   ✅ 9 readings created\n');
+
+  // =============================================
+  // 8d. CREATE READING CARDS
+  // =============================================
+  console.log('🃏 Creating reading cards...');
+
+  // Fetch cigano cards needed
+  const card1 = await prisma.ciganoCard.findUnique({ where: { number: 1 } }); // Cavaleiro
+  const card2 = await prisma.ciganoCard.findUnique({ where: { number: 2 } }); // Trevo
+  const card5 = await prisma.ciganoCard.findUnique({ where: { number: 5 } }); // Árvore
+  const card9 = await prisma.ciganoCard.findUnique({ where: { number: 9 } }); // Buquê
+  const card16 = await prisma.ciganoCard.findUnique({ where: { number: 16 } }); // Estrela
+  const card20 = await prisma.ciganoCard.findUnique({ where: { number: 20 } }); // Jardim
+  const card21 = await prisma.ciganoCard.findUnique({ where: { number: 21 } }); // Montanha
+  const card24 = await prisma.ciganoCard.findUnique({ where: { number: 24 } }); // Coração
+  const card29 = await prisma.ciganoCard.findUnique({ where: { number: 29 } }); // Cigana
+  const card31 = await prisma.ciganoCard.findUnique({ where: { number: 31 } }); // Sol
+  const card32 = await prisma.ciganoCard.findUnique({ where: { number: 32 } }); // Lua
+  const card33 = await prisma.ciganoCard.findUnique({ where: { number: 33 } }); // Chave
+  const card34 = await prisma.ciganoCard.findUnique({ where: { number: 34 } }); // Peixes
+  const card35 = await prisma.ciganoCard.findUnique({ where: { number: 35 } }); // Âncora
+  const card30 = await prisma.ciganoCard.findUnique({ where: { number: 30 } }); // Lírios
+  const card36 = await prisma.ciganoCard.findUnique({ where: { number: 36 } }); // Cruz
+  const card22 = await prisma.ciganoCard.findUnique({ where: { number: 22 } }); // Caminhos
+
+  // Reading 1 Cards (3 cartas)
+  await prisma.readingCard.createMany({
+    data: [
+      {
+        readingId: reading1.id,
+        cardId: card1!.id,
+        position: 1,
+        positionName: 'Passado',
+        isReversed: false,
+        interpretation: 'O Cavaleiro no passado mostra que você já vinha recebendo sinais e mensagens sobre mudanças no relacionamento. Essas novidades começaram a se formar há algum tempo.',
+      },
+      {
+        readingId: reading1.id,
+        cardId: card24!.id,
+        position: 2,
+        positionName: 'Presente',
+        isReversed: false,
+        interpretation: 'O Coração no presente confirma que o amor verdadeiro está vivo e forte entre vocês agora. Este é um momento de reconhecer e valorizar os sentimentos que compartilham.',
+      },
+      {
+        readingId: reading1.id,
+        cardId: card31!.id,
+        position: 3,
+        positionName: 'Futuro',
+        isReversed: false,
+        interpretation: 'O Sol no futuro é extremamente positivo! Indica que sim, há excelentes perspectivas de evolução. Vocês caminham para uma fase de alegria, sucesso e realização juntos.',
+      },
+    ],
+  });
+
+  // Reading 2 Cards (5 cartas)
+  await prisma.readingCard.createMany({
+    data: [
+      {
+        readingId: reading2.id,
+        cardId: card29!.id,
+        position: 1,
+        positionName: 'Você',
+        isReversed: false,
+        interpretation: 'A Cigana representa você no centro desta decisão, mostrando que você tem autonomia e poder de escolha. Esta decisão está em suas mãos.',
+      },
+      {
+        readingId: reading2.id,
+        cardId: card21!.id,
+        position: 2,
+        positionName: 'Desafio',
+        isReversed: false,
+        interpretation: 'A Montanha como desafio indica que ambas as opções têm seus obstáculos. Não existe escolha sem dificuldades, mas isso não deve paralisá-la.',
+      },
+      {
+        readingId: reading2.id,
+        cardId: card33!.id,
+        position: 3,
+        positionName: 'Conselho',
+        isReversed: false,
+        interpretation: 'A Chave aconselha que você olhe para onde terá mais crescimento e realização a longo prazo. A resposta certa está na opção que abre mais portas para seu futuro.',
+      },
+      {
+        readingId: reading2.id,
+        cardId: card16!.id,
+        position: 4,
+        positionName: 'Caminho',
+        isReversed: false,
+        interpretation: 'A Estrela ilumina seu caminho, mostrando que seguir sua inspiração e intuição será fundamental. Confie nos sinais que o universo está enviando.',
+      },
+      {
+        readingId: reading2.id,
+        cardId: card34!.id,
+        position: 5,
+        positionName: 'Resultado',
+        isReversed: false,
+        interpretation: 'Os Peixes no resultado indicam prosperidade financeira. Escolha o caminho que oferece mais abundância, reconhecimento e satisfação profissional.',
+      },
+    ],
+  });
+
+  // Reading 3 Cards (5 cartas)
+  await prisma.readingCard.createMany({
+    data: [
+      {
+        readingId: reading3.id,
+        cardId: card5!.id,
+        position: 1,
+        positionName: 'Situação Atual',
+        isReversed: false,
+        interpretation: 'A Árvore representa sua saúde vital. Ela pede que você cuide das raízes - alimentação, sono, exercícios. Volte aos fundamentos do bem-estar.',
+      },
+      {
+        readingId: reading3.id,
+        cardId: card2!.id,
+        position: 2,
+        positionName: 'Oportunidade',
+        isReversed: false,
+        interpretation: 'O Trevo traz a boa notícia de que pequenas mudanças podem trazer grandes melhorias. A sorte está ao seu lado nesta jornada de renovação.',
+      },
+      {
+        readingId: reading3.id,
+        cardId: card9!.id,
+        position: 3,
+        positionName: 'Ação',
+        isReversed: false,
+        interpretation: 'O Buquê sugere que buscar alegria e beleza no dia a dia será transformador. Celebre a vida e encontre prazer nas pequenas coisas.',
+      },
+      {
+        readingId: reading3.id,
+        cardId: card20!.id,
+        position: 4,
+        positionName: 'Apoio',
+        isReversed: false,
+        interpretation: 'O Jardim indica que atividades sociais e ao ar livre farão muito bem. Conecte-se com amigos e natureza para renovar suas energias.',
+      },
+      {
+        readingId: reading3.id,
+        cardId: card31!.id,
+        position: 5,
+        positionName: 'Resultado',
+        isReversed: false,
+        interpretation: 'O Sol garante que você recuperará plenamente sua energia e vitalidade. Um futuro radiante e cheio de disposição aguarda você.',
+      },
+    ],
+  });
+
+  // Reading 5-8 Cards (3 cartas cada - acompanhamento mensal)
+  await prisma.readingCard.createMany({
+    data: [
+      // Semana 1
+      { readingId: reading5.id, cardId: card1!.id, position: 1, positionName: 'Energia Principal', isReversed: false, interpretation: 'O Cavaleiro traz notícias e movimento para sua semana.' },
+      { readingId: reading5.id, cardId: card16!.id, position: 2, positionName: 'Influência', isReversed: false, interpretation: 'A Estrela ilumina com esperança e inspiração.' },
+      { readingId: reading5.id, cardId: card24!.id, position: 3, positionName: 'Orientação', isReversed: false, interpretation: 'O Coração guia suas decisões com amor.' },
+      // Semana 2
+      { readingId: reading6.id, cardId: card22!.id, position: 1, positionName: 'Energia Principal', isReversed: false, interpretation: 'Os Caminhos pedem uma decisão importante.' },
+      { readingId: reading6.id, cardId: card33!.id, position: 2, positionName: 'Influência', isReversed: false, interpretation: 'A Chave indica que a solução está próxima.' },
+      { readingId: reading6.id, cardId: card31!.id, position: 3, positionName: 'Orientação', isReversed: false, interpretation: 'O Sol garante um desfecho positivo.' },
+      // Semana 3
+      { readingId: reading7.id, cardId: card21!.id, position: 1, positionName: 'Energia Principal', isReversed: false, interpretation: 'A Montanha surge como desafio temporário.' },
+      { readingId: reading7.id, cardId: card35!.id, position: 2, positionName: 'Influência', isReversed: false, interpretation: 'A Âncora pede persistência e estabilidade.' },
+      { readingId: reading7.id, cardId: card2!.id, position: 3, positionName: 'Orientação', isReversed: false, interpretation: 'O Trevo traz a sorte necessária para superar.' },
+      // Semana 4
+      { readingId: reading8.id, cardId: card9!.id, position: 1, positionName: 'Energia Principal', isReversed: false, interpretation: 'O Buquê traz celebração e alegria.' },
+      { readingId: reading8.id, cardId: card34!.id, position: 2, positionName: 'Influência', isReversed: false, interpretation: 'Os Peixes indicam abundância chegando.' },
+      { readingId: reading8.id, cardId: card31!.id, position: 3, positionName: 'Orientação', isReversed: false, interpretation: 'O Sol ilumina o encerramento com sucesso.' },
+    ],
+  });
+
+  // Reading 9 Cards (12 cartas - uma por mês)
+  await prisma.readingCard.createMany({
+    data: [
+      { readingId: reading9.id, cardId: card1!.id, position: 1, positionName: 'Janeiro', isReversed: false, interpretation: 'Janeiro começa com O Cavaleiro trazendo notícias importantes e movimento. Prepare-se para novidades que mudarão sua perspectiva.' },
+      { readingId: reading9.id, cardId: card24!.id, position: 2, positionName: 'Fevereiro', isReversed: false, interpretation: 'Fevereiro é o mês do Coração. O amor estará em evidência - seja no romance, na família ou no amor-próprio.' },
+      { readingId: reading9.id, cardId: card16!.id, position: 3, positionName: 'Março', isReversed: false, interpretation: 'Março traz A Estrela com inspiração e esperança renovadas. Um mês para sonhar e planejar o futuro.' },
+      { readingId: reading9.id, cardId: card33!.id, position: 4, positionName: 'Abril', isReversed: false, interpretation: 'Abril é marcado pela Chave - portas importantes se abrirão. Soluções chegam e destinos se revelam.' },
+      { readingId: reading9.id, cardId: card34!.id, position: 5, positionName: 'Maio', isReversed: false, interpretation: 'Maio traz Os Peixes com abundância financeira. Um mês próspero para seus negócios e finanças.' },
+      { readingId: reading9.id, cardId: card31!.id, position: 6, positionName: 'Junho', isReversed: false, interpretation: 'Junho brilha com O Sol - sucesso, alegria e conquistas marcam este mês radiante.' },
+      { readingId: reading9.id, cardId: card32!.id, position: 7, positionName: 'Julho', isReversed: false, interpretation: 'Julho é iluminado pela Lua - sua intuição estará aguçada. Confie em seus sonhos e pressentimentos.' },
+      { readingId: reading9.id, cardId: card2!.id, position: 8, positionName: 'Agosto', isReversed: false, interpretation: 'Agosto traz O Trevo com sorte e oportunidades inesperadas. Esteja atenta aos sinais.' },
+      { readingId: reading9.id, cardId: card9!.id, position: 9, positionName: 'Setembro', isReversed: false, interpretation: 'Setembro celebra com O Buquê - alegrias, convites e momentos felizes em abundância.' },
+      { readingId: reading9.id, cardId: card35!.id, position: 10, positionName: 'Outubro', isReversed: false, interpretation: 'Outubro ancora com A Âncora - estabilidade e realização de metas. Sua persistência será recompensada.' },
+      { readingId: reading9.id, cardId: card30!.id, position: 11, positionName: 'Novembro', isReversed: false, interpretation: 'Novembro floresce com Os Lírios - paz, harmonia e maturidade. Um mês sereno e equilibrado.' },
+      { readingId: reading9.id, cardId: card36!.id, position: 12, positionName: 'Dezembro', isReversed: false, interpretation: 'Dezembro fecha com A Cruz - ciclos importantes se encerram, preparando terreno para novos começos. Um mês de fé e transformação espiritual.' },
+    ],
+  });
+
+  console.log('   ✅ Reading cards created\n');
+
+  // =============================================
+  // 8e. CREATE APPOINTMENTS
+  // =============================================
+  console.log('📅 Creating appointments...');
+
+  // Appointment 1: SCHEDULED (Futuro - vinculado ao order3)
+  await prisma.appointment.create({
+    data: {
+      orderItemId: orderItem3.id,
+      clientId: client.id,
+      scheduledDate: daysFromNow(3),
+      startTime: '14:00',
+      endTime: '14:30',
+      durationMinutes: 30,
+      status: 'SCHEDULED',
+      clientNotes: 'Prefiro falar sobre questões de carreira',
+      meetingUrl: 'https://meet.izabelatarot.com.br/maria-20260108',
+      meetingPassword: 'tarot2026',
+      createdAt: daysAgo(7),
+    },
+  });
+
+  // Appointment 2: CONFIRMED (Futuro - sem order)
+  await prisma.appointment.create({
+    data: {
+      clientId: client.id,
+      scheduledDate: daysFromNow(7),
+      startTime: '10:00',
+      endTime: '11:00',
+      durationMinutes: 60,
+      status: 'CONFIRMED',
+      confirmedAt: daysAgo(2),
+      reminderSentAt: daysAgo(1),
+      meetingUrl: 'https://meet.izabelatarot.com.br/maria-20260112',
+      meetingPassword: 'tarot2026',
+      createdAt: daysAgo(10),
+    },
+  });
+
+  // Appointment 3: COMPLETED (Passado)
+  await prisma.appointment.create({
+    data: {
+      clientId: client.id,
+      scheduledDate: daysAgo(20),
+      startTime: '15:00',
+      endTime: '15:30',
+      durationMinutes: 30,
+      status: 'COMPLETED',
+      adminNotes: 'Ótima sessão, cliente muito satisfeita. Focamos em questões de relacionamento.',
+      confirmedAt: daysAgo(22),
+      reminderSentAt: daysAgo(21),
+      meetingUrl: 'https://meet.izabelatarot.com.br/maria-20251216',
+      createdAt: daysAgo(25),
+    },
+  });
+
+  // Appointment 4: CANCELLED (Passado)
+  await prisma.appointment.create({
+    data: {
+      clientId: client.id,
+      scheduledDate: daysAgo(45),
+      startTime: '16:00',
+      endTime: '16:30',
+      durationMinutes: 30,
+      status: 'CANCELLED',
+      cancelledAt: daysAgo(46),
+      cancellationReason: 'Cliente solicitou reagendamento por motivo pessoal',
+      createdAt: daysAgo(50),
+    },
+  });
+
+  console.log('   ✅ 4 appointments created\n');
+
+  // =============================================
+  // 8f. CREATE CLIENT TESTIMONIALS
+  // =============================================
+  console.log('💬 Creating client testimonials...');
+
+  await prisma.testimonial.createMany({
+    data: [
+      {
+        clientId: client.id,
+        clientName: 'Maria S.',
+        clientAvatarUrl: '/avatars/client-maria.jpg',
+        content: 'A leitura da Izabela me ajudou muito em um momento de decisão importante na carreira. As cartas trouxeram clareza e eu consegui tomar a melhor decisão para minha vida profissional. Recomendo muito!',
+        rating: 5,
+        isApproved: true,
+        isFeatured: true,
+        displayOrder: 5,
+        createdAt: daysAgo(30),
+      },
+      {
+        clientId: client.id,
+        clientName: 'Maria S.',
+        clientAvatarUrl: '/avatars/client-maria.jpg',
+        content: 'Segunda consulta e continuo impressionada com a precisão das leituras. A Izabela tem um dom especial para interpretar as cartas do Tarot Cigano. Sempre saio das sessões mais leve e confiante.',
+        rating: 5,
+        isApproved: true,
+        isFeatured: false,
+        displayOrder: 6,
+        createdAt: daysAgo(10),
+      },
+    ],
+  });
+
+  console.log('   ✅ 2 client testimonials created\n');
+
+  // =============================================
+  // 8g. CREATE NOTIFICATIONS
+  // =============================================
+  console.log('🔔 Creating notifications...');
+
+  await prisma.notification.createMany({
+    data: [
+      {
+        userId: client.id,
+        title: 'Nova leitura disponível',
+        message: 'Sua leitura sobre amor está pronta! Acesse agora para ver o que as cartas revelaram.',
+        type: 'READING_PUBLISHED',
+        referenceId: reading1.id,
+        isRead: false,
+        createdAt: daysAgo(1),
+      },
+      {
+        userId: client.id,
+        title: 'Consulta confirmada',
+        message: 'Sua consulta para 08/01/2026 às 14:00 foi confirmada. Preparamos um espaço especial para você!',
+        type: 'APPOINTMENT_CONFIRMED',
+        referenceId: orderItem3.id,
+        isRead: true,
+        readAt: hoursAgo(6),
+        createdAt: daysAgo(2),
+      },
+      {
+        userId: client.id,
+        title: 'Lembrete: Consulta em breve',
+        message: 'Lembrete: Você tem uma consulta agendada para daqui a 3 dias, dia 08/01 às 14:00. Nos vemos em breve!',
+        type: 'APPOINTMENT_REMINDER',
+        isRead: false,
+        createdAt: hoursAgo(12),
+      },
+      {
+        userId: client.id,
+        title: 'Pedido confirmado',
+        message: 'Seu pedido #ORD-2025-001 foi confirmado com sucesso! Em breve sua leitura estará pronta.',
+        type: 'ORDER_CONFIRMED',
+        referenceId: order1.id,
+        isRead: true,
+        readAt: daysAgo(14),
+        createdAt: daysAgo(15),
+      },
+      {
+        userId: client.id,
+        title: 'Pagamento aprovado',
+        message: 'Seu pagamento de R$ 127,00 foi aprovado. Obrigada pela confiança!',
+        type: 'PAYMENT_APPROVED',
+        referenceId: order2.id,
+        isRead: true,
+        readAt: daysAgo(2),
+        createdAt: daysAgo(3),
+      },
+      {
+        userId: client.id,
+        title: 'Seu depoimento foi publicado',
+        message: 'Obrigada por compartilhar sua experiência conosco! Seu depoimento foi publicado e ajudará outras pessoas.',
+        type: 'TESTIMONIAL_APPROVED',
+        isRead: true,
+        readAt: daysAgo(29),
+        createdAt: daysAgo(30),
+      },
+      {
+        userId: client.id,
+        title: 'Bem-vinda, Maria!',
+        message: 'É um prazer receber você aqui! Explore nossos serviços de Tarot Cigano e descubra o que as cartas têm a revelar.',
+        type: 'WELCOME',
+        isRead: true,
+        readAt: daysAgo(89),
+        createdAt: daysAgo(90),
+      },
+      {
+        userId: client.id,
+        title: 'Leitura em andamento',
+        message: 'Sua leitura sobre o conflito familiar está sendo preparada com todo carinho. Em breve estará disponível!',
+        type: 'READING_IN_PROGRESS',
+        referenceId: reading4.id,
+        isRead: false,
+        createdAt: daysAgo(2),
+      },
+    ],
+  });
+
+  console.log('   ✅ 8 notifications created\n');
+
+  console.log('✅ Test data for client created successfully!\n');
+  console.log('📊 Client Statistics:');
+  console.log('   - Total Orders: 5');
+  console.log('   - Total Spent: R$ 1.162,00');
+  console.log('   - Readings: 9 (6 published, 1 in progress, 2 pending)');
+  console.log('   - Appointments: 4 (2 upcoming, 1 completed, 1 cancelled)');
+  console.log('   - Testimonials: 2');
+  console.log('   - Notifications: 8 (4 unread)\n');
+
   console.log('📋 Summary:');
   console.log('   - 1 Admin user (admin@izabelatarot.com.br / Admin@123)');
+  console.log('   - 1 Client user (client@izabelatarot.com.br / Client@123)');
   console.log('   - 36 Cigano Tarot cards');
   console.log('   - 4 Product categories');
   console.log('   - 6 Products');
   console.log('   - Schedule settings configured');
   console.log('   - Site settings configured');
-  console.log('   - 4 Sample testimonials');
+  console.log('   - 6 Sample testimonials (4 general + 2 from client)');
 }
 
 main()
