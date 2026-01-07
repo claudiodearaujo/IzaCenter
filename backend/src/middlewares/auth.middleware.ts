@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
 import { JwtPayload } from '../types';
 import { prisma } from '../config/database';
+import { tokenBlacklist } from '../config/redis';
 
 /**
  * Middleware to verify JWT token and attach user to request
@@ -16,7 +17,7 @@ export async function authenticate(
 ): Promise<void> {
   try {
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       res.status(401).json({
         success: false,
@@ -26,6 +27,17 @@ export async function authenticate(
     }
 
     const token = authHeader.split(' ')[1];
+
+    // Check if token is blacklisted
+    const isBlacklisted = await tokenBlacklist.isBlacklisted(token);
+    if (isBlacklisted) {
+      res.status(401).json({
+        success: false,
+        message: 'Token foi revogado',
+        code: 'TOKEN_REVOKED',
+      });
+      return;
+    }
 
     try {
       const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;

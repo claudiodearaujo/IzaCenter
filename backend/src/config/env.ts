@@ -16,10 +16,10 @@ export const env = {
   DATABASE_URL: process.env.DATABASE_URL || '',
   
   // JWT
-  JWT_SECRET: process.env.JWT_SECRET || 'dev-secret-change-in-production',
-  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
-  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret-change-in-production',
-  JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
+  JWT_SECRET: process.env.JWT_SECRET || '',
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '15m',
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || '',
+  JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   
   // Supabase
   SUPABASE_URL: process.env.SUPABASE_URL || '',
@@ -57,20 +57,31 @@ export const env = {
   isTest: process.env.NODE_ENV === 'test',
 };
 
-// Validate required environment variables in production
+// Validate required environment variables
+// Critical secrets must ALWAYS be set (development, test, and production)
+const criticalSecrets = ['JWT_SECRET', 'JWT_REFRESH_SECRET'];
+const missingSecrets = criticalSecrets.filter((key) => !process.env[key]);
+
+if (missingSecrets.length > 0) {
+  throw new Error(
+    `CRITICAL: Missing required secrets: ${missingSecrets.join(', ')}. ` +
+    `These must be set in all environments for security. ` +
+    `Generate strong secrets using: openssl rand -base64 32`
+  );
+}
+
+// Validate additional required variables in production
 if (env.isProduction) {
   const required = [
     'DATABASE_URL',
-    'JWT_SECRET',
-    'JWT_REFRESH_SECRET',
     'STRIPE_SECRET_KEY',
     'STRIPE_WEBHOOK_SECRET',
     'SUPABASE_URL',
     'SUPABASE_SERVICE_ROLE_KEY',
   ];
-  
+
   const missing = required.filter((key) => !process.env[key]);
-  
+
   if (missing.length > 0) {
     throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
   }

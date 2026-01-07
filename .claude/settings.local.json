@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run seed:*)"
+      "Bash(npm run seed:*)",
+      "Bash(npm test:*)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(npx prisma:*)",
+      "Bash(test:*)",
+      "Bash(npm run prisma:generate:*)"
     ]
   }
 }

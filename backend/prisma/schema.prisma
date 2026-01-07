@@ -144,6 +144,11 @@ model Product {
   attachments            ProductAttachment[]
   orderItems             OrderItem[]
 
+  @@index([categoryId])
+  @@index([isActive])
+  @@index([isFeatured])
+  @@index([productType])
+  @@index([isActive, isFeatured])
   @@map("products")
 }
 
@@ -189,6 +194,11 @@ model Order {
   client                   User          @relation(fields: [clientId], references: [id])
   items                    OrderItem[]
 
+  @@index([clientId])
+  @@index([status])
+  @@index([clientId, status])
+  @@index([createdAt])
+  @@index([paymentStatus])
   @@map("orders")
 }
 
@@ -272,6 +282,11 @@ model Reading {
   client          User          @relation(fields: [clientId], references: [id])
   cards           ReadingCard[]
 
+  @@index([clientId])
+  @@index([status])
+  @@index([clientId, status])
+  @@index([publishedAt])
+  @@index([readingDate])
   @@map("readings")
 }
 
@@ -369,6 +384,11 @@ model Appointment {
   orderItem          OrderItem?        @relation(fields: [orderItemId], references: [id])
   client             User              @relation(fields: [clientId], references: [id])
 
+  @@index([clientId])
+  @@index([scheduledDate])
+  @@index([clientId, scheduledDate])
+  @@index([status])
+  @@index([scheduledDate, status])
   @@map("appointments")
 }
 
@@ -440,5 +460,8 @@ model Notification {
 
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
+  @@index([userId, isRead])
+  @@index([createdAt])
   @@map("notifications")
 }

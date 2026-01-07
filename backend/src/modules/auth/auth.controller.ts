@@ -144,16 +144,28 @@ export class AuthController {
 
   /**
    * POST /auth/logout
-   * Logout user (client-side token removal)
+   * Logout user (blacklist token)
    */
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      // In a stateless JWT setup, logout is handled client-side
-      // If using refresh token storage, we would invalidate here
+      // Extract token from Authorization header
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        res.status(401).json({
+          success: false,
+          message: 'Token de autenticação não fornecido',
+        });
+        return;
+      }
+
+      const token = authHeader.split(' ')[1];
+
+      // Blacklist the token
+      const result = await authService.logout(token);
 
       res.json({
         success: true,
-        message: 'Logout realizado com sucesso',
+        message: result.message,
       });
     } catch (error) {
       next(error);

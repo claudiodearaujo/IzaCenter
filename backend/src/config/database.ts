@@ -3,10 +3,14 @@
 import { PrismaClient } from '@prisma/client';
 import { env } from './env';
 
-// Create Prisma client with logging in development
+// Create Prisma client with Prisma 7 adapter configuration
 export const prisma = new PrismaClient({
-  log: env.isDevelopment 
-    ? ['query', 'info', 'warn', 'error'] 
+  adapter: {
+    provider: 'postgresql',
+    url: process.env.DATABASE_URL,
+  },
+  log: env.isDevelopment
+    ? ['query', 'info', 'warn', 'error']
     : ['error'],
 });
 

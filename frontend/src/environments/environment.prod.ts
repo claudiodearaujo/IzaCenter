@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.izabelatarot.com.br/api',
+  apiUrl: 'https://izacenter-backend.onrender.com/api',
   stripePublishableKey: 'pk_live_...'
 };
