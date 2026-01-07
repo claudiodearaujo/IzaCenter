@@ -6,14 +6,15 @@
  */
 
 import { PrismaClient, ProductType } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+
+// Create adapter for test database
+const testConnectionString = process.env.TEST_DATABASE_URL || process.env.DATABASE_URL!;
+const testAdapter = new PrismaPg({ connectionString: testConnectionString });
 
 // Use a separate Prisma instance for integration tests
 export const testPrisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.TEST_DATABASE_URL || process.env.DATABASE_URL,
-    },
-  },
+  adapter: testAdapter,
 });
 
 /**

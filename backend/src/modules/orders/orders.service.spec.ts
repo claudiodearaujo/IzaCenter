@@ -1,6 +1,6 @@
 import { OrdersService } from './orders.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
-import { Decimal } from '@prisma/client/runtime/library';
+import { Prisma } from '@prisma/client';
 
 // Mock stripe helpers
 jest.mock('../../config/stripe', () => ({
@@ -82,7 +82,7 @@ describe('OrdersService', () => {
     const mockProduct = {
       id: 'product-123',
       name: 'Leitura Completa',
-      price: new Decimal('50.00'),
+      price: new Prisma.Decimal('50.00'),
       productType: 'QUESTION',
       isActive: true,
       validityDays: 365,
@@ -96,9 +96,9 @@ describe('OrdersService', () => {
         id: 'order-123',
         orderNumber: 'ORD-2026-0001',
         clientId,
-        subtotal: new Decimal('50.00'),
-        discount: new Decimal('0'),
-        total: new Decimal('50.00'),
+        subtotal: new Prisma.Decimal('50.00'),
+        discount: new Prisma.Decimal('0'),
+        total: new Prisma.Decimal('50.00'),
         status: 'PENDING',
         paymentStatus: 'PENDING',
         items: [
@@ -107,9 +107,9 @@ describe('OrdersService', () => {
             productId: 'product-123',
             productName: 'Leitura Completa',
             productType: 'QUESTION',
-            unitPrice: new Decimal('50.00'),
+            unitPrice: new Prisma.Decimal('50.00'),
             quantity: 1,
-            totalPrice: new Decimal('50.00'),
+            totalPrice: new Prisma.Decimal('50.00'),
             clientQuestions: ['Qual é meu futuro profissional?'],
             product: mockProduct,
           },
@@ -172,7 +172,7 @@ describe('OrdersService', () => {
         code: 'SAVE10',
         isActive: true,
         discountType: 'PERCENTAGE',
-        discountValue: new Decimal('10'),
+        discountValue: new Prisma.Decimal('10'),
         usesCount: 0,
         maxUses: 100,
         validFrom: null,
@@ -187,9 +187,9 @@ describe('OrdersService', () => {
       prismaMock.order.create.mockResolvedValue({
         id: 'order-123',
         orderNumber: 'ORD-2026-0001',
-        subtotal: new Decimal('50.00'),
-        discount: new Decimal('5.00'),
-        total: new Decimal('45.00'),
+        subtotal: new Prisma.Decimal('50.00'),
+        discount: new Prisma.Decimal('5.00'),
+        total: new Prisma.Decimal('45.00'),
         items: [{ product: mockProduct }],
         client: mockClient,
       } as any);
@@ -288,7 +288,7 @@ describe('OrdersService', () => {
       stripePaymentIntentId: paymentIntentId,
       paidAt: new Date(),
       orderNumber: 'ORD-2026-0001',
-      total: new Decimal('50.00'),
+      total: new Prisma.Decimal('50.00'),
       items: [
         {
           id: 'item-123',
@@ -619,7 +619,7 @@ describe('OrdersService', () => {
       prismaMock.order.count.mockResolvedValueOnce(10); // total orders
       prismaMock.order.count.mockResolvedValueOnce(8); // paid orders
       prismaMock.order.aggregate.mockResolvedValue({
-        _sum: { total: new Decimal('1000.00') },
+        _sum: { total: new Prisma.Decimal('1000.00') },
       } as any);
       prismaMock.order.groupBy.mockResolvedValue([
         { status: 'PENDING', _count: 2 },
@@ -632,7 +632,7 @@ describe('OrdersService', () => {
       // Assert
       expect(result.totalOrders).toBe(10);
       expect(result.paidOrders).toBe(8);
-      expect(result.revenue).toEqual(new Decimal('1000.00'));
+      expect(result.revenue).toEqual(new Prisma.Decimal('1000.00'));
       expect(result.statusCounts).toEqual({
         PENDING: 2,
         PAID: 8,
@@ -646,7 +646,7 @@ describe('OrdersService', () => {
 
       prismaMock.order.count.mockResolvedValue(5);
       prismaMock.order.aggregate.mockResolvedValue({
-        _sum: { total: new Decimal('500.00') },
+        _sum: { total: new Prisma.Decimal('500.00') },
       } as any);
       prismaMock.order.groupBy.mockResolvedValue([
         { status: 'PAID', _count: 5 },

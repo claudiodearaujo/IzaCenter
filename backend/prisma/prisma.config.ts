@@ -5,7 +5,7 @@ import { defineConfig } from '@prisma/client';
 
 export default defineConfig({
   adapter: {
-    provider: 'postgresql',
+    provider: 'postgres',
     url: process.env.DATABASE_URL,
   },
 });

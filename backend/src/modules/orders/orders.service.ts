@@ -1,6 +1,6 @@
 // apps/backend/src/modules/orders/orders.service.ts
 
-import { Decimal } from '@prisma/client/runtime/library';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../config/database';
 import { env } from '../../config/env';
 import { stripeHelpers } from '../../config/stripe';
@@ -40,11 +40,11 @@ export class OrdersService {
     }
 
     // Calculate totals
-    let subtotal = new Decimal(0);
+    let subtotal = new Prisma.Decimal(0);
     const orderItems = data.items.map((item) => {
       const product = products.find((p) => p.id === item.productId)!;
       const quantity = item.quantity || 1;
-      const unitPrice = new Decimal(product.price);
+      const unitPrice = new Prisma.Decimal(product.price);
       const totalPrice = unitPrice.mul(quantity);
       subtotal = subtotal.add(totalPrice);
 
@@ -60,7 +60,7 @@ export class OrdersService {
     });
 
     // Apply coupon if provided
-    let discount = new Decimal(0);
+    let discount = new Prisma.Decimal(0);
     if (data.couponCode) {
       const coupon = await prisma.coupon.findUnique({
         where: { code: data.couponCode.toUpperCase() },
@@ -78,7 +78,7 @@ export class OrdersService {
           if (coupon.discountType === 'PERCENTAGE') {
             discount = subtotal.mul(coupon.discountValue).div(100);
           } else {
-            discount = new Decimal(coupon.discountValue);
+            discount = new Prisma.Decimal(coupon.discountValue);
           }
 
           // Update coupon usage

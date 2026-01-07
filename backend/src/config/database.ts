@@ -1,14 +1,16 @@
 // apps/backend/src/config/database.ts
 
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { env } from './env';
+
+// Create PostgreSQL adapter
+const connectionString = process.env.DATABASE_URL!;
+const adapter = new PrismaPg({ connectionString });
 
 // Create Prisma client with Prisma 7 adapter configuration
 export const prisma = new PrismaClient({
-  adapter: {
-    provider: 'postgresql',
-    url: process.env.DATABASE_URL,
-  },
+  adapter,
   log: env.isDevelopment
     ? ['query', 'info', 'warn', 'error']
     : ['error'],
