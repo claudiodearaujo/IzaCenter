@@ -333,5 +333,176 @@
     "maxLength": "Máximo de {{max}} caracteres",
     "pattern": "Formato inválido",
     "passwordMismatch": "As senhas não coincidem"
+  },
+  "about": {
+    "title": "Sobre Izabela Santos",
+    "subtitle": "Taróloga, terapeuta integrativa e estudante de psicologia analítica junguiana.",
+    "journey": {
+      "title": "Minha Jornada",
+      "paragraph1": "Minha paixão pelo tarot começou como uma busca pessoal por autoconhecimento e se transformou em uma vocação para ajudar outras pessoas em suas jornadas.",
+      "paragraph2": "Com formação em Administração de Empresas e especialização em Terapias Integrativas Naturais, uni meu conhecimento analítico à sensibilidade intuitiva para oferecer leituras que vão além do superficial.",
+      "paragraph3": "Atualmente, estudo Psicologia Analítica Junguiana, integrando os arquétipos e símbolos às minhas interpretações do baralho cigano Lenormand."
+    },
+    "education": {
+      "title": "Formações:",
+      "item1": "Administração de Empresas",
+      "item2": "Terapias Integrativas Naturais",
+      "item3": "Psicologia Analítica Junguiana (em andamento)"
+    },
+    "values": {
+      "title": "Meus Valores",
+      "welcome": {
+        "title": "Acolhimento",
+        "description": "Cada pessoa é única e merece ser ouvida com respeito e empatia."
+      },
+      "honesty": {
+        "title": "Honestidade",
+        "description": "Interpretações claras e verdadeiras, sempre com respeito."
+      },
+      "empowerment": {
+        "title": "Empoderamento",
+        "description": "O tarot é uma ferramenta para você tomar suas próprias decisões."
+      }
+    },
+    "cta": {
+      "title": "Pronta para sua leitura?",
+      "subtitle": "Agende uma consulta e descubra as mensagens que as cartas têm para você.",
+      "button": "Ver Serviços"
+    }
+  },
+  "services": {
+    "title": "Serviços",
+    "subtitle": "Escolha a forma de consulta que melhor se adapta às suas necessidades.",
+    "viewOptions": "Ver Opções",
+    "items": {
+      "readingByQuestions": {
+        "title": "Leitura por Perguntas",
+        "description": "Faça suas perguntas e receba orientação através das cartas. Ideal para dúvidas específicas.",
+        "features": {
+          "feature1": "1, 3 ou 5 perguntas",
+          "feature2": "Resposta em até 48h",
+          "feature3": "Leitura detalhada em PDF",
+          "feature4": "Validade de 1 ano"
+        },
+        "price": "A partir de R$ 50,00"
+      },
+      "liveSession": {
+        "title": "Sessão Online ao Vivo",
+        "description": "Consulta personalizada por videochamada. Interação em tempo real e tiragem exclusiva.",
+        "features": {
+          "feature1": "30 ou 60 minutos",
+          "feature2": "Videochamada ao vivo",
+          "feature3": "Perguntas ilimitadas",
+          "feature4": "Gravação da sessão"
+        },
+        "price": "A partir de R$ 150,00"
+      },
+      "monthlyReading": {
+        "title": "Jogo Mensal",
+        "description": "Acompanhamento mensal com previsões e orientações para cada área da sua vida.",
+        "features": {
+          "feature1": "Previsão completa do mês",
+          "feature2": "Todas as áreas da vida",
+          "feature3": "Áudio explicativo",
+          "feature4": "Atualização mensal"
+        },
+        "price": "R$ 120,00/mês"
+      },
+      "specialReading": {
+        "title": "Jogo Especial",
+        "description": "Leituras temáticas para momentos especiais: aniversário, ano novo, lua cheia.",
+        "features": {
+          "feature1": "Tiragens especiais",
+          "feature2": "Ritual personalizado",
+          "feature3": "PDF ilustrado",
+          "feature4": "Presente especial"
+        },
+        "price": "A partir de R$ 100,00"
+      }
+    },
+    "faqPreview": {
+      "title": "Tem dúvidas?",
+      "subtitle": "Consulte nossa página de perguntas frequentes ou entre em contato.",
+      "faqButton": "Ver FAQ",
+      "contactButton": "Entrar em Contato"
+    }
+  },
+  "contact": {
+    "title": "Contato",
+    "subtitle": "Entre em contato para tirar dúvidas ou agendar sua consulta.",
+    "form": {
+      "title": "Envie uma mensagem",
+      "name": "Nome",
+      "namePlaceholder": "Seu nome",
+      "email": "Email",
+      "emailPlaceholder": "seu@email.com",
+      "subject": "Assunto",
+      "subjectPlaceholder": "Sobre o que deseja falar?",
+      "message": "Mensagem",
+      "messagePlaceholder": "Escreva sua mensagem...",
+      "submitButton": "Enviar Mensagem",
+      "successMessage": "Mensagem enviada com sucesso! Retornarei em breve."
+    },
+    "info": {
+      "title": "Informações de Contato",
+      "email": {
+        "label": "Email"
+      },
+      "instagram": {
+        "label": "Instagram"
+      },
+      "schedule": {
+        "label": "Horário",
+        "value": "Seg - Sex: 9h às 18h"
+      },
+      "location": {
+        "label": "Localização"
+      }
+    },
+    "social": {
+      "title": "Redes Sociais"
+    }
+  },
+  "faq": {
+    "title": "Perguntas Frequentes",
+    "subtitle": "Tire suas dúvidas sobre as leituras de tarot.",
+    "items": {
+      "therapeuticTarot": {
+        "question": "O que é o tarot terapêutico?",
+        "answer": "O tarot terapêutico é uma ferramenta de autoconhecimento que utiliza as cartas para reflexão e orientação, não como previsão do futuro, mas como um espelho para compreender melhor situações e possibilidades."
+      },
+      "readingByQuestions": {
+        "question": "Como funciona a leitura por perguntas?",
+        "answer": "Você envia suas perguntas através da plataforma. Eu faço a tiragem das cartas e preparo uma interpretação detalhada em PDF, que fica disponível na sua área de cliente em até 48h."
+      },
+      "experience": {
+        "question": "Preciso de experiência com tarot?",
+        "answer": "Não! As leituras são feitas de forma clara e acessível. Você não precisa ter nenhum conhecimento prévio sobre tarot ou o baralho cigano."
+      },
+      "recording": {
+        "question": "As sessões online são gravadas?",
+        "answer": "Sim, com sua autorização, as sessões online podem ser gravadas para que você possa revisar as orientações depois."
+      },
+      "validity": {
+        "question": "Qual a validade da leitura?",
+        "answer": "As leituras ficam disponíveis na sua área de cliente por 1 ano após a publicação."
+      },
+      "topics": {
+        "question": "Posso fazer perguntas sobre qualquer assunto?",
+        "answer": "As leituras podem abordar áreas como profissional, relacionamentos, saúde emocional e crescimento pessoal. Evitamos questões sobre saúde física, assuntos legais ou terceiros."
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Depoimentos",
+    "subtitle": "Veja o que minhas clientes dizem sobre as leituras.",
+    "items": {
+      "item1": "A leitura da Izabela foi transformadora. Me ajudou a entender melhor meu momento profissional e tomar decisões importantes.",
+      "item2": "Clareza e acolhimento em cada palavra. Recomendo demais para quem busca orientação verdadeira.",
+      "item3": "Encontrei orientação e paz. A Izabela tem um dom especial para interpretar as cartas.",
+      "item4": "Fiz minha primeira leitura e fiquei impressionada com a precisão. Voltarei com certeza!",
+      "item5": "A sessão online foi incrível. Me senti muito acolhida e recebi orientações valiosas.",
+      "item6": "O jogo mensal me ajuda a planejar meu mês com mais consciência. Super recomendo!"
+    }
   }
 }

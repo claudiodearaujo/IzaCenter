@@ -1,44 +1,69 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [CommonModule, RouterLink, ButtonModule],
+  imports: [CommonModule, RouterLink, ButtonModule, TranslateModule],
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
 export class ServicesComponent {
-  services = [
-    {
-      icon: '🔮',
-      title: 'Leitura por Perguntas',
-      description: 'Faça suas perguntas e receba orientação através das cartas. Ideal para dúvidas específicas.',
-      features: ['1, 3 ou 5 perguntas', 'Resposta em até 48h', 'Leitura detalhada em PDF', 'Validade de 1 ano'],
-      price: 'A partir de R$ 50,00'
-    },
-    {
-      icon: '✨',
-      title: 'Sessão Online ao Vivo',
-      description: 'Consulta personalizada por videochamada. Interação em tempo real e tiragem exclusiva.',
-      features: ['30 ou 60 minutos', 'Videochamada ao vivo', 'Perguntas ilimitadas', 'Gravação da sessão'],
-      price: 'A partir de R$ 150,00'
-    },
-    {
-      icon: '📿',
-      title: 'Jogo Mensal',
-      description: 'Acompanhamento mensal com previsões e orientações para cada área da sua vida.',
-      features: ['Previsão completa do mês', 'Todas as áreas da vida', 'Áudio explicativo', 'Atualização mensal'],
-      price: 'R$ 120,00/mês'
-    },
-    {
-      icon: '🌟',
-      title: 'Jogo Especial',
-      description: 'Leituras temáticas para momentos especiais: aniversário, ano novo, lua cheia.',
-      features: ['Tiragens especiais', 'Ritual personalizado', 'PDF ilustrado', 'Presente especial'],
-      price: 'A partir de R$ 100,00'
-    }
-  ];
+  private translate = inject(TranslateService);
+
+  get services() {
+    return [
+      {
+        icon: '🔮',
+        title: this.translate.instant('services.items.readingByQuestions.title'),
+        description: this.translate.instant('services.items.readingByQuestions.description'),
+        features: [
+          this.translate.instant('services.items.readingByQuestions.features.feature1'),
+          this.translate.instant('services.items.readingByQuestions.features.feature2'),
+          this.translate.instant('services.items.readingByQuestions.features.feature3'),
+          this.translate.instant('services.items.readingByQuestions.features.feature4')
+        ],
+        price: this.translate.instant('services.items.readingByQuestions.price')
+      },
+      {
+        icon: '✨',
+        title: this.translate.instant('services.items.liveSession.title'),
+        description: this.translate.instant('services.items.liveSession.description'),
+        features: [
+          this.translate.instant('services.items.liveSession.features.feature1'),
+          this.translate.instant('services.items.liveSession.features.feature2'),
+          this.translate.instant('services.items.liveSession.features.feature3'),
+          this.translate.instant('services.items.liveSession.features.feature4')
+        ],
+        price: this.translate.instant('services.items.liveSession.price')
+      },
+      {
+        icon: '📿',
+        title: this.translate.instant('services.items.monthlyReading.title'),
+        description: this.translate.instant('services.items.monthlyReading.description'),
+        features: [
+          this.translate.instant('services.items.monthlyReading.features.feature1'),
+          this.translate.instant('services.items.monthlyReading.features.feature2'),
+          this.translate.instant('services.items.monthlyReading.features.feature3'),
+          this.translate.instant('services.items.monthlyReading.features.feature4')
+        ],
+        price: this.translate.instant('services.items.monthlyReading.price')
+      },
+      {
+        icon: '🌟',
+        title: this.translate.instant('services.items.specialReading.title'),
+        description: this.translate.instant('services.items.specialReading.description'),
+        features: [
+          this.translate.instant('services.items.specialReading.features.feature1'),
+          this.translate.instant('services.items.specialReading.features.feature2'),
+          this.translate.instant('services.items.specialReading.features.feature3'),
+          this.translate.instant('services.items.specialReading.features.feature4')
+        ],
+        price: this.translate.instant('services.items.specialReading.price')
+      }
+    ];
+  }
 }

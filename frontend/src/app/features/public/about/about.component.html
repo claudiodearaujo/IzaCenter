@@ -4,10 +4,10 @@
     <div class="text-center mb-16">
       <span class="text-5xl block mb-4">✨</span>
       <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">
-        Sobre Izabela Santos
+        {{ 'about.title' | translate }}
       </h1>
       <p class="text-xl text-neutral-600 max-w-2xl mx-auto">
-        Taróloga, terapeuta integrativa e estudante de psicologia analítica junguiana.
+        {{ 'about.subtitle' | translate }}
       </p>
     </div>
 
@@ -27,36 +27,32 @@
       <!-- Text -->
       <div class="space-y-6">
         <h2 class="text-3xl font-serif font-bold text-neutral-900">
-          Minha Jornada
+          {{ 'about.journey.title' | translate }}
         </h2>
         <p class="text-neutral-600 leading-relaxed">
-          Minha paixão pelo tarot começou como uma busca pessoal por autoconhecimento 
-          e se transformou em uma vocação para ajudar outras pessoas em suas jornadas.
+          {{ 'about.journey.paragraph1' | translate }}
         </p>
         <p class="text-neutral-600 leading-relaxed">
-          Com formação em Administração de Empresas e especialização em Terapias 
-          Integrativas Naturais, uni meu conhecimento analítico à sensibilidade 
-          intuitiva para oferecer leituras que vão além do superficial.
+          {{ 'about.journey.paragraph2' | translate }}
         </p>
         <p class="text-neutral-600 leading-relaxed">
-          Atualmente, estudo Psicologia Analítica Junguiana, integrando os 
-          arquétipos e símbolos às minhas interpretações do baralho cigano Lenormand.
+          {{ 'about.journey.paragraph3' | translate }}
         </p>
 
         <div class="pt-4">
-          <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-4">Formações:</h3>
+          <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-4">{{ 'about.education.title' | translate }}</h3>
           <ul class="space-y-3">
             <li class="flex items-center gap-3">
               <i class="pi pi-check-circle text-primary-600"></i>
-              <span>Administração de Empresas</span>
+              <span>{{ 'about.education.item1' | translate }}</span>
             </li>
             <li class="flex items-center gap-3">
               <i class="pi pi-check-circle text-primary-600"></i>
-              <span>Terapias Integrativas Naturais</span>
+              <span>{{ 'about.education.item2' | translate }}</span>
             </li>
             <li class="flex items-center gap-3">
               <i class="pi pi-check-circle text-primary-600"></i>
-              <span>Psicologia Analítica Junguiana (em andamento)</span>
+              <span>{{ 'about.education.item3' | translate }}</span>
             </li>
           </ul>
         </div>
@@ -66,23 +62,23 @@
     <!-- Values -->
     <div class="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-3xl p-8 md:p-12 mb-16">
       <h2 class="text-3xl font-serif font-bold text-neutral-900 text-center mb-10">
-        Meus Valores
+        {{ 'about.values.title' | translate }}
       </h2>
       <div class="grid md:grid-cols-3 gap-8">
         <div class="text-center">
           <span class="text-4xl block mb-4">💜</span>
-          <h3 class="text-xl font-semibold text-neutral-800 mb-2">Acolhimento</h3>
-          <p class="text-neutral-600">Cada pessoa é única e merece ser ouvida com respeito e empatia.</p>
+          <h3 class="text-xl font-semibold text-neutral-800 mb-2">{{ 'about.values.welcome.title' | translate }}</h3>
+          <p class="text-neutral-600">{{ 'about.values.welcome.description' | translate }}</p>
         </div>
         <div class="text-center">
           <span class="text-4xl block mb-4">🔮</span>
-          <h3 class="text-xl font-semibold text-neutral-800 mb-2">Honestidade</h3>
-          <p class="text-neutral-600">Interpretações claras e verdadeiras, sempre com respeito.</p>
+          <h3 class="text-xl font-semibold text-neutral-800 mb-2">{{ 'about.values.honesty.title' | translate }}</h3>
+          <p class="text-neutral-600">{{ 'about.values.honesty.description' | translate }}</p>
         </div>
         <div class="text-center">
           <span class="text-4xl block mb-4">✨</span>
-          <h3 class="text-xl font-semibold text-neutral-800 mb-2">Empoderamento</h3>
-          <p class="text-neutral-600">O tarot é uma ferramenta para você tomar suas próprias decisões.</p>
+          <h3 class="text-xl font-semibold text-neutral-800 mb-2">{{ 'about.values.empowerment.title' | translate }}</h3>
+          <p class="text-neutral-600">{{ 'about.values.empowerment.description' | translate }}</p>
         </div>
       </div>
     </div>
@@ -90,13 +86,13 @@
     <!-- CTA -->
     <div class="text-center">
       <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-4">
-        Pronta para sua leitura?
+        {{ 'about.cta.title' | translate }}
       </h2>
       <p class="text-neutral-600 mb-6">
-        Agende uma consulta e descubra as mensagens que as cartas têm para você.
+        {{ 'about.cta.subtitle' | translate }}
       </p>
       <a routerLink="/loja">
-        <p-button label="Ver Serviços" icon="pi pi-arrow-right" iconPos="right" size="large" />
+        <p-button [label]="'about.cta.button' | translate" icon="pi pi-arrow-right" iconPos="right" size="large" />
       </a>
     </div>
   </div>

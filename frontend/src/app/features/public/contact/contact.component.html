@@ -4,10 +4,10 @@
     <div class="text-center mb-16">
       <span class="text-5xl block mb-4">💌</span>
       <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">
-        Contato
+        {{ 'contact.title' | translate }}
       </h1>
       <p class="text-xl text-neutral-600 max-w-2xl mx-auto">
-        Entre em contato para tirar dúvidas ou agendar sua consulta.
+        {{ 'contact.subtitle' | translate }}
       </p>
     </div>
 
@@ -15,35 +15,35 @@
       <!-- Contact Form -->
       <div class="bg-white rounded-3xl p-8 shadow-sm">
         <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-6">
-          Envie uma mensagem
+          {{ 'contact.form.title' | translate }}
         </h2>
-        
+
         <form (ngSubmit)="onSubmit()" class="space-y-6">
           <div>
-            <label for="name" class="block text-sm font-medium text-neutral-700 mb-2">Nome</label>
-            <input pInputText id="name" [(ngModel)]="form.name" name="name" 
-                   class="w-full" placeholder="Seu nome" required />
+            <label for="name" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'contact.form.name' | translate }}</label>
+            <input pInputText id="name" [(ngModel)]="form.name" name="name"
+                   class="w-full" [placeholder]="'contact.form.namePlaceholder' | translate" required />
           </div>
 
           <div>
-            <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">Email</label>
+            <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'contact.form.email' | translate }}</label>
             <input pInputText id="email" [(ngModel)]="form.email" name="email" type="email"
-                   class="w-full" placeholder="seu@email.com" required />
+                   class="w-full" [placeholder]="'contact.form.emailPlaceholder' | translate" required />
           </div>
 
           <div>
-            <label for="subject" class="block text-sm font-medium text-neutral-700 mb-2">Assunto</label>
+            <label for="subject" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'contact.form.subject' | translate }}</label>
             <input pInputText id="subject" [(ngModel)]="form.subject" name="subject"
-                   class="w-full" placeholder="Sobre o que deseja falar?" required />
+                   class="w-full" [placeholder]="'contact.form.subjectPlaceholder' | translate" required />
           </div>
 
           <div>
-            <label for="message" class="block text-sm font-medium text-neutral-700 mb-2">Mensagem</label>
+            <label for="message" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'contact.form.message' | translate }}</label>
             <textarea pTextarea id="message" [(ngModel)]="form.message" name="message"
-                      class="w-full" rows="5" placeholder="Escreva sua mensagem..." required></textarea>
+                      class="w-full" rows="5" [placeholder]="'contact.form.messagePlaceholder' | translate" required></textarea>
           </div>
 
-          <p-button type="submit" label="Enviar Mensagem" icon="pi pi-send" 
+          <p-button type="submit" [label]="'contact.form.submitButton' | translate" icon="pi pi-send"
                     [loading]="isLoading()" styleClass="w-full" />
         </form>
       </div>
@@ -52,9 +52,9 @@
       <div class="space-y-8">
         <div class="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-3xl p-8">
           <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-6">
-            Informações de Contato
+            {{ 'contact.info.title' | translate }}
           </h2>
-          
+
           <div class="space-y-6">
             @for (info of contactInfo; track info.label) {
               <div class="flex items-start gap-4">
@@ -73,7 +73,7 @@
         <!-- Social Links -->
         <div class="bg-white rounded-3xl p-8 shadow-sm">
           <h3 class="text-xl font-serif font-semibold text-neutral-900 mb-4">
-            Redes Sociais
+            {{ 'contact.social.title' | translate }}
           </h3>
           <div class="flex gap-4">
             <a href="https://instagram.com/izabela.tarot" target="_blank" rel="noopener"
