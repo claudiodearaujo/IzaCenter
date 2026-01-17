@@ -23,13 +23,13 @@
 
       <!-- Quick Links -->
       <div>
-        <h3 class="text-lg font-serif font-semibold mb-4">Links Rápidos</h3>
+        <h3 class="text-lg font-serif font-semibold mb-4">{{ 'footer.quickLinks' | translate }}</h3>
         <ul class="space-y-2">
           @for (link of quickLinks; track link.route) {
             <li>
-              <a [routerLink]="link.route" 
+              <a [routerLink]="link.route"
                  class="text-primary-200 hover:text-white transition-colors text-sm">
-                {{ link.label }}
+                {{ link.labelKey | translate }}
               </a>
             </li>
           }
@@ -38,13 +38,13 @@
 
       <!-- Legal -->
       <div>
-        <h3 class="text-lg font-serif font-semibold mb-4">Informações</h3>
+        <h3 class="text-lg font-serif font-semibold mb-4">{{ 'footer.legal' | translate }}</h3>
         <ul class="space-y-2">
           @for (link of legalLinks; track link.route) {
             <li>
-              <a [routerLink]="link.route" 
+              <a [routerLink]="link.route"
                  class="text-primary-200 hover:text-white transition-colors text-sm">
-                {{ link.label }}
+                {{ link.labelKey | translate }}
               </a>
             </li>
           }
@@ -53,7 +53,7 @@
 
       <!-- Contact -->
       <div>
-        <h3 class="text-lg font-serif font-semibold mb-4">Contato</h3>
+        <h3 class="text-lg font-serif font-semibold mb-4">{{ 'footer.contact' | translate }}</h3>
         <div class="space-y-3 text-sm text-primary-200">
           <p class="flex items-center gap-2">
             <i class="pi pi-map-marker"></i>
@@ -73,7 +73,7 @@
 
     <!-- Bottom -->
     <div class="border-t border-white/10 mt-10 pt-6 text-center text-sm text-primary-300">
-      <p>&copy; {{ currentYear }} Izabela Tarot. Todos os direitos reservados.</p>
+      <p>&copy; {{ currentYear }} Izabela Tarot. {{ 'footer.rightsReserved' | translate }}</p>
       <p class="mt-2 text-xs">
         Tarot é uma ferramenta de autoconhecimento e não substitui orientação médica ou psicológica profissional.
       </p>

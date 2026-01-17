@@ -1,0 +1,337 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "shop": "Shop",
+    "testimonials": "Testimonials",
+    "contact": "Contact",
+    "cart": "Cart",
+    "login": "Sign In",
+    "register": "Sign Up",
+    "logout": "Sign Out",
+    "myArea": "My Area",
+    "adminPanel": "Admin Panel"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "legal": "Legal",
+    "contact": "Contact",
+    "social": "Social Media",
+    "rightsReserved": "All rights reserved.",
+    "termsOfUse": "Terms of Use",
+    "privacyPolicy": "Privacy Policy",
+    "faq": "FAQ",
+    "admin": "Admin"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Access your account",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot your password?",
+      "loginButton": "Sign In",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign up"
+    },
+    "register": {
+      "title": "Sign Up",
+      "subtitle": "Create your account",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "phone": "Phone",
+      "registerButton": "Sign Up",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in"
+    },
+    "forgotPassword": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your email to recover",
+      "email": "Email",
+      "sendButton": "Send",
+      "backToLogin": "Back to login"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your new password",
+      "password": "New Password",
+      "confirmPassword": "Confirm Password",
+      "resetButton": "Reset"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Discover your path with Tarot",
+      "subtitle": "Guidance, clarity and support through the cards",
+      "cta": "Schedule Consultation"
+    },
+    "services": {
+      "title": "Services",
+      "subtitle": "Choose the ideal service for you",
+      "readingByQuestions": {
+        "title": "Reading by Questions",
+        "description": "Clear and objective answers to your most important questions."
+      },
+      "liveSession": {
+        "title": "Live Online Session",
+        "description": "Personalized consultation via video call with real-time guidance."
+      },
+      "monthlyReading": {
+        "title": "Monthly Reading",
+        "description": "Monthly follow-up with forecasts and guidance for the month."
+      },
+      "viewAll": "View All Services"
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "subtitle": "What our clients say"
+    },
+    "cta": {
+      "title": "Ready to start your journey?",
+      "subtitle": "Schedule your consultation and discover what the cards have for you",
+      "button": "Schedule Now"
+    }
+  },
+  "client": {
+    "dashboard": {
+      "title": "Dashboard",
+      "welcome": "Welcome",
+      "overview": "Overview",
+      "recentReadings": "Recent Readings",
+      "upcomingAppointments": "Upcoming Appointments",
+      "recentOrders": "Recent Orders"
+    },
+    "readings": {
+      "title": "My Readings",
+      "noReadings": "You don't have any readings yet",
+      "viewDetails": "View Details",
+      "date": "Date",
+      "status": "Status",
+      "type": "Type"
+    },
+    "appointments": {
+      "title": "My Appointments",
+      "noAppointments": "You don't have any appointments yet",
+      "schedule": "Schedule",
+      "reschedule": "Reschedule",
+      "cancel": "Cancel",
+      "date": "Date",
+      "time": "Time",
+      "status": "Status"
+    },
+    "orders": {
+      "title": "My Orders",
+      "noOrders": "You haven't placed any orders yet",
+      "orderNumber": "Order #",
+      "date": "Date",
+      "total": "Total",
+      "status": "Status",
+      "viewDetails": "View Details"
+    },
+    "profile": {
+      "title": "My Profile",
+      "personalInfo": "Personal Information",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "birthDate": "Birth Date",
+      "language": "Language",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "saveChanges": "Save Changes"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "readings": "Readings",
+      "appointments": "Appointments",
+      "orders": "Orders",
+      "profile": "Profile"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Panel",
+      "overview": "Overview",
+      "stats": "Statistics",
+      "recentActivity": "Recent Activity"
+    },
+    "layout": {
+      "pendingReadings": "Pending Readings",
+      "orders": "Orders",
+      "clients": "Clients",
+      "availability": "Availability",
+      "reports": "Reports"
+    },
+    "products": {
+      "title": "Products",
+      "addProduct": "Add Product",
+      "editProduct": "Edit Product",
+      "deleteProduct": "Delete Product",
+      "name": "Name",
+      "description": "Description",
+      "price": "Price",
+      "category": "Category",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "users": {
+      "title": "Users",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "readings": {
+      "title": "Readings",
+      "client": "Client",
+      "date": "Date",
+      "type": "Type",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "appointments": {
+      "title": "Appointments",
+      "client": "Client",
+      "date": "Date",
+      "time": "Time",
+      "type": "Type",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "categories": {
+      "title": "Categories",
+      "addCategory": "Add Category",
+      "name": "Name",
+      "description": "Description",
+      "actions": "Actions"
+    },
+    "cards": {
+      "title": "Cards",
+      "addCard": "Add Card",
+      "name": "Name",
+      "description": "Description",
+      "meaning": "Meaning",
+      "actions": "Actions"
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "client": "Client",
+      "content": "Content",
+      "rating": "Rating",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "settings": {
+      "title": "Settings",
+      "general": "General",
+      "notifications": "Notifications",
+      "payment": "Payment",
+      "email": "Email"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "products": "Products",
+      "users": "Users",
+      "readings": "Readings",
+      "appointments": "Appointments",
+      "categories": "Categories",
+      "cards": "Cards",
+      "testimonials": "Testimonials",
+      "settings": "Settings"
+    }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "clear": "Clear",
+    "apply": "Apply",
+    "actions": "Actions",
+    "status": "Status",
+    "date": "Date",
+    "time": "Time",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "country": "Country",
+    "zipCode": "ZIP Code",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "price": "Price",
+    "quantity": "Quantity",
+    "description": "Description",
+    "category": "Category",
+    "image": "Image",
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "continueShopping": "Continue Shopping",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "removeItem": "Remove Item",
+    "updateQuantity": "Update Quantity",
+    "productAdded": "Product added to cart!"
+  },
+  "messages": {
+    "error": {
+      "generic": "An error occurred. Please try again.",
+      "network": "Connection error. Check your internet.",
+      "unauthorized": "You don't have permission to access this page.",
+      "notFound": "Page not found."
+    },
+    "success": {
+      "saved": "Saved successfully!",
+      "deleted": "Deleted successfully!",
+      "updated": "Updated successfully!",
+      "created": "Created successfully!"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email",
+    "minLength": "Minimum {{min}} characters",
+    "maxLength": "Maximum {{max}} characters",
+    "pattern": "Invalid format",
+    "passwordMismatch": "Passwords do not match"
+  }
+}

@@ -5,13 +5,14 @@ import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, InputTextModule, PasswordModule],
+  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, InputTextModule, PasswordModule, TranslateModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

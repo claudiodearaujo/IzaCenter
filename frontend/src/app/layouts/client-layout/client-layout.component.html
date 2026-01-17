@@ -51,13 +51,13 @@
         <ul class="space-y-1">
           @for (item of menuItems; track item.route) {
             <li>
-              <a [routerLink]="item.route" 
+              <a [routerLink]="item.route"
                  routerLinkActive="bg-primary-50 text-primary-700"
                  [routerLinkActiveOptions]="{exact: item.route === '/cliente'}"
                  (click)="closeSidebar()"
                  class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-600 hover:bg-neutral-50 transition-colors">
                 <i class="pi" [class]="item.icon"></i>
-                {{ item.label }}
+                {{ item.labelKey | translate }}
               </a>
             </li>
           }
@@ -68,11 +68,11 @@
       <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-neutral-100">
         <a routerLink="/" class="flex items-center gap-3 px-4 py-3 text-neutral-600 hover:text-neutral-800">
           <i class="pi pi-arrow-left"></i>
-          Voltar ao Site
+          {{ 'common.back' | translate }}
         </a>
         <button (click)="logout()" class="flex items-center gap-3 px-4 py-3 text-red-600 hover:text-red-700 w-full">
           <i class="pi pi-sign-out"></i>
-          Sair
+          {{ 'nav.logout' | translate }}
         </button>
       </div>
     </aside>

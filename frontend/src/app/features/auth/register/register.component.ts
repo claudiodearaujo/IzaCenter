@@ -6,13 +6,14 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { InputMaskModule } from 'primeng/inputmask';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, InputTextModule, PasswordModule, InputMaskModule],
+  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, InputTextModule, PasswordModule, InputMaskModule, TranslateModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })

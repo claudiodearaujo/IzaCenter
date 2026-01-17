@@ -29,6 +29,8 @@
     "@angular/forms": "^20.1.0",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
     "@playwright/test": "^1.57.0",
     "@primeuix/themes": "^2.0.2",
     "@tailwindcss/postcss": "^4.1.18",

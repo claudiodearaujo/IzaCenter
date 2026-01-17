@@ -1,0 +1,337 @@
+{
+  "nav": {
+    "home": "Início",
+    "about": "Sobre",
+    "services": "Serviços",
+    "shop": "Loja",
+    "testimonials": "Depoimentos",
+    "contact": "Contato",
+    "cart": "Carrinho",
+    "login": "Entrar",
+    "register": "Cadastrar",
+    "logout": "Sair",
+    "myArea": "Minha Área",
+    "adminPanel": "Painel Admin"
+  },
+  "footer": {
+    "quickLinks": "Links Rápidos",
+    "legal": "Legal",
+    "contact": "Contato",
+    "social": "Redes Sociais",
+    "rightsReserved": "Todos os direitos reservados.",
+    "termsOfUse": "Termos de Uso",
+    "privacyPolicy": "Política de Privacidade",
+    "faq": "FAQ",
+    "admin": "Admin"
+  },
+  "auth": {
+    "login": {
+      "title": "Entrar",
+      "subtitle": "Acesse sua conta",
+      "email": "E-mail",
+      "password": "Senha",
+      "rememberMe": "Lembrar-me",
+      "forgotPassword": "Esqueceu sua senha?",
+      "loginButton": "Entrar",
+      "noAccount": "Não tem uma conta?",
+      "registerLink": "Cadastre-se"
+    },
+    "register": {
+      "title": "Cadastrar",
+      "subtitle": "Crie sua conta",
+      "name": "Nome",
+      "email": "E-mail",
+      "password": "Senha",
+      "confirmPassword": "Confirmar Senha",
+      "phone": "Telefone",
+      "registerButton": "Cadastrar",
+      "hasAccount": "Já tem uma conta?",
+      "loginLink": "Faça login"
+    },
+    "forgotPassword": {
+      "title": "Esqueceu sua senha?",
+      "subtitle": "Digite seu e-mail para recuperar",
+      "email": "E-mail",
+      "sendButton": "Enviar",
+      "backToLogin": "Voltar para login"
+    },
+    "resetPassword": {
+      "title": "Redefinir Senha",
+      "subtitle": "Digite sua nova senha",
+      "password": "Nova Senha",
+      "confirmPassword": "Confirmar Senha",
+      "resetButton": "Redefinir"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Descubra seu caminho com o Tarot",
+      "subtitle": "Orientação, clareza e acolhimento através das cartas",
+      "cta": "Agendar Consulta"
+    },
+    "services": {
+      "title": "Serviços",
+      "subtitle": "Escolha o serviço ideal para você",
+      "readingByQuestions": {
+        "title": "Leitura por Perguntas",
+        "description": "Respostas claras e objetivas para suas questões mais importantes."
+      },
+      "liveSession": {
+        "title": "Sessão Online ao Vivo",
+        "description": "Consulta personalizada por videochamada com orientação em tempo real."
+      },
+      "monthlyReading": {
+        "title": "Jogo Mensal",
+        "description": "Acompanhamento mensal com previsões e orientações para o mês."
+      },
+      "viewAll": "Ver Todos os Serviços"
+    },
+    "testimonials": {
+      "title": "Depoimentos",
+      "subtitle": "O que dizem nossos clientes"
+    },
+    "cta": {
+      "title": "Pronto para começar sua jornada?",
+      "subtitle": "Agende sua consulta e descubra o que as cartas têm para você",
+      "button": "Agendar Agora"
+    }
+  },
+  "client": {
+    "dashboard": {
+      "title": "Dashboard",
+      "welcome": "Bem-vindo(a)",
+      "overview": "Visão Geral",
+      "recentReadings": "Leituras Recentes",
+      "upcomingAppointments": "Próximos Agendamentos",
+      "recentOrders": "Pedidos Recentes"
+    },
+    "readings": {
+      "title": "Minhas Leituras",
+      "noReadings": "Você ainda não tem leituras",
+      "viewDetails": "Ver Detalhes",
+      "date": "Data",
+      "status": "Status",
+      "type": "Tipo"
+    },
+    "appointments": {
+      "title": "Meus Agendamentos",
+      "noAppointments": "Você ainda não tem agendamentos",
+      "schedule": "Agendar",
+      "reschedule": "Reagendar",
+      "cancel": "Cancelar",
+      "date": "Data",
+      "time": "Horário",
+      "status": "Status"
+    },
+    "orders": {
+      "title": "Meus Pedidos",
+      "noOrders": "Você ainda não fez pedidos",
+      "orderNumber": "Pedido #",
+      "date": "Data",
+      "total": "Total",
+      "status": "Status",
+      "viewDetails": "Ver Detalhes"
+    },
+    "profile": {
+      "title": "Meu Perfil",
+      "personalInfo": "Informações Pessoais",
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "birthDate": "Data de Nascimento",
+      "language": "Idioma",
+      "changePassword": "Alterar Senha",
+      "currentPassword": "Senha Atual",
+      "newPassword": "Nova Senha",
+      "confirmPassword": "Confirmar Senha",
+      "saveChanges": "Salvar Alterações"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "readings": "Leituras",
+      "appointments": "Agendamentos",
+      "orders": "Pedidos",
+      "profile": "Perfil"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Painel Administrativo",
+      "overview": "Visão Geral",
+      "stats": "Estatísticas",
+      "recentActivity": "Atividade Recente"
+    },
+    "layout": {
+      "pendingReadings": "Leituras Pendentes",
+      "orders": "Pedidos",
+      "clients": "Clientes",
+      "availability": "Disponibilidade",
+      "reports": "Relatórios"
+    },
+    "products": {
+      "title": "Produtos",
+      "addProduct": "Adicionar Produto",
+      "editProduct": "Editar Produto",
+      "deleteProduct": "Excluir Produto",
+      "name": "Nome",
+      "description": "Descrição",
+      "price": "Preço",
+      "category": "Categoria",
+      "status": "Status",
+      "actions": "Ações"
+    },
+    "users": {
+      "title": "Usuários",
+      "name": "Nome",
+      "email": "E-mail",
+      "role": "Função",
+      "status": "Status",
+      "actions": "Ações"
+    },
+    "readings": {
+      "title": "Leituras",
+      "client": "Cliente",
+      "date": "Data",
+      "type": "Tipo",
+      "status": "Status",
+      "actions": "Ações"
+    },
+    "appointments": {
+      "title": "Agendamentos",
+      "client": "Cliente",
+      "date": "Data",
+      "time": "Horário",
+      "type": "Tipo",
+      "status": "Status",
+      "actions": "Ações"
+    },
+    "categories": {
+      "title": "Categorias",
+      "addCategory": "Adicionar Categoria",
+      "name": "Nome",
+      "description": "Descrição",
+      "actions": "Ações"
+    },
+    "cards": {
+      "title": "Cartas",
+      "addCard": "Adicionar Carta",
+      "name": "Nome",
+      "description": "Descrição",
+      "meaning": "Significado",
+      "actions": "Ações"
+    },
+    "testimonials": {
+      "title": "Depoimentos",
+      "client": "Cliente",
+      "content": "Conteúdo",
+      "rating": "Avaliação",
+      "status": "Status",
+      "actions": "Ações"
+    },
+    "settings": {
+      "title": "Configurações",
+      "general": "Geral",
+      "notifications": "Notificações",
+      "payment": "Pagamento",
+      "email": "E-mail"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "products": "Produtos",
+      "users": "Usuários",
+      "readings": "Leituras",
+      "appointments": "Agendamentos",
+      "categories": "Categorias",
+      "cards": "Cartas",
+      "testimonials": "Depoimentos",
+      "settings": "Configurações"
+    }
+  },
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "view": "Visualizar",
+    "add": "Adicionar",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "loading": "Carregando...",
+    "noData": "Nenhum dado disponível",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warning": "Aviso",
+    "info": "Informação",
+    "confirm": "Confirmar",
+    "yes": "Sim",
+    "no": "Não",
+    "close": "Fechar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "reset": "Redefinir",
+    "clear": "Limpar",
+    "apply": "Aplicar",
+    "actions": "Ações",
+    "status": "Status",
+    "date": "Data",
+    "time": "Hora",
+    "name": "Nome",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "address": "Endereço",
+    "city": "Cidade",
+    "state": "Estado",
+    "country": "País",
+    "zipCode": "CEP",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "price": "Preço",
+    "quantity": "Quantidade",
+    "description": "Descrição",
+    "category": "Categoria",
+    "image": "Imagem",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "pending": "Pendente",
+    "completed": "Concluído",
+    "cancelled": "Cancelado",
+    "approved": "Aprovado",
+    "rejected": "Rejeitado"
+  },
+  "cart": {
+    "title": "Carrinho de Compras",
+    "empty": "Seu carrinho está vazio",
+    "continueShopping": "Continuar Comprando",
+    "checkout": "Finalizar Compra",
+    "subtotal": "Subtotal",
+    "shipping": "Frete",
+    "total": "Total",
+    "removeItem": "Remover Item",
+    "updateQuantity": "Atualizar Quantidade",
+    "productAdded": "Produto adicionado ao carrinho!"
+  },
+  "messages": {
+    "error": {
+      "generic": "Ocorreu um erro. Tente novamente.",
+      "network": "Erro de conexão. Verifique sua internet.",
+      "unauthorized": "Você não tem permissão para acessar esta página.",
+      "notFound": "Página não encontrada."
+    },
+    "success": {
+      "saved": "Salvo com sucesso!",
+      "deleted": "Excluído com sucesso!",
+      "updated": "Atualizado com sucesso!",
+      "created": "Criado com sucesso!"
+    }
+  },
+  "validation": {
+    "required": "Este campo é obrigatório",
+    "email": "E-mail inválido",
+    "minLength": "Mínimo de {{min}} caracteres",
+    "maxLength": "Máximo de {{max}} caracteres",
+    "pattern": "Formato inválido",
+    "passwordMismatch": "As senhas não coincidem"
+  }
+}

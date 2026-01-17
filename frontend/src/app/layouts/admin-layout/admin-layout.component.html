@@ -5,7 +5,7 @@
       <button (click)="toggleSidebar()" class="p-2">
         <i class="pi pi-bars text-xl"></i>
       </button>
-      <span class="font-semibold">Painel Administrativo</span>
+      <span class="font-semibold">{{ 'admin.dashboard.title' | translate }}</span>
       <div class="w-10"></div>
     </div>
   </header>
@@ -28,7 +28,7 @@
           <span class="text-2xl">✨</span>
           <div>
             <span class="text-lg font-serif font-semibold">Izabela Tarot</span>
-            <span class="block text-xs text-primary-300">Painel Admin</span>
+            <span class="block text-xs text-primary-300">{{ 'nav.adminPanel' | translate }}</span>
           </div>
         </a>
       </div>
@@ -51,14 +51,14 @@
         <ul class="space-y-1">
           @for (item of menuItems; track item.route) {
             <li>
-              <a [routerLink]="item.route" 
+              <a [routerLink]="item.route"
                  routerLinkActive="bg-primary-800 text-white"
                  [routerLinkActiveOptions]="{exact: item.route === '/admin'}"
                  (click)="closeSidebar()"
                  class="flex items-center justify-between px-4 py-3 rounded-xl text-primary-200 hover:bg-primary-800 hover:text-white transition-colors">
                 <span class="flex items-center gap-3">
                   <i class="pi" [class]="item.icon"></i>
-                  {{ item.label }}
+                  {{ item.labelKey | translate }}
                 </span>
                 @if (item.badge) {
                   <p-badge value="3" severity="danger" />
@@ -73,11 +73,11 @@
       <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-primary-800">
         <a routerLink="/" class="flex items-center gap-3 px-4 py-2 text-primary-300 hover:text-white text-sm">
           <i class="pi pi-external-link"></i>
-          Ver Site
+          {{ 'common.back' | translate }}
         </a>
         <button (click)="logout()" class="flex items-center gap-3 px-4 py-2 text-red-400 hover:text-red-300 w-full text-sm">
           <i class="pi pi-sign-out"></i>
-          Sair
+          {{ 'nav.logout' | translate }}
         </button>
       </div>
     </aside>

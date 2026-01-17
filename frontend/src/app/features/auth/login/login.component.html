@@ -11,40 +11,40 @@
     <!-- Card -->
     <div class="bg-white rounded-3xl shadow-xl p-8">
       <h1 class="text-2xl font-serif font-bold text-neutral-900 text-center mb-2">
-        Bem-vinda de volta!
+        {{ 'auth.login.title' | translate }}
       </h1>
       <p class="text-neutral-600 text-center mb-8">
-        Entre para acessar sua área de cliente.
+        {{ 'auth.login.subtitle' | translate }}
       </p>
 
       <form (ngSubmit)="onSubmit()" class="space-y-6">
         <div>
-          <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">Email</label>
+          <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'auth.login.email' | translate }}</label>
           <input pInputText id="email" [(ngModel)]="form.email" name="email" type="email"
                  class="w-full" placeholder="seu@email.com" required />
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium text-neutral-700 mb-2">Senha</label>
+          <label for="password" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'auth.login.password' | translate }}</label>
           <p-password id="password" [(ngModel)]="form.password" name="password"
-                      [toggleMask]="true" [feedback]="false" styleClass="w-full" 
-                      inputStyleClass="w-full" placeholder="Sua senha" required />
+                      [toggleMask]="true" [feedback]="false" styleClass="w-full"
+                      inputStyleClass="w-full" [placeholder]="'auth.login.password' | translate" required />
         </div>
 
         <div class="flex justify-end">
           <a routerLink="/auth/esqueci-senha" class="text-sm text-primary-600 hover:text-primary-700">
-            Esqueci minha senha
+            {{ 'auth.login.forgotPassword' | translate }}
           </a>
         </div>
 
-        <p-button type="submit" label="Entrar" [loading]="isLoading()" styleClass="w-full" size="large" />
+        <p-button type="submit" [label]="'auth.login.loginButton' | translate" [loading]="isLoading()" styleClass="w-full" size="large" />
       </form>
 
       <div class="mt-8 pt-6 border-t border-neutral-100 text-center">
         <p class="text-neutral-600">
-          Ainda não tem conta?
+          {{ 'auth.login.noAccount' | translate }}
           <a routerLink="/auth/cadastro" class="text-primary-600 hover:text-primary-700 font-medium ml-1">
-            Cadastre-se
+            {{ 'auth.login.registerLink' | translate }}
           </a>
         </p>
       </div>
@@ -54,7 +54,7 @@
     <div class="text-center mt-6">
       <a routerLink="/" class="text-neutral-500 hover:text-neutral-700 text-sm inline-flex items-center gap-1">
         <i class="pi pi-arrow-left text-xs"></i>
-        Voltar ao site
+        {{ 'common.back' | translate }}
       </a>
     </div>
   </div>
