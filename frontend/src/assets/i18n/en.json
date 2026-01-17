@@ -1,0 +1,508 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "shop": "Shop",
+    "testimonials": "Testimonials",
+    "contact": "Contact",
+    "cart": "Cart",
+    "login": "Sign In",
+    "register": "Sign Up",
+    "logout": "Sign Out",
+    "myArea": "My Area",
+    "adminPanel": "Admin Panel"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "legal": "Legal",
+    "contact": "Contact",
+    "social": "Social Media",
+    "rightsReserved": "All rights reserved.",
+    "termsOfUse": "Terms of Use",
+    "privacyPolicy": "Privacy Policy",
+    "faq": "FAQ",
+    "admin": "Admin"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Access your account",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot your password?",
+      "loginButton": "Sign In",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign up"
+    },
+    "register": {
+      "title": "Sign Up",
+      "subtitle": "Create your account",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "phone": "Phone",
+      "registerButton": "Sign Up",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in"
+    },
+    "forgotPassword": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your email to recover",
+      "email": "Email",
+      "sendButton": "Send",
+      "backToLogin": "Back to login"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your new password",
+      "password": "New Password",
+      "confirmPassword": "Confirm Password",
+      "resetButton": "Reset"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Discover your path with Tarot",
+      "subtitle": "Guidance, clarity and support through the cards",
+      "cta": "Schedule Consultation"
+    },
+    "services": {
+      "title": "Services",
+      "subtitle": "Choose the ideal service for you",
+      "readingByQuestions": {
+        "title": "Reading by Questions",
+        "description": "Clear and objective answers to your most important questions."
+      },
+      "liveSession": {
+        "title": "Live Online Session",
+        "description": "Personalized consultation via video call with real-time guidance."
+      },
+      "monthlyReading": {
+        "title": "Monthly Reading",
+        "description": "Monthly follow-up with forecasts and guidance for the month."
+      },
+      "viewAll": "View All Services"
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "subtitle": "What our clients say"
+    },
+    "cta": {
+      "title": "Ready to start your journey?",
+      "subtitle": "Schedule your consultation and discover what the cards have for you",
+      "button": "Schedule Now"
+    }
+  },
+  "client": {
+    "dashboard": {
+      "title": "Dashboard",
+      "welcome": "Welcome",
+      "overview": "Overview",
+      "recentReadings": "Recent Readings",
+      "upcomingAppointments": "Upcoming Appointments",
+      "recentOrders": "Recent Orders"
+    },
+    "readings": {
+      "title": "My Readings",
+      "noReadings": "You don't have any readings yet",
+      "viewDetails": "View Details",
+      "date": "Date",
+      "status": "Status",
+      "type": "Type"
+    },
+    "appointments": {
+      "title": "My Appointments",
+      "noAppointments": "You don't have any appointments yet",
+      "schedule": "Schedule",
+      "reschedule": "Reschedule",
+      "cancel": "Cancel",
+      "date": "Date",
+      "time": "Time",
+      "status": "Status"
+    },
+    "orders": {
+      "title": "My Orders",
+      "noOrders": "You haven't placed any orders yet",
+      "orderNumber": "Order #",
+      "date": "Date",
+      "total": "Total",
+      "status": "Status",
+      "viewDetails": "View Details"
+    },
+    "profile": {
+      "title": "My Profile",
+      "personalInfo": "Personal Information",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "birthDate": "Birth Date",
+      "language": "Language",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "saveChanges": "Save Changes"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "readings": "Readings",
+      "appointments": "Appointments",
+      "orders": "Orders",
+      "profile": "Profile"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Panel",
+      "overview": "Overview",
+      "stats": "Statistics",
+      "recentActivity": "Recent Activity"
+    },
+    "layout": {
+      "pendingReadings": "Pending Readings",
+      "orders": "Orders",
+      "clients": "Clients",
+      "availability": "Availability",
+      "reports": "Reports"
+    },
+    "products": {
+      "title": "Products",
+      "addProduct": "Add Product",
+      "editProduct": "Edit Product",
+      "deleteProduct": "Delete Product",
+      "name": "Name",
+      "description": "Description",
+      "price": "Price",
+      "category": "Category",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "users": {
+      "title": "Users",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "readings": {
+      "title": "Readings",
+      "client": "Client",
+      "date": "Date",
+      "type": "Type",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "appointments": {
+      "title": "Appointments",
+      "client": "Client",
+      "date": "Date",
+      "time": "Time",
+      "type": "Type",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "categories": {
+      "title": "Categories",
+      "addCategory": "Add Category",
+      "name": "Name",
+      "description": "Description",
+      "actions": "Actions"
+    },
+    "cards": {
+      "title": "Cards",
+      "addCard": "Add Card",
+      "name": "Name",
+      "description": "Description",
+      "meaning": "Meaning",
+      "actions": "Actions"
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "client": "Client",
+      "content": "Content",
+      "rating": "Rating",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "settings": {
+      "title": "Settings",
+      "general": "General",
+      "notifications": "Notifications",
+      "payment": "Payment",
+      "email": "Email"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "products": "Products",
+      "users": "Users",
+      "readings": "Readings",
+      "appointments": "Appointments",
+      "categories": "Categories",
+      "cards": "Cards",
+      "testimonials": "Testimonials",
+      "settings": "Settings"
+    }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "clear": "Clear",
+    "apply": "Apply",
+    "actions": "Actions",
+    "status": "Status",
+    "date": "Date",
+    "time": "Time",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "country": "Country",
+    "zipCode": "ZIP Code",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "price": "Price",
+    "quantity": "Quantity",
+    "description": "Description",
+    "category": "Category",
+    "image": "Image",
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "continueShopping": "Continue Shopping",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "removeItem": "Remove Item",
+    "updateQuantity": "Update Quantity",
+    "productAdded": "Product added to cart!"
+  },
+  "messages": {
+    "error": {
+      "generic": "An error occurred. Please try again.",
+      "network": "Connection error. Check your internet.",
+      "unauthorized": "You don't have permission to access this page.",
+      "notFound": "Page not found."
+    },
+    "success": {
+      "saved": "Saved successfully!",
+      "deleted": "Deleted successfully!",
+      "updated": "Updated successfully!",
+      "created": "Created successfully!"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email",
+    "minLength": "Minimum {{min}} characters",
+    "maxLength": "Maximum {{max}} characters",
+    "pattern": "Invalid format",
+    "passwordMismatch": "Passwords do not match"
+  },
+  "about": {
+    "title": "About Izabela Santos",
+    "subtitle": "Tarot reader, integrative therapist and student of Jungian analytical psychology.",
+    "journey": {
+      "title": "My Journey",
+      "paragraph1": "My passion for tarot began as a personal quest for self-knowledge and transformed into a vocation to help other people on their journeys.",
+      "paragraph2": "With a degree in Business Administration and specialization in Integrative Natural Therapies, I combined my analytical knowledge with intuitive sensitivity to offer readings that go beyond the superficial.",
+      "paragraph3": "Currently, I study Jungian Analytical Psychology, integrating archetypes and symbols into my interpretations of the Lenormand cards."
+    },
+    "education": {
+      "title": "Education:",
+      "item1": "Business Administration",
+      "item2": "Integrative Natural Therapies",
+      "item3": "Jungian Analytical Psychology (in progress)"
+    },
+    "values": {
+      "title": "My Values",
+      "welcome": {
+        "title": "Welcome",
+        "description": "Each person is unique and deserves to be heard with respect and empathy."
+      },
+      "honesty": {
+        "title": "Honesty",
+        "description": "Clear and truthful interpretations, always with respect."
+      },
+      "empowerment": {
+        "title": "Empowerment",
+        "description": "Tarot is a tool for you to make your own decisions."
+      }
+    },
+    "cta": {
+      "title": "Ready for your reading?",
+      "subtitle": "Schedule a consultation and discover the messages the cards have for you.",
+      "button": "View Services"
+    }
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Choose the consultation format that best suits your needs.",
+    "viewOptions": "View Options",
+    "items": {
+      "readingByQuestions": {
+        "title": "Reading by Questions",
+        "description": "Ask your questions and receive guidance through the cards. Ideal for specific doubts.",
+        "features": {
+          "feature1": "1, 3 or 5 questions",
+          "feature2": "Response within 48h",
+          "feature3": "Detailed PDF reading",
+          "feature4": "Valid for 1 year"
+        },
+        "price": "From $50.00"
+      },
+      "liveSession": {
+        "title": "Live Online Session",
+        "description": "Personalized consultation via video call. Real-time interaction and exclusive reading.",
+        "features": {
+          "feature1": "30 or 60 minutes",
+          "feature2": "Live video call",
+          "feature3": "Unlimited questions",
+          "feature4": "Session recording"
+        },
+        "price": "From $150.00"
+      },
+      "monthlyReading": {
+        "title": "Monthly Reading",
+        "description": "Monthly follow-up with forecasts and guidance for each area of your life.",
+        "features": {
+          "feature1": "Complete monthly forecast",
+          "feature2": "All life areas",
+          "feature3": "Explanatory audio",
+          "feature4": "Monthly update"
+        },
+        "price": "$120.00/month"
+      },
+      "specialReading": {
+        "title": "Special Reading",
+        "description": "Themed readings for special moments: birthday, new year, full moon.",
+        "features": {
+          "feature1": "Special spreads",
+          "feature2": "Personalized ritual",
+          "feature3": "Illustrated PDF",
+          "feature4": "Special gift"
+        },
+        "price": "From $100.00"
+      }
+    },
+    "faqPreview": {
+      "title": "Have questions?",
+      "subtitle": "Check our frequently asked questions page or get in touch.",
+      "faqButton": "View FAQ",
+      "contactButton": "Contact Us"
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Get in touch to ask questions or schedule your consultation.",
+    "form": {
+      "title": "Send a message",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "What would you like to talk about?",
+      "message": "Message",
+      "messagePlaceholder": "Write your message...",
+      "submitButton": "Send Message",
+      "successMessage": "Message sent successfully! I will get back to you soon."
+    },
+    "info": {
+      "title": "Contact Information",
+      "email": {
+        "label": "Email"
+      },
+      "instagram": {
+        "label": "Instagram"
+      },
+      "schedule": {
+        "label": "Schedule",
+        "value": "Mon - Fri: 9am to 6pm"
+      },
+      "location": {
+        "label": "Location"
+      }
+    },
+    "social": {
+      "title": "Social Media"
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Get answers about tarot readings.",
+    "items": {
+      "therapeuticTarot": {
+        "question": "What is therapeutic tarot?",
+        "answer": "Therapeutic tarot is a self-knowledge tool that uses cards for reflection and guidance, not as a prediction of the future, but as a mirror to better understand situations and possibilities."
+      },
+      "readingByQuestions": {
+        "question": "How does reading by questions work?",
+        "answer": "You send your questions through the platform. I do the card spread and prepare a detailed interpretation in PDF, which is available in your client area within 48 hours."
+      },
+      "experience": {
+        "question": "Do I need experience with tarot?",
+        "answer": "No! The readings are done in a clear and accessible way. You don't need any prior knowledge about tarot or the Lenormand deck."
+      },
+      "recording": {
+        "question": "Are online sessions recorded?",
+        "answer": "Yes, with your permission, online sessions can be recorded so you can review the guidance later."
+      },
+      "validity": {
+        "question": "What is the validity of the reading?",
+        "answer": "Readings are available in your client area for 1 year after publication."
+      },
+      "topics": {
+        "question": "Can I ask questions about any topic?",
+        "answer": "Readings can cover areas such as professional, relationships, emotional health and personal growth. We avoid questions about physical health, legal matters or third parties."
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Testimonials",
+    "subtitle": "See what my clients say about the readings.",
+    "items": {
+      "item1": "Izabela's reading was transformative. It helped me better understand my professional moment and make important decisions.",
+      "item2": "Clarity and warmth in every word. I highly recommend it to anyone seeking true guidance.",
+      "item3": "I found guidance and peace. Izabela has a special gift for interpreting the cards.",
+      "item4": "I did my first reading and was impressed with the accuracy. I will definitely be back!",
+      "item5": "The online session was incredible. I felt very welcomed and received valuable guidance.",
+      "item6": "The monthly reading helps me plan my month with more awareness. I highly recommend it!"
+    }
+  }
+}

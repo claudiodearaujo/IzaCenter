@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
+import { TranslateModule } from '@ngx-translate/core';
 import { fadeInUp, listAnimation } from '../../../shared/animations/fade.animation';
 import { TestimonialCardComponent, Testimonial } from '../../../shared/components/testimonial-card/testimonial-card.component';
 import { Product } from '../../../core/models/product.model';
@@ -17,7 +18,7 @@ import { NotificationService } from '../../../core/services/notification.service
     RouterLink,
     ButtonModule,
     CarouselModule,
-
+    TranslateModule,
     TestimonialCardComponent
   ],
   templateUrl: './home.component.html',
@@ -34,20 +35,20 @@ export class HomeComponent implements OnInit {
   services = [
     {
       icon: 'assets/images/service-questions.svg',
-      title: 'Leitura por Perguntas',
-      description: 'Respostas claras e objetivas para suas questões mais importantes.',
+      titleKey: 'home.services.readingByQuestions.title',
+      descriptionKey: 'home.services.readingByQuestions.description',
       link: '/loja'
     },
     {
       icon: 'assets/images/service-live.svg',
-      title: 'Sessão Online ao Vivo',
-      description: 'Consulta personalizada por videochamada com orientação em tempo real.',
+      titleKey: 'home.services.liveSession.title',
+      descriptionKey: 'home.services.liveSession.description',
       link: '/loja'
     },
     {
       icon: 'assets/images/service-monthly.svg',
-      title: 'Jogo Mensal',
-      description: 'Acompanhamento mensal com previsões e orientações para o mês.',
+      titleKey: 'home.services.monthlyReading.title',
+      descriptionKey: 'home.services.monthlyReading.description',
       link: '/loja'
     }
   ];

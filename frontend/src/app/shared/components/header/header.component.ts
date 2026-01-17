@@ -4,8 +4,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { MenubarModule } from 'primeng/menubar';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
+import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +18,9 @@ import { CartService } from '../../../core/services/cart.service';
     RouterLinkActive,
     ButtonModule,
     BadgeModule,
-    MenubarModule
+    MenubarModule,
+    TranslateModule,
+    LanguageSelectorComponent
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'

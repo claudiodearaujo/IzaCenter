@@ -18,6 +18,10 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "css",
+            "optimization": {
+              "fonts": false
+            },
             "assets": [
               {
                 "glob": "**/*",

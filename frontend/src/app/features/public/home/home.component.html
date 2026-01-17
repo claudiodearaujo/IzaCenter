@@ -11,16 +11,14 @@
     <div class="max-w-3xl mx-auto text-center" @fadeInUp>
       <img src="assets/images/hero-crystal-ball.svg" alt="Bola de cristal" class="inline-block w-24 h-24 mb-6" />
       <h1 class="text-4xl md:text-6xl font-serif font-bold text-neutral-900 mb-6 leading-tight">
-        Descubra os caminhos do seu
-        <span class="text-primary-600">destino</span>
+        {{ 'home.hero.title' | translate }}
       </h1>
       <p class="text-lg md:text-xl text-neutral-600 mb-8 leading-relaxed">
-        Leituras de tarot terapêutico com o baralho cigano Lenormand. 
-        Orientação para sua jornada de autoconhecimento e crescimento pessoal.
+        {{ 'home.hero.subtitle' | translate }}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a routerLink="/loja">
-          <p-button label="Ver Serviços" icon="pi pi-arrow-right" iconPos="right" size="large" />
+          <p-button [label]="'home.services.viewAll' | translate" icon="pi pi-arrow-right" iconPos="right" size="large" />
         </a>
         <a routerLink="/sobre">
           <p-button label="Conheça a Izabela" [outlined]="true" size="large" />
@@ -45,16 +43,16 @@
         </div>
           </div>
       <div>
-        <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">Sobre Mim</span>
+        <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'nav.about' | translate }}</span>
         <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2 mb-6">
           Olá, eu sou a Izabela Santos
         </h2>
         <p class="text-neutral-600 mb-4 leading-relaxed">
-          Taróloga e estudante de Psicologia Analítica Junguiana, com formação em 
+          Taróloga e estudante de Psicologia Analítica Junguiana, com formação em
           Administração de Empresas e Terapias Integrativas Naturais.
         </p>
         <p class="text-neutral-600 mb-6 leading-relaxed">
-          Utilizo o baralho cigano Lenormand (36 cartas) para oferecer orientação 
+          Utilizo o baralho cigano Lenormand (36 cartas) para oferecer orientação
           em áreas como profissional, saúde e relacionamentos.
         </p>
         <div class="flex flex-wrap gap-3 mb-6">
@@ -75,21 +73,21 @@
 <section class="py-28 px-4 sm:px-6 lg:px-8" style="background: linear-gradient(to bottom, #fafafa, white);" mb-0>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">Serviços</span>
+      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'home.services.title' | translate }}</span>
       <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2">
-        Escolha sua forma de consulta
+        {{ 'home.services.subtitle' | translate }}
       </h2>
     </div>
 
     <div class="grid md:grid-cols-3 gap-8" @listAnimation>
-      @for (service of services; track service.title) {
-        <a [routerLink]="service.link" 
+      @for (service of services; track service.titleKey) {
+        <a [routerLink]="service.link"
            class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 text-center">
-          <img [src]="service.icon" [alt]="service.title" class="w-20 h-20 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-          <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-3">{{ service.title }}</h3>
-          <p class="text-neutral-600 mb-4">{{ service.description }}</p>
+          <img [src]="service.icon" [alt]="service.titleKey | translate" class="w-20 h-20 mx-auto mb-4 group-hover:scale-110 transition-transform" />
+          <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-3">{{ service.titleKey | translate }}</h3>
+          <p class="text-neutral-600 mb-4">{{ service.descriptionKey | translate }}</p>
           <span class="text-primary-600 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-            Saiba mais <i class="pi pi-arrow-right text-sm"></i>
+            {{ 'common.view' | translate }} <i class="pi pi-arrow-right text-sm"></i>
           </span>
         </a>
       }
@@ -101,9 +99,9 @@
 <section class="py-28 px-4 sm:px-6 lg:px-8 bg-white mb-0">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">Depoimentos</span>
+      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'home.testimonials.title' | translate }}</span>
       <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2">
-        O que dizem minhas clientes
+        {{ 'home.testimonials.subtitle' | translate }}
       </h2>
     </div>
 
@@ -115,7 +113,7 @@
 
     <div class="text-center mt-10">
       <a routerLink="/depoimentos">
-        <p-button label="Ver Todos os Depoimentos" [outlined]="true" />
+        <p-button [label]="'nav.testimonials' | translate" [outlined]="true" />
       </a>
     </div>
   </div>
@@ -126,13 +124,13 @@
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <img src="assets/images/cta-sparkle.svg" alt="" class="w-16 h-16 mx-auto mb-6" />
     <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">
-      Pronta para descobrir seu caminho?
+      {{ 'home.cta.title' | translate }}
     </h2>
     <p class="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-      Agende sua leitura e receba orientação para sua jornada de autoconhecimento.
+      {{ 'home.cta.subtitle' | translate }}
     </p>
     <a routerLink="/loja">
-      <p-button label="Agendar Consulta" icon="pi pi-calendar" size="large" severity="secondary" />
+      <p-button [label]="'home.cta.button' | translate" icon="pi pi-calendar" size="large" severity="secondary" />
     </a>
   </div>
 </section>

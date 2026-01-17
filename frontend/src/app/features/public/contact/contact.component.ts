@@ -5,19 +5,21 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { NotificationService } from '../../../core/services/notification.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule],
+  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule, TranslateModule],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.css'
 })
 export class ContactComponent {
   private notificationService = inject(NotificationService);
+  private translate = inject(TranslateService);
 
   isLoading = signal(false);
-  
+
   form = {
     name: '',
     email: '',
@@ -25,20 +27,22 @@ export class ContactComponent {
     message: ''
   };
 
-  contactInfo = [
-    { icon: 'pi-envelope', label: 'Email', value: 'izabela.ayurvida@gmail.com' },
-    { icon: 'pi-instagram', label: 'Instagram', value: '@izabela.tarot' },
-    { icon: 'pi-clock', label: 'Horário', value: 'Seg - Sex: 9h às 18h' },
-    { icon: 'pi-map-marker', label: 'Localização', value: 'Belo Horizonte, MG' }
-  ];
+  get contactInfo() {
+    return [
+      { icon: 'pi-envelope', label: this.translate.instant('contact.info.email.label'), value: 'izabela.ayurvida@gmail.com' },
+      { icon: 'pi-instagram', label: this.translate.instant('contact.info.instagram.label'), value: '@izabela.tarot' },
+      { icon: 'pi-clock', label: this.translate.instant('contact.info.schedule.label'), value: this.translate.instant('contact.info.schedule.value') },
+      { icon: 'pi-map-marker', label: this.translate.instant('contact.info.location.label'), value: 'Belo Horizonte, MG' }
+    ];
+  }
 
   async onSubmit(): Promise<void> {
     this.isLoading.set(true);
-    
+
     // TODO: Send to API
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    this.notificationService.showSuccess('Mensagem enviada com sucesso! Retornarei em breve.');
+
+    this.notificationService.showSuccess(this.translate.instant('contact.form.successMessage'));
     this.form = { name: '', email: '', subject: '', message: '' };
     this.isLoading.set(false);
   }

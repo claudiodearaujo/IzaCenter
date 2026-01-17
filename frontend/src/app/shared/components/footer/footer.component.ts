@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css'
 })
@@ -19,17 +20,17 @@ export class FooterComponent {
   ];
 
   quickLinks = [
-    { label: 'Início', route: '/' },
-    { label: 'Sobre', route: '/sobre' },
-    { label: 'Serviços', route: '/servicos' },
-    { label: 'Loja', route: '/loja' },
-    { label: 'Contato', route: '/contato' },
-       { label: 'Admin', route: '/admin' }
+    { labelKey: 'nav.home', route: '/' },
+    { labelKey: 'nav.about', route: '/sobre' },
+    { labelKey: 'nav.services', route: '/servicos' },
+    { labelKey: 'nav.shop', route: '/loja' },
+    { labelKey: 'nav.contact', route: '/contato' },
+    { labelKey: 'footer.admin', route: '/admin' }
   ];
 
   legalLinks = [
-    { label: 'Termos de Uso', route: '/termos' },
-    { label: 'Política de Privacidade', route: '/privacidade' },
-    { label: 'FAQ', route: '/faq' }
+    { labelKey: 'footer.termsOfUse', route: '/termos' },
+    { labelKey: 'footer.privacyPolicy', route: '/privacidade' },
+    { labelKey: 'footer.faq', route: '/faq' }
   ];
 }

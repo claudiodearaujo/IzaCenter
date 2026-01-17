@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, PasswordModule],
+  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, PasswordModule, TranslateModule],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.css'
 })

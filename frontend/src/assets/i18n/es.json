@@ -1,0 +1,508 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "services": "Servicios",
+    "shop": "Tienda",
+    "testimonials": "Testimonios",
+    "contact": "Contacto",
+    "cart": "Carrito",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "myArea": "Mi Área",
+    "adminPanel": "Panel de Administración"
+  },
+  "footer": {
+    "quickLinks": "Enlaces Rápidos",
+    "legal": "Legal",
+    "contact": "Contacto",
+    "social": "Redes Sociales",
+    "rightsReserved": "Todos los derechos reservados.",
+    "termsOfUse": "Términos de Uso",
+    "privacyPolicy": "Política de Privacidad",
+    "faq": "Preguntas Frecuentes",
+    "admin": "Admin"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "subtitle": "Accede a tu cuenta",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "rememberMe": "Recuérdame",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "loginButton": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "registerLink": "Regístrate"
+    },
+    "register": {
+      "title": "Registrarse",
+      "subtitle": "Crea tu cuenta",
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "phone": "Teléfono",
+      "registerButton": "Registrarse",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "loginLink": "Inicia sesión"
+    },
+    "forgotPassword": {
+      "title": "¿Olvidaste tu contraseña?",
+      "subtitle": "Ingresa tu correo para recuperar",
+      "email": "Correo Electrónico",
+      "sendButton": "Enviar",
+      "backToLogin": "Volver al inicio de sesión"
+    },
+    "resetPassword": {
+      "title": "Restablecer Contraseña",
+      "subtitle": "Ingresa tu nueva contraseña",
+      "password": "Nueva Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "resetButton": "Restablecer"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Descubre tu camino con el Tarot",
+      "subtitle": "Orientación, claridad y acogida a través de las cartas",
+      "cta": "Agendar Consulta"
+    },
+    "services": {
+      "title": "Servicios",
+      "subtitle": "Elige el servicio ideal para ti",
+      "readingByQuestions": {
+        "title": "Lectura por Preguntas",
+        "description": "Respuestas claras y objetivas para tus preguntas más importantes."
+      },
+      "liveSession": {
+        "title": "Sesión en Línea en Vivo",
+        "description": "Consulta personalizada por videollamada con orientación en tiempo real."
+      },
+      "monthlyReading": {
+        "title": "Lectura Mensual",
+        "description": "Seguimiento mensual con previsiones y orientaciones para el mes."
+      },
+      "viewAll": "Ver Todos los Servicios"
+    },
+    "testimonials": {
+      "title": "Testimonios",
+      "subtitle": "Lo que dicen nuestros clientes"
+    },
+    "cta": {
+      "title": "¿Listo para comenzar tu viaje?",
+      "subtitle": "Agenda tu consulta y descubre lo que las cartas tienen para ti",
+      "button": "Agendar Ahora"
+    }
+  },
+  "client": {
+    "dashboard": {
+      "title": "Panel de Control",
+      "welcome": "Bienvenido(a)",
+      "overview": "Resumen",
+      "recentReadings": "Lecturas Recientes",
+      "upcomingAppointments": "Próximas Citas",
+      "recentOrders": "Pedidos Recientes"
+    },
+    "readings": {
+      "title": "Mis Lecturas",
+      "noReadings": "Aún no tienes lecturas",
+      "viewDetails": "Ver Detalles",
+      "date": "Fecha",
+      "status": "Estado",
+      "type": "Tipo"
+    },
+    "appointments": {
+      "title": "Mis Citas",
+      "noAppointments": "Aún no tienes citas",
+      "schedule": "Agendar",
+      "reschedule": "Reagendar",
+      "cancel": "Cancelar",
+      "date": "Fecha",
+      "time": "Hora",
+      "status": "Estado"
+    },
+    "orders": {
+      "title": "Mis Pedidos",
+      "noOrders": "Aún no has realizado pedidos",
+      "orderNumber": "Pedido #",
+      "date": "Fecha",
+      "total": "Total",
+      "status": "Estado",
+      "viewDetails": "Ver Detalles"
+    },
+    "profile": {
+      "title": "Mi Perfil",
+      "personalInfo": "Información Personal",
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono",
+      "birthDate": "Fecha de Nacimiento",
+      "language": "Idioma",
+      "changePassword": "Cambiar Contraseña",
+      "currentPassword": "Contraseña Actual",
+      "newPassword": "Nueva Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "saveChanges": "Guardar Cambios"
+    },
+    "menu": {
+      "dashboard": "Panel",
+      "readings": "Lecturas",
+      "appointments": "Citas",
+      "orders": "Pedidos",
+      "profile": "Perfil"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Panel Administrativo",
+      "overview": "Resumen",
+      "stats": "Estadísticas",
+      "recentActivity": "Actividad Reciente"
+    },
+    "layout": {
+      "pendingReadings": "Lecturas Pendientes",
+      "orders": "Pedidos",
+      "clients": "Clientes",
+      "availability": "Disponibilidad",
+      "reports": "Informes"
+    },
+    "products": {
+      "title": "Productos",
+      "addProduct": "Agregar Producto",
+      "editProduct": "Editar Producto",
+      "deleteProduct": "Eliminar Producto",
+      "name": "Nombre",
+      "description": "Descripción",
+      "price": "Precio",
+      "category": "Categoría",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "users": {
+      "title": "Usuarios",
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "role": "Rol",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "readings": {
+      "title": "Lecturas",
+      "client": "Cliente",
+      "date": "Fecha",
+      "type": "Tipo",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "appointments": {
+      "title": "Citas",
+      "client": "Cliente",
+      "date": "Fecha",
+      "time": "Hora",
+      "type": "Tipo",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "categories": {
+      "title": "Categorías",
+      "addCategory": "Agregar Categoría",
+      "name": "Nombre",
+      "description": "Descripción",
+      "actions": "Acciones"
+    },
+    "cards": {
+      "title": "Cartas",
+      "addCard": "Agregar Carta",
+      "name": "Nombre",
+      "description": "Descripción",
+      "meaning": "Significado",
+      "actions": "Acciones"
+    },
+    "testimonials": {
+      "title": "Testimonios",
+      "client": "Cliente",
+      "content": "Contenido",
+      "rating": "Calificación",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "settings": {
+      "title": "Configuraciones",
+      "general": "General",
+      "notifications": "Notificaciones",
+      "payment": "Pago",
+      "email": "Correo Electrónico"
+    },
+    "menu": {
+      "dashboard": "Panel",
+      "products": "Productos",
+      "users": "Usuarios",
+      "readings": "Lecturas",
+      "appointments": "Citas",
+      "categories": "Categorías",
+      "cards": "Cartas",
+      "testimonials": "Testimonios",
+      "settings": "Configuraciones"
+    }
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "add": "Agregar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "loading": "Cargando...",
+    "noData": "No hay datos disponibles",
+    "error": "Error",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "info": "Información",
+    "confirm": "Confirmar",
+    "yes": "Sí",
+    "no": "No",
+    "close": "Cerrar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "reset": "Restablecer",
+    "clear": "Limpiar",
+    "apply": "Aplicar",
+    "actions": "Acciones",
+    "status": "Estado",
+    "date": "Fecha",
+    "time": "Hora",
+    "name": "Nombre",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "city": "Ciudad",
+    "state": "Estado",
+    "country": "País",
+    "zipCode": "Código Postal",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "price": "Precio",
+    "quantity": "Cantidad",
+    "description": "Descripción",
+    "category": "Categoría",
+    "image": "Imagen",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "pending": "Pendiente",
+    "completed": "Completado",
+    "cancelled": "Cancelado",
+    "approved": "Aprobado",
+    "rejected": "Rechazado"
+  },
+  "cart": {
+    "title": "Carrito de Compras",
+    "empty": "Tu carrito está vacío",
+    "continueShopping": "Continuar Comprando",
+    "checkout": "Finalizar Compra",
+    "subtotal": "Subtotal",
+    "shipping": "Envío",
+    "total": "Total",
+    "removeItem": "Eliminar Artículo",
+    "updateQuantity": "Actualizar Cantidad",
+    "productAdded": "¡Producto agregado al carrito!"
+  },
+  "messages": {
+    "error": {
+      "generic": "Ocurrió un error. Inténtalo de nuevo.",
+      "network": "Error de conexión. Verifica tu internet.",
+      "unauthorized": "No tienes permiso para acceder a esta página.",
+      "notFound": "Página no encontrada."
+    },
+    "success": {
+      "saved": "¡Guardado con éxito!",
+      "deleted": "¡Eliminado con éxito!",
+      "updated": "¡Actualizado con éxito!",
+      "created": "¡Creado con éxito!"
+    }
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "email": "Correo electrónico inválido",
+    "minLength": "Mínimo {{min}} caracteres",
+    "maxLength": "Máximo {{max}} caracteres",
+    "pattern": "Formato inválido",
+    "passwordMismatch": "Las contraseñas no coinciden"
+  },
+  "about": {
+    "title": "Acerca de Izabela Santos",
+    "subtitle": "Tarotista, terapeuta integrativa y estudiante de psicología analítica junguiana.",
+    "journey": {
+      "title": "Mi Camino",
+      "paragraph1": "Mi pasión por el tarot comenzó como una búsqueda personal de autoconocimiento y se transformó en una vocación para ayudar a otras personas en sus caminos.",
+      "paragraph2": "Con formación en Administración de Empresas y especialización en Terapias Integrativas Naturales, uní mi conocimiento analítico a la sensibilidad intuitiva para ofrecer lecturas que van más allá de lo superficial.",
+      "paragraph3": "Actualmente, estudio Psicología Analítica Junguiana, integrando los arquetipos y símbolos a mis interpretaciones de las cartas Lenormand."
+    },
+    "education": {
+      "title": "Formación:",
+      "item1": "Administración de Empresas",
+      "item2": "Terapias Integrativas Naturales",
+      "item3": "Psicología Analítica Junguiana (en progreso)"
+    },
+    "values": {
+      "title": "Mis Valores",
+      "welcome": {
+        "title": "Acogida",
+        "description": "Cada persona es única y merece ser escuchada con respeto y empatía."
+      },
+      "honesty": {
+        "title": "Honestidad",
+        "description": "Interpretaciones claras y verdaderas, siempre con respeto."
+      },
+      "empowerment": {
+        "title": "Empoderamiento",
+        "description": "El tarot es una herramienta para que tomes tus propias decisiones."
+      }
+    },
+    "cta": {
+      "title": "¿Lista para tu lectura?",
+      "subtitle": "Agenda una consulta y descubre los mensajes que las cartas tienen para ti.",
+      "button": "Ver Servicios"
+    }
+  },
+  "services": {
+    "title": "Servicios",
+    "subtitle": "Elige la forma de consulta que mejor se adapte a tus necesidades.",
+    "viewOptions": "Ver Opciones",
+    "items": {
+      "readingByQuestions": {
+        "title": "Lectura por Preguntas",
+        "description": "Haz tus preguntas y recibe orientación a través de las cartas. Ideal para dudas específicas.",
+        "features": {
+          "feature1": "1, 3 o 5 preguntas",
+          "feature2": "Respuesta en hasta 48h",
+          "feature3": "Lectura detallada en PDF",
+          "feature4": "Validez de 1 año"
+        },
+        "price": "Desde $50.00"
+      },
+      "liveSession": {
+        "title": "Sesión en Línea en Vivo",
+        "description": "Consulta personalizada por videollamada. Interacción en tiempo real y tirada exclusiva.",
+        "features": {
+          "feature1": "30 o 60 minutos",
+          "feature2": "Videollamada en vivo",
+          "feature3": "Preguntas ilimitadas",
+          "feature4": "Grabación de la sesión"
+        },
+        "price": "Desde $150.00"
+      },
+      "monthlyReading": {
+        "title": "Lectura Mensual",
+        "description": "Seguimiento mensual con previsiones y orientaciones para cada área de tu vida.",
+        "features": {
+          "feature1": "Previsión completa del mes",
+          "feature2": "Todas las áreas de la vida",
+          "feature3": "Audio explicativo",
+          "feature4": "Actualización mensual"
+        },
+        "price": "$120.00/mes"
+      },
+      "specialReading": {
+        "title": "Lectura Especial",
+        "description": "Lecturas temáticas para momentos especiales: cumpleaños, año nuevo, luna llena.",
+        "features": {
+          "feature1": "Tiradas especiales",
+          "feature2": "Ritual personalizado",
+          "feature3": "PDF ilustrado",
+          "feature4": "Regalo especial"
+        },
+        "price": "Desde $100.00"
+      }
+    },
+    "faqPreview": {
+      "title": "¿Tienes dudas?",
+      "subtitle": "Consulta nuestra página de preguntas frecuentes o ponte en contacto.",
+      "faqButton": "Ver Preguntas Frecuentes",
+      "contactButton": "Contactar"
+    }
+  },
+  "contact": {
+    "title": "Contacto",
+    "subtitle": "Ponte en contacto para resolver dudas o agendar tu consulta.",
+    "form": {
+      "title": "Envía un mensaje",
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "tu@email.com",
+      "subject": "Asunto",
+      "subjectPlaceholder": "¿Sobre qué deseas hablar?",
+      "message": "Mensaje",
+      "messagePlaceholder": "Escribe tu mensaje...",
+      "submitButton": "Enviar Mensaje",
+      "successMessage": "¡Mensaje enviado con éxito! Te responderé pronto."
+    },
+    "info": {
+      "title": "Información de Contacto",
+      "email": {
+        "label": "Correo Electrónico"
+      },
+      "instagram": {
+        "label": "Instagram"
+      },
+      "schedule": {
+        "label": "Horario",
+        "value": "Lun - Vie: 9h a 18h"
+      },
+      "location": {
+        "label": "Ubicación"
+      }
+    },
+    "social": {
+      "title": "Redes Sociales"
+    }
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Resuelve tus dudas sobre las lecturas de tarot.",
+    "items": {
+      "therapeuticTarot": {
+        "question": "¿Qué es el tarot terapéutico?",
+        "answer": "El tarot terapéutico es una herramienta de autoconocimiento que utiliza las cartas para reflexión y orientación, no como predicción del futuro, sino como un espejo para comprender mejor situaciones y posibilidades."
+      },
+      "readingByQuestions": {
+        "question": "¿Cómo funciona la lectura por preguntas?",
+        "answer": "Envías tus preguntas a través de la plataforma. Hago la tirada de cartas y preparo una interpretación detallada en PDF, que estará disponible en tu área de cliente en hasta 48h."
+      },
+      "experience": {
+        "question": "¿Necesito experiencia con el tarot?",
+        "answer": "¡No! Las lecturas se realizan de forma clara y accesible. No necesitas ningún conocimiento previo sobre el tarot o las cartas Lenormand."
+      },
+      "recording": {
+        "question": "¿Las sesiones online se graban?",
+        "answer": "Sí, con tu autorización, las sesiones online pueden ser grabadas para que puedas revisar las orientaciones después."
+      },
+      "validity": {
+        "question": "¿Cuál es la validez de la lectura?",
+        "answer": "Las lecturas están disponibles en tu área de cliente por 1 año después de la publicación."
+      },
+      "topics": {
+        "question": "¿Puedo hacer preguntas sobre cualquier tema?",
+        "answer": "Las lecturas pueden abordar áreas como profesional, relaciones, salud emocional y crecimiento personal. Evitamos preguntas sobre salud física, asuntos legales o terceros."
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Testimonios",
+    "subtitle": "Mira lo que mis clientes dicen sobre las lecturas.",
+    "items": {
+      "item1": "La lectura de Izabela fue transformadora. Me ayudó a entender mejor mi momento profesional y tomar decisiones importantes.",
+      "item2": "Claridad y acogida en cada palabra. Lo recomiendo mucho para quien busca orientación verdadera.",
+      "item3": "Encontré orientación y paz. Izabela tiene un don especial para interpretar las cartas.",
+      "item4": "Hice mi primera lectura y quedé impresionada con la precisión. ¡Volveré con seguridad!",
+      "item5": "La sesión online fue increíble. Me sentí muy acogida y recibí orientaciones valiosas.",
+      "item6": "La lectura mensual me ayuda a planificar mi mes con más conciencia. ¡Super recomiendo!"
+    }
+  }
+}

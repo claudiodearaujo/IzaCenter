@@ -4,6 +4,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -15,7 +16,8 @@ import { AuthService } from '../../core/services/auth.service';
     RouterLink,
     RouterLinkActive,
     ToastModule,
-    BadgeModule
+    BadgeModule,
+    TranslateModule
   ],
   providers: [MessageService],
   templateUrl: './admin-layout.component.html',
@@ -28,14 +30,14 @@ export class AdminLayoutComponent {
   readonly currentUser = this.authService.currentUser;
 
   menuItems = [
-    { label: 'Dashboard', icon: 'pi-chart-bar', route: '/admin' },
-    { label: 'Leituras Pendentes', icon: 'pi-book', route: '/admin/leituras', badge: true },
-    { label: 'Agendamentos', icon: 'pi-calendar', route: '/admin/agendamentos' },
-    { label: 'Pedidos', icon: 'pi-shopping-cart', route: '/admin/pedidos' },
-    { label: 'Produtos', icon: 'pi-box', route: '/admin/produtos' },
-    { label: 'Clientes', icon: 'pi-users', route: '/admin/clientes' },
-    { label: 'Disponibilidade', icon: 'pi-clock', route: '/admin/disponibilidade' },
-    { label: 'Relatórios', icon: 'pi-chart-line', route: '/admin/relatorios' }
+    { labelKey: 'admin.menu.dashboard', icon: 'pi-chart-bar', route: '/admin' },
+    { labelKey: 'admin.layout.pendingReadings', icon: 'pi-book', route: '/admin/leituras', badge: true },
+    { labelKey: 'admin.menu.appointments', icon: 'pi-calendar', route: '/admin/agendamentos' },
+    { labelKey: 'admin.layout.orders', icon: 'pi-shopping-cart', route: '/admin/pedidos' },
+    { labelKey: 'admin.menu.products', icon: 'pi-box', route: '/admin/produtos' },
+    { labelKey: 'admin.layout.clients', icon: 'pi-users', route: '/admin/clientes' },
+    { labelKey: 'admin.layout.availability', icon: 'pi-clock', route: '/admin/disponibilidade' },
+    { labelKey: 'admin.layout.reports', icon: 'pi-chart-line', route: '/admin/relatorios' }
   ];
 
   toggleSidebar(): void {
