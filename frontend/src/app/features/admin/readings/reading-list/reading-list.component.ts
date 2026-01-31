@@ -11,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ReadingsService, Reading } from '../../../../core/services/readings.service';
 
@@ -27,12 +28,14 @@ import { ReadingsService, Reading } from '../../../../core/services/readings.ser
     Select,
     TagModule,
     Tooltip,
+    TranslateModule,
   ],
   templateUrl: './reading-list.component.html',
   styleUrl: './reading-list.component.css',
 })
 export class AdminReadingListComponent implements OnInit {
   private readingsService = inject(ReadingsService);
+  private translate = inject(TranslateService);
 
   readings = signal<Reading[]>([]);
   loading = signal(true);
@@ -46,12 +49,14 @@ export class AdminReadingListComponent implements OnInit {
   searchTerm = '';
   selectedStatus: string | null = null;
 
-  statusOptions = [
-    { label: 'Todos', value: null },
-    { label: 'Pendente', value: 'PENDING' },
-    { label: 'Em Andamento', value: 'IN_PROGRESS' },
-    { label: 'Publicada', value: 'PUBLISHED' },
-  ];
+  get statusOptions() {
+    return [
+      { label: this.translate.instant('admin.readings.allStatus'), value: null },
+      { label: this.translate.instant('admin.readings.statusWaiting'), value: 'PENDING' },
+      { label: this.translate.instant('admin.readings.statusInProgress'), value: 'IN_PROGRESS' },
+      { label: this.translate.instant('admin.readings.statusPublished'), value: 'PUBLISHED' },
+    ];
+  }
 
   ngOnInit() {
     this.loadReadings();
@@ -92,9 +97,9 @@ export class AdminReadingListComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
-      PENDING: 'Pendente',
-      IN_PROGRESS: 'Em andamento',
-      PUBLISHED: 'Publicada',
+      PENDING: this.translate.instant('admin.readings.statusWaiting'),
+      IN_PROGRESS: this.translate.instant('admin.readings.statusInProgress'),
+      PUBLISHED: this.translate.instant('admin.readings.statusPublished'),
     };
     return labels[status] || status;
   }
@@ -126,8 +131,8 @@ export class AdminReadingListComponent implements OnInit {
     const diffDays = Math.floor(diffHours / 24);
 
     if (diffDays > 0) {
-      return `${diffDays} dia(s)`;
+      return this.translate.instant('admin.readings.daysAgo', { count: diffDays });
     }
-    return `${diffHours} hora(s)`;
+    return this.translate.instant('admin.readings.hoursAgo', { count: diffHours });
   }
 }

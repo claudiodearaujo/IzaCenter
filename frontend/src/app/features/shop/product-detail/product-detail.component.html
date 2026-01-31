@@ -6,11 +6,11 @@
     <nav class="mb-8">
       <ol class="flex items-center gap-2 text-sm">
         <li>
-          <a routerLink="/" class="text-secondary hover:text-primary transition-colors">Home</a>
+          <a routerLink="/" class="text-secondary hover:text-primary transition-colors">{{ 'shop.productDetail.home' | translate }}</a>
         </li>
         <li class="text-secondary">/</li>
         <li>
-          <a routerLink="/loja" class="text-secondary hover:text-primary transition-colors">Loja</a>
+          <a routerLink="/loja" class="text-secondary hover:text-primary transition-colors">{{ 'shop.productDetail.shop' | translate }}</a>
         </li>
         @if (product()) {
           <li class="text-secondary">/</li>
@@ -84,13 +84,13 @@
 
           <!-- Features -->
           <div class="glass-card p-6 mb-8">
-            <h3 class="heading-4 text-primary mb-4">O que está incluso:</h3>
+            <h3 class="heading-4 text-primary mb-4">{{ 'shop.productDetail.included' | translate }}</h3>
             <ul class="space-y-3">
               @if (product()?.numQuestions) {
                 <li class="flex items-center gap-3">
                   <i class="pi pi-check-circle text-accent"></i>
                   <span class="text-secondary">
-                    {{ product()?.numQuestions }} pergunta(s) respondida(s)
+                    {{ product()?.numQuestions }} {{ 'shop.productDetail.questionsAnswered' | translate }}
                   </span>
                 </li>
               }
@@ -98,7 +98,7 @@
                 <li class="flex items-center gap-3">
                   <i class="pi pi-check-circle text-accent"></i>
                   <span class="text-secondary">
-                    Tiragem com {{ product()?.numCards }} cartas
+                    {{ 'shop.productDetail.spreadWith' | translate }} {{ product()?.numCards }} {{ 'shop.productDetail.cards' | translate }}
                   </span>
                 </li>
               }
@@ -106,17 +106,17 @@
                 <li class="flex items-center gap-3">
                   <i class="pi pi-check-circle text-accent"></i>
                   <span class="text-secondary">
-                    Sessão de {{ product()?.sessionDurationMinutes }} minutos
+                    {{ 'shop.productDetail.sessionOf' | translate }} {{ product()?.sessionDurationMinutes }} {{ 'shop.productDetail.minutes' | translate }}
                   </span>
                 </li>
               }
               <li class="flex items-center gap-3">
                 <i class="pi pi-check-circle text-accent"></i>
-                <span class="text-secondary">Interpretação detalhada em texto</span>
+                <span class="text-secondary">{{ 'shop.productDetail.detailedInterpretation' | translate }}</span>
               </li>
               <li class="flex items-center gap-3">
                 <i class="pi pi-check-circle text-accent"></i>
-                <span class="text-secondary">Acesso por {{ product()?.validityDays }} dias</span>
+                <span class="text-secondary">{{ 'shop.productDetail.accessFor' | translate }} {{ product()?.validityDays }} {{ 'shop.productDetail.days' | translate }}</span>
               </li>
             </ul>
           </div>
@@ -124,39 +124,39 @@
           <!-- Question Input -->
           <div class="mb-8">
             <label class="block text-primary font-medium mb-2">
-              Sua pergunta (opcional):
+              {{ 'shop.productDetail.yourQuestion' | translate }}
             </label>
-            <textarea 
+            <textarea
               pInputTextarea
               [(ngModel)]="question"
               [rows]="3"
-              placeholder="Descreva sua situação ou pergunta para a leitura..."
+              [placeholder]="'shop.productDetail.questionPlaceholder' | translate"
               class="w-full"
             ></textarea>
             <p class="text-sm text-secondary mt-2">
-              Você pode adicionar ou modificar sua pergunta após a compra.
+              {{ 'shop.productDetail.questionNote' | translate }}
             </p>
           </div>
 
           <!-- Action Buttons -->
           <div class="flex flex-wrap gap-4">
-            <button 
-              pButton 
+            <button
+              pButton
               class="btn-primary flex-1"
               [loading]="addingToCart()"
               (click)="buyNow()"
             >
               <i class="pi pi-shopping-cart mr-2"></i>
-              Comprar Agora
+              {{ 'shop.productDetail.buyNow' | translate }}
             </button>
-            <button 
-              pButton 
+            <button
+              pButton
               class="btn-secondary"
               [loading]="addingToCart()"
               (click)="addToCart()"
             >
               <i class="pi pi-plus mr-2"></i>
-              Adicionar ao Carrinho
+              {{ 'shop.productDetail.addToCart' | translate }}
             </button>
           </div>
 
@@ -164,15 +164,15 @@
           <div class="flex flex-wrap gap-6 mt-8 pt-8 border-t border-primary/10">
             <div class="flex items-center gap-2 text-secondary">
               <i class="pi pi-lock text-accent"></i>
-              <span class="text-sm">Pagamento Seguro</span>
+              <span class="text-sm">{{ 'shop.productDetail.securePayment' | translate }}</span>
             </div>
             <div class="flex items-center gap-2 text-secondary">
               <i class="pi pi-shield text-accent"></i>
-              <span class="text-sm">100% Confidencial</span>
+              <span class="text-sm">{{ 'shop.productDetail.confidential' | translate }}</span>
             </div>
             <div class="flex items-center gap-2 text-secondary">
               <i class="pi pi-clock text-accent"></i>
-              <span class="text-sm">Entrega em 48h</span>
+              <span class="text-sm">{{ 'shop.productDetail.delivery48h' | translate }}</span>
             </div>
           </div>
         </div>
@@ -182,8 +182,8 @@
       <div class="mt-16">
         <p-tabs value="0">
           <p-tablist>
-            <p-tab value="0">Descrição Completa</p-tab>
-            <p-tab value="1">Como Funciona</p-tab>
+            <p-tab value="0">{{ 'shop.productDetail.fullDescription' | translate }}</p-tab>
+            <p-tab value="1">{{ 'shop.productDetail.howItWorks' | translate }}</p-tab>
           </p-tablist>
           <p-tabpanels>
           <p-tabpanel value="0">
@@ -202,29 +202,29 @@
                   <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
                     <span class="text-primary font-bold">1</span>
                   </div>
-                  <h4 class="text-primary font-medium mb-2">Escolha</h4>
-                  <p class="text-secondary text-sm">Selecione o serviço e adicione sua pergunta</p>
+                  <h4 class="text-primary font-medium mb-2">{{ 'shop.productDetail.step1Title' | translate }}</h4>
+                  <p class="text-secondary text-sm">{{ 'shop.productDetail.step1Description' | translate }}</p>
                 </div>
                 <div class="text-center">
                   <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
                     <span class="text-primary font-bold">2</span>
                   </div>
-                  <h4 class="text-primary font-medium mb-2">Pagamento</h4>
-                  <p class="text-secondary text-sm">Finalize com PIX, cartão ou boleto</p>
+                  <h4 class="text-primary font-medium mb-2">{{ 'shop.productDetail.step2Title' | translate }}</h4>
+                  <p class="text-secondary text-sm">{{ 'shop.productDetail.step2Description' | translate }}</p>
                 </div>
                 <div class="text-center">
                   <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
                     <span class="text-primary font-bold">3</span>
                   </div>
-                  <h4 class="text-primary font-medium mb-2">Leitura</h4>
-                  <p class="text-secondary text-sm">Realizo sua leitura com carinho</p>
+                  <h4 class="text-primary font-medium mb-2">{{ 'shop.productDetail.step3Title' | translate }}</h4>
+                  <p class="text-secondary text-sm">{{ 'shop.productDetail.step3Description' | translate }}</p>
                 </div>
                 <div class="text-center">
                   <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
                     <span class="text-primary font-bold">4</span>
                   </div>
-                  <h4 class="text-primary font-medium mb-2">Entrega</h4>
-                  <p class="text-secondary text-sm">Receba na sua área de cliente</p>
+                  <h4 class="text-primary font-medium mb-2">{{ 'shop.productDetail.step4Title' | translate }}</h4>
+                  <p class="text-secondary text-sm">{{ 'shop.productDetail.step4Description' | translate }}</p>
                 </div>
               </div>
             </div>
@@ -237,7 +237,7 @@
       @if (relatedProducts().length > 0) {
         <div class="mt-16">
           <h2 class="heading-2 text-center text-primary mb-8">
-            Você também pode gostar
+            {{ 'shop.productDetail.youMayLike' | translate }}
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             @for (related of relatedProducts(); track related.id) {

@@ -3,6 +3,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -18,6 +19,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
   imports: [
     CommonModule,
     RouterLink,
+    TranslateModule,
     ButtonModule,
     SkeletonModule,
     Tabs,
@@ -33,6 +35,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
 export class AppointmentListComponent implements OnInit {
   private appointmentsService = inject(AppointmentsService);
   private notification = inject(NotificationService);
+  private translate = inject(TranslateService);
 
   upcomingAppointments = signal<Appointment[]>([]);
   pastAppointments = signal<Appointment[]>([]);
@@ -73,11 +76,11 @@ export class AppointmentListComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
-      SCHEDULED: 'Agendado',
-      CONFIRMED: 'Confirmado',
-      COMPLETED: 'Realizado',
-      CANCELLED: 'Cancelado',
-      NO_SHOW: 'Não compareceu',
+      SCHEDULED: this.translate.instant('client.appointments.statusScheduled'),
+      CONFIRMED: this.translate.instant('client.appointments.statusConfirmed'),
+      COMPLETED: this.translate.instant('client.appointments.statusCompleted'),
+      CANCELLED: this.translate.instant('client.appointments.statusCancelled'),
+      NO_SHOW: this.translate.instant('client.appointments.statusNoShow'),
     };
     return labels[status] || status;
   }
@@ -134,13 +137,13 @@ export class AppointmentListComponent implements OnInit {
 
     this.appointmentsService.cancel(this.selectedAppointment()!.id).subscribe({
       next: () => {
-        this.notification.success('Agendamento cancelado com sucesso');
+        this.notification.success(this.translate.instant('client.appointments.cancelDialog.success'));
         this.cancelDialogVisible.set(false);
         this.cancelling.set(false);
         this.loadAppointments();
       },
       error: (err) => {
-        this.notification.error(err.error?.message || 'Erro ao cancelar agendamento');
+        this.notification.error(err.error?.message || this.translate.instant('client.appointments.cancelDialog.error'));
         this.cancelling.set(false);
       },
     });

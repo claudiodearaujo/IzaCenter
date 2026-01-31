@@ -13,6 +13,7 @@ import { FileUploadModule, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { Checkbox } from 'primeng/checkbox';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { CardsService, CiganoCard, CreateCardDTO } from '../../../../core/services/cards.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -31,6 +32,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
     FileUploadModule,
     ConfirmDialogModule,
     Checkbox,
+    TranslateModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './card-list.component.html',
@@ -40,6 +42,7 @@ export class CardListComponent implements OnInit {
   private cardsService = inject(CardsService);
   private notification = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
+  private translate = inject(TranslateService);
 
   cards = signal<CiganoCard[]>([]);
   loading = signal(true);
@@ -156,7 +159,7 @@ export class CardListComponent implements OnInit {
 
   saveCard() {
     if (!this.form.name.trim()) {
-      this.notification.warning('Informe o nome da carta');
+      this.notification.warning(this.translate.instant('admin.cards.nameRequired'));
       return;
     }
 
@@ -169,14 +172,14 @@ export class CardListComponent implements OnInit {
     request.subscribe({
       next: () => {
         this.notification.success(
-          this.editingCard() ? 'Carta atualizada!' : 'Carta criada!'
+          this.editingCard() ? this.translate.instant('admin.cards.updatedSuccess') : this.translate.instant('admin.cards.createdSuccess')
         );
         this.closeDialog();
         this.loadCards();
         this.saving.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao salvar carta');
+        this.notification.error(this.translate.instant('admin.cards.errorSaving'));
         this.saving.set(false);
       },
     });
@@ -184,11 +187,11 @@ export class CardListComponent implements OnInit {
 
   confirmDelete(card: CiganoCard) {
     this.confirmationService.confirm({
-      message: `Deseja realmente excluir a carta "${card.name}"?`,
-      header: 'Confirmar Exclusão',
+      message: this.translate.instant('admin.cards.deleteConfirm', { name: card.name }),
+      header: this.translate.instant('admin.cards.confirmDeletion'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sim, excluir',
-      rejectLabel: 'Cancelar',
+      acceptLabel: this.translate.instant('admin.cards.yesDelete'),
+      rejectLabel: this.translate.instant('common.cancel'),
       accept: () => {
         this.deleteCard(card.id);
       },
@@ -198,31 +201,31 @@ export class CardListComponent implements OnInit {
   deleteCard(id: string) {
     this.cardsService.delete(id).subscribe({
       next: () => {
-        this.notification.success('Carta excluída!');
+        this.notification.success(this.translate.instant('admin.cards.deletedSuccess'));
         this.loadCards();
       },
       error: () => {
-        this.notification.error('Erro ao excluir carta');
+        this.notification.error(this.translate.instant('admin.cards.errorDeleting'));
       },
     });
   }
 
   generateDeck() {
     this.confirmationService.confirm({
-      message: 'Isso irá criar as 36 cartas do baralho Cigano com dados padrão. Cartas existentes não serão afetadas. Continuar?',
-      header: 'Gerar Baralho Cigano',
+      message: this.translate.instant('admin.cards.generateConfirm'),
+      header: this.translate.instant('admin.cards.generateDeck'),
       icon: 'pi pi-info-circle',
-      acceptLabel: 'Sim, gerar',
-      rejectLabel: 'Cancelar',
+      acceptLabel: this.translate.instant('admin.cards.yesGenerate'),
+      rejectLabel: this.translate.instant('common.cancel'),
       accept: () => {
         this.loading.set(true);
         this.cardsService.generateDeck().subscribe({
           next: () => {
-            this.notification.success('Baralho Cigano gerado!');
+            this.notification.success(this.translate.instant('admin.cards.deckGeneratedSuccess'));
             this.loadCards();
           },
           error: () => {
-            this.notification.error('Erro ao gerar baralho');
+            this.notification.error(this.translate.instant('admin.cards.errorGenerating'));
             this.loading.set(false);
           },
         });

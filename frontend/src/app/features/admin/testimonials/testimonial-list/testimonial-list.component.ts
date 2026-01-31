@@ -15,6 +15,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TooltipModule } from 'primeng/tooltip';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TestimonialsService, Testimonial } from '../../../../core/services/testimonials.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -35,6 +36,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
     ConfirmDialogModule,
     CheckboxModule,
     TooltipModule,
+    TranslateModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './testimonial-list.component.html',
@@ -44,6 +46,7 @@ export class TestimonialListComponent implements OnInit {
   private testimonialsService = inject(TestimonialsService);
   private notification = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
+  private translate = inject(TranslateService);
 
   testimonials = signal<Testimonial[]>([]);
   loading = signal(true);
@@ -58,19 +61,23 @@ export class TestimonialListComponent implements OnInit {
   searchTerm = '';
   selectedStatus: string | null = null;
 
-  statusOptions = [
-    { label: 'Todos', value: null },
-    { label: 'Pendentes', value: 'pending' },
-    { label: 'Aprovados', value: 'approved' },
-    { label: 'Destacados', value: 'featured' },
-  ];
+  get statusOptions() {
+    return [
+      { label: this.translate.instant('common.all'), value: null },
+      { label: this.translate.instant('admin.testimonials.statusPending'), value: 'pending' },
+      { label: this.translate.instant('admin.testimonials.statusApproved'), value: 'approved' },
+      { label: this.translate.instant('admin.testimonials.statusFeatured'), value: 'featured' },
+    ];
+  }
 
-  filterOptions = [
-    { label: 'Todos', value: null },
-    { label: 'Pendentes', value: 'pending' },
-    { label: 'Aprovados', value: 'approved' },
-    { label: 'Destacados', value: 'featured' },
-  ];
+  get filterOptions() {
+    return [
+      { label: this.translate.instant('common.all'), value: null },
+      { label: this.translate.instant('admin.testimonials.statusPending'), value: 'pending' },
+      { label: this.translate.instant('admin.testimonials.statusApproved'), value: 'approved' },
+      { label: this.translate.instant('admin.testimonials.statusFeatured'), value: 'featured' },
+    ];
+  }
 
   // View Dialog
   viewDialogVisible = signal(false);
@@ -119,9 +126,9 @@ export class TestimonialListComponent implements OnInit {
 
   getStatusLabel(testimonial: Testimonial): string {
     if (testimonial.isApproved) {
-      return testimonial.isFeatured ? 'Destaque' : 'Aprovado';
+      return testimonial.isFeatured ? this.translate.instant('admin.testimonials.featured') : this.translate.instant('admin.testimonials.approved');
     }
-    return 'Pendente';
+    return this.translate.instant('admin.testimonials.pending');
   }
 
   getStatusSeverity(testimonial: Testimonial): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
@@ -156,32 +163,32 @@ export class TestimonialListComponent implements OnInit {
   approveTestimonial(testimonial: Testimonial) {
     this.testimonialsService.update(testimonial.id, { isApproved: true }).subscribe({
       next: () => {
-        this.notification.success('Depoimento aprovado!');
+        this.notification.success(this.translate.instant('admin.testimonials.approvedSuccess'));
         this.loadTestimonials();
         this.viewDialogVisible.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao aprovar');
+        this.notification.error(this.translate.instant('admin.testimonials.errorApproving'));
       },
     });
   }
 
   rejectTestimonial(testimonial: Testimonial) {
     this.confirmationService.confirm({
-      message: 'Deseja realmente rejeitar este depoimento?',
-      header: 'Confirmar Rejeição',
+      message: this.translate.instant('admin.testimonials.rejectConfirm'),
+      header: this.translate.instant('admin.testimonials.confirmRejection'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sim, rejeitar',
-      rejectLabel: 'Cancelar',
+      acceptLabel: this.translate.instant('admin.testimonials.yesReject'),
+      rejectLabel: this.translate.instant('common.cancel'),
       accept: () => {
         this.testimonialsService.update(testimonial.id, { isApproved: false }).subscribe({
           next: () => {
-            this.notification.success('Depoimento rejeitado');
+            this.notification.success(this.translate.instant('admin.testimonials.rejectedSuccess'));
             this.loadTestimonials();
             this.viewDialogVisible.set(false);
           },
           error: () => {
-            this.notification.error('Erro ao rejeitar');
+            this.notification.error(this.translate.instant('admin.testimonials.errorRejecting'));
           },
         });
       },
@@ -200,23 +207,23 @@ export class TestimonialListComponent implements OnInit {
           );
           this.notification.success(
             testimonial.isFeatured
-              ? 'Depoimento removido dos destaques'
-              : 'Depoimento destacado!'
+              ? this.translate.instant('admin.testimonials.unfeaturedSuccess')
+              : this.translate.instant('admin.testimonials.featuredSuccess')
           );
         },
         error: () => {
-          this.notification.error('Erro ao atualizar');
+          this.notification.error(this.translate.instant('admin.testimonials.errorUpdating'));
         },
       });
   }
 
   confirmDelete(testimonial: Testimonial) {
     this.confirmationService.confirm({
-      message: 'Deseja realmente excluir este depoimento? Esta ação não pode ser desfeita.',
-      header: 'Confirmar Exclusão',
+      message: this.translate.instant('admin.testimonials.deleteConfirm'),
+      header: this.translate.instant('admin.testimonials.confirmDeletion'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sim, excluir',
-      rejectLabel: 'Cancelar',
+      acceptLabel: this.translate.instant('admin.testimonials.yesDelete'),
+      rejectLabel: this.translate.instant('common.cancel'),
       accept: () => {
         this.deleteTestimonial(testimonial.id);
       },
@@ -226,11 +233,11 @@ export class TestimonialListComponent implements OnInit {
   deleteTestimonial(id: string) {
     this.testimonialsService.delete(id).subscribe({
       next: () => {
-        this.notification.success('Depoimento excluído!');
+        this.notification.success(this.translate.instant('admin.testimonials.deletedSuccess'));
         this.loadTestimonials();
       },
       error: () => {
-        this.notification.error('Erro ao excluir');
+        this.notification.error(this.translate.instant('admin.testimonials.errorDeleting'));
       },
     });
   }

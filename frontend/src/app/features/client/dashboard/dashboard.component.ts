@@ -3,6 +3,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -43,6 +44,7 @@ interface RecentReading {
   imports: [
     CommonModule,
     RouterLink,
+    TranslateModule,
     ButtonModule,
     CardModule,
     SkeletonModule,
@@ -53,6 +55,7 @@ interface RecentReading {
 })
 export class DashboardComponent implements OnInit {
   private api = inject(ApiService);
+  private translate = inject(TranslateService);
   authService = inject(AuthService);
 
   user = this.authService.user;
@@ -114,16 +117,16 @@ export class DashboardComponent implements OnInit {
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
       // Order status
-      PENDING: 'Pendente',
-      PAID: 'Pago',
-      PROCESSING: 'Processando',
-      COMPLETED: 'Concluído',
-      CANCELLED: 'Cancelado',
-      REFUNDED: 'Reembolsado',
+      PENDING: this.translate.instant('client.orders.statusPending'),
+      PAID: this.translate.instant('client.orders.statusPaid'),
+      PROCESSING: this.translate.instant('client.orders.statusProcessing'),
+      COMPLETED: this.translate.instant('client.orders.statusCompleted'),
+      CANCELLED: this.translate.instant('client.orders.statusCancelled'),
+      REFUNDED: this.translate.instant('client.orders.statusRefunded'),
       // Reading status
-      WAITING: 'Aguardando',
-      IN_PROGRESS: 'Em andamento',
-      PUBLISHED: 'Publicada',
+      WAITING: this.translate.instant('client.readings.statusWaiting'),
+      IN_PROGRESS: this.translate.instant('client.readings.statusInProgress'),
+      PUBLISHED: this.translate.instant('client.readings.statusPublished'),
     };
     return labels[status] || status;
   }

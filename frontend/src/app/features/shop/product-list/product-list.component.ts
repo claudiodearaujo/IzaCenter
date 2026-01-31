@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { Select } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { SkeletonModule } from 'primeng/skeleton';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card.component';
 import { ApiService } from '../../../core/services/api.service';
@@ -18,12 +19,12 @@ import { Product, ProductCategory } from '../../../core/models/product.model';
   standalone: true,
   imports: [
     CommonModule,
-    
     FormsModule,
     Select,
     InputTextModule,
     SkeletonModule,
     ProductCardComponent,
+    TranslateModule,
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',
@@ -31,21 +32,24 @@ import { Product, ProductCategory } from '../../../core/models/product.model';
 export class ProductListComponent implements OnInit {
   private api = inject(ApiService);
   private route = inject(ActivatedRoute);
+  private translate = inject(TranslateService);
 
   products = signal<Product[]>([]);
   categories = signal<ProductCategory[]>([]);
   loading = signal(true);
-  
+
   selectedCategory = signal<string | null>(null);
   searchTerm = signal('');
   sortOption = signal('newest');
 
-  sortOptions = [
-    { label: 'Mais recentes', value: 'newest' },
-    { label: 'Menor preço', value: 'price_asc' },
-    { label: 'Maior preço', value: 'price_desc' },
-    { label: 'Nome A-Z', value: 'name_asc' },
-  ];
+  get sortOptions() {
+    return [
+      { label: this.translate.instant('shop.productList.sortNewest'), value: 'newest' },
+      { label: this.translate.instant('shop.productList.sortPriceLow'), value: 'price_asc' },
+      { label: this.translate.instant('shop.productList.sortPriceHigh'), value: 'price_desc' },
+      { label: this.translate.instant('shop.productList.sortNameAZ'), value: 'name_asc' },
+    ];
+  }
 
   ngOnInit() {
     this.loadCategories();

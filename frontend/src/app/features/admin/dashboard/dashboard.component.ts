@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ChartModule } from 'primeng/chart';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import {
   DashboardService,
@@ -29,6 +30,7 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
     SkeletonModule,
     ChartModule,
     CurrencyBrlPipe,
+    TranslateModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -36,6 +38,7 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
 export class AdminDashboardComponent implements OnInit {
   private dashboardService = inject(DashboardService);
   private readingsService = inject(ReadingsService);
+  private translate = inject(TranslateService);
 
   stats = signal<DashboardStats | null>(null);
   recentOrders = signal<RecentOrder[]>([]);
@@ -166,12 +169,12 @@ export class AdminDashboardComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
-      PENDING: 'Pendente',
-      PAID: 'Pago',
-      PROCESSING: 'Processando',
-      COMPLETED: 'Concluído',
-      WAITING: 'Aguardando',
-      IN_PROGRESS: 'Em andamento',
+      PENDING: this.translate.instant('client.orders.statusPending'),
+      PAID: this.translate.instant('client.orders.statusPaid'),
+      PROCESSING: this.translate.instant('client.orders.statusProcessing'),
+      COMPLETED: this.translate.instant('client.orders.statusCompleted'),
+      WAITING: this.translate.instant('admin.readings.statusWaiting'),
+      IN_PROGRESS: this.translate.instant('admin.readings.statusInProgress'),
     };
     return labels[status] || status;
   }

@@ -13,6 +13,7 @@ import { TagModule } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ProductsService, Product } from '../../../../core/services/products.service';
 import { CategoriesService, ProductCategory } from '../../../../core/services/categories.service';
@@ -34,6 +35,7 @@ import { CurrencyBrlPipe } from '../../../../shared/pipes/currency-brl.pipe';
     Tooltip,
     ConfirmDialogModule,
     CurrencyBrlPipe,
+    TranslateModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './product-list.component.html',
@@ -44,6 +46,7 @@ export class AdminProductListComponent implements OnInit {
   private categoriesService = inject(CategoriesService);
   private notification = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
+  private translate = inject(TranslateService);
 
   products = signal<Product[]>([]);
   categories = signal<ProductCategory[]>([]);
@@ -53,13 +56,15 @@ export class AdminProductListComponent implements OnInit {
   searchTerm = '';
   selectedCategory: string | null = null;
 
-  typeOptions = [
-    { label: 'Todos', value: null },
-    { label: 'Perguntas', value: 'QUESTION' },
-    { label: 'Sessão', value: 'SESSION' },
-    { label: 'Mensal', value: 'MONTHLY' },
-    { label: 'Especial', value: 'SPECIAL' },
-  ];
+  get typeOptions() {
+    return [
+      { label: this.translate.instant('admin.products.allStatus'), value: null },
+      { label: this.translate.instant('admin.products.typeQuestion'), value: 'QUESTION' },
+      { label: this.translate.instant('admin.products.typeSession'), value: 'SESSION' },
+      { label: this.translate.instant('admin.products.typeMonthly'), value: 'MONTHLY' },
+      { label: this.translate.instant('admin.products.typeSpecial'), value: 'SPECIAL' },
+    ];
+  }
 
   ngOnInit() {
     this.loadCategories();
@@ -70,7 +75,7 @@ export class AdminProductListComponent implements OnInit {
     this.categoriesService.findAllAdmin().subscribe({
       next: (response) => {
         this.categories.set([
-          { id: '', name: 'Todas', slug: '', displayOrder: 0 } as ProductCategory,
+          { id: '', name: this.translate.instant('admin.products.allCategories'), slug: '', displayOrder: 0 } as ProductCategory,
           ...response.data,
         ]);
       },
@@ -116,12 +121,12 @@ export class AdminProductListComponent implements OnInit {
       .subscribe({
         next: () => {
           this.notification.success(
-            product.isActive ? 'Produto desativado' : 'Produto ativado'
+            this.translate.instant('admin.products.saveSuccess')
           );
           this.loadProducts();
         },
         error: () => {
-          this.notification.error('Erro ao atualizar produto');
+          this.notification.error(this.translate.instant('admin.products.saveError'));
         },
       });
   }
@@ -132,32 +137,32 @@ export class AdminProductListComponent implements OnInit {
       .subscribe({
         next: () => {
           this.notification.success(
-            product.isFeatured ? 'Removido dos destaques' : 'Adicionado aos destaques'
+            this.translate.instant('admin.products.saveSuccess')
           );
           this.loadProducts();
         },
         error: () => {
-          this.notification.error('Erro ao atualizar produto');
+          this.notification.error(this.translate.instant('admin.products.saveError'));
         },
       });
   }
 
   deleteProduct(product: Product) {
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja excluir o produto "${product.name}"?`,
-      header: 'Confirmar Exclusão',
+      message: this.translate.instant('admin.products.confirmDelete'),
+      header: this.translate.instant('admin.products.deleteProduct'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Excluir',
-      rejectLabel: 'Cancelar',
+      acceptLabel: this.translate.instant('common.delete'),
+      rejectLabel: this.translate.instant('common.cancel'),
       accept: () => {
         this.productsService.delete(product.id).subscribe({
           next: () => {
-            this.notification.success('Produto excluído');
+            this.notification.success(this.translate.instant('admin.products.deleteSuccess'));
             this.loadProducts();
           },
           error: (err) => {
             this.notification.error(
-              err.error?.message || 'Erro ao excluir produto'
+              err.error?.message || this.translate.instant('admin.products.deleteError')
             );
           },
         });
@@ -167,10 +172,10 @@ export class AdminProductListComponent implements OnInit {
 
   getTypeLabel(type: string): string {
     const labels: Record<string, string> = {
-      QUESTION: 'Perguntas',
-      SESSION: 'Sessão',
-      MONTHLY: 'Mensal',
-      SPECIAL: 'Especial',
+      QUESTION: this.translate.instant('admin.products.typeQuestion'),
+      SESSION: this.translate.instant('admin.products.typeSession'),
+      MONTHLY: this.translate.instant('admin.products.typeMonthly'),
+      SPECIAL: this.translate.instant('admin.products.typeSpecial'),
     };
     return labels[type] || type;
   }

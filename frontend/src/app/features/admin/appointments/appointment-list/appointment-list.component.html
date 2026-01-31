@@ -7,9 +7,9 @@
       <div>
         <h1 class="heading-1 text-primary mb-2">
           <i class="pi pi-calendar mr-3"></i>
-          Agendamentos
+          {{ 'admin.appointments.title' | translate }}
         </h1>
-        <p class="text-secondary">Gerencie as consultas ao vivo agendadas</p>
+        <p class="text-secondary">{{ 'admin.appointments.subtitle' | translate }}</p>
       </div>
     </div>
 
@@ -23,7 +23,7 @@
           <p class="text-2xl font-bold text-primary">
             {{ upcomingCount() }}
           </p>
-          <p class="text-secondary text-sm">Próximos</p>
+          <p class="text-secondary text-sm">{{ 'admin.appointments.upcoming' | translate }}</p>
         </div>
       </div>
       <div class="glass-card p-4 flex items-center gap-4">
@@ -34,7 +34,7 @@
           <p class="text-2xl font-bold text-primary">
             {{ todayCount() }}
           </p>
-          <p class="text-secondary text-sm">Hoje</p>
+          <p class="text-secondary text-sm">{{ 'admin.appointments.today' | translate }}</p>
         </div>
       </div>
       <div class="glass-card p-4 flex items-center gap-4">
@@ -45,7 +45,7 @@
           <p class="text-2xl font-bold text-primary">
             {{ completedCount() }}
           </p>
-          <p class="text-secondary text-sm">Concluídos</p>
+          <p class="text-secondary text-sm">{{ 'admin.appointments.completed' | translate }}</p>
         </div>
       </div>
       <div class="glass-card p-4 flex items-center gap-4">
@@ -56,7 +56,7 @@
           <p class="text-2xl font-bold text-primary">
             {{ cancelledCount() }}
           </p>
-          <p class="text-secondary text-sm">Cancelados</p>
+          <p class="text-secondary text-sm">{{ 'admin.appointments.cancelled' | translate }}</p>
         </div>
       </div>
     </div>
@@ -67,37 +67,37 @@
         <div class="flex-1">
           <span class="p-input-icon-left w-full">
             <i class="pi pi-search"></i>
-            <input 
-              pInputText 
+            <input
+              pInputText
               [(ngModel)]="searchTerm"
-              placeholder="Buscar por cliente..."
+              [placeholder]="'admin.appointments.searchClient' | translate"
               class="w-full"
               (keyup.enter)="onSearch()"
             />
           </span>
         </div>
         <div class="w-full md:w-48">
-          <p-select 
-            [options]="statusOptions" 
+          <p-select
+            [options]="statusOptions"
             [(ngModel)]="selectedStatus"
             optionLabel="label"
             optionValue="value"
-            placeholder="Status"
+            [placeholder]="'common.status' | translate"
             (onChange)="onSearch()"
             styleClass="w-full"
           />
         </div>
         <button pButton class="btn-primary" (click)="onSearch()">
           <i class="pi pi-search mr-2"></i>
-          Buscar
+          {{ 'common.search' | translate }}
         </button>
       </div>
     </div>
 
     <!-- Table -->
     <div class="glass-card overflow-hidden">
-      <p-table 
-        [value]="appointments()" 
+      <p-table
+        [value]="appointments()"
         [loading]="loading()"
         [paginator]="true"
         [rows]="10"
@@ -109,12 +109,12 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th>Cliente</th>
-            <th>Serviço</th>
-            <th>Data/Hora</th>
-            <th>Duração</th>
-            <th>Status</th>
-            <th>Ações</th>
+            <th>{{ 'admin.appointments.client' | translate }}</th>
+            <th>{{ 'admin.appointments.service' | translate }}</th>
+            <th>{{ 'admin.appointments.dateTime' | translate }}</th>
+            <th>{{ 'admin.appointments.duration' | translate }}</th>
+            <th>{{ 'common.status' | translate }}</th>
+            <th>{{ 'common.actions' | translate }}</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-appointment>
@@ -133,16 +133,16 @@
               <div class="flex items-center gap-2">
                 @if (isToday(appointment.scheduledDate)) {
                   <span class="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded">
-                    HOJE
+                    {{ 'admin.appointments.todayBadge' | translate }}
                   </span>
                 }
                 <span class="text-primary">{{ formatDateTime(appointment.scheduledDate) }}</span>
               </div>
             </td>
-            <td class="text-secondary">{{ appointment.durationMinutes }} min</td>
+            <td class="text-secondary">{{ appointment.durationMinutes }} {{ 'common.min' | translate }}</td>
             <td>
-              <p-tag 
-                [value]="getStatusLabel(appointment.status)" 
+              <p-tag
+                [value]="getStatusLabel(appointment.status)"
                 [severity]="getStatusSeverity(appointment.status)"
               />
             </td>
@@ -150,102 +150,102 @@
               <div class="flex gap-1">
                 @switch (appointment.status) {
                   @case ('SCHEDULED') {
-                    <button 
-                      pButton 
+                    <button
+                      pButton
                       class="p-button-success p-button-sm"
-                      pTooltip="Confirmar"
+                      [pTooltip]="'admin.appointments.confirm' | translate"
                       (click)="confirmAppointment(appointment)"
                     >
                       <i class="pi pi-check"></i>
                     </button>
-                    <button 
-                      pButton 
+                    <button
+                      pButton
                       class="p-button-outlined p-button-sm"
-                      pTooltip="Reagendar"
+                      [pTooltip]="'admin.appointments.reschedule' | translate"
                       (click)="openRescheduleDialog(appointment)"
                     >
                       <i class="pi pi-calendar"></i>
                     </button>
-                    <button 
-                      pButton 
+                    <button
+                      pButton
                       class="p-button-danger p-button-sm"
-                      pTooltip="Cancelar"
+                      [pTooltip]="'common.cancel' | translate"
                       (click)="cancelAppointment(appointment)"
                     >
                       <i class="pi pi-times"></i>
                     </button>
                   }
                   @case ('CONFIRMED') {
-                    <button 
-                      pButton 
+                    <button
+                      pButton
                       class="p-button-warning p-button-sm"
-                      pTooltip="Iniciar Consulta"
+                      [pTooltip]="'admin.appointments.startConsultation' | translate"
                       (click)="startAppointment(appointment)"
                     >
                       <i class="pi pi-play"></i>
                     </button>
                     @if (appointment.meetingUrl) {
-                      <a 
+                      <a
                         [href]="appointment.meetingUrl"
                         target="_blank"
                         class="p-button p-button-outlined p-button-sm"
-                        pTooltip="Abrir reunião"
+                        [pTooltip]="'admin.appointments.openMeeting' | translate"
                       >
                         <i class="pi pi-video"></i>
                       </a>
                     }
-                    <button 
-                      pButton 
+                    <button
+                      pButton
                       class="p-button-outlined p-button-sm"
-                      pTooltip="Reagendar"
+                      [pTooltip]="'admin.appointments.reschedule' | translate"
                       (click)="openRescheduleDialog(appointment)"
                     >
                       <i class="pi pi-calendar"></i>
                     </button>
                   }
                   @case ('IN_PROGRESS') {
-                    <button 
-                      pButton 
+                    <button
+                      pButton
                       class="p-button-success p-button-sm"
-                      pTooltip="Concluir"
+                      [pTooltip]="'admin.appointments.complete' | translate"
                       (click)="completeAppointment(appointment)"
                     >
                       <i class="pi pi-check-circle"></i>
                     </button>
                     @if (appointment.meetingUrl) {
-                      <a 
+                      <a
                         [href]="appointment.meetingUrl"
                         target="_blank"
                         class="p-button p-button-outlined p-button-sm"
-                        pTooltip="Abrir reunião"
+                        [pTooltip]="'admin.appointments.openMeeting' | translate"
                       >
                         <i class="pi pi-video"></i>
                       </a>
                     }
-                    <button 
-                      pButton 
+                    <button
+                      pButton
                       class="p-button-secondary p-button-sm"
-                      pTooltip="Não compareceu"
+                      [pTooltip]="'admin.appointments.markNoShow' | translate"
                       (click)="markNoShow(appointment)"
                     >
                       <i class="pi pi-user-minus"></i>
                     </button>
                   }
                   @default {
-                    <button 
-                      pButton 
+                    <button
+                      pButton
                       class="p-button-text p-button-sm"
-                      pTooltip="Anotações"
+                      [pTooltip]="'admin.appointments.notes' | translate"
                       (click)="openNotesDialog(appointment)"
                     >
                       <i class="pi pi-file-edit"></i>
                     </button>
                   }
                 }
-                <button 
-                  pButton 
+                <button
+                  pButton
                   class="p-button-text p-button-sm"
-                  pTooltip="Anotações"
+                  [pTooltip]="'admin.appointments.notes' | translate"
                   (click)="openNotesDialog(appointment)"
                 >
                   <i class="pi pi-file-edit"></i>
@@ -258,7 +258,7 @@
           <tr>
             <td colspan="6" class="text-center py-8">
               <i class="pi pi-calendar text-4xl text-secondary/30 mb-4"></i>
-              <p class="text-secondary">Nenhum agendamento encontrado</p>
+              <p class="text-secondary">{{ 'admin.appointments.noAppointments' | translate }}</p>
             </td>
           </tr>
         </ng-template>
@@ -268,12 +268,12 @@
 </section>
 
 <!-- Reschedule Dialog -->
-<p-dialog 
+<p-dialog
   [(visible)]="rescheduleDialogVisible"
   [modal]="true"
   [closable]="true"
   [style]="{width: '400px'}"
-  header="Reagendar Consulta"
+  [header]="'admin.appointments.rescheduleTitle' | translate"
 >
   <div class="space-y-4 p-2">
     @if (selectedAppointment()) {
@@ -284,8 +284,8 @@
     }
 
     <div>
-      <label class="block text-secondary text-sm mb-2">Nova Data e Hora</label>
-      <p-datepicker 
+      <label class="block text-secondary text-sm mb-2">{{ 'admin.appointments.newDateTime' | translate }}</label>
+      <p-datepicker
         [(ngModel)]="newDateTime"
         [showTime]="true"
         [showButtonBar]="true"
@@ -297,35 +297,35 @@
 
     <p class="text-secondary/60 text-sm">
       <i class="pi pi-info-circle mr-1"></i>
-      O cliente será notificado sobre a mudança de horário.
+      {{ 'admin.appointments.rescheduleNote' | translate }}
     </p>
   </div>
 
   <ng-template pTemplate="footer">
     <div class="flex justify-end gap-3 pt-4">
       <button pButton class="btn-outline" (click)="rescheduleDialogVisible.set(false)">
-        Cancelar
+        {{ 'common.cancel' | translate }}
       </button>
-      <button 
-        pButton 
+      <button
+        pButton
         class="btn-primary"
         [loading]="saving()"
         (click)="reschedule()"
       >
         <i class="pi pi-calendar mr-2"></i>
-        Reagendar
+        {{ 'admin.appointments.reschedule' | translate }}
       </button>
     </div>
   </ng-template>
 </p-dialog>
 
 <!-- Notes Dialog -->
-<p-dialog 
+<p-dialog
   [(visible)]="notesDialogVisible"
   [modal]="true"
   [closable]="true"
   [style]="{width: '500px'}"
-  header="Anotações da Consulta"
+  [header]="'admin.appointments.notesTitle' | translate"
 >
   <div class="space-y-4 p-2">
     @if (selectedAppointment()) {
@@ -338,13 +338,13 @@
     }
 
     <div>
-      <label class="block text-secondary text-sm mb-2">Anotações</label>
-      <textarea 
-        pInputTextarea 
+      <label class="block text-secondary text-sm mb-2">{{ 'admin.appointments.notes' | translate }}</label>
+      <textarea
+        pInputTextarea
         [(ngModel)]="notes"
         [rows]="6"
         class="w-full"
-        placeholder="Anotações sobre a consulta..."
+        [placeholder]="'admin.appointments.notesPlaceholder' | translate"
       ></textarea>
     </div>
   </div>
@@ -352,22 +352,22 @@
   <ng-template pTemplate="footer">
     <div class="flex justify-end gap-3 pt-4">
       <button pButton class="btn-outline" (click)="notesDialogVisible.set(false)">
-        Cancelar
+        {{ 'common.cancel' | translate }}
       </button>
-      <button 
-        pButton 
+      <button
+        pButton
         class="btn-primary"
         [loading]="saving()"
         (click)="saveNotes()"
       >
         <i class="pi pi-save mr-2"></i>
-        Salvar
+        {{ 'common.save' | translate }}
       </button>
     </div>
   </ng-template>
 </p-dialog>
 
-<p-confirmDialog 
+<p-confirmDialog
   styleClass="custom-confirm-dialog"
   [style]="{width: '400px'}"
 />

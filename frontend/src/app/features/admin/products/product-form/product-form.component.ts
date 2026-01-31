@@ -13,6 +13,7 @@ import { Select } from 'primeng/select';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FileUploadModule, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { EditorModule } from 'primeng/editor';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ProductsService, CreateProductDTO } from '../../../../core/services/products.service';
 import { CategoriesService, ProductCategory } from '../../../../core/services/categories.service';
@@ -34,6 +35,7 @@ import { TextareaModule } from 'primeng/textarea';
     CheckboxModule,
     FileUploadModule,
     EditorModule,
+    TranslateModule,
   ],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.css',
@@ -44,6 +46,7 @@ export class ProductFormComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private notification = inject(NotificationService);
+  private translate = inject(TranslateService);
 
   productId = signal<string | null>(null);
   isEditing = signal(false);
@@ -67,12 +70,14 @@ export class ProductFormComponent implements OnInit {
     isFeatured: false,
   };
 
-  typeOptions = [
-    { label: 'Perguntas', value: 'QUESTION' },
-    { label: 'Sessão ao Vivo', value: 'SESSION' },
-    { label: 'Assinatura Mensal', value: 'MONTHLY' },
-    { label: 'Especial', value: 'SPECIAL' },
-  ];
+  get typeOptions() {
+    return [
+      { label: this.translate.instant('admin.products.typeQuestion'), value: 'QUESTION' },
+      { label: this.translate.instant('admin.products.typeSession'), value: 'SESSION' },
+      { label: this.translate.instant('admin.products.typeMonthly'), value: 'MONTHLY' },
+      { label: this.translate.instant('admin.products.typeSpecial'), value: 'SPECIAL' },
+    ];
+  }
 
   ngOnInit() {
     this.loadCategories();
@@ -116,7 +121,7 @@ export class ProductFormComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao carregar produto');
+        this.notification.error(this.translate.instant('messages.error.generic'));
         this.router.navigate(['/admin/produtos']);
       },
     });
@@ -124,12 +129,12 @@ export class ProductFormComponent implements OnInit {
 
   save() {
     if (!this.form.name?.trim()) {
-      this.notification.warning('Nome é obrigatório');
+      this.notification.warning(this.translate.instant('validation.required'));
       return;
     }
 
     if (!this.form.price || this.form.price <= 0) {
-      this.notification.warning('Preço deve ser maior que zero');
+      this.notification.warning(this.translate.instant('validation.required'));
       return;
     }
 
@@ -138,22 +143,22 @@ export class ProductFormComponent implements OnInit {
     if (this.isEditing()) {
       this.productsService.update(this.productId()!, this.form).subscribe({
         next: () => {
-          this.notification.success('Produto atualizado!');
+          this.notification.success(this.translate.instant('admin.products.saveSuccess'));
           this.router.navigate(['/admin/produtos']);
         },
         error: (err) => {
-          this.notification.error(err.error?.message || 'Erro ao atualizar');
+          this.notification.error(err.error?.message || this.translate.instant('admin.products.saveError'));
           this.saving.set(false);
         },
       });
     } else {
       this.productsService.create(this.form).subscribe({
         next: () => {
-          this.notification.success('Produto criado!');
+          this.notification.success(this.translate.instant('admin.products.saveSuccess'));
           this.router.navigate(['/admin/produtos']);
         },
         error: (err) => {
-          this.notification.error(err.error?.message || 'Erro ao criar');
+          this.notification.error(err.error?.message || this.translate.instant('admin.products.saveError'));
           this.saving.set(false);
         },
       });
@@ -162,7 +167,7 @@ export class ProductFormComponent implements OnInit {
 
   onImageUpload(event: FileUploadHandlerEvent) {
     if (!this.productId()) {
-      this.notification.warning('Salve o produto primeiro para adicionar imagem');
+      this.notification.warning(this.translate.instant('admin.products.saveSuccess'));
       return;
     }
 
@@ -172,10 +177,10 @@ export class ProductFormComponent implements OnInit {
         next: (response) => {
           this.coverImageUrl.set(response.url);
           this.form.coverImageUrl = response.url;
-          this.notification.success('Imagem atualizada!');
+          this.notification.success(this.translate.instant('admin.products.saveSuccess'));
         },
         error: () => {
-          this.notification.error('Erro ao enviar imagem');
+          this.notification.error(this.translate.instant('admin.products.saveError'));
         },
       });
     }

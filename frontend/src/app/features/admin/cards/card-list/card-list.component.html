@@ -7,18 +7,18 @@
       <div>
         <h1 class="heading-1 text-primary mb-2">
           <i class="pi pi-th-large mr-3"></i>
-          Baralho Cigano
+          {{ 'admin.cards.title' | translate }}
         </h1>
-        <p class="text-secondary">Gerencie as 36 cartas do baralho Cigano</p>
+        <p class="text-secondary">{{ 'admin.cards.subtitle' | translate }}</p>
       </div>
       <div class="flex gap-3">
         <button pButton class="btn-outline" (click)="generateDeck()">
           <i class="pi pi-sync mr-2"></i>
-          Gerar Baralho
+          {{ 'admin.cards.generateDeckButton' | translate }}
         </button>
         <button pButton class="btn-primary" (click)="openDialog()">
           <i class="pi pi-plus mr-2"></i>
-          Nova Carta
+          {{ 'admin.cards.newCard' | translate }}
         </button>
       </div>
     </div>
@@ -27,10 +27,10 @@
     <div class="glass-card p-4 mb-6">
       <span class="p-input-icon-left w-full max-w-md">
         <i class="pi pi-search"></i>
-        <input 
-          pInputText 
+        <input
+          pInputText
           [(ngModel)]="searchTerm"
-          placeholder="Buscar carta por nome, número ou palavra-chave..."
+          [placeholder]="'admin.cards.searchPlaceholder' | translate"
           class="w-full"
         />
       </span>
@@ -53,12 +53,12 @@
       <div class="glass-card p-12 text-center">
         <i class="pi pi-th-large text-5xl text-secondary/30 mb-4"></i>
         @if (searchTerm) {
-          <p class="text-secondary">Nenhuma carta encontrada para "{{ searchTerm }}"</p>
+          <p class="text-secondary">{{ 'admin.cards.noCardsFound' | translate:{ term: searchTerm } }}</p>
         } @else {
-          <p class="text-secondary mb-4">Nenhuma carta cadastrada ainda</p>
+          <p class="text-secondary mb-4">{{ 'admin.cards.noCardsYet' | translate }}</p>
           <button pButton class="btn-primary" (click)="generateDeck()">
             <i class="pi pi-sync mr-2"></i>
-            Gerar Baralho Cigano
+            {{ 'admin.cards.generateDeckButton' | translate }}
           </button>
         }
       </div>
@@ -69,8 +69,8 @@
             <!-- Card Image -->
             <div class="relative">
               @if (card.imageUrl) {
-                <img 
-                  [src]="card.imageUrl" 
+                <img
+                  [src]="card.imageUrl"
                   [alt]="card.name"
                   class="w-full aspect-[2/3] object-cover"
                 />
@@ -78,40 +78,35 @@
                 <div class="w-full aspect-[2/3] bg-gradient-mystical flex items-center justify-center">
                   <div class="text-center">
                     <span class="text-4xl font-bold text-white">{{ card.number }}</span>
-                    <p class="text-white/60 text-sm mt-2">Sem imagem</p>
+                    <p class="text-white/60 text-sm mt-2">{{ 'admin.cards.noImage' | translate }}</p>
                   </div>
                 </div>
               }
 
               <!-- Overlay on hover -->
               <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                <button 
-                  pButton 
+                <button
+                  pButton
                   class="p-button-rounded p-button-outlined"
                   (click)="openDialog(card); $event.stopPropagation()"
                 >
                   <i class="pi pi-pencil"></i>
                 </button>
-                <button 
-                  pButton 
+                <button
+                  pButton
                   class="p-button-rounded p-button-danger p-button-outlined"
                   (click)="confirmDelete(card); $event.stopPropagation()"
                 >
                   <i class="pi pi-trash"></i>
                 </button>
               </div>
-
-              <!-- Number badge -->
-              <!-- <div class="absolute top-2 left-2 w-8 h-8 bg-accent rounded-full flex items-center justify-center">
-                <span class="text-dark font-bold text-sm">{{ card.number }}</span>
-              </div> -->
             </div>
 
             <!-- Card Info -->
             <div class="p-3">
               <h3 class="text-primary font-medium truncate">{{ card.name }}</h3>
               <p class="text-secondary text-xs truncate">
-                {{ card.isPositive ? 'Positiva' : 'Negativa' }}
+                {{ card.isPositive ? ('admin.cards.positive' | translate) : ('admin.cards.negative' | translate) }}
               </p>
             </div>
           </div>
@@ -122,12 +117,12 @@
 </section>
 
 <!-- Edit/Create Dialog -->
-<p-dialog 
+<p-dialog
   [(visible)]="dialogVisible"
   [modal]="true"
   [closable]="true"
   [style]="{width: '90vw', maxWidth: '700px'}"
-  [header]="editingCard() ? 'Editar Carta' : 'Nova Carta'"
+  [header]="editingCard() ? ('admin.cards.editCard' | translate) : ('admin.cards.newCard' | translate)"
   (onHide)="closeDialog()"
 >
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
@@ -135,8 +130,8 @@
     <div class="flex flex-col items-center">
       <div class="w-full max-w-48 mb-4">
         @if (imagePreview()) {
-          <img 
-            [src]="imagePreview()" 
+          <img
+            [src]="imagePreview()"
             alt="Preview"
             class="w-full rounded-lg"
           />
@@ -147,25 +142,25 @@
         }
       </div>
 
-      <p-fileUpload 
-        mode="basic" 
+      <p-fileUpload
+        mode="basic"
         name="image"
         accept="image/*"
         [maxFileSize]="5000000"
-        chooseLabel="Escolher Imagem"
+        [chooseLabel]="'admin.cards.chooseImage' | translate"
         [auto]="false"
         (onSelect)="onImageSelect($event)"
         styleClass="w-full"
       />
-      <p class="text-secondary/60 text-xs mt-2">PNG ou JPG. Máximo 5MB.</p>
+      <p class="text-secondary/60 text-xs mt-2">{{ 'admin.cards.imageFormat' | translate }}</p>
     </div>
 
     <!-- Form -->
     <div class="space-y-4">
       <div>
-        <label class="block text-secondary text-sm mb-1">Número *</label>
-        <input 
-          pInputText 
+        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.numberLabel' | translate }}</label>
+        <input
+          pInputText
           type="number"
           [(ngModel)]="form.number"
           class="w-full"
@@ -175,76 +170,76 @@
       </div>
 
       <div>
-        <label class="block text-secondary text-sm mb-1">Nome *</label>
-        <input 
-          pInputText 
+        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.nameLabel' | translate }}</label>
+        <input
+          pInputText
           [(ngModel)]="form.name"
           class="w-full"
-          placeholder="Ex: O Cavaleiro"
+          [placeholder]="'admin.cards.namePlaceholder' | translate"
         />
       </div>
 
       <div class="flex items-center gap-2">
-        <p-checkbox 
-          [(ngModel)]="form.isPositive" 
+        <p-checkbox
+          [(ngModel)]="form.isPositive"
           [binary]="true"
           inputId="isPositive"
         />
-        <label for="isPositive" class="text-secondary text-sm">Carta Positiva</label>
+        <label for="isPositive" class="text-secondary text-sm">{{ 'admin.cards.positiveCard' | translate }}</label>
       </div>
 
       <div>
-        <label class="block text-secondary text-sm mb-1">Significado Geral</label>
-        <textarea 
-          pInputTextarea 
+        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.generalMeaning' | translate }}</label>
+        <textarea
+          pInputTextarea
           [(ngModel)]="form.generalMeaning"
           [rows]="3"
           class="w-full"
-          placeholder="Descrição geral da carta..."
+          [placeholder]="'admin.cards.generalMeaningPlaceholder' | translate"
         ></textarea>
       </div>
 
       <div>
-        <label class="block text-secondary text-sm mb-1">Significado no Amor</label>
-        <textarea 
-          pInputTextarea 
+        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.loveMeaning' | translate }}</label>
+        <textarea
+          pInputTextarea
           [(ngModel)]="form.loveMeaning"
           [rows]="2"
           class="w-full"
-          placeholder="Interpretação para questões de amor..."
+          [placeholder]="'admin.cards.loveMeaningPlaceholder' | translate"
         ></textarea>
       </div>
 
       <div>
-        <label class="block text-secondary text-sm mb-1">Significado no Trabalho</label>
-        <textarea 
-          pInputTextarea 
+        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.workMeaning' | translate }}</label>
+        <textarea
+          pInputTextarea
           [(ngModel)]="form.workMeaning"
           [rows]="2"
           class="w-full"
-          placeholder="Interpretação para questões profissionais..."
+          [placeholder]="'admin.cards.workMeaningPlaceholder' | translate"
         ></textarea>
       </div>
 
       <div>
-        <label class="block text-secondary text-sm mb-1">Significado na Saúde</label>
-        <textarea 
-          pInputTextarea 
+        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.healthMeaning' | translate }}</label>
+        <textarea
+          pInputTextarea
           [(ngModel)]="form.healthMeaning"
           [rows]="2"
           class="w-full"
-          placeholder="Interpretação para questões de saúde..."
+          [placeholder]="'admin.cards.healthMeaningPlaceholder' | translate"
         ></textarea>
       </div>
 
       <div>
-        <label class="block text-secondary text-sm mb-1">Significado no Dinheiro</label>
-        <textarea 
-          pInputTextarea 
+        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.moneyMeaning' | translate }}</label>
+        <textarea
+          pInputTextarea
           [(ngModel)]="form.moneyMeaning"
           [rows]="2"
           class="w-full"
-          placeholder="Interpretação para questões financeiras..."
+          [placeholder]="'admin.cards.moneyMeaningPlaceholder' | translate"
         ></textarea>
       </div>
     </div>
@@ -253,22 +248,22 @@
   <ng-template pTemplate="footer">
     <div class="flex justify-end gap-3 pt-4">
       <button pButton class="btn-outline" (click)="closeDialog()">
-        Cancelar
+        {{ 'common.cancel' | translate }}
       </button>
-      <button 
-        pButton 
+      <button
+        pButton
         class="btn-primary"
         [loading]="saving()"
         (click)="saveCard()"
       >
         <i class="pi pi-save mr-2"></i>
-        {{ editingCard() ? 'Atualizar' : 'Criar' }}
+        {{ editingCard() ? ('common.update' | translate) : ('common.create' | translate) }}
       </button>
     </div>
   </ng-template>
 </p-dialog>
 
-<p-confirmDialog 
+<p-confirmDialog
   styleClass="custom-confirm-dialog"
   [style]="{width: '400px'}"
 />

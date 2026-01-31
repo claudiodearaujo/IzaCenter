@@ -6,10 +6,10 @@
     <div class="text-center mb-12">
       <h1 class="heading-1 text-primary mb-4">
         <i class="pi pi-credit-card mr-3"></i>
-        Finalizar Compra
+        {{ 'shop.checkout.title' | translate }}
       </h1>
       <p class="text-body text-secondary">
-        Revise seu pedido e prossiga para o pagamento seguro
+        {{ 'shop.checkout.subtitle' | translate }}
       </p>
     </div>
 
@@ -18,8 +18,8 @@
       <div class="fixed inset-0 bg-dark/80 z-50 flex items-center justify-center">
         <div class="text-center">
           <p-progressSpinner strokeWidth="3" />
-          <p class="text-primary mt-4">Processando seu pedido...</p>
-          <p class="text-secondary text-sm mt-2">Você será redirecionado para o pagamento</p>
+          <p class="text-primary mt-4">{{ 'shop.checkout.processing' | translate }}</p>
+          <p class="text-secondary text-sm mt-2">{{ 'shop.checkout.redirecting' | translate }}</p>
         </div>
       </div>
     }
@@ -31,21 +31,21 @@
         <div class="glass-card p-6">
           <h2 class="heading-3 text-primary mb-6 flex items-center gap-2">
             <i class="pi pi-user"></i>
-            Dados do Cliente
+            {{ 'shop.checkout.customerData' | translate }}
           </h2>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="text-secondary text-sm">Nome:</label>
+              <label class="text-secondary text-sm">{{ 'shop.checkout.name' | translate }}</label>
               <p class="text-primary font-medium">{{ user()?.fullName }}</p>
             </div>
             <div>
-              <label class="text-secondary text-sm">Email:</label>
+              <label class="text-secondary text-sm">{{ 'shop.checkout.email' | translate }}</label>
               <p class="text-primary font-medium">{{ user()?.email }}</p>
             </div>
             @if (user()?.phone) {
               <div>
-                <label class="text-secondary text-sm">Telefone:</label>
+                <label class="text-secondary text-sm">{{ 'shop.checkout.phone' | translate }}</label>
                 <p class="text-primary font-medium">{{ user()?.phone }}</p>
               </div>
             }
@@ -53,7 +53,7 @@
 
           <a routerLink="/cliente/perfil" class="inline-block mt-4 text-accent hover:text-accent-light transition-colors text-sm">
             <i class="pi pi-pencil mr-1"></i>
-            Editar dados
+            {{ 'shop.checkout.editData' | translate }}
           </a>
         </div>
 
@@ -61,7 +61,7 @@
         <div class="glass-card p-6">
           <h2 class="heading-3 text-primary mb-6 flex items-center gap-2">
             <i class="pi pi-list"></i>
-            Itens do Pedido
+            {{ 'shop.checkout.orderItems' | translate }}
           </h2>
 
           <div class="space-y-4">
@@ -70,8 +70,8 @@
                 <!-- Image -->
                 <div class="flex-shrink-0 w-16 h-16">
                   @if (item.product.coverImageUrl) {
-                    <img 
-                      [src]="item.product.coverImageUrl" 
+                    <img
+                      [src]="item.product.coverImageUrl"
                       [alt]="item.product.name"
                       class="w-full h-full object-cover rounded"
                     />
@@ -86,7 +86,7 @@
                 <div class="flex-1">
                   <h4 class="text-primary font-medium">{{ item.product.name }}</h4>
                   <p class="text-secondary text-sm">
-                    {{ getProductTypeLabel(item.product.productType) }} • Qtd: {{ item.quantity }}
+                    {{ getProductTypeLabel(item.product.productType) }} • {{ 'shop.checkout.qty' | translate }} {{ item.quantity }}
                   </p>
                   @if (item.questions && item.questions[0]) {
                     <p class="text-secondary text-xs mt-1 italic truncate">
@@ -105,7 +105,7 @@
 
           <a routerLink="/loja/carrinho" class="inline-block mt-4 text-accent hover:text-accent-light transition-colors text-sm">
             <i class="pi pi-arrow-left mr-1"></i>
-            Voltar ao carrinho
+            {{ 'shop.checkout.backToCart' | translate }}
           </a>
         </div>
 
@@ -113,32 +113,31 @@
         <div class="glass-card p-6">
           <h2 class="heading-3 text-primary mb-4 flex items-center gap-2">
             <i class="pi pi-shield"></i>
-            Pagamento Seguro
+            {{ 'shop.checkout.securePayment' | translate }}
           </h2>
-          
+
           <p class="text-secondary mb-4">
-            Ao clicar em "Pagar", você será redirecionado para a página de pagamento seguro do Stripe, 
-            onde poderá escolher entre:
+            {{ 'shop.checkout.paymentDescription' | translate }}
           </p>
 
           <div class="grid grid-cols-3 gap-4 mb-6">
             <div class="p-4 bg-dark/30 rounded-lg text-center">
               <i class="pi pi-credit-card text-2xl text-primary mb-2"></i>
-              <p class="text-secondary text-sm">Cartão de Crédito</p>
+              <p class="text-secondary text-sm">{{ 'shop.checkout.creditCard' | translate }}</p>
             </div>
             <div class="p-4 bg-dark/30 rounded-lg text-center">
               <i class="pi pi-qrcode text-2xl text-primary mb-2"></i>
-              <p class="text-secondary text-sm">PIX</p>
+              <p class="text-secondary text-sm">{{ 'shop.checkout.pix' | translate }}</p>
             </div>
             <div class="p-4 bg-dark/30 rounded-lg text-center">
               <i class="pi pi-file text-2xl text-primary mb-2"></i>
-              <p class="text-secondary text-sm">Boleto</p>
+              <p class="text-secondary text-sm">{{ 'shop.checkout.bankSlip' | translate }}</p>
             </div>
           </div>
 
           <div class="flex items-center gap-4 text-secondary text-sm">
             <i class="pi pi-lock text-accent"></i>
-            <span>Seus dados são criptografados e protegidos</span>
+            <span>{{ 'shop.checkout.dataProtected' | translate }}</span>
           </div>
         </div>
       </div>
@@ -146,7 +145,7 @@
       <!-- Order Summary -->
       <div class="lg:col-span-2">
         <div class="glass-card p-6 sticky top-24">
-          <h2 class="heading-3 text-primary mb-6">Resumo</h2>
+          <h2 class="heading-3 text-primary mb-6">{{ 'shop.checkout.summary' | translate }}</h2>
 
           <!-- Items Summary -->
           <div class="space-y-3 pb-6 border-b border-primary/10">
@@ -161,52 +160,52 @@
           <!-- Totals -->
           <div class="space-y-3 py-6 border-b border-primary/10">
             <div class="flex justify-between">
-              <span class="text-secondary">Subtotal:</span>
+              <span class="text-secondary">{{ 'shop.checkout.subtotal' | translate }}</span>
               <span class="text-primary">{{ subtotal() | currencyBrl }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-secondary">Desconto:</span>
+              <span class="text-secondary">{{ 'shop.checkout.discount' | translate }}</span>
               <span class="text-accent">R$ 0,00</span>
             </div>
           </div>
 
           <div class="flex justify-between py-6">
-            <span class="text-primary font-bold text-lg">Total:</span>
+            <span class="text-primary font-bold text-lg">{{ 'shop.checkout.total' | translate }}</span>
             <span class="text-accent font-bold text-2xl">{{ total() | currencyBrl }}</span>
           </div>
 
           <!-- Terms -->
           <div class="mb-6">
-            <p-checkbox 
+            <p-checkbox
               [(ngModel)]="acceptTerms"
               [binary]="true"
               inputId="terms"
             />
             <label for="terms" class="ml-2 text-secondary text-sm">
-              Li e aceito os 
-              <a routerLink="/termos" class="text-accent hover:underline">termos de uso</a> 
-              e a 
-              <a routerLink="/privacidade" class="text-accent hover:underline">política de privacidade</a>
+              {{ 'shop.checkout.acceptTerms' | translate }}
+              <a routerLink="/termos" class="text-accent hover:underline">{{ 'shop.checkout.termsOfUse' | translate }}</a>
+              {{ 'shop.checkout.and' | translate }}
+              <a routerLink="/privacidade" class="text-accent hover:underline">{{ 'shop.checkout.privacyPolicy' | translate }}</a>
             </label>
           </div>
 
           <!-- Pay Button -->
-          <button 
-            pButton 
+          <button
+            pButton
             class="btn-primary w-full"
             [loading]="processing()"
             [disabled]="!acceptTerms() || isEmpty"
             (click)="processPayment()"
           >
             <i class="pi pi-lock mr-2"></i>
-            Pagar {{ total() | currencyBrl }}
+            {{ 'shop.checkout.pay' | translate }} {{ total() | currencyBrl }}
           </button>
 
           <!-- Security Info -->
           <div class="mt-6 text-center">
             <p class="text-secondary text-xs">
               <i class="pi pi-shield mr-1"></i>
-              Pagamento processado de forma segura pelo Stripe
+              {{ 'shop.checkout.securePaymentInfo' | translate }}
             </p>
           </div>
         </div>

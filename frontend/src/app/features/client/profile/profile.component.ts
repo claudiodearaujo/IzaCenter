@@ -4,6 +4,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -22,6 +23,7 @@ import { NotificationService } from '../../../core/services/notification.service
     CommonModule,
     FormsModule,
     RouterLink,
+    TranslateModule,
     ButtonModule,
     InputTextModule,
     PasswordModule,
@@ -35,6 +37,7 @@ export class ProfileComponent implements OnInit {
   private api = inject(ApiService);
   authService = inject(AuthService);
   private notification = inject(NotificationService);
+  private translate = inject(TranslateService);
 
   user = this.authService.user;
 
@@ -76,7 +79,7 @@ export class ProfileComponent implements OnInit {
 
   saveProfile() {
     if (!this.profileForm.fullName.trim()) {
-      this.notification.warning('Nome completo é obrigatório');
+      this.notification.warning(this.translate.instant('client.profile.fullName') + ' ' + this.translate.instant('client.profile.required'));
       return;
     }
 
@@ -84,12 +87,12 @@ export class ProfileComponent implements OnInit {
 
     this.api.patch('/users/me', this.profileForm).subscribe({
       next: () => {
-        this.notification.success('Perfil atualizado com sucesso!');
+        this.notification.success(this.translate.instant('client.profile.profileUpdated'));
         this.authService.refreshProfile();
         this.savingProfile.set(false);
       },
       error: (err) => {
-        this.notification.error(err.error?.message || 'Erro ao atualizar perfil');
+        this.notification.error(err.error?.message || this.translate.instant('client.profile.profileError'));
         this.savingProfile.set(false);
       },
     });
@@ -101,17 +104,17 @@ export class ProfileComponent implements OnInit {
       !this.passwordForm.newPassword ||
       !this.passwordForm.confirmPassword
     ) {
-      this.notification.warning('Preencha todos os campos');
+      this.notification.warning(this.translate.instant('client.profile.fillAllFields'));
       return;
     }
 
     if (this.passwordForm.newPassword !== this.passwordForm.confirmPassword) {
-      this.notification.error('As senhas não conferem');
+      this.notification.error(this.translate.instant('client.profile.passwordMismatch'));
       return;
     }
 
     if (this.passwordForm.newPassword.length < 6) {
-      this.notification.error('A nova senha deve ter pelo menos 6 caracteres');
+      this.notification.error(this.translate.instant('client.profile.passwordMinLength'));
       return;
     }
 
@@ -124,7 +127,7 @@ export class ProfileComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          this.notification.success('Senha alterada com sucesso!');
+          this.notification.success(this.translate.instant('client.profile.passwordChanged'));
           this.passwordForm = {
             currentPassword: '',
             newPassword: '',
@@ -133,7 +136,7 @@ export class ProfileComponent implements OnInit {
           this.savingPassword.set(false);
         },
         error: (err) => {
-          this.notification.error(err.error?.message || 'Erro ao alterar senha');
+          this.notification.error(err.error?.message || this.translate.instant('client.profile.passwordError'));
           this.savingPassword.set(false);
         },
       });
@@ -149,12 +152,12 @@ export class ProfileComponent implements OnInit {
 
       this.api.post('/users/me/avatar', formData).subscribe({
         next: () => {
-          this.notification.success('Avatar atualizado!');
+          this.notification.success(this.translate.instant('client.profile.avatarUpdated'));
           this.authService.refreshProfile();
           this.uploadingAvatar.set(false);
         },
         error: (err) => {
-          this.notification.error(err.error?.message || 'Erro ao enviar avatar');
+          this.notification.error(err.error?.message || this.translate.instant('client.profile.avatarError'));
           this.uploadingAvatar.set(false);
         },
       });
@@ -162,7 +165,7 @@ export class ProfileComponent implements OnInit {
   }
 
   formatDate(dateString?: string | null): string {
-    if (!dateString) return 'Não informada';
+    if (!dateString) return this.translate.instant('client.profile.notInformed');
     return new Date(dateString).toLocaleDateString('pt-BR');
   }
 }

@@ -7,9 +7,9 @@
       <div>
         <h1 class="heading-1 text-primary mb-2">
           <i class="pi pi-comments mr-3"></i>
-          Depoimentos
+          {{ 'admin.testimonials.title' | translate }}
         </h1>
-        <p class="text-secondary">Gerencie os depoimentos dos clientes</p>
+        <p class="text-secondary">{{ 'admin.testimonials.subtitle' | translate }}</p>
       </div>
     </div>
 
@@ -23,7 +23,7 @@
           <p class="text-2xl font-bold text-primary">
             {{ pendingCount() }}
           </p>
-          <p class="text-secondary text-sm">Pendentes</p>
+          <p class="text-secondary text-sm">{{ 'admin.testimonials.pendingCount' | translate }}</p>
         </div>
       </div>
       <div class="glass-card p-4 flex items-center gap-4">
@@ -34,7 +34,7 @@
           <p class="text-2xl font-bold text-primary">
             {{ approvedCount() }}
           </p>
-          <p class="text-secondary text-sm">Aprovados</p>
+          <p class="text-secondary text-sm">{{ 'admin.testimonials.approvedCount' | translate }}</p>
         </div>
       </div>
       <div class="glass-card p-4 flex items-center gap-4">
@@ -45,7 +45,7 @@
           <p class="text-2xl font-bold text-primary">
             {{ featuredCount() }}
           </p>
-          <p class="text-secondary text-sm">Destacados</p>
+          <p class="text-secondary text-sm">{{ 'admin.testimonials.featuredCount' | translate }}</p>
         </div>
       </div>
       <div class="glass-card p-4 flex items-center gap-4">
@@ -56,7 +56,7 @@
           <p class="text-2xl font-bold text-primary">
             {{ getAverageRating() }}
           </p>
-          <p class="text-secondary text-sm">Média de Avaliação</p>
+          <p class="text-secondary text-sm">{{ 'admin.testimonials.averageRating' | translate }}</p>
         </div>
       </div>
     </div>
@@ -67,37 +67,37 @@
         <div class="flex-1">
           <span class="p-input-icon-left w-full">
             <i class="pi pi-search"></i>
-            <input 
-              pInputText 
+            <input
+              pInputText
               [(ngModel)]="searchTerm"
-              placeholder="Buscar por cliente..."
+              [placeholder]="'admin.testimonials.searchClient' | translate"
               class="w-full"
               (keyup.enter)="onSearch()"
             />
           </span>
         </div>
         <div class="w-full md:w-48">
-          <p-select 
-            [options]="statusOptions" 
+          <p-select
+            [options]="statusOptions"
             [(ngModel)]="selectedStatus"
             optionLabel="label"
             optionValue="value"
-            placeholder="Status"
+            [placeholder]="'common.status' | translate"
             (onChange)="onSearch()"
             styleClass="w-full"
           />
         </div>
         <button pButton class="btn-primary" (click)="onSearch()">
           <i class="pi pi-search mr-2"></i>
-          Buscar
+          {{ 'common.search' | translate }}
         </button>
       </div>
     </div>
 
     <!-- Table -->
     <div class="glass-card overflow-hidden">
-      <p-table 
-        [value]="testimonials()" 
+      <p-table
+        [value]="testimonials()"
         [loading]="loading()"
         [paginator]="true"
         [rows]="10"
@@ -109,13 +109,13 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th>Cliente</th>
-            <th>Depoimento</th>
-            <th>Avaliação</th>
-            <th>Status</th>
-            <th>Destaque</th>
-            <th>Data</th>
-            <th>Ações</th>
+            <th>{{ 'admin.testimonials.client' | translate }}</th>
+            <th>{{ 'admin.testimonials.testimonial' | translate }}</th>
+            <th>{{ 'admin.testimonials.rating' | translate }}</th>
+            <th>{{ 'common.status' | translate }}</th>
+            <th>{{ 'admin.testimonials.highlight' | translate }}</th>
+            <th>{{ 'admin.testimonials.date' | translate }}</th>
+            <th>{{ 'common.actions' | translate }}</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-testimonial>
@@ -123,8 +123,8 @@
             <td>
               <div class="flex items-center gap-3">
                 @if (testimonial.clientAvatarUrl || testimonial.client?.avatarUrl) {
-                  <img 
-                    [src]="testimonial.clientAvatarUrl || testimonial.client?.avatarUrl" 
+                  <img
+                    [src]="testimonial.clientAvatarUrl || testimonial.client?.avatarUrl"
                     [alt]="testimonial.clientName || testimonial.client?.fullName"
                     class="w-10 h-10 rounded-full object-cover"
                   />
@@ -141,7 +141,7 @@
               </div>
             </td>
             <td>
-              <p 
+              <p
                 class="text-secondary cursor-pointer hover:text-primary transition-colors"
                 (click)="viewTestimonial(testimonial)"
               >
@@ -149,24 +149,24 @@
               </p>
             </td>
             <td>
-              <p-rating 
-                [(ngModel)]="testimonial.rating" 
+              <p-rating
+                [(ngModel)]="testimonial.rating"
                 [readonly]="true"
               />
             </td>
             <td>
-              <p-tag 
-                [value]="testimonial.isApproved ? 'Aprovado' : 'Pendente'" 
+              <p-tag
+                [value]="testimonial.isApproved ? ('admin.testimonials.approved' | translate) : ('admin.testimonials.pending' | translate)"
                 [severity]="testimonial.isApproved ? 'success' : 'warn'"
               />
             </td>
             <td class="text-center">
               @if (testimonial.isApproved) {
-                <button 
-                  pButton 
+                <button
+                  pButton
                   [class]="testimonial.isFeatured ? 'p-button-warning' : 'p-button-text'"
                   (click)="toggleHighlight(testimonial)"
-                  pTooltip="{{ testimonial.isFeatured ? 'Remover destaque' : 'Destacar' }}"
+                  [pTooltip]="testimonial.isFeatured ? ('admin.testimonials.removeFeatured' | translate) : ('admin.testimonials.addFeatured' | translate)"
                 >
                   <i class="pi pi-star{{ testimonial.isFeatured ? '-fill' : '' }}"></i>
                 </button>
@@ -177,36 +177,36 @@
             <td class="text-secondary text-sm">{{ formatDate(testimonial.createdAt) }}</td>
             <td>
               <div class="flex gap-1">
-                <button 
-                  pButton 
+                <button
+                  pButton
                   class="p-button-text p-button-sm"
-                  pTooltip="Ver"
+                  [pTooltip]="'admin.testimonials.view' | translate"
                   (click)="viewTestimonial(testimonial)"
                 >
                   <i class="pi pi-eye"></i>
                 </button>
                 @if (!testimonial.isApproved) {
-                  <button 
-                    pButton 
+                  <button
+                    pButton
                     class="p-button-success p-button-sm"
-                    pTooltip="Aprovar"
+                    [pTooltip]="'admin.testimonials.approve' | translate"
                     (click)="approveTestimonial(testimonial)"
                   >
                     <i class="pi pi-check"></i>
                   </button>
-                  <button 
-                    pButton 
+                  <button
+                    pButton
                     class="p-button-danger p-button-sm"
-                    pTooltip="Rejeitar"
+                    [pTooltip]="'admin.testimonials.reject' | translate"
                     (click)="rejectTestimonial(testimonial)"
                   >
                     <i class="pi pi-times"></i>
                   </button>
                 }
-                <button 
-                  pButton 
+                <button
+                  pButton
                   class="p-button-danger p-button-text p-button-sm"
-                  pTooltip="Excluir"
+                  [pTooltip]="'common.delete' | translate"
                   (click)="confirmDelete(testimonial)"
                 >
                   <i class="pi pi-trash"></i>
@@ -219,7 +219,7 @@
           <tr>
             <td colspan="7" class="text-center py-8">
               <i class="pi pi-comments text-4xl text-secondary/30 mb-4"></i>
-              <p class="text-secondary">Nenhum depoimento encontrado</p>
+              <p class="text-secondary">{{ 'admin.testimonials.noTestimonials' | translate }}</p>
             </td>
           </tr>
         </ng-template>
@@ -229,20 +229,20 @@
 </section>
 
 <!-- View Dialog -->
-<p-dialog 
+<p-dialog
   [(visible)]="viewDialogVisible"
   [modal]="true"
   [closable]="true"
   [style]="{width: '90vw', maxWidth: '600px'}"
-  header="Depoimento"
+  [header]="'admin.testimonials.testimonial' | translate"
 >
   @if (selectedTestimonial()) {
     <div class="p-4 space-y-4">
       <!-- User Info -->
       <div class="flex items-center gap-4">
         @if (selectedTestimonial()?.clientAvatarUrl || selectedTestimonial()?.client?.avatarUrl) {
-          <img 
-            [src]="selectedTestimonial()?.clientAvatarUrl || selectedTestimonial()?.client?.avatarUrl" 
+          <img
+            [src]="selectedTestimonial()?.clientAvatarUrl || selectedTestimonial()?.client?.avatarUrl"
             [alt]="selectedTestimonial()?.clientName || selectedTestimonial()?.client?.fullName"
             class="w-16 h-16 rounded-full object-cover"
           />
@@ -263,8 +263,8 @@
 
       <!-- Rating -->
       <div class="flex items-center gap-2">
-        <p-rating 
-          [ngModel]="selectedTestimonial()?.rating" 
+        <p-rating
+          [ngModel]="selectedTestimonial()?.rating"
           [readonly]="true"
         />
         <span class="text-secondary">({{ selectedTestimonial()?.rating }}/5)</span>
@@ -280,10 +280,10 @@
       <!-- Meta -->
       <div class="flex items-center justify-between text-secondary text-sm">
         <span>
-          Enviado em {{ selectedTestimonial() ? formatDate(selectedTestimonial()!.createdAt) : '' }}
+          {{ 'admin.testimonials.submittedOn' | translate }} {{ selectedTestimonial() ? formatDate(selectedTestimonial()!.createdAt) : '' }}
         </span>
-        <p-tag 
-          [value]="getStatusLabel(selectedTestimonial()!)" 
+        <p-tag
+          [value]="getStatusLabel(selectedTestimonial()!)"
           [severity]="getStatusSeverity(selectedTestimonial()!)"
         />
       </div>
@@ -291,21 +291,21 @@
       <!-- Actions -->
       @if (!selectedTestimonial()?.isApproved) {
         <div class="flex gap-3 pt-4 border-t border-primary/10">
-          <button 
-            pButton 
+          <button
+            pButton
             class="btn-primary flex-1"
             (click)="approveTestimonial(selectedTestimonial()!)"
           >
             <i class="pi pi-check mr-2"></i>
-            Aprovar
+            {{ 'admin.testimonials.approve' | translate }}
           </button>
-          <button 
-            pButton 
+          <button
+            pButton
             class="btn-outline flex-1"
             (click)="rejectTestimonial(selectedTestimonial()!)"
           >
             <i class="pi pi-times mr-2"></i>
-            Rejeitar
+            {{ 'admin.testimonials.reject' | translate }}
           </button>
         </div>
       }
@@ -313,7 +313,7 @@
   }
 </p-dialog>
 
-<p-confirmDialog 
+<p-confirmDialog
   styleClass="custom-confirm-dialog"
   [style]="{width: '400px'}"
 />

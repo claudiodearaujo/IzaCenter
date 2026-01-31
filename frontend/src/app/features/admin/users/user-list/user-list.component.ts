@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { Select } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { UsersService, User } from '../../../../core/services/users.service';
 
@@ -25,12 +26,14 @@ import { UsersService, User } from '../../../../core/services/users.service';
     TableModule,
     Select,
     TagModule,
+    TranslateModule,
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
 })
 export class UserListComponent implements OnInit {
   private usersService = inject(UsersService);
+  private translate = inject(TranslateService);
 
   users = signal<User[]>([]);
   loading = signal(true);
@@ -39,11 +42,13 @@ export class UserListComponent implements OnInit {
   searchTerm = '';
   selectedRole: string | null = null;
 
-  roleOptions = [
-    { label: 'Todos', value: null },
-    { label: 'Clientes', value: 'CLIENT' },
-    { label: 'Administradores', value: 'ADMIN' },
-  ];
+  get roleOptions() {
+    return [
+      { label: this.translate.instant('admin.users.allRoles'), value: null },
+      { label: this.translate.instant('admin.users.roleClient'), value: 'CLIENT' },
+      { label: this.translate.instant('admin.users.roleAdmin'), value: 'ADMIN' },
+    ];
+  }
 
   ngOnInit() {
     this.loadUsers();
@@ -91,7 +96,7 @@ export class UserListComponent implements OnInit {
   }
 
   getRoleLabel(role: string): string {
-    return role === 'ADMIN' ? 'Admin' : 'Cliente';
+    return role === 'ADMIN' ? this.translate.instant('admin.users.roleAdmin') : this.translate.instant('admin.users.roleClient');
   }
 
   formatDate(dateString: string | Date): string {
