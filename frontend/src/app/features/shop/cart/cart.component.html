@@ -6,10 +6,10 @@
     <div class="text-center mb-12">
       <h1 class="heading-1 text-primary mb-4">
         <i class="pi pi-shopping-cart mr-3"></i>
-        Carrinho
+        {{ 'shop.cart.title' | translate }}
       </h1>
       <p class="text-body text-secondary">
-        Revise seus itens antes de finalizar a compra
+        {{ 'shop.cart.subtitle' | translate }}
       </p>
     </div>
 
@@ -19,13 +19,13 @@
         <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
           <i class="pi pi-shopping-cart text-4xl text-primary"></i>
         </div>
-        <h2 class="heading-3 text-primary mb-4">Seu carrinho está vazio</h2>
+        <h2 class="heading-3 text-primary mb-4">{{ 'shop.cart.empty' | translate }}</h2>
         <p class="text-secondary mb-8 max-w-md mx-auto">
-          Explore nossa loja e encontre a leitura perfeita para você.
+          {{ 'shop.cart.emptyDescription' | translate }}
         </p>
         <a routerLink="/loja" class="btn-primary inline-flex items-center gap-2">
           <i class="pi pi-shopping-bag"></i>
-          Ver Produtos
+          {{ 'shop.cart.viewProducts' | translate }}
         </a>
       </div>
     }
@@ -67,10 +67,10 @@
                         ({{ getProductTypeLabel(item.product.productType) }})
                       </span>
                     </div>
-                    <button 
+                    <button
                       class="text-secondary hover:text-red-500 transition-colors p-2"
                       (click)="removeItem(item.product.id)"
-                      title="Remover item"
+                      [title]="'shop.cart.removeItemTitle' | translate"
                     >
                       <i class="pi pi-trash"></i>
                     </button>
@@ -90,7 +90,7 @@
 
                   <!-- Quantity -->
                   <div class="flex items-center gap-4 mb-4">
-                    <label class="text-secondary text-sm">Quantidade:</label>
+                    <label class="text-secondary text-sm">{{ 'shop.cart.quantity' | translate }}</label>
                     <div class="flex items-center gap-2">
                       <button 
                         class="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center justify-center"
@@ -114,14 +114,14 @@
                   <!-- Question Input -->
                   <div>
                     <label class="text-secondary text-sm block mb-2">
-                      Sua pergunta (opcional):
+                      {{ 'shop.cart.yourQuestion' | translate }}
                     </label>
-                    <textarea 
+                    <textarea
                       pInputTextarea
                       [rows]="2"
                       [ngModel]="item.questions?.[0] || ''"
                       (ngModelChange)="updateQuestions(item, $event)"
-                      placeholder="Descreva sua situação ou pergunta..."
+                      [placeholder]="'shop.cart.questionPlaceholder' | translate"
                       class="w-full text-sm"
                     ></textarea>
                   </div>
@@ -132,12 +132,12 @@
 
           <!-- Clear Cart -->
           <div class="text-right">
-            <button 
+            <button
               class="text-secondary hover:text-red-500 transition-colors text-sm"
               (click)="clearCart()"
             >
               <i class="pi pi-trash mr-2"></i>
-              Limpar carrinho
+              {{ 'shop.cart.clearCart' | translate }}
             </button>
           </div>
         </div>
@@ -145,27 +145,27 @@
         <!-- Order Summary -->
         <div class="lg:col-span-1">
           <div class="glass-card p-6 sticky top-24">
-            <h3 class="heading-3 text-primary mb-6">Resumo do Pedido</h3>
+            <h3 class="heading-3 text-primary mb-6">{{ 'shop.cart.orderSummary' | translate }}</h3>
 
             <!-- Coupon -->
             <div class="mb-6">
-              <label class="text-secondary text-sm block mb-2">Cupom de desconto:</label>
+              <label class="text-secondary text-sm block mb-2">{{ 'shop.cart.couponLabel' | translate }}</label>
               <div class="flex gap-2">
-                <input 
-                  type="text" 
-                  pInputText 
+                <input
+                  type="text"
+                  pInputText
                   [(ngModel)]="couponCode"
-                  placeholder="Digite o cupom"
+                  [placeholder]="'shop.cart.couponPlaceholder' | translate"
                   class="flex-1"
                 />
-                <button 
+                <button
                   pButton
                   class="btn-secondary"
                   [loading]="applyingCoupon()"
                   (click)="applyCoupon()"
                   [disabled]="!couponCode()"
                 >
-                  Aplicar
+                  {{ 'shop.cart.applyCoupon' | translate }}
                 </button>
               </div>
             </div>
@@ -173,36 +173,36 @@
             <!-- Totals -->
             <div class="space-y-4 py-6 border-y border-primary/10">
               <div class="flex justify-between">
-                <span class="text-secondary">Subtotal:</span>
+                <span class="text-secondary">{{ 'shop.cart.subtotal' | translate }}</span>
                 <span class="text-primary">{{ subtotal() | currencyBrl }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-secondary">Desconto:</span>
+                <span class="text-secondary">{{ 'shop.cart.discount' | translate }}</span>
                 <span class="text-accent">R$ 0,00</span>
               </div>
             </div>
 
             <div class="flex justify-between py-6">
-              <span class="text-primary font-bold text-lg">Total:</span>
+              <span class="text-primary font-bold text-lg">{{ 'shop.cart.total' | translate }}</span>
               <span class="text-accent font-bold text-2xl">{{ total() | currencyBrl }}</span>
             </div>
 
             <!-- Checkout Button -->
-            <button 
-              pButton 
+            <button
+              pButton
               class="btn-primary w-full mb-4"
               (click)="proceedToCheckout()"
             >
               <i class="pi pi-credit-card mr-2"></i>
-              Finalizar Compra
+              {{ 'shop.cart.checkout' | translate }}
             </button>
 
-            <a 
-              routerLink="/loja" 
+            <a
+              routerLink="/loja"
               class="btn-outline w-full text-center flex items-center justify-center gap-2"
             >
               <i class="pi pi-arrow-left"></i>
-              Continuar Comprando
+              {{ 'shop.cart.continueShopping' | translate }}
             </a>
 
             <!-- Trust Badges -->
@@ -210,15 +210,15 @@
               <div class="flex flex-wrap justify-center gap-4 text-secondary text-sm">
                 <div class="flex items-center gap-1">
                   <i class="pi pi-lock text-accent"></i>
-                  <span>Seguro</span>
+                  <span>{{ 'shop.cart.secure' | translate }}</span>
                 </div>
                 <div class="flex items-center gap-1">
                   <i class="pi pi-shield text-accent"></i>
-                  <span>Privado</span>
+                  <span>{{ 'shop.cart.private' | translate }}</span>
                 </div>
                 <div class="flex items-center gap-1">
                   <i class="pi pi-check-circle text-accent"></i>
-                  <span>Garantido</span>
+                  <span>{{ 'shop.cart.guaranteed' | translate }}</span>
                 </div>
               </div>
             </div>

@@ -6,11 +6,10 @@
     <div class="text-center mb-12">
       <h1 class="heading-1 text-primary mb-4">
         <i class="pi pi-shopping-bag mr-3"></i>
-        Loja
+        {{ 'shop.productList.title' | translate }}
       </h1>
       <p class="text-body text-secondary max-w-2xl mx-auto">
-        Escolha sua consulta de Tarot Cigano e receba orientações 
-        personalizadas para iluminar seu caminho.
+        {{ 'shop.productList.subtitle' | translate }}
       </p>
     </div>
 
@@ -21,12 +20,12 @@
         <div class="flex-1 min-w-[250px]">
           <span class="p-input-icon-left w-full">
             <i class="pi pi-search"></i>
-            <input 
-              type="text" 
-              pInputText 
+            <input
+              type="text"
+              pInputText
               [(ngModel)]="searchTerm"
               (keyup.enter)="onSearch()"
-              placeholder="Buscar serviços..."
+              [placeholder]="'shop.productList.searchPlaceholder' | translate"
               class="w-full"
             />
           </span>
@@ -40,7 +39,7 @@
             (onChange)="onCategoryChange($event.value)"
             optionLabel="name"
             optionValue="id"
-            placeholder="Todas as categorias"
+            [placeholder]="'shop.productList.allCategories' | translate"
             [showClear]="true"
             styleClass="w-full"
           />
@@ -89,15 +88,15 @@
         <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
           <i class="pi pi-search text-4xl text-primary"></i>
         </div>
-        <h3 class="heading-3 text-primary mb-4">Nenhum serviço encontrado</h3>
+        <h3 class="heading-3 text-primary mb-4">{{ 'shop.productList.noResults' | translate }}</h3>
         <p class="text-secondary mb-8">
-          Tente buscar com outros termos ou remova os filtros.
+          {{ 'shop.productList.noResultsDescription' | translate }}
         </p>
-        <button 
+        <button
           class="btn-secondary"
           (click)="selectedCategory.set(null); searchTerm.set(''); loadProducts()"
         >
-          Limpar filtros
+          {{ 'shop.productList.clearFilters' | translate }}
         </button>
       </div>
     }
@@ -105,18 +104,17 @@
     <!-- Why Choose Section -->
     <div class="mt-20">
       <h2 class="heading-2 text-center text-primary mb-12">
-        Por que escolher minhas leituras?
+        {{ 'shop.productList.whyChoose' | translate }}
       </h2>
-      
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="glass-card p-8 text-center">
           <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-primary flex items-center justify-center">
             <i class="pi pi-heart text-2xl text-white"></i>
           </div>
-          <h3 class="heading-4 text-primary mb-4">Leitura Personalizada</h3>
+          <h3 class="heading-4 text-primary mb-4">{{ 'shop.productList.personalizedReading' | translate }}</h3>
           <p class="text-secondary">
-            Cada consulta é única e focada nas suas questões específicas. 
-            Não utilizo interpretações genéricas.
+            {{ 'shop.productList.personalizedDescription' | translate }}
           </p>
         </div>
 
@@ -124,10 +122,9 @@
           <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-primary flex items-center justify-center">
             <i class="pi pi-clock text-2xl text-white"></i>
           </div>
-          <h3 class="heading-4 text-primary mb-4">Entrega Rápida</h3>
+          <h3 class="heading-4 text-primary mb-4">{{ 'shop.productList.fastDelivery' | translate }}</h3>
           <p class="text-secondary">
-            Sua leitura é preparada com cuidado e entregue em até 
-            48 horas úteis após a confirmação do pagamento.
+            {{ 'shop.productList.fastDeliveryDescription' | translate }}
           </p>
         </div>
 
@@ -135,10 +132,9 @@
           <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-primary flex items-center justify-center">
             <i class="pi pi-lock text-2xl text-white"></i>
           </div>
-          <h3 class="heading-4 text-primary mb-4">100% Confidencial</h3>
+          <h3 class="heading-4 text-primary mb-4">{{ 'shop.productList.confidential' | translate }}</h3>
           <p class="text-secondary">
-            Suas perguntas e leituras são completamente privadas 
-            e tratadas com total sigilo.
+            {{ 'shop.productList.confidentialDescription' | translate }}
           </p>
         </div>
       </div>

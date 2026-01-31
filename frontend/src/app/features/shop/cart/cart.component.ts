@@ -9,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Textarea, TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { CartService, CartItem } from '../../../core/services/cart.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -27,6 +28,7 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
     TextareaModule,
     InputNumberModule,
     CurrencyBrlPipe,
+    TranslateModule,
   ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
@@ -36,6 +38,7 @@ export class CartComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private notification = inject(NotificationService);
+  private translate = inject(TranslateService);
 
   couponCode = signal('');
   applyingCoupon = signal(false);
@@ -67,31 +70,31 @@ export class CartComponent {
 
   removeItem(productId: string) {
     this.cartService.removeItem(productId);
-    this.notification.info('Item removido do carrinho');
+    this.notification.info(this.translate.instant('shop.cart.itemRemoved'));
   }
 
   clearCart() {
     this.cartService.clearCart();
-    this.notification.info('Carrinho limpo');
+    this.notification.info(this.translate.instant('shop.cart.cartCleared'));
   }
 
   applyCoupon() {
     if (!this.couponCode()) return;
-    
+
     this.applyingCoupon.set(true);
-    
+
     // TODO: Validate coupon via API
     setTimeout(() => {
       this.applyingCoupon.set(false);
-      this.notification.info('Cupom aplicado! (Demo)');
+      this.notification.info(this.translate.instant('shop.cart.couponApplied'));
     }, 1000);
   }
 
   proceedToCheckout() {
     if (!this.authService.isAuthenticated()) {
-      this.notification.info('Faça login para continuar com a compra');
-      this.router.navigate(['/auth/login'], { 
-        queryParams: { redirect: '/loja/checkout' } 
+      this.notification.info(this.translate.instant('shop.cart.loginToContinue'));
+      this.router.navigate(['/auth/login'], {
+        queryParams: { redirect: '/loja/checkout' }
       });
       return;
     }
@@ -101,10 +104,10 @@ export class CartComponent {
 
   getProductTypeLabel(type: string): string {
     const labels: Record<string, string> = {
-      'QUESTION': 'Perguntas',
-      'SESSION': 'Sessão',
-      'MONTHLY': 'Mensal',
-      'SPECIAL': 'Especial',
+      'QUESTION': this.translate.instant('shop.cart.typeQuestion'),
+      'SESSION': this.translate.instant('shop.cart.typeSession'),
+      'MONTHLY': this.translate.instant('shop.cart.typeMonthly'),
+      'SPECIAL': this.translate.instant('shop.cart.typeSpecial'),
     };
     return labels[type] || type;
   }

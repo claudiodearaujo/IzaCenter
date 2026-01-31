@@ -10,6 +10,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { SkeletonModule } from 'primeng/skeleton';
 import { GalleriaModule } from 'primeng/galleria';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ApiService } from '../../../core/services/api.service';
 import { CartService } from '../../../core/services/cart.service';
@@ -34,6 +35,7 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
     SkeletonModule,
     GalleriaModule,
     CurrencyBrlPipe,
+    TranslateModule,
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css',
@@ -44,6 +46,7 @@ export class ProductDetailComponent implements OnInit {
   private router = inject(Router);
   private cartService = inject(CartService);
   private notification = inject(NotificationService);
+  private translate = inject(TranslateService);
 
   product = signal<Product | null>(null);
   loading = signal(true);
@@ -71,7 +74,7 @@ export class ProductDetailComponent implements OnInit {
       },
       error: () => {
         this.loading.set(false);
-        this.notification.error('Produto não encontrado');
+        this.notification.error(this.translate.instant('shop.productDetail.productNotFound'));
         this.router.navigate(['/loja']);
       },
     });
@@ -102,7 +105,7 @@ export class ProductDetailComponent implements OnInit {
       this.question() ? [this.question()] : []
     );
 
-    this.notification.success('Produto adicionado ao carrinho!');
+    this.notification.success(this.translate.instant('shop.productDetail.productAdded'));
     this.addingToCart.set(false);
   }
 
@@ -119,10 +122,10 @@ export class ProductDetailComponent implements OnInit {
 
   getProductTypeLabel(type: string): string {
     const labels: Record<string, string> = {
-      'QUESTION': 'Perguntas',
-      'SESSION': 'Sessão Completa',
-      'MONTHLY': 'Mensal',
-      'SPECIAL': 'Especial',
+      'QUESTION': this.translate.instant('shop.productDetail.typeQuestion'),
+      'SESSION': this.translate.instant('shop.productDetail.typeSession'),
+      'MONTHLY': this.translate.instant('shop.productDetail.typeMonthly'),
+      'SPECIAL': this.translate.instant('shop.productDetail.typeSpecial'),
     };
     return labels[type] || type;
   }

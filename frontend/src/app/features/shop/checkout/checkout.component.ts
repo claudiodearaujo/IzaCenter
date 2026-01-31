@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { CartService } from '../../../core/services/cart.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -26,6 +27,7 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
     CheckboxModule,
     ProgressSpinnerModule,
     CurrencyBrlPipe,
+    TranslateModule,
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
@@ -36,6 +38,7 @@ export class CheckoutComponent implements OnInit {
   private api = inject(ApiService);
   private router = inject(Router);
   private notification = inject(NotificationService);
+  private translate = inject(TranslateService);
 
   user = this.authService.user;
   processing = signal(false);
@@ -73,12 +76,12 @@ export class CheckoutComponent implements OnInit {
 
   async processPayment() {
     if (!this.acceptTerms()) {
-      this.notification.warning('Aceite os termos para continuar');
+      this.notification.warning(this.translate.instant('shop.checkout.acceptTermsWarning'));
       return;
     }
 
     if (this.isEmpty) {
-      this.notification.error('Carrinho vazio');
+      this.notification.error(this.translate.instant('shop.checkout.emptyCart'));
       return;
     }
 
@@ -99,7 +102,7 @@ export class CheckoutComponent implements OnInit {
       error: (error) => {
         this.processing.set(false);
         this.notification.error(
-          error.error?.message || 'Erro ao processar pedido. Tente novamente.'
+          error.error?.message || this.translate.instant('shop.checkout.processingError')
         );
       },
     });
@@ -107,10 +110,10 @@ export class CheckoutComponent implements OnInit {
 
   getProductTypeLabel(type: string): string {
     const labels: Record<string, string> = {
-      'QUESTION': 'Perguntas',
-      'SESSION': 'Sessão',
-      'MONTHLY': 'Mensal',
-      'SPECIAL': 'Especial',
+      'QUESTION': this.translate.instant('shop.checkout.typeQuestion'),
+      'SESSION': this.translate.instant('shop.checkout.typeSession'),
+      'MONTHLY': this.translate.instant('shop.checkout.typeMonthly'),
+      'SPECIAL': this.translate.instant('shop.checkout.typeSpecial'),
     };
     return labels[type] || type;
   }
