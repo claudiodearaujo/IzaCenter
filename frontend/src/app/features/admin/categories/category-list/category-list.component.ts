@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { CategoriesService, ProductCategory, CreateCategoryDTO } from '../../../../core/services/categories.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -29,6 +30,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
     DialogModule,
     ConfirmDialogModule,
     ToggleButtonModule,
+    TranslateModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './category-list.component.html',
@@ -38,6 +40,7 @@ export class CategoryListComponent implements OnInit {
   private categoriesService = inject(CategoriesService);
   private notification = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
+  private translate = inject(TranslateService);
 
   categories = signal<ProductCategory[]>([]);
   loading = signal(true);
@@ -101,7 +104,7 @@ export class CategoryListComponent implements OnInit {
 
   saveCategory() {
     if (!this.form.name.trim()) {
-      this.notification.warning('Informe o nome da categoria');
+      this.notification.warning(this.translate.instant('admin.categories.nameRequired'));
       return;
     }
 
@@ -114,14 +117,14 @@ export class CategoryListComponent implements OnInit {
     request.subscribe({
       next: () => {
         this.notification.success(
-          this.editingCategory() ? 'Categoria atualizada!' : 'Categoria criada!'
+          this.editingCategory() ? this.translate.instant('admin.categories.updatedSuccess') : this.translate.instant('admin.categories.createdSuccess')
         );
         this.closeDialog();
         this.loadCategories();
         this.saving.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao salvar categoria');
+        this.notification.error(this.translate.instant('admin.categories.errorSaving'));
         this.saving.set(false);
       },
     });
@@ -147,7 +150,7 @@ export class CategoryListComponent implements OnInit {
         this.loadCategories();
       },
       error: () => {
-        this.notification.error('Erro ao reordenar');
+        this.notification.error(this.translate.instant('admin.categories.errorReordering'));
       },
     });
   }
@@ -155,17 +158,17 @@ export class CategoryListComponent implements OnInit {
   confirmDelete(category: ProductCategory) {
     if (category._count?.products && category._count.products > 0) {
       this.notification.warning(
-        `Esta categoria possui ${category._count.products} produto(s) vinculado(s). Remova-os primeiro.`
+        this.translate.instant('admin.categories.hasProducts', { count: category._count.products })
       );
       return;
     }
 
     this.confirmationService.confirm({
-      message: `Deseja realmente excluir a categoria "${category.name}"?`,
-      header: 'Confirmar Exclusão',
+      message: this.translate.instant('admin.categories.deleteConfirm', { name: category.name }),
+      header: this.translate.instant('admin.categories.confirmDeletion'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sim, excluir',
-      rejectLabel: 'Cancelar',
+      acceptLabel: this.translate.instant('admin.categories.yesDelete'),
+      rejectLabel: this.translate.instant('common.cancel'),
       accept: () => {
         this.deleteCategory(category.id);
       },
@@ -175,11 +178,11 @@ export class CategoryListComponent implements OnInit {
   deleteCategory(id: string) {
     this.categoriesService.delete(id).subscribe({
       next: () => {
-        this.notification.success('Categoria excluída!');
+        this.notification.success(this.translate.instant('admin.categories.deletedSuccess'));
         this.loadCategories();
       },
       error: () => {
-        this.notification.error('Erro ao excluir categoria');
+        this.notification.error(this.translate.instant('admin.categories.errorDeleting'));
       },
     });
   }
@@ -188,12 +191,12 @@ export class CategoryListComponent implements OnInit {
     this.categoriesService.update(category.id, { isActive: !category.isActive }).subscribe({
       next: () => {
         this.notification.success(
-          category.isActive ? 'Categoria desativada!' : 'Categoria ativada!'
+          category.isActive ? this.translate.instant('admin.categories.deactivatedSuccess') : this.translate.instant('admin.categories.activatedSuccess')
         );
         this.loadCategories();
       },
       error: () => {
-        this.notification.error('Erro ao atualizar categoria');
+        this.notification.error(this.translate.instant('admin.categories.errorUpdating'));
       },
     });
   }

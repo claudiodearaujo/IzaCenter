@@ -5,7 +5,7 @@
     <!-- Back Button -->
     <a routerLink="/admin/leituras" class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6">
       <i class="pi pi-arrow-left mr-2"></i>
-      Voltar para leituras
+      {{ 'admin.readings.backToReadings' | translate }}
     </a>
 
     @if (loading()) {
@@ -23,36 +23,36 @@
           <div>
             <div class="flex items-center gap-3 mb-2">
               <h1 class="heading-1 text-primary">
-                Leitura para {{ reading()?.client?.fullName }}
+                {{ 'admin.readings.readingFor' | translate }} {{ reading()?.client?.fullName }}
               </h1>
-              <p-tag 
-                [value]="getStatusLabel(reading()?.status ?? 'DRAFT')" 
+              <p-tag
+                [value]="getStatusLabel(reading()?.status ?? 'DRAFT')"
                 [severity]="getStatusSeverity(reading()?.status ?? 'DRAFT')"
               />
             </div>
             <p class="text-secondary">{{ reading()?.orderItem?.product?.name }}</p>
-            <p class="text-secondary/60 text-sm">Criado em {{ formatDate(reading()?.createdAt ?? '') }}</p>
+            <p class="text-secondary/60 text-sm">{{ 'admin.readings.createdOn' | translate }} {{ formatDate(reading()?.createdAt ?? '') }}</p>
           </div>
 
           <div class="flex gap-3">
             @if (reading()?.status !== 'PUBLISHED') {
-              <button 
-                pButton 
+              <button
+                pButton
                 class="btn-outline"
                 [loading]="saving()"
                 (click)="saveReading()"
               >
                 <i class="pi pi-save mr-2"></i>
-                Salvar Rascunho
+                {{ 'admin.readings.saveDraft' | translate }}
               </button>
-              <button 
-                pButton 
+              <button
+                pButton
                 class="btn-primary"
                 [loading]="publishing()"
                 (click)="publishReading()"
               >
                 <i class="pi pi-send mr-2"></i>
-                Publicar
+                {{ 'admin.readings.publish' | translate }}
               </button>
             }
           </div>
@@ -64,12 +64,12 @@
         <div class="glass-card p-6 mb-6 bg-gradient-to-r from-accent/10 to-purple-600/10">
           <h3 class="heading-3 text-primary mb-4 flex items-center gap-2">
             <i class="pi pi-question-circle"></i>
-            Perguntas do Cliente
+            {{ 'admin.readings.clientQuestions' | translate }}
           </h3>
           <div class="space-y-3">
             @for (question of reading()?.orderItem?.clientQuestions ?? []; track $index) {
               <div class="p-4 bg-dark/30 rounded-lg">
-                <span class="text-accent text-sm">Pergunta {{ $index + 1 }}:</span>
+                <span class="text-accent text-sm">{{ 'admin.readings.question' | translate }} {{ $index + 1 }}:</span>
                 <p class="text-primary italic mt-1">"{{ question }}"</p>
               </div>
             }
@@ -83,14 +83,14 @@
           <!-- Title -->
           <div class="glass-card p-6">
             <label for="title" class="block text-secondary text-sm mb-2">
-              Título da Leitura (opcional)
+              {{ 'admin.readings.titleOptional' | translate }}
             </label>
-            <input 
-              pInputText 
+            <input
+              pInputText
               id="title"
               [(ngModel)]="form.title"
               class="w-full"
-              placeholder="Ex: Leitura sobre Amor e Relacionamentos"
+              [placeholder]="'admin.readings.titlePlaceholder' | translate"
               [disabled]="reading()?.status === 'PUBLISHED'"
             />
           </div>
@@ -98,14 +98,14 @@
           <!-- Introduction -->
           <div class="glass-card p-6">
             <label class="block text-secondary text-sm mb-2">
-              Introdução (opcional)
+              {{ 'admin.readings.introductionOptional' | translate }}
             </label>
-            <textarea 
-              pInputTextarea 
+            <textarea
+              pInputTextarea
               [(ngModel)]="form.introduction"
               [rows]="4"
               class="w-full"
-              placeholder="Uma breve introdução para a leitura..."
+              [placeholder]="'admin.readings.introductionPlaceholder' | translate"
               [disabled]="reading()?.status === 'PUBLISHED'"
             ></textarea>
           </div>
@@ -113,15 +113,15 @@
           <!-- Cards Section -->
           <div class="glass-card p-6">
             <div class="flex items-center justify-between mb-6">
-              <h3 class="heading-3 text-primary">Cartas</h3>
+              <h3 class="heading-3 text-primary">{{ 'admin.readings.cards' | translate }}</h3>
               @if (reading()?.status !== 'PUBLISHED') {
-                <button 
-                  pButton 
+                <button
+                  pButton
                   class="btn-outline"
                   (click)="openCardDialog()"
                 >
                   <i class="pi pi-plus mr-2"></i>
-                  Adicionar Carta
+                  {{ 'admin.readings.addCard' | translate }}
                 </button>
               }
             </div>
@@ -129,14 +129,14 @@
             @if (selectedCards().length === 0) {
               <div class="text-center py-8 border-2 border-dashed border-primary/20 rounded-lg">
                 <i class="pi pi-th-large text-4xl text-secondary/30 mb-4"></i>
-                <p class="text-secondary">Nenhuma carta adicionada</p>
+                <p class="text-secondary">{{ 'admin.readings.noCardsAdded' | translate }}</p>
                 @if (reading()?.status !== 'PUBLISHED') {
-                  <button 
-                    pButton 
+                  <button
+                    pButton
                     class="btn-outline mt-4"
                     (click)="openCardDialog()"
                   >
-                    Adicionar Carta
+                    {{ 'admin.readings.addCard' | translate }}
                   </button>
                 }
               </div>
@@ -148,14 +148,14 @@
                       <!-- Card Image -->
                       <div class="flex-shrink-0 w-24">
                         @if (card.card?.imageUrl) {
-                          <img 
-                            [src]="card.card?.imageUrl" 
+                          <img
+                            [src]="card.card?.imageUrl"
                             [alt]="card.card?.name"
                             class="w-full rounded-lg cursor-pointer"
                             (click)="openCardDialog($index)"
                           />
                         } @else {
-                          <div 
+                          <div
                             class="w-full aspect-[2/3] bg-gradient-mystical rounded-lg flex items-center justify-center cursor-pointer"
                             (click)="openCardDialog($index)"
                           >
@@ -168,19 +168,19 @@
                       <div class="flex-1">
                         <div class="flex items-start justify-between mb-3">
                           <div>
-                            <input 
-                              pInputText 
+                            <input
+                              pInputText
                               [value]="card.positionName"
                               (input)="updateCardPositionName($index, $any($event.target).value)"
                               class="text-sm mb-1"
-                              placeholder="Nome da posição"
+                              [placeholder]="'admin.readings.positionName' | translate"
                               [disabled]="reading()?.status === 'PUBLISHED'"
                             />
                             <h4 class="text-primary font-bold">{{ card.card?.name }}</h4>
                           </div>
                           @if (reading()?.status !== 'PUBLISHED') {
-                            <button 
-                              pButton 
+                            <button
+                              pButton
                               class="p-button-text p-button-danger"
                               (click)="removeCard($index)"
                             >
@@ -189,13 +189,13 @@
                           }
                         </div>
 
-                        <textarea 
-                          pInputTextarea 
+                        <textarea
+                          pInputTextarea
                           [value]="card.interpretation"
                           (input)="updateCardInterpretation($index, $any($event.target).value)"
                           [rows]="3"
                           class="w-full"
-                          placeholder="Interpretação desta carta para o cliente..."
+                          [placeholder]="'admin.readings.cardInterpretationPlaceholder' | translate"
                           [disabled]="reading()?.status === 'PUBLISHED'"
                         ></textarea>
                       </div>
@@ -209,9 +209,9 @@
           <!-- General Interpretation -->
           <div class="glass-card p-6">
             <label class="block text-secondary text-sm mb-2">
-              Interpretação Geral *
+              {{ 'admin.readings.generalInterpretationRequired' | translate }}
             </label>
-            <p-editor 
+            <p-editor
               [(ngModel)]="form.interpretation"
               [style]="{'height':'200px'}"
               [readonly]="reading()?.status === 'PUBLISHED'"
@@ -221,14 +221,14 @@
           <!-- Advice -->
           <div class="glass-card p-6">
             <label class="block text-secondary text-sm mb-2">
-              Conselho (opcional)
+              {{ 'admin.readings.adviceOptional' | translate }}
             </label>
-            <textarea 
-              pInputTextarea 
+            <textarea
+              pInputTextarea
               [(ngModel)]="form.advice"
               [rows]="4"
               class="w-full"
-              placeholder="Um conselho ou orientação para o cliente..."
+              [placeholder]="'admin.readings.advicePlaceholder' | translate"
               [disabled]="reading()?.status === 'PUBLISHED'"
             ></textarea>
           </div>
@@ -236,14 +236,14 @@
           <!-- Conclusion -->
           <div class="glass-card p-6">
             <label class="block text-secondary text-sm mb-2">
-              Conclusão (opcional)
+              {{ 'admin.readings.conclusionOptional' | translate }}
             </label>
-            <textarea 
-              pInputTextarea 
+            <textarea
+              pInputTextarea
               [(ngModel)]="form.conclusion"
               [rows]="4"
               class="w-full"
-              placeholder="Palavras finais para encerrar a leitura..."
+              [placeholder]="'admin.readings.conclusionPlaceholder' | translate"
               [disabled]="reading()?.status === 'PUBLISHED'"
             ></textarea>
           </div>
@@ -253,37 +253,37 @@
         <div class="space-y-6">
           <!-- Client Info -->
           <div class="glass-card p-6">
-            <h3 class="heading-4 text-primary mb-4">Cliente</h3>
+            <h3 class="heading-4 text-primary mb-4">{{ 'admin.readings.client' | translate }}</h3>
             <p class="text-primary font-medium">{{ reading()?.client?.fullName }}</p>
             <p class="text-secondary text-sm">{{ reading()?.client?.email }}</p>
           </div>
 
           <!-- Audio -->
           <div class="glass-card p-6">
-            <h3 class="heading-4 text-primary mb-4">Áudio (opcional)</h3>
+            <h3 class="heading-4 text-primary mb-4">{{ 'admin.readings.audioOptional' | translate }}</h3>
 
             @if (reading()?.audioUrl) {
-              <audio 
-                [src]="reading()?.audioUrl" 
-                controls 
+              <audio
+                [src]="reading()?.audioUrl"
+                controls
                 class="w-full mb-4"
               ></audio>
             }
 
             @if (reading()?.status !== 'PUBLISHED') {
-              <p-fileUpload 
-                mode="basic" 
+              <p-fileUpload
+                mode="basic"
                 name="audio"
                 accept="audio/*"
                 [maxFileSize]="50000000"
                 [auto]="true"
-                chooseLabel="Enviar Áudio"
+                [chooseLabel]="'admin.readings.uploadAudio' | translate"
                 [customUpload]="true"
                 (uploadHandler)="onAudioUpload($event)"
                 styleClass="w-full"
               />
               <p class="text-secondary/60 text-xs mt-2">
-                MP3, WAV ou M4A. Máximo 50MB.
+                {{ 'admin.readings.audioFormat' | translate }}
               </p>
             }
           </div>
@@ -291,26 +291,26 @@
           <!-- Actions -->
           @if (reading()?.status !== 'PUBLISHED') {
             <div class="glass-card p-6">
-              <button 
-                pButton 
+              <button
+                pButton
                 class="btn-outline w-full mb-3"
                 [loading]="saving()"
                 (click)="saveReading()"
               >
                 <i class="pi pi-save mr-2"></i>
-                Salvar Rascunho
+                {{ 'admin.readings.saveDraft' | translate }}
               </button>
-              <button 
-                pButton 
+              <button
+                pButton
                 class="btn-primary w-full"
                 [loading]="publishing()"
                 (click)="publishReading()"
               >
                 <i class="pi pi-send mr-2"></i>
-                Publicar Leitura
+                {{ 'admin.readings.publishReading' | translate }}
               </button>
               <p class="text-secondary/60 text-xs mt-3 text-center">
-                Ao publicar, o cliente será notificado por email
+                {{ 'admin.readings.publishNote' | translate }}
               </p>
             </div>
           }
@@ -321,22 +321,22 @@
 </section>
 
 <!-- Card Selection Dialog -->
-<p-dialog 
+<p-dialog
   [(visible)]="cardDialogVisible"
   [modal]="true"
   [closable]="true"
   [style]="{width: '80vw', maxWidth: '900px'}"
-  header="Selecionar Carta"
+  [header]="'admin.readings.selectCard' | translate"
 >
   <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 max-h-[60vh] overflow-y-auto">
     @for (card of availableCards(); track card.id) {
-      <div 
+      <div
         class="cursor-pointer transition-transform hover:scale-105"
         (click)="selectCard(card)"
       >
         @if (card.imageUrl) {
-          <img 
-            [src]="card.imageUrl" 
+          <img
+            [src]="card.imageUrl"
             [alt]="card.name"
             class="w-full rounded-lg mb-2"
           />

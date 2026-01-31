@@ -7,18 +7,18 @@
       <div>
         <h1 class="heading-1 text-primary mb-2">
           <i class="pi pi-cog mr-3"></i>
-          Configurações
+          {{ 'admin.settings.title' | translate }}
         </h1>
-        <p class="text-secondary">Configure o site e suas funcionalidades</p>
+        <p class="text-secondary">{{ 'admin.settings.subtitle' | translate }}</p>
       </div>
-      <button 
-        pButton 
+      <button
+        pButton
         class="btn-primary"
         [loading]="saving()"
         (click)="saveSettings()"
       >
         <i class="pi pi-save mr-2"></i>
-        Salvar Alterações
+        {{ 'admin.settings.save' | translate }}
       </button>
     </div>
 
@@ -33,11 +33,11 @@
     } @else {
       <p-tabs [(value)]="activeTab">
         <p-tablist>
-          <p-tab value="0"><i class="pi pi-home mr-2"></i>Geral</p-tab>
-          <p-tab value="1"><i class="pi pi-phone mr-2"></i>Contato</p-tab>
-          <p-tab value="2"><i class="pi pi-clock mr-2"></i>Horários</p-tab>
-          <p-tab value="3"><i class="pi pi-file-edit mr-2"></i>Conteúdo</p-tab>
-          <p-tab value="4"><i class="pi pi-chart-bar mr-2"></i>Analytics</p-tab>
+          <p-tab value="0"><i class="pi pi-home mr-2"></i>{{ 'admin.settings.general' | translate }}</p-tab>
+          <p-tab value="1"><i class="pi pi-phone mr-2"></i>{{ 'admin.settings.contact' | translate }}</p-tab>
+          <p-tab value="2"><i class="pi pi-clock mr-2"></i>{{ 'admin.settings.general' | translate }}</p-tab>
+          <p-tab value="3"><i class="pi pi-file-edit mr-2"></i>{{ 'admin.settings.email' | translate }}</p-tab>
+          <p-tab value="4"><i class="pi pi-chart-bar mr-2"></i>{{ 'admin.settings.payment' | translate }}</p-tab>
         </p-tablist>
         <p-tabpanels>
         <!-- General Tab -->
@@ -45,37 +45,37 @@
           <div class="space-y-6 p-4">
             <!-- Site Identity -->
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Identidade do Site</h3>
-              
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.siteSettings' | translate }}</h3>
+
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Nome do Site *</label>
-                  <input 
-                    pInputText 
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.siteName' | translate }} *</label>
+                  <input
+                    pInputText
                     [(ngModel)]="settings.siteName"
                     class="w-full"
                     placeholder="Izabela Tarot"
                   />
                 </div>
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Palavras-chave (SEO)</label>
-                  <input 
-                    pInputText 
-                    [(ngModel)]="settings.siteKeywords"
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.contactEmail' | translate }}</label>
+                  <input
+                    pInputText
+                    [(ngModel)]="settings.contactEmail"
                     class="w-full"
-                    placeholder="tarot, cigano, leitura..."
+                    placeholder="contato@email.com"
                   />
                 </div>
               </div>
 
               <div class="mt-4">
-                <label class="block text-secondary text-sm mb-2">Descrição do Site</label>
-                <textarea 
-                  pInputTextarea 
+                <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.siteDescription' | translate }}</label>
+                <textarea
+                  pInputTextarea
                   [(ngModel)]="settings.siteDescription"
                   [rows]="3"
                   class="w-full"
-                  placeholder="Breve descrição do site para SEO..."
+                  placeholder="Breve descrição do site..."
                 ></textarea>
               </div>
             </div>

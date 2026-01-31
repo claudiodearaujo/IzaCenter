@@ -14,6 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { TagModule } from 'primeng/tag';
 import { DividerModule } from 'primeng/divider';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ReadingsService, Reading, ReadingCard, UpdateReadingDTO } from '../../../../core/services/readings.service';
 import { CardsService, CiganoCard } from '../../../../core/services/cards.service';
@@ -35,6 +36,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
     FileUploadModule,
     TagModule,
     DividerModule,
+    TranslateModule,
   ],
   templateUrl: './reading-form.component.html',
   styleUrl: './reading-form.component.css',
@@ -45,6 +47,7 @@ export class ReadingFormComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private notification = inject(NotificationService);
+  private translate = inject(TranslateService);
 
   readingId = signal<string | null>(null);
   reading = signal<Reading | null>(null);
@@ -102,7 +105,7 @@ export class ReadingFormComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao carregar leitura');
+        this.notification.error(this.translate.instant('admin.readings.errorLoading'));
         this.router.navigate(['/admin/leituras']);
       },
     });
@@ -139,11 +142,11 @@ export class ReadingFormComponent implements OnInit {
 
     this.readingsService.update(this.readingId()!, data).subscribe({
       next: () => {
-        this.notification.success('Leitura salva!');
+        this.notification.success(this.translate.instant('admin.readings.savedSuccess'));
         this.saving.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao salvar');
+        this.notification.error(this.translate.instant('admin.readings.errorSaving'));
         this.saving.set(false);
       },
     });
@@ -151,7 +154,7 @@ export class ReadingFormComponent implements OnInit {
 
   publishReading() {
     if (!this.form.interpretation) {
-      this.notification.warning('Preencha a interpretação geral antes de publicar');
+      this.notification.warning(this.translate.instant('admin.readings.interpretationRequired'));
       return;
     }
 
@@ -173,17 +176,17 @@ export class ReadingFormComponent implements OnInit {
         // Then publish
         this.readingsService.updateStatus(this.readingId()!, 'PUBLISHED').subscribe({
           next: () => {
-            this.notification.success('Leitura publicada! O cliente será notificado.');
+            this.notification.success(this.translate.instant('admin.readings.publishedSuccess'));
             this.router.navigate(['/admin/leituras']);
           },
           error: () => {
-            this.notification.error('Erro ao publicar');
+            this.notification.error(this.translate.instant('admin.readings.errorPublishing'));
             this.publishing.set(false);
           },
         });
       },
       error: () => {
-        this.notification.error('Erro ao salvar');
+        this.notification.error(this.translate.instant('admin.readings.errorSaving'));
         this.publishing.set(false);
       },
     });
@@ -204,7 +207,7 @@ export class ReadingFormComponent implements OnInit {
       cardId: card.id,
       card: card,
       position: this.selectedCards().length + 1,
-      positionName: `Carta ${this.selectedCards().length + 1}`,
+      positionName: this.translate.instant('admin.readings.cardPosition', { number: this.selectedCards().length + 1 }),
       interpretation: '',
     };
 
@@ -256,10 +259,10 @@ export class ReadingFormComponent implements OnInit {
           this.reading.update((r) =>
             r ? { ...r, audioUrl: response.data.audioUrl } : null
           );
-          this.notification.success('Áudio enviado!');
+          this.notification.success(this.translate.instant('admin.readings.audioUploadedSuccess'));
         },
         error: () => {
-          this.notification.error('Erro ao enviar áudio');
+          this.notification.error(this.translate.instant('admin.readings.errorUploadingAudio'));
         },
       });
     }
@@ -267,9 +270,9 @@ export class ReadingFormComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
-      PENDING: 'Pendente',
-      IN_PROGRESS: 'Em andamento',
-      PUBLISHED: 'Publicada',
+      PENDING: this.translate.instant('admin.readings.statusPending'),
+      IN_PROGRESS: this.translate.instant('admin.readings.statusInProgress'),
+      PUBLISHED: this.translate.instant('admin.readings.statusPublished'),
     };
     return labels[status] || status;
   }

@@ -12,6 +12,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { FileUploadModule, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { DividerModule } from 'primeng/divider';
 import { EditorModule } from 'primeng/editor';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import {
   SettingsService,
@@ -41,6 +42,7 @@ import { NotificationService } from '../../../core/services/notification.service
     FileUploadModule,
     DividerModule,
     EditorModule,
+    TranslateModule,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
@@ -48,6 +50,7 @@ import { NotificationService } from '../../../core/services/notification.service
 export class SettingsComponent implements OnInit {
   private settingsService = inject(SettingsService);
   private notification = inject(NotificationService);
+  private translate = inject(TranslateService);
 
   loading = signal(true);
   saving = signal(false);
@@ -213,11 +216,11 @@ export class SettingsComponent implements OnInit {
     this.saving.set(true);
     this.settingsService.updateGeneralSettings(this.generalSettings).subscribe({
       next: () => {
-        this.notification.success('Configurações gerais salvas!');
+        this.notification.success(this.translate.instant('admin.settings.generalSaved'));
         this.saving.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao salvar configurações');
+        this.notification.error(this.translate.instant('admin.settings.errorSaving'));
         this.saving.set(false);
       },
     });
@@ -227,11 +230,11 @@ export class SettingsComponent implements OnInit {
     this.saving.set(true);
     this.settingsService.updateContactSettings(this.contactSettings).subscribe({
       next: () => {
-        this.notification.success('Informações de contato salvas!');
+        this.notification.success(this.translate.instant('admin.settings.contactSaved'));
         this.saving.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao salvar configurações');
+        this.notification.error(this.translate.instant('admin.settings.errorSaving'));
         this.saving.set(false);
       },
     });
@@ -241,11 +244,11 @@ export class SettingsComponent implements OnInit {
     this.saving.set(true);
     this.settingsService.updateBusinessHours(this.businessHours).subscribe({
       next: () => {
-        this.notification.success('Horários de funcionamento salvos!');
+        this.notification.success(this.translate.instant('admin.settings.hoursSaved'));
         this.saving.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao salvar configurações');
+        this.notification.error(this.translate.instant('admin.settings.errorSaving'));
         this.saving.set(false);
       },
     });
@@ -255,11 +258,11 @@ export class SettingsComponent implements OnInit {
     this.saving.set(true);
     this.settingsService.updateContentSettings(this.contentSettings).subscribe({
       next: () => {
-        this.notification.success('Conteúdo salvo!');
+        this.notification.success(this.translate.instant('admin.settings.contentSaved'));
         this.saving.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao salvar configurações');
+        this.notification.error(this.translate.instant('admin.settings.errorSaving'));
         this.saving.set(false);
       },
     });
@@ -269,11 +272,11 @@ export class SettingsComponent implements OnInit {
     this.saving.set(true);
     this.settingsService.updateAnalyticsSettings(this.analyticsSettings).subscribe({
       next: () => {
-        this.notification.success('Configurações de analytics salvas!');
+        this.notification.success(this.translate.instant('admin.settings.analyticsSaved'));
         this.saving.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao salvar configurações');
+        this.notification.error(this.translate.instant('admin.settings.errorSaving'));
         this.saving.set(false);
       },
     });
@@ -281,15 +284,15 @@ export class SettingsComponent implements OnInit {
 
   onLogoUpload(event: FileUploadHandlerEvent) {
     // TODO: Implement file upload
-    this.notification.info('Upload de arquivos será implementado em breve');
+    this.notification.info(this.translate.instant('admin.settings.uploadComingSoon'));
   }
 
   onFaviconUpload(event: FileUploadHandlerEvent) {
     // TODO: Implement file upload
-    this.notification.info('Upload de arquivos será implementado em breve');
+    this.notification.info(this.translate.instant('admin.settings.uploadComingSoon'));
   }
 
   clearCache() {
-    this.notification.info('Cache limpo com sucesso!');
+    this.notification.info(this.translate.instant('admin.settings.cacheCleared'));
   }
 }

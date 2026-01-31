@@ -13,6 +13,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DatePicker } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { AppointmentsService, Appointment } from '../../../../core/services/appointments.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -31,6 +32,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
     DialogModule,
     DatePicker,
     ConfirmDialogModule,
+    TranslateModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './appointment-list.component.html',
@@ -40,6 +42,7 @@ export class AdminAppointmentListComponent implements OnInit {
   private appointmentsService = inject(AppointmentsService);
   private notification = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
+  private translate = inject(TranslateService);
 
   appointments = signal<Appointment[]>([]);
   loading = signal(true);
@@ -62,15 +65,17 @@ export class AdminAppointmentListComponent implements OnInit {
   selectedStatus: string | null = null;
   searchTerm = '';
 
-  statusOptions = [
-    { label: 'Todos', value: null },
-    { label: 'Agendado', value: 'SCHEDULED' },
-    { label: 'Confirmado', value: 'CONFIRMED' },
-    { label: 'Em andamento', value: 'IN_PROGRESS' },
-    { label: 'Concluído', value: 'COMPLETED' },
-    { label: 'Cancelado', value: 'CANCELLED' },
-    { label: 'Não compareceu', value: 'NO_SHOW' },
-  ];
+  get statusOptions() {
+    return [
+      { label: this.translate.instant('common.all'), value: null },
+      { label: this.translate.instant('admin.appointments.statusScheduled'), value: 'SCHEDULED' },
+      { label: this.translate.instant('admin.appointments.statusConfirmed'), value: 'CONFIRMED' },
+      { label: this.translate.instant('admin.appointments.statusInProgress'), value: 'IN_PROGRESS' },
+      { label: this.translate.instant('admin.appointments.statusCompleted'), value: 'COMPLETED' },
+      { label: this.translate.instant('admin.appointments.statusCancelled'), value: 'CANCELLED' },
+      { label: this.translate.instant('admin.appointments.statusNoShow'), value: 'NO_SHOW' },
+    ];
+  }
 
   // Reschedule Dialog
   rescheduleDialogVisible = signal(false);
@@ -122,12 +127,12 @@ export class AdminAppointmentListComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
-      SCHEDULED: 'Agendado',
-      CONFIRMED: 'Confirmado',
-      IN_PROGRESS: 'Em andamento',
-      COMPLETED: 'Concluído',
-      CANCELLED: 'Cancelado',
-      NO_SHOW: 'Não compareceu',
+      SCHEDULED: this.translate.instant('admin.appointments.statusScheduled'),
+      CONFIRMED: this.translate.instant('admin.appointments.statusConfirmed'),
+      IN_PROGRESS: this.translate.instant('admin.appointments.statusInProgress'),
+      COMPLETED: this.translate.instant('admin.appointments.statusCompleted'),
+      CANCELLED: this.translate.instant('admin.appointments.statusCancelled'),
+      NO_SHOW: this.translate.instant('admin.appointments.statusNoShow'),
     };
     return labels[status] || status;
   }
@@ -156,26 +161,26 @@ export class AdminAppointmentListComponent implements OnInit {
   }
 
   confirmAppointment(appointment: Appointment) {
-    this.updateStatus(appointment.id, 'CONFIRMED', 'Agendamento confirmado!');
+    this.updateStatus(appointment.id, 'CONFIRMED', this.translate.instant('admin.appointments.confirmedSuccess'));
   }
 
   startAppointment(appointment: Appointment) {
-    this.updateStatus(appointment.id, 'IN_PROGRESS', 'Consulta iniciada!');
+    this.updateStatus(appointment.id, 'IN_PROGRESS', this.translate.instant('admin.appointments.startedSuccess'));
   }
 
   completeAppointment(appointment: Appointment) {
-    this.updateStatus(appointment.id, 'COMPLETED', 'Consulta concluída!');
+    this.updateStatus(appointment.id, 'COMPLETED', this.translate.instant('admin.appointments.completedSuccess'));
   }
 
   markNoShow(appointment: Appointment) {
     this.confirmationService.confirm({
-      message: `Marcar como "Não compareceu"? Isso notificará o cliente.`,
-      header: 'Confirmar',
+      message: this.translate.instant('admin.appointments.noShowConfirm'),
+      header: this.translate.instant('common.confirm'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sim',
-      rejectLabel: 'Não',
+      acceptLabel: this.translate.instant('common.yes'),
+      rejectLabel: this.translate.instant('common.no'),
       accept: () => {
-        this.updateStatus(appointment.id, 'NO_SHOW', 'Marcado como não compareceu');
+        this.updateStatus(appointment.id, 'NO_SHOW', this.translate.instant('admin.appointments.noShowSuccess'));
       },
     });
   }
@@ -187,7 +192,7 @@ export class AdminAppointmentListComponent implements OnInit {
         this.loadAppointments();
       },
       error: () => {
-        this.notification.error('Erro ao atualizar status');
+        this.notification.error(this.translate.instant('admin.appointments.errorUpdatingStatus'));
       },
     });
   }
@@ -215,14 +220,14 @@ export class AdminAppointmentListComponent implements OnInit {
       .reschedule(appointment.id, this.newDateTime, startTime, endTime)
       .subscribe({
         next: () => {
-          this.notification.success('Agendamento reagendado! O cliente será notificado.');
+          this.notification.success(this.translate.instant('admin.appointments.rescheduledSuccess'));
           this.rescheduleDialogVisible.set(false);
           this.selectedAppointment.set(null);
           this.loadAppointments();
           this.saving.set(false);
         },
         error: () => {
-          this.notification.error('Erro ao reagendar');
+          this.notification.error(this.translate.instant('admin.appointments.errorRescheduling'));
           this.saving.set(false);
         },
       });
@@ -243,13 +248,13 @@ export class AdminAppointmentListComponent implements OnInit {
       .update(this.selectedAppointment()!.id, { adminNotes: this.notes })
       .subscribe({
         next: () => {
-          this.notification.success('Anotações salvas!');
+          this.notification.success(this.translate.instant('admin.appointments.notesSaved'));
           this.notesDialogVisible.set(false);
           this.loadAppointments();
           this.saving.set(false);
         },
         error: () => {
-          this.notification.error('Erro ao salvar');
+          this.notification.error(this.translate.instant('admin.appointments.errorSaving'));
           this.saving.set(false);
         },
       });
@@ -257,13 +262,13 @@ export class AdminAppointmentListComponent implements OnInit {
 
   cancelAppointment(appointment: Appointment) {
     this.confirmationService.confirm({
-      message: `Deseja cancelar este agendamento? O cliente será notificado e poderá receber reembolso.`,
-      header: 'Confirmar Cancelamento',
+      message: this.translate.instant('admin.appointments.cancelConfirm'),
+      header: this.translate.instant('admin.appointments.confirmCancellation'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sim, cancelar',
-      rejectLabel: 'Não',
+      acceptLabel: this.translate.instant('admin.appointments.yesCancel'),
+      rejectLabel: this.translate.instant('common.no'),
       accept: () => {
-        this.updateStatus(appointment.id, 'CANCELLED', 'Agendamento cancelado');
+        this.updateStatus(appointment.id, 'CANCELLED', this.translate.instant('admin.appointments.cancelledSuccess'));
       },
     });
   }
