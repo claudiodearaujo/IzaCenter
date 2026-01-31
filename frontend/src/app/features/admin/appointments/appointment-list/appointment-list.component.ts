@@ -12,6 +12,7 @@ import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { DatePicker } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -32,6 +33,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
     DialogModule,
     DatePicker,
     ConfirmDialogModule,
+    TooltipModule,
     TranslateModule,
   ],
   providers: [ConfirmationService],
