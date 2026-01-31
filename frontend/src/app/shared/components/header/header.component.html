@@ -41,8 +41,8 @@
         <app-language-selector />
 
         <!-- Cart -->
-        <a routerLink="/carrinho" class="relative p-2 text-neutral-700 hover:text-primary-600 transition-colors">
-          <i class="pi pi-shopping-cart text-xl"></i>
+        <a routerLink="/carrinho" class="relative p-2 text-neutral-700 hover:text-primary-600 transition-colors text-xl">
+          🛒
           @if (cartItemCount() > 0) {
             <span class="absolute -top-1 -right-1 bg-primary-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
               {{ cartItemCount() }}
@@ -80,8 +80,9 @@
       </div>
 
       <!-- Mobile Menu Button -->
-      <button class="lg:hidden p-2 text-neutral-700" (click)="toggleMenu()">
-        <i class="pi" [class.pi-bars]="!isMenuOpen()" [class.pi-times]="isMenuOpen()" class="text-xl"></i>
+      <button class="lg:hidden p-2 text-neutral-700 text-xl" (click)="toggleMenu()">
+        <span *ngIf="!isMenuOpen()">☰</span>
+        <span *ngIf="isMenuOpen()">✕</span>
       </button>
     </div>
 
@@ -122,7 +123,7 @@
 
             <a routerLink="/carrinho" (click)="closeMenu()"
                class="flex items-center gap-2 text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
-              <i class="pi pi-shopping-cart"></i>
+              🛒
               {{ 'nav.cart' | translate }}
               @if (cartItemCount() > 0) {
                 <span class="bg-primary-600 text-white text-xs px-2 py-0.5 rounded-full">

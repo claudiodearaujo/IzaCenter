@@ -18,19 +18,20 @@ interface Language {
       <select
         [(ngModel)]="selectedLanguageCode"
         (change)="onLanguageChange()"
-        class="appearance-none bg-white border border-neutral-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer">
+        class="appearance-none bg-white border border-neutral-300 rounded-lg px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer min-w-[140px]">
         @for (language of languages; track language.code) {
           <option [value]="language.code">
             {{ language.flag }} {{ language.name }}
           </option>
         }
       </select>
-      <i class="pi pi-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 text-xs pointer-events-none"></i>
+      <span class="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 text-xs pointer-events-none">▼</span>
     </div>
   `,
   styles: [`
     select {
       background-image: none;
+      padding-right: 28px;
     }
   `]
 })
