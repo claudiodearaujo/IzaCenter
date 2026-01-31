@@ -5,16 +5,16 @@
     <!-- Back Button -->
     <a routerLink="/admin/produtos" class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6">
       <i class="pi pi-arrow-left mr-2"></i>
-      Voltar para produtos
+      {{ 'common.back' | translate }}
     </a>
 
     <!-- Header -->
     <div class="mb-8">
       <h1 class="heading-1 text-primary mb-2">
-        {{ isEditing() ? 'Editar Produto' : 'Novo Produto' }}
+        {{ isEditing() ? ('admin.products.editProduct' | translate) : ('admin.products.newProduct' | translate) }}
       </h1>
       <p class="text-secondary">
-        {{ isEditing() ? 'Atualize as informações do produto' : 'Preencha os dados para criar um novo produto' }}
+        {{ isEditing() ? ('admin.products.subtitle' | translate) : ('admin.products.subtitle' | translate) }}
       </p>
     </div>
 
@@ -32,40 +32,40 @@
         <div class="lg:col-span-2 space-y-6">
           <!-- Basic Info -->
           <div class="glass-card p-6">
-            <h3 class="heading-3 text-primary mb-6">Informações Básicas</h3>
+            <h3 class="heading-3 text-primary mb-6">{{ 'admin.products.productDetails' | translate }}</h3>
 
             <div class="space-y-4">
               <div>
                 <label for="name" class="block text-secondary text-sm mb-2">
-                  Nome do Produto *
+                  {{ 'admin.products.name' | translate }} *
                 </label>
-                <input 
-                  pInputText 
+                <input
+                  pInputText
                   id="name"
                   [(ngModel)]="form.name"
                   class="w-full"
-                  placeholder="Ex: Tiragem de 3 Cartas"
+                  [placeholder]="'admin.products.namePlaceholder' | translate"
                 />
               </div>
 
               <div>
                 <label for="shortDescription" class="block text-secondary text-sm mb-2">
-                  Descrição Curta
+                  {{ 'admin.products.shortDescription' | translate }}
                 </label>
-                <input 
-                  pInputText 
+                <input
+                  pInputText
                   id="shortDescription"
                   [(ngModel)]="form.shortDescription"
                   class="w-full"
-                  placeholder="Breve descrição para listagem"
+                  [placeholder]="'admin.products.descriptionPlaceholder' | translate"
                 />
               </div>
 
               <div>
                 <label for="description" class="block text-secondary text-sm mb-2">
-                  Descrição Completa
+                  {{ 'admin.products.longDescription' | translate }}
                 </label>
-                <p-editor 
+                <p-editor
                   [(ngModel)]="form.fullDescription"
                   [style]="{'height':'200px'}"
                 />
@@ -75,16 +75,16 @@
 
           <!-- Type & Category -->
           <div class="glass-card p-6">
-            <h3 class="heading-3 text-primary mb-6">Tipo e Categoria</h3>
+            <h3 class="heading-3 text-primary mb-6">{{ 'admin.products.type' | translate }}</h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label for="type" class="block text-secondary text-sm mb-2">
-                  Tipo de Produto *
+                  {{ 'admin.products.type' | translate }} *
                 </label>
-                <p-select 
+                <p-select
                   id="type"
-                  [options]="typeOptions" 
+                  [options]="typeOptions"
                   [(ngModel)]="form.productType"
                   optionLabel="label"
                   optionValue="value"
@@ -94,15 +94,15 @@
 
               <div>
                 <label for="category" class="block text-secondary text-sm mb-2">
-                  Categoria
+                  {{ 'admin.products.category' | translate }}
                 </label>
-                <p-select 
+                <p-select
                   id="category"
-                  [options]="categories()" 
+                  [options]="categories()"
                   [(ngModel)]="form.categoryId"
                   optionLabel="name"
                   optionValue="id"
-                  placeholder="Selecione..."
+                  [placeholder]="'admin.products.selectCategory' | translate"
                   [showClear]="true"
                   styleClass="w-full"
                 />
@@ -111,9 +111,9 @@
               @if (form.productType === 'QUESTION') {
                 <div>
                   <label for="questionCount" class="block text-secondary text-sm mb-2">
-                    Número de Perguntas
+                    {{ 'admin.products.questions' | translate }}
                   </label>
-                  <p-inputNumber 
+                  <p-inputNumber
                     id="questionCount"
                     [(ngModel)]="form.numQuestions"
                     [min]="1"
@@ -126,9 +126,9 @@
               @if (form.productType === 'SESSION') {
                 <div>
                   <label for="duration" class="block text-secondary text-sm mb-2">
-                    Duração (minutos)
+                    {{ 'admin.products.duration' | translate }}
                   </label>
-                  <p-inputNumber 
+                  <p-inputNumber
                     id="duration"
                     [(ngModel)]="form.sessionDurationMinutes"
                     [min]="15"
@@ -141,10 +141,10 @@
 
               <div>
                 <label for="deliveryTime" class="block text-secondary text-sm mb-2">
-                  Prazo de Entrega
+                  {{ 'admin.products.createdAt' | translate }}
                 </label>
-                <input 
-                  pInputText 
+                <input
+                  pInputText
                   id="deliveryTime"
                   [(ngModel)]="form.validityDays"
                   class="w-full"
@@ -161,14 +161,14 @@
         <div class="space-y-6">
           <!-- Pricing -->
           <div class="glass-card p-6">
-            <h3 class="heading-3 text-primary mb-6">Preço</h3>
+            <h3 class="heading-3 text-primary mb-6">{{ 'admin.products.price' | translate }}</h3>
 
             <div class="space-y-4">
               <div>
                 <label for="price" class="block text-secondary text-sm mb-2">
-                  Preço *
+                  {{ 'admin.products.price' | translate }} *
                 </label>
-                <p-inputNumber 
+                <p-inputNumber
                   id="price"
                   [(ngModel)]="form.price"
                   mode="currency"
@@ -180,9 +180,9 @@
 
               <div>
                 <label for="originalPrice" class="block text-secondary text-sm mb-2">
-                  Preço Original (opcional)
+                  {{ 'admin.products.price' | translate }} ({{ 'common.info' | translate }})
                 </label>
-                <p-inputNumber 
+                <p-inputNumber
                   id="originalPrice"
                   [(ngModel)]="form.originalPrice"
                   mode="currency"
@@ -191,7 +191,7 @@
                   styleClass="w-full"
                 />
                 <p class="text-secondary/60 text-xs mt-1">
-                  Exibido como "de R$ X por R$ Y"
+                  {{ 'common.info' | translate }}
                 </p>
               </div>
             </div>
@@ -199,7 +199,7 @@
 
           <!-- Image -->
           <div class="glass-card p-6">
-            <h3 class="heading-3 text-primary mb-6">Imagem</h3>
+            <h3 class="heading-3 text-primary mb-6">{{ 'admin.products.image' | translate }}</h3>
 
             @if (coverImageUrl()) {
               <div class="mb-4">
@@ -211,13 +211,13 @@
               </div>
             }
 
-            <p-fileUpload 
-              mode="basic" 
+            <p-fileUpload
+              mode="basic"
               name="cover"
               accept="image/*"
               [maxFileSize]="5000000"
               [auto]="true"
-              chooseLabel="Selecionar Imagem"
+              [chooseLabel]="'admin.products.uploadImage' | translate"
               [customUpload]="true"
               (uploadHandler)="onImageUpload($event)"
               [disabled]="!isEditing()"
@@ -225,49 +225,49 @@
             />
             @if (!isEditing()) {
               <p class="text-secondary/60 text-xs mt-2">
-                Salve o produto primeiro para adicionar imagem
+                {{ 'common.info' | translate }}
               </p>
             }
           </div>
 
           <!-- Status -->
           <div class="glass-card p-6">
-            <h3 class="heading-3 text-primary mb-6">Status</h3>
+            <h3 class="heading-3 text-primary mb-6">{{ 'admin.products.status' | translate }}</h3>
 
             <div class="space-y-4">
               <div class="flex items-center gap-3">
-                <p-checkbox 
+                <p-checkbox
                   [(ngModel)]="form.isActive"
                   [binary]="true"
                   inputId="isActive"
                 />
-                <label for="isActive" class="text-primary">Produto Ativo</label>
+                <label for="isActive" class="text-primary">{{ 'admin.products.active' | translate }}</label>
               </div>
 
               <div class="flex items-center gap-3">
-                <p-checkbox 
+                <p-checkbox
                   [(ngModel)]="form.isFeatured"
                   [binary]="true"
                   inputId="isFeatured"
                 />
-                <label for="isFeatured" class="text-primary">Em Destaque</label>
+                <label for="isFeatured" class="text-primary">{{ 'admin.products.active' | translate }}</label>
               </div>
             </div>
           </div>
 
           <!-- Actions -->
           <div class="glass-card p-6">
-            <button 
-              pButton 
+            <button
+              pButton
               class="btn-primary w-full mb-3"
               [loading]="saving()"
               (click)="save()"
             >
               <i class="pi pi-check mr-2"></i>
-              {{ isEditing() ? 'Salvar Alterações' : 'Criar Produto' }}
+              {{ isEditing() ? ('common.save' | translate) : ('admin.products.newProduct' | translate) }}
             </button>
             <a routerLink="/admin/produtos" class="btn-outline w-full block text-center">
-              Cancelar
+              {{ 'common.cancel' | translate }}
             </a>
           </div>
         </div>

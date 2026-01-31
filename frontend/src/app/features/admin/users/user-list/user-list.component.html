@@ -7,9 +7,9 @@
       <div>
         <h1 class="heading-1 text-primary mb-2">
           <i class="pi pi-users mr-3"></i>
-          Usuários
+          {{ 'admin.users.title' | translate }}
         </h1>
-        <p class="text-secondary">Gerencie os usuários do sistema</p>
+        <p class="text-secondary">{{ 'admin.users.subtitle' | translate }}</p>
       </div>
     </div>
 
@@ -19,29 +19,29 @@
         <div class="flex-1">
           <span class="p-input-icon-left w-full">
             <i class="pi pi-search"></i>
-            <input 
-              pInputText 
+            <input
+              pInputText
               [(ngModel)]="searchTerm"
-              placeholder="Buscar por nome ou email..."
+              [placeholder]="'admin.users.searchPlaceholder' | translate"
               class="w-full"
               (keyup.enter)="onSearch()"
             />
           </span>
         </div>
         <div class="w-full md:w-48">
-          <p-select 
-            [options]="roleOptions" 
+          <p-select
+            [options]="roleOptions"
             [(ngModel)]="selectedRole"
             optionLabel="label"
             optionValue="value"
-            placeholder="Filtrar por tipo"
+            [placeholder]="'admin.users.filterByRole' | translate"
             (onChange)="onRoleChange()"
             styleClass="w-full"
           />
         </div>
         <button pButton class="btn-primary" (click)="onSearch()">
           <i class="pi pi-search mr-2"></i>
-          Buscar
+          {{ 'common.search' | translate }}
         </button>
       </div>
     </div>
@@ -61,14 +61,14 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th>Usuário</th>
-            <th>Email</th>
-            <th>Tipo</th>
-            <th>Pedidos</th>
-            <th>Leituras</th>
-            <th>Cadastro</th>
-            <th>Status</th>
-            <th>Ações</th>
+            <th>{{ 'admin.users.name' | translate }}</th>
+            <th>{{ 'admin.users.email' | translate }}</th>
+            <th>{{ 'admin.users.role' | translate }}</th>
+            <th>{{ 'admin.users.totalOrders' | translate }}</th>
+            <th>{{ 'admin.users.totalReadings' | translate }}</th>
+            <th>{{ 'admin.users.createdAt' | translate }}</th>
+            <th>{{ 'admin.users.status' | translate }}</th>
+            <th>{{ 'admin.users.actions' | translate }}</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user>
@@ -103,22 +103,22 @@
               @if (user.isActive) {
                 <span class="inline-flex items-center gap-1 text-green-400 text-sm">
                   <i class="pi pi-check-circle"></i>
-                  Ativo
+                  {{ 'admin.users.active' | translate }}
                 </span>
               } @else {
                 <span class="inline-flex items-center gap-1 text-red-400 text-sm">
                   <i class="pi pi-times-circle"></i>
-                  Inativo
+                  {{ 'admin.users.inactive' | translate }}
                 </span>
               }
             </td>
             <td>
-              <a 
+              <a
                 [routerLink]="['/admin/usuarios', user.id]"
                 class="text-accent hover:text-accent-light transition-colors"
               >
                 <i class="pi pi-eye mr-1"></i>
-                Ver
+                {{ 'admin.users.viewDetails' | translate }}
               </a>
             </td>
           </tr>
@@ -127,7 +127,7 @@
           <tr>
             <td colspan="8" class="text-center py-8">
               <i class="pi pi-users text-4xl text-secondary/30 mb-4"></i>
-              <p class="text-secondary">Nenhum usuário encontrado</p>
+              <p class="text-secondary">{{ 'admin.users.noUsers' | translate }}</p>
             </td>
           </tr>
         </ng-template>

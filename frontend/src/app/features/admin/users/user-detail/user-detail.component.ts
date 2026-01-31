@@ -12,6 +12,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { UsersService, User } from '../../../../core/services/users.service';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -40,6 +41,7 @@ interface UserDetail extends User {
     ToggleButtonModule,
     ConfirmDialogModule,
     CurrencyBrlPipe,
+    TranslateModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './user-detail.component.html',
@@ -50,6 +52,7 @@ export class UserDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private notification = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
+  private translate = inject(TranslateService);
 
   user = signal<UserDetail | null>(null);
   loading = signal(true);
@@ -71,7 +74,7 @@ export class UserDetailComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.notification.error('Erro ao carregar usuário');
+        this.notification.error(this.translate.instant('admin.users.errorLoadingUser'));
         this.loading.set(false);
       },
     });
@@ -82,20 +85,22 @@ export class UserDetailComponent implements OnInit {
 
     const newRole = this.user()!.role === 'ADMIN' ? 'CLIENT' : 'ADMIN';
 
+    const roleLabel = newRole === 'ADMIN'
+      ? this.translate.instant('admin.users.roleAdmin')
+      : this.translate.instant('admin.users.roleClient');
+
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja alterar o tipo do usuário para ${
-        newRole === 'ADMIN' ? 'Administrador' : 'Cliente'
-      }?`,
-      header: 'Confirmar Alteração',
+      message: this.translate.instant('admin.users.confirmRoleChange', { role: roleLabel }),
+      header: this.translate.instant('admin.users.confirmChange'),
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.usersService.updateRole(this.user()!.id, newRole).subscribe({
           next: () => {
             this.user.update((u) => (u ? { ...u, role: newRole as 'ADMIN' | 'CLIENT' } : null));
-            this.notification.success('Tipo de usuário atualizado');
+            this.notification.success(this.translate.instant('admin.users.roleUpdated'));
           },
           error: () => {
-            this.notification.error('Erro ao atualizar tipo');
+            this.notification.error(this.translate.instant('admin.users.errorUpdatingRole'));
           },
         });
       },
@@ -107,11 +112,13 @@ export class UserDetailComponent implements OnInit {
   }
 
   getRoleLabel(role: string): string {
-    return role === 'ADMIN' ? 'Administrador' : 'Cliente';
+    return role === 'ADMIN'
+      ? this.translate.instant('admin.users.roleAdmin')
+      : this.translate.instant('admin.users.roleClient');
   }
 
   formatDate(dateString?: string | Date): string {
-    if (!dateString) return 'Não informada';
+    if (!dateString) return this.translate.instant('admin.users.notInformed');
     return new Date(dateString).toLocaleDateString('pt-BR');
   }
 
@@ -130,18 +137,25 @@ export class UserDetailComponent implements OnInit {
 
     const newStatus = !this.user()!.isActive;
 
+    const action = newStatus
+      ? this.translate.instant('admin.users.activate')
+      : this.translate.instant('admin.users.deactivate');
+    const successMessage = newStatus
+      ? this.translate.instant('admin.users.userActivated')
+      : this.translate.instant('admin.users.userDeactivated');
+
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja ${newStatus ? 'ativar' : 'desativar'} este usuário?`,
-      header: 'Confirmar Alteração',
+      message: this.translate.instant('admin.users.confirmStatusChange', { action }),
+      header: this.translate.instant('admin.users.confirmChange'),
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.usersService.update(this.user()!.id, { isActive: newStatus } as any).subscribe({
           next: () => {
             this.user.update((u) => (u ? { ...u, isActive: newStatus } : null));
-            this.notification.success(`Usuário ${newStatus ? 'ativado' : 'desativado'}`);
+            this.notification.success(successMessage);
           },
           error: () => {
-            this.notification.error('Erro ao atualizar status');
+            this.notification.error(this.translate.instant('admin.users.errorUpdatingStatus'));
           },
         });
       },

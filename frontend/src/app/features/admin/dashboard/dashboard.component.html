@@ -5,17 +5,17 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
       <div>
-        <h1 class="heading-1 text-primary mb-2">Dashboard</h1>
-        <p class="text-secondary">Visão geral do sistema</p>
+        <h1 class="heading-1 text-primary mb-2">{{ 'admin.dashboard.title' | translate }}</h1>
+        <p class="text-secondary">{{ 'admin.dashboard.subtitle' | translate }}</p>
       </div>
       <div class="flex gap-4">
         <a routerLink="/admin/leituras" class="btn-outline">
           <i class="pi pi-book mr-2"></i>
-          Leituras Pendentes
+          {{ 'admin.layout.pendingReadings' | translate }}
         </a>
         <a routerLink="/admin/pedidos" class="btn-primary">
           <i class="pi pi-shopping-bag mr-2"></i>
-          Ver Pedidos
+          {{ 'admin.dashboard.viewAll' | translate }}
         </a>
       </div>
     </div>
@@ -41,7 +41,7 @@
           <p class="text-3xl font-bold text-primary mb-1">
             {{ formatCurrency(stats()?.totalRevenue || 0) }}
           </p>
-          <p class="text-secondary text-sm">Faturamento Total</p>
+          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalRevenue' | translate }}</p>
         }
       </div>
 
@@ -62,7 +62,7 @@
           <p-skeleton height="1rem" width="40%" />
         } @else {
           <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalOrders || 0 }}</p>
-          <p class="text-secondary text-sm">Total de Pedidos</p>
+          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalOrders' | translate }}</p>
         }
       </div>
 
@@ -83,7 +83,7 @@
           <p-skeleton height="1rem" width="40%" />
         } @else {
           <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalUsers || 0 }}</p>
-          <p class="text-secondary text-sm">Usuários Cadastrados</p>
+          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalClients' | translate }}</p>
         }
       </div>
 
@@ -104,7 +104,7 @@
           <p-skeleton height="1rem" width="40%" />
         } @else {
           <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.pendingReadings || 0 }}</p>
-          <p class="text-secondary text-sm">Leituras Pendentes</p>
+          <p class="text-secondary text-sm">{{ 'admin.dashboard.pendingReadings' | translate }}</p>
         }
       </div>
     </div>
@@ -113,7 +113,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
       <!-- Revenue Chart -->
       <div class="glass-card p-6">
-        <h3 class="heading-3 text-primary mb-6">Faturamento (6 meses)</h3>
+        <h3 class="heading-3 text-primary mb-6">{{ 'admin.dashboard.totalRevenue' | translate }} (6 {{ 'common.date' | translate }})</h3>
         <div class="h-64">
           <p-chart type="line" [data]="revenueChartData" [options]="revenueChartOptions" />
         </div>
@@ -121,7 +121,7 @@
 
       <!-- Orders by Type Chart -->
       <div class="glass-card p-6">
-        <h3 class="heading-3 text-primary mb-6">Pedidos por Tipo</h3>
+        <h3 class="heading-3 text-primary mb-6">{{ 'admin.dashboard.recentOrders' | translate }}</h3>
         <div class="h-64">
           <p-chart type="doughnut" [data]="ordersChartData" [options]="ordersChartOptions" />
         </div>
@@ -133,9 +133,9 @@
       <!-- Recent Orders -->
       <div class="glass-card p-6">
         <div class="flex items-center justify-between mb-6">
-          <h3 class="heading-3 text-primary">Pedidos Recentes</h3>
+          <h3 class="heading-3 text-primary">{{ 'admin.dashboard.recentOrders' | translate }}</h3>
           <a routerLink="/admin/pedidos" class="text-accent hover:text-accent-light transition-colors text-sm">
-            Ver todos <i class="pi pi-arrow-right ml-1"></i>
+            {{ 'admin.dashboard.viewAll' | translate }} <i class="pi pi-arrow-right ml-1"></i>
           </a>
         </div>
 
@@ -146,7 +146,7 @@
             }
           </div>
         } @else if (recentOrders().length === 0) {
-          <p class="text-secondary text-center py-8">Nenhum pedido encontrado</p>
+          <p class="text-secondary text-center py-8">{{ 'admin.products.noProducts' | translate }}</p>
         } @else {
           <div class="space-y-3">
             @for (order of recentOrders(); track order.id) {
@@ -176,9 +176,9 @@
       <!-- Pending Readings -->
       <div class="glass-card p-6">
         <div class="flex items-center justify-between mb-6">
-          <h3 class="heading-3 text-primary">Leituras Pendentes</h3>
+          <h3 class="heading-3 text-primary">{{ 'admin.dashboard.pendingReadings' | translate }}</h3>
           <a routerLink="/admin/leituras" class="text-accent hover:text-accent-light transition-colors text-sm">
-            Ver todas <i class="pi pi-arrow-right ml-1"></i>
+            {{ 'admin.dashboard.viewAll' | translate }} <i class="pi pi-arrow-right ml-1"></i>
           </a>
         </div>
 
@@ -191,7 +191,7 @@
         } @else if (pendingReadings().length === 0) {
           <div class="text-center py-8">
             <i class="pi pi-check-circle text-3xl text-green-400 mb-2"></i>
-            <p class="text-secondary">Todas as leituras em dia! 🎉</p>
+            <p class="text-secondary">{{ 'admin.readings.noReadings' | translate }}</p>
           </div>
         } @else {
           <div class="space-y-3">
@@ -222,31 +222,31 @@
 
     <!-- Quick Actions -->
     <div class="glass-card p-6 mt-8">
-      <h3 class="heading-3 text-primary mb-6">Ações Rápidas</h3>
+      <h3 class="heading-3 text-primary mb-6">{{ 'admin.dashboard.quickActions' | translate }}</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         <a routerLink="/admin/produtos/novo" class="quick-action-btn">
           <i class="pi pi-plus-circle text-2xl mb-2"></i>
-          <span class="text-sm">Novo Produto</span>
+          <span class="text-sm">{{ 'admin.dashboard.newProduct' | translate }}</span>
         </a>
         <a routerLink="/admin/leituras" class="quick-action-btn">
           <i class="pi pi-book text-2xl mb-2"></i>
-          <span class="text-sm">Leituras</span>
+          <span class="text-sm">{{ 'admin.menu.readings' | translate }}</span>
         </a>
         <a routerLink="/admin/agendamentos" class="quick-action-btn">
           <i class="pi pi-calendar text-2xl mb-2"></i>
-          <span class="text-sm">Agendamentos</span>
+          <span class="text-sm">{{ 'admin.menu.appointments' | translate }}</span>
         </a>
         <a routerLink="/admin/usuarios" class="quick-action-btn">
           <i class="pi pi-users text-2xl mb-2"></i>
-          <span class="text-sm">Usuários</span>
+          <span class="text-sm">{{ 'admin.menu.users' | translate }}</span>
         </a>
         <a routerLink="/admin/depoimentos" class="quick-action-btn">
           <i class="pi pi-star text-2xl mb-2"></i>
-          <span class="text-sm">Depoimentos</span>
+          <span class="text-sm">{{ 'admin.menu.testimonials' | translate }}</span>
         </a>
         <a routerLink="/admin/configuracoes" class="quick-action-btn">
           <i class="pi pi-cog text-2xl mb-2"></i>
-          <span class="text-sm">Configurações</span>
+          <span class="text-sm">{{ 'admin.menu.settings' | translate }}</span>
         </a>
       </div>
     </div>

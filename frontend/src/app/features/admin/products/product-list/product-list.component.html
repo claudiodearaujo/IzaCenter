@@ -9,18 +9,18 @@
       <div>
         <h1 class="heading-1 text-primary mb-2">
           <i class="pi pi-box mr-3"></i>
-          Produtos
+          {{ 'admin.products.title' | translate }}
         </h1>
-        <p class="text-secondary">Gerencie os produtos e consultas</p>
+        <p class="text-secondary">{{ 'admin.products.subtitle' | translate }}</p>
       </div>
       <div class="flex gap-4">
         <a routerLink="/admin/categorias" class="btn-outline">
           <i class="pi pi-folder mr-2"></i>
-          Categorias
+          {{ 'admin.menu.categories' | translate }}
         </a>
         <a routerLink="/admin/produtos/novo" class="btn-primary">
           <i class="pi pi-plus mr-2"></i>
-          Novo Produto
+          {{ 'admin.products.newProduct' | translate }}
         </a>
       </div>
     </div>
@@ -31,29 +31,29 @@
         <div class="flex-1">
           <span class="p-input-icon-left w-full">
             <i class="pi pi-search"></i>
-            <input 
-              pInputText 
+            <input
+              pInputText
               [(ngModel)]="searchTerm"
-              placeholder="Buscar produtos..."
+              [placeholder]="'admin.products.searchPlaceholder' | translate"
               class="w-full"
               (keyup.enter)="onSearch()"
             />
           </span>
         </div>
         <div class="w-full md:w-48">
-          <p-select 
-            [options]="categories()" 
+          <p-select
+            [options]="categories()"
             [(ngModel)]="selectedCategory"
             optionLabel="name"
             optionValue="id"
-            placeholder="Categoria"
+            [placeholder]="'admin.products.category' | translate"
             (onChange)="onSearch()"
             styleClass="w-full"
           />
         </div>
         <button pButton class="btn-primary" (click)="onSearch()">
           <i class="pi pi-search mr-2"></i>
-          Buscar
+          {{ 'common.search' | translate }}
         </button>
       </div>
     </div>
@@ -73,14 +73,14 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th>Produto</th>
-            <th>Tipo</th>
-            <th>Categoria</th>
-            <th>Preço</th>
-            <th>Vendas</th>
-            <th>Status</th>
-            <th>Destaque</th>
-            <th>Ações</th>
+            <th>{{ 'admin.products.name' | translate }}</th>
+            <th>{{ 'admin.products.type' | translate }}</th>
+            <th>{{ 'admin.products.category' | translate }}</th>
+            <th>{{ 'admin.products.price' | translate }}</th>
+            <th>{{ 'admin.dashboard.totalOrders' | translate }}</th>
+            <th>{{ 'admin.products.status' | translate }}</th>
+            <th>{{ 'admin.products.status' | translate }}</th>
+            <th>{{ 'admin.products.actions' | translate }}</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-product>
@@ -111,39 +111,39 @@
             <td class="text-accent font-bold">{{ product.price | currencyBrl }}</td>
             <td class="text-secondary">{{ product._count?.orderItems || 0 }}</td>
             <td>
-              <button 
-                pButton 
+              <button
+                pButton
                 [class]="product.isActive ? 'p-button-success p-button-text' : 'p-button-secondary p-button-text'"
                 (click)="toggleActive(product)"
-                [pTooltip]="product.isActive ? 'Ativo - Clique para desativar' : 'Inativo - Clique para ativar'"
+                [pTooltip]="(product.isActive ? 'admin.products.active' : 'admin.products.inactive') | translate"
               >
                 <i class="pi" [class]="product.isActive ? 'pi-check-circle' : 'pi-times-circle'"></i>
               </button>
             </td>
             <td>
-              <button 
-                pButton 
+              <button
+                pButton
                 [class]="product.isFeatured ? 'p-button-warning p-button-text' : 'p-button-secondary p-button-text'"
                 (click)="toggleFeatured(product)"
-                [pTooltip]="product.isFeatured ? 'Em destaque - Clique para remover' : 'Adicionar aos destaques'"
+                [pTooltip]="(product.isFeatured ? 'admin.products.active' : 'admin.products.inactive') | translate"
               >
                 <i class="pi" [class]="product.isFeatured ? 'pi-star-fill' : 'pi-star'"></i>
               </button>
             </td>
             <td>
               <div class="flex items-center gap-2">
-                <a 
+                <a
                   [routerLink]="['/admin/produtos', product.id]"
                   class="p-button p-button-text p-button-info"
-                  pTooltip="Editar"
+                  [pTooltip]="'common.edit' | translate"
                 >
                   <i class="pi pi-pencil"></i>
                 </a>
-                <button 
-                  pButton 
+                <button
+                  pButton
                   class="p-button-text p-button-danger"
                   (click)="deleteProduct(product)"
-                  pTooltip="Excluir"
+                  [pTooltip]="'common.delete' | translate"
                 >
                   <i class="pi pi-trash"></i>
                 </button>
@@ -155,10 +155,10 @@
           <tr>
             <td colspan="8" class="text-center py-8">
               <i class="pi pi-box text-4xl text-secondary/30 mb-4"></i>
-              <p class="text-secondary">Nenhum produto encontrado</p>
+              <p class="text-secondary">{{ 'admin.products.noProducts' | translate }}</p>
               <a routerLink="/admin/produtos/novo" class="btn-primary inline-block mt-4">
                 <i class="pi pi-plus mr-2"></i>
-                Criar Produto
+                {{ 'admin.products.newProduct' | translate }}
               </a>
             </td>
           </tr>

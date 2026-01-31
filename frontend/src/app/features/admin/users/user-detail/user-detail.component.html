@@ -7,7 +7,7 @@
     <!-- Back Button -->
     <a routerLink="/admin/usuarios" class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6">
       <i class="pi pi-arrow-left mr-2"></i>
-      Voltar para usuários
+      {{ 'admin.users.backToList' | translate }}
     </a>
 
     @if (loading()) {
@@ -61,15 +61,15 @@
               (click)="toggleActive()"
             >
               <i class="pi" [class]="user()?.isActive ? 'pi-ban' : 'pi-check'" class="mr-2"></i>
-              {{ user()?.isActive ? 'Desativar' : 'Ativar' }}
+              {{ user()?.isActive ? ('admin.users.deactivate' | translate) : ('admin.users.activate' | translate) }}
             </button>
-            <button 
-              pButton 
+            <button
+              pButton
               class="btn-outline"
               (click)="toggleRole()"
             >
               <i class="pi pi-user-edit mr-2"></i>
-              Alterar Tipo
+              {{ 'admin.users.changeRole' | translate }}
             </button>
           </div>
         </div>
@@ -79,22 +79,22 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="glass-card p-4 text-center">
           <p class="text-3xl font-bold text-primary">{{ user()?._count?.orders || 0 }}</p>
-          <p class="text-secondary text-sm">Pedidos</p>
+          <p class="text-secondary text-sm">{{ 'admin.users.orders' | translate }}</p>
         </div>
         <div class="glass-card p-4 text-center">
           <p class="text-3xl font-bold text-primary">{{ user()?._count?.readings || 0 }}</p>
-          <p class="text-secondary text-sm">Leituras</p>
+          <p class="text-secondary text-sm">{{ 'admin.users.readings' | translate }}</p>
         </div>
         <div class="glass-card p-4 text-center">
           <p class="text-3xl font-bold text-primary">{{ user()?._count?.appointments || 0 }}</p>
-          <p class="text-secondary text-sm">Agendamentos</p>
+          <p class="text-secondary text-sm">{{ 'admin.users.appointments' | translate }}</p>
         </div>
         <div class="glass-card p-4 text-center">
           <p class="text-lg font-bold" [class]="user()?.isActive ? 'text-green-400' : 'text-red-400'">
             <i class="pi" [class]="user()?.isActive ? 'pi-check-circle' : 'pi-times-circle'" class="mr-1"></i>
-            {{ user()?.isActive ? 'Ativo' : 'Inativo' }}
+            {{ user()?.isActive ? ('admin.users.active' | translate) : ('admin.users.inactive' | translate) }}
           </p>
-          <p class="text-secondary text-sm">Status</p>
+          <p class="text-secondary text-sm">{{ 'admin.users.status' | translate }}</p>
         </div>
       </div>
 
@@ -102,36 +102,36 @@
       <div class="glass-card p-6">
         <p-tabs value="0">
           <p-tablist>
-            <p-tab value="0">Informações</p-tab>
-            <p-tab value="1">Pedidos</p-tab>
-            <p-tab value="2">Leituras</p-tab>
+            <p-tab value="0">{{ 'admin.users.information' | translate }}</p-tab>
+            <p-tab value="1">{{ 'admin.users.orders' | translate }}</p-tab>
+            <p-tab value="2">{{ 'admin.users.readings' | translate }}</p-tab>
           </p-tablist>
           <p-tabpanels>
           <!-- Info Tab -->
           <p-tabpanel value="0">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
               <div>
-                <label class="text-secondary text-sm">Nome Completo</label>
+                <label class="text-secondary text-sm">{{ 'admin.users.fullName' | translate }}</label>
                 <p class="text-primary font-medium">{{ user()?.fullName }}</p>
               </div>
               <div>
-                <label class="text-secondary text-sm">Email</label>
+                <label class="text-secondary text-sm">{{ 'admin.users.email' | translate }}</label>
                 <p class="text-primary font-medium">{{ user()?.email }}</p>
               </div>
               <div>
-                <label class="text-secondary text-sm">Telefone</label>
-                <p class="text-primary font-medium">{{ user()?.phone || 'Não informado' }}</p>
+                <label class="text-secondary text-sm">{{ 'admin.users.phone' | translate }}</label>
+                <p class="text-primary font-medium">{{ user()?.phone || ('admin.users.notInformed' | translate) }}</p>
               </div>
               <div>
-                <label class="text-secondary text-sm">Data de Nascimento</label>
+                <label class="text-secondary text-sm">{{ 'admin.users.birthDate' | translate }}</label>
                 <p class="text-primary font-medium">{{ formatDate(user()?.birthDate) }}</p>
               </div>
               <div>
-                <label class="text-secondary text-sm">Data de Cadastro</label>
+                <label class="text-secondary text-sm">{{ 'admin.users.createdAt' | translate }}</label>
                 <p class="text-primary font-medium">{{ formatDateTime(user()?.createdAt ?? '') }}</p>
               </div>
               <div>
-                <label class="text-secondary text-sm">Tipo de Conta</label>
+                <label class="text-secondary text-sm">{{ 'admin.users.accountType' | translate }}</label>
                 <p class="text-primary font-medium">{{ getRoleLabel(user()?.role ?? 'CLIENT') }}</p>
               </div>
             </div>
@@ -158,7 +158,7 @@
                 }
               </div>
             } @else {
-              <p class="text-secondary text-center py-8">Nenhum pedido encontrado</p>
+              <p class="text-secondary text-center py-8">{{ 'admin.users.noOrders' | translate }}</p>
             }
           </p-tabpanel>
 
@@ -180,7 +180,7 @@
                 }
               </div>
             } @else {
-              <p class="text-secondary text-center py-8">Nenhuma leitura encontrada</p>
+              <p class="text-secondary text-center py-8">{{ 'admin.users.noReadings' | translate }}</p>
             }
           </p-tabpanel>
           </p-tabpanels>
