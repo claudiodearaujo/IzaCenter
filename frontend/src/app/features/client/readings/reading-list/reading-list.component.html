@@ -6,11 +6,10 @@
     <div class="text-center mb-12">
       <h1 class="heading-1 text-primary mb-4">
         <i class="pi pi-book mr-3"></i>
-        Minhas Leituras
+        {{ 'client.readings.title' | translate }}
       </h1>
       <p class="text-secondary max-w-2xl mx-auto">
-        Aqui você encontra todas as suas leituras de tarot. Leia e releia 
-        quantas vezes quiser para absorver cada mensagem.
+        {{ 'client.readings.subtitle' | translate }}
       </p>
     </div>
 
@@ -41,22 +40,21 @@
         <div class="w-24 h-24 bg-gradient-mystical rounded-full flex items-center justify-center mx-auto mb-6">
           <i class="pi pi-book text-4xl text-white"></i>
         </div>
-        <h2 class="heading-2 text-primary mb-4">Nenhuma leitura encontrada</h2>
+        <h2 class="heading-2 text-primary mb-4">{{ 'client.readings.noReadingsTitle' | translate }}</h2>
         @if (selectedFilter() === 'all') {
           <p class="text-secondary mb-6">
-            Você ainda não possui leituras. Após adquirir uma consulta, 
-            sua leitura aparecerá aqui quando for publicada.
+            {{ 'client.readings.noReadingsMessage' | translate }}
           </p>
           <a routerLink="/loja" class="btn-primary inline-block">
             <i class="pi pi-shopping-cart mr-2"></i>
-            Explorar Consultas
+            {{ 'client.readings.exploreConsultations' | translate }}
           </a>
         } @else {
           <p class="text-secondary mb-6">
-            Nenhuma leitura com o filtro selecionado.
+            {{ 'client.readings.noFilterResults' | translate }}
           </p>
           <button class="btn-outline" (click)="selectedFilter.set('all'); onFilterChange()">
-            Ver todas as leituras
+            {{ 'client.readings.viewAllReadings' | translate }}
           </button>
         }
       </div>
@@ -121,14 +119,14 @@
               <div class="flex items-center justify-between text-sm">
                 <span class="text-secondary">
                   @if (reading.status === 'PUBLISHED' && reading.publishedAt) {
-                    Publicada em {{ formatDate(reading.publishedAt) }}
+                    {{ 'client.readings.publishedOn' | translate }} {{ formatDate(reading.publishedAt) }}
                   } @else {
-                    Solicitada em {{ formatDate(reading.createdAt) }}
+                    {{ 'client.readings.requestedOn' | translate }} {{ formatDate(reading.createdAt) }}
                   }
                 </span>
                 @if (reading.status === 'PUBLISHED') {
                   <span class="text-accent">
-                    Ler <i class="pi pi-arrow-right ml-1"></i>
+                    {{ 'client.readings.read' | translate }} <i class="pi pi-arrow-right ml-1"></i>
                   </span>
                 }
               </div>
@@ -145,27 +143,27 @@
           <div class="w-14 h-14 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <i class="pi pi-clock text-2xl text-yellow-400"></i>
           </div>
-          <h4 class="text-primary font-bold mb-2">Aguardando</h4>
+          <h4 class="text-primary font-bold mb-2">{{ 'client.readings.statusWaiting' | translate }}</h4>
           <p class="text-secondary text-sm">
-            Sua consulta está na fila e será respondida em breve
+            {{ 'client.readings.statusWaitingDesc' | translate }}
           </p>
         </div>
         <div>
           <div class="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <i class="pi pi-spinner text-2xl text-blue-400"></i>
           </div>
-          <h4 class="text-primary font-bold mb-2">Em Andamento</h4>
+          <h4 class="text-primary font-bold mb-2">{{ 'client.readings.statusInProgress' | translate }}</h4>
           <p class="text-secondary text-sm">
-            Estou preparando sua leitura com muito carinho
+            {{ 'client.readings.statusInProgressDesc' | translate }}
           </p>
         </div>
         <div>
           <div class="w-14 h-14 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <i class="pi pi-check-circle text-2xl text-green-400"></i>
           </div>
-          <h4 class="text-primary font-bold mb-2">Publicada</h4>
+          <h4 class="text-primary font-bold mb-2">{{ 'client.readings.statusPublished' | translate }}</h4>
           <p class="text-secondary text-sm">
-            Sua leitura está pronta! Clique para acessar
+            {{ 'client.readings.statusPublishedDesc' | translate }}
           </p>
         </div>
       </div>

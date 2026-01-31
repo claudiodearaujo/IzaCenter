@@ -3,6 +3,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -35,6 +36,7 @@ interface Reading {
     CommonModule,
     RouterLink,
     FormsModule,
+    TranslateModule,
     ButtonModule,
     SkeletonModule,
     SelectButtonModule,
@@ -44,16 +46,17 @@ interface Reading {
 })
 export class ReadingListComponent implements OnInit {
   private api = inject(ApiService);
+  private translate = inject(TranslateService);
 
   readings = signal<Reading[]>([]);
   loading = signal(true);
   selectedFilter = signal('all');
 
   filterOptions = [
-    { label: 'Todas', value: 'all' },
-    { label: 'Aguardando', value: 'WAITING' },
-    { label: 'Em Andamento', value: 'IN_PROGRESS' },
-    { label: 'Publicadas', value: 'PUBLISHED' },
+    { label: this.translate.instant('client.readings.filterAll'), value: 'all' },
+    { label: this.translate.instant('client.readings.filterWaiting'), value: 'WAITING' },
+    { label: this.translate.instant('client.readings.filterInProgress'), value: 'IN_PROGRESS' },
+    { label: this.translate.instant('client.readings.filterPublished'), value: 'PUBLISHED' },
   ];
 
   ngOnInit() {
@@ -86,9 +89,9 @@ export class ReadingListComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
-      WAITING: 'Aguardando',
-      IN_PROGRESS: 'Em andamento',
-      PUBLISHED: 'Publicada',
+      WAITING: this.translate.instant('client.readings.statusWaiting'),
+      IN_PROGRESS: this.translate.instant('client.readings.statusInProgress'),
+      PUBLISHED: this.translate.instant('client.readings.statusPublished'),
     };
     return labels[status] || status;
   }

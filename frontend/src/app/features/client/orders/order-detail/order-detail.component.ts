@@ -3,6 +3,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -51,6 +52,7 @@ interface Order {
   imports: [
     CommonModule,
     RouterLink,
+    TranslateModule,
     ButtonModule,
     SkeletonModule,
     CurrencyBrlPipe,
@@ -61,6 +63,7 @@ interface Order {
 export class OrderDetailComponent implements OnInit {
   private api = inject(ApiService);
   private route = inject(ActivatedRoute);
+  private translate = inject(TranslateService);
 
   order = signal<Order | null>(null);
   loading = signal(true);
@@ -90,15 +93,15 @@ export class OrderDetailComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
-      PENDING: 'Pendente',
-      PAID: 'Pago',
-      PROCESSING: 'Processando',
-      COMPLETED: 'Concluído',
-      CANCELLED: 'Cancelado',
-      REFUNDED: 'Reembolsado',
-      WAITING: 'Aguardando',
-      IN_PROGRESS: 'Em andamento',
-      PUBLISHED: 'Publicada',
+      PENDING: this.translate.instant('client.orders.statusPending'),
+      WAITING: this.translate.instant('client.readings.statusWaiting'),
+      PAID: this.translate.instant('client.orders.statusPaid'),
+      PROCESSING: this.translate.instant('client.orders.statusProcessing'),
+      IN_PROGRESS: this.translate.instant('client.readings.statusInProgress'),
+      COMPLETED: this.translate.instant('client.orders.statusCompleted'),
+      PUBLISHED: this.translate.instant('client.readings.statusPublished'),
+      CANCELLED: this.translate.instant('client.orders.statusCancelled'),
+      REFUNDED: this.translate.instant('client.orders.statusRefunded'),
     };
     return labels[status] || status;
   }
@@ -120,19 +123,19 @@ export class OrderDetailComponent implements OnInit {
 
   getPaymentLabel(method?: string): string {
     const labels: Record<string, string> = {
-      card: 'Cartão de Crédito',
-      pix: 'PIX',
-      boleto: 'Boleto',
+      card: this.translate.instant('client.orders.detail.paymentCard'),
+      pix: this.translate.instant('client.orders.detail.paymentPix'),
+      boleto: this.translate.instant('client.orders.detail.paymentBoleto'),
     };
-    return method ? labels[method] || method : 'Não informado';
+    return method ? labels[method] || method : this.translate.instant('client.orders.detail.paymentNotInformed');
   }
 
   getProductTypeLabel(type: string): string {
     const labels: Record<string, string> = {
-      QUESTION: 'Perguntas',
-      SESSION: 'Sessão',
-      MONTHLY: 'Mensal',
-      SPECIAL: 'Especial',
+      QUESTION: this.translate.instant('client.orders.detail.productTypeQuestion'),
+      SESSION: this.translate.instant('client.orders.detail.productTypeSession'),
+      MONTHLY: this.translate.instant('client.orders.detail.productTypeMonthly'),
+      SPECIAL: this.translate.instant('client.orders.detail.productTypeSpecial'),
     };
     return labels[type] || type;
   }

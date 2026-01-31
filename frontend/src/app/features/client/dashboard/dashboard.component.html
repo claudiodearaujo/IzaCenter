@@ -5,10 +5,10 @@
     <!-- Welcome Header -->
     <div class="mb-8">
       <h1 class="heading-1 text-primary mb-2">
-        Olá, {{ (user()?.fullName ?? 'Cliente').split(' ')[0] }}! ✨
+        {{ 'client.dashboard.welcome' | translate }}, {{ (user()?.fullName ?? 'Cliente').split(' ')[0] }}! ✨
       </h1>
       <p class="text-secondary">
-        Bem-vinda ao seu espaço de conexão com o místico
+        {{ 'client.dashboard.welcomeSubtitle' | translate }}
       </p>
     </div>
 
@@ -24,7 +24,7 @@
           <p-skeleton height="1rem" width="80%" styleClass="mx-auto" />
         } @else {
           <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalOrders || 0 }}</p>
-          <p class="text-secondary text-sm">Pedidos realizados</p>
+          <p class="text-secondary text-sm">{{ 'client.dashboard.ordersPlaced' | translate }}</p>
         }
       </div>
 
@@ -38,7 +38,7 @@
           <p-skeleton height="1rem" width="80%" styleClass="mx-auto" />
         } @else {
           <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.pendingReadings || 0 }}</p>
-          <p class="text-secondary text-sm">Leituras pendentes</p>
+          <p class="text-secondary text-sm">{{ 'client.dashboard.pendingReadings' | translate }}</p>
         }
       </div>
 
@@ -52,7 +52,7 @@
           <p-skeleton height="1rem" width="80%" styleClass="mx-auto" />
         } @else {
           <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.completedReadings || 0 }}</p>
-          <p class="text-secondary text-sm">Leituras concluídas</p>
+          <p class="text-secondary text-sm">{{ 'client.dashboard.completedReadings' | translate }}</p>
         }
       </div>
 
@@ -66,30 +66,30 @@
           <p-skeleton height="1rem" width="80%" styleClass="mx-auto" />
         } @else {
           <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.upcomingAppointments || 0 }}</p>
-          <p class="text-secondary text-sm">Agendamentos</p>
+          <p class="text-secondary text-sm">{{ 'client.dashboard.upcomingAppointments' | translate }}</p>
         }
       </div>
     </div>
 
     <!-- Quick Actions -->
     <div class="glass-card p-6 mb-12">
-      <h2 class="heading-3 text-primary mb-6">Ações Rápidas</h2>
+      <h2 class="heading-3 text-primary mb-6">{{ 'client.dashboard.quickActions' | translate }}</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <a routerLink="/loja" class="btn-outline text-center py-4">
           <i class="pi pi-shopping-cart block mb-2 text-xl"></i>
-          Nova Consulta
+          {{ 'client.dashboard.newConsultation' | translate }}
         </a>
         <a routerLink="/cliente/leituras" class="btn-outline text-center py-4">
           <i class="pi pi-book block mb-2 text-xl"></i>
-          Minhas Leituras
+          {{ 'client.dashboard.myReadings' | translate }}
         </a>
         <a routerLink="/cliente/agendamentos" class="btn-outline text-center py-4">
           <i class="pi pi-calendar block mb-2 text-xl"></i>
-          Agendamentos
+          {{ 'client.dashboard.appointments' | translate }}
         </a>
         <a routerLink="/cliente/perfil" class="btn-outline text-center py-4">
           <i class="pi pi-user block mb-2 text-xl"></i>
-          Meu Perfil
+          {{ 'client.dashboard.myProfile' | translate }}
         </a>
       </div>
     </div>
@@ -100,10 +100,10 @@
         <div class="flex items-center justify-between mb-6">
           <h2 class="heading-3 text-primary">
             <i class="pi pi-shopping-bag mr-2"></i>
-            Pedidos Recentes
+            {{ 'client.dashboard.recentOrders' | translate }}
           </h2>
           <a routerLink="/cliente/pedidos" class="text-accent hover:text-accent-light transition-colors text-sm">
-            Ver todos <i class="pi pi-arrow-right ml-1"></i>
+            {{ 'client.dashboard.viewAll' | translate }} <i class="pi pi-arrow-right ml-1"></i>
           </a>
         </div>
 
@@ -116,9 +116,9 @@
         } @else if (recentOrders().length === 0) {
           <div class="text-center py-8">
             <i class="pi pi-shopping-bag text-4xl text-secondary/30 mb-4"></i>
-            <p class="text-secondary">Você ainda não fez nenhum pedido</p>
+            <p class="text-secondary">{{ 'client.dashboard.noOrders' | translate }}</p>
             <a routerLink="/loja" class="btn-primary inline-block mt-4">
-              Explorar Consultas
+              {{ 'client.dashboard.exploreConsultations' | translate }}
             </a>
           </div>
         } @else {
@@ -152,10 +152,10 @@
         <div class="flex items-center justify-between mb-6">
           <h2 class="heading-3 text-primary">
             <i class="pi pi-book mr-2"></i>
-            Leituras Recentes
+            {{ 'client.dashboard.recentReadings' | translate }}
           </h2>
           <a routerLink="/cliente/leituras" class="text-accent hover:text-accent-light transition-colors text-sm">
-            Ver todas <i class="pi pi-arrow-right ml-1"></i>
+            {{ 'client.dashboard.viewAllFemale' | translate }} <i class="pi pi-arrow-right ml-1"></i>
           </a>
         </div>
 
@@ -168,9 +168,9 @@
         } @else if (recentReadings().length === 0) {
           <div class="text-center py-8">
             <i class="pi pi-book text-4xl text-secondary/30 mb-4"></i>
-            <p class="text-secondary">Nenhuma leitura ainda</p>
+            <p class="text-secondary">{{ 'client.dashboard.noReadings' | translate }}</p>
             <p class="text-secondary text-sm mt-2">
-              Suas leituras aparecerão aqui quando forem publicadas
+              {{ 'client.dashboard.noReadingsDescription' | translate }}
             </p>
           </div>
         } @else {
@@ -207,15 +207,13 @@
       <div class="w-20 h-20 bg-gradient-mystical rounded-full flex items-center justify-center mx-auto mb-6">
         <i class="pi pi-star text-3xl text-white"></i>
       </div>
-      <h3 class="heading-2 text-primary mb-4">Dicas para sua Jornada</h3>
+      <h3 class="heading-2 text-primary mb-4">{{ 'client.dashboard.tipsTitle' | translate }}</h3>
       <p class="text-secondary max-w-2xl mx-auto mb-6">
-        Para uma experiência mais profunda com suas leituras, recomendo que você as leia 
-        em um momento tranquilo, em um ambiente calmo. Reflita sobre cada carta e mensagem, 
-        deixando que a intuição guie sua interpretação pessoal.
+        {{ 'client.dashboard.tipsDescription' | translate }}
       </p>
       <a routerLink="/faq" class="btn-outline inline-block">
         <i class="pi pi-question-circle mr-2"></i>
-        Perguntas Frequentes
+        {{ 'client.dashboard.faq' | translate }}
       </a>
     </div>
   </div>

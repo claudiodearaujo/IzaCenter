@@ -3,6 +3,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -38,6 +39,7 @@ interface OrdersResponse {
   imports: [
     CommonModule,
     RouterLink,
+    TranslateModule,
     ButtonModule,
     SkeletonModule,
     PaginatorModule,
@@ -48,6 +50,7 @@ interface OrdersResponse {
 })
 export class OrderListComponent implements OnInit {
   private api = inject(ApiService);
+  private translate = inject(TranslateService);
 
   orders = signal<Order[]>([]);
   loading = signal(true);
@@ -89,12 +92,12 @@ export class OrderListComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
-      PENDING: 'Pendente',
-      PAID: 'Pago',
-      PROCESSING: 'Processando',
-      COMPLETED: 'Concluído',
-      CANCELLED: 'Cancelado',
-      REFUNDED: 'Reembolsado',
+      PENDING: this.translate.instant('client.orders.statusPending'),
+      PAID: this.translate.instant('client.orders.statusPaid'),
+      PROCESSING: this.translate.instant('client.orders.statusProcessing'),
+      COMPLETED: this.translate.instant('client.orders.statusCompleted'),
+      CANCELLED: this.translate.instant('client.orders.statusCancelled'),
+      REFUNDED: this.translate.instant('client.orders.statusRefunded'),
     };
     return labels[status] || status;
   }

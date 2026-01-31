@@ -3,6 +3,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -52,6 +53,7 @@ interface Reading {
   imports: [
     CommonModule,
     RouterLink,
+    TranslateModule,
     ButtonModule,
     SkeletonModule,
     DividerModule,
@@ -63,6 +65,7 @@ export class ReadingDetailComponent implements OnInit {
   private api = inject(ApiService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private translate = inject(TranslateService);
 
   reading = signal<Reading | null>(null);
   loading = signal(true);
