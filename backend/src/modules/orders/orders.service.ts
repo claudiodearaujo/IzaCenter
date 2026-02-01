@@ -44,7 +44,7 @@ export class OrdersService {
     const orderItems = data.items.map((item) => {
       const product = products.find((p) => p.id === item.productId)!;
       const quantity = item.quantity || 1;
-      const unitPrice = new Prisma.Decimal(product.price);
+      const unitPrice = product.price instanceof Prisma.Decimal ? product.price : new Prisma.Decimal(product.price as any);
       const totalPrice = unitPrice.mul(quantity);
       subtotal = subtotal.add(totalPrice);
 
@@ -78,7 +78,7 @@ export class OrdersService {
           if (coupon.discountType === 'PERCENTAGE') {
             discount = subtotal.mul(coupon.discountValue).div(100);
           } else {
-            discount = new Prisma.Decimal(coupon.discountValue);
+            discount = coupon.discountValue instanceof Prisma.Decimal ? coupon.discountValue : new Prisma.Decimal(coupon.discountValue as any);
           }
 
           // Update coupon usage
