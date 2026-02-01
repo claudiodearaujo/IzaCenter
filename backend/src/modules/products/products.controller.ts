@@ -59,7 +59,7 @@ export class ProductsController {
   async getBySlug(req: Request, res: Response, next: NextFunction) {
     try {
       const { slug } = req.params;
-      const product = await productsService.getBySlug(slug);
+      const product = await productsService.getBySlug(slug as string);
 
       res.json({
         success: true,
@@ -136,7 +136,7 @@ export class ProductsController {
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const product = await productsService.getById(id);
+      const product = await productsService.getById(id as string);
 
       res.json({
         success: true,
@@ -155,7 +155,7 @@ export class ProductsController {
     try {
       const { id } = req.params;
       const data = req.body as UpdateProductDto;
-      const product = await productsService.update(id, data);
+      const product = await productsService.update(id as string, data);
 
       res.json({
         success: true,
@@ -183,7 +183,7 @@ export class ProductsController {
         return;
       }
 
-      const product = await productsService.updateCoverImage(id, req.file);
+      const product = await productsService.updateCoverImage(id as string, req.file);
 
       res.json({
         success: true,
@@ -202,7 +202,7 @@ export class ProductsController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await productsService.delete(id);
+      const result = await productsService.delete(id as string);
 
       res.json({
         success: true,
@@ -260,7 +260,7 @@ export class ProductsController {
   async getCategoryById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const category = await productsService.getCategoryById(id);
+      const category = await productsService.getCategoryById(id as string);
 
       res.json({
         success: true,
@@ -279,7 +279,7 @@ export class ProductsController {
     try {
       const { id } = req.params;
       const data = req.body as UpdateCategoryDto;
-      const category = await productsService.updateCategory(id, data);
+      const category = await productsService.updateCategory(id as string, data);
 
       res.json({
         success: true,
@@ -298,7 +298,7 @@ export class ProductsController {
   async deleteCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await productsService.deleteCategory(id);
+      const result = await productsService.deleteCategory(id as string);
 
       res.json({
         success: true,

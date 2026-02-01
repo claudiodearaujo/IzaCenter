@@ -135,7 +135,7 @@ export class UsersController {
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const user = await usersService.getById(id);
+      const user = await usersService.getById(id as string);
 
       res.json({
         success: true,
@@ -154,7 +154,7 @@ export class UsersController {
     try {
       const { id } = req.params;
       const data = req.body as AdminUpdateUserDto;
-      const user = await usersService.adminUpdate(id, data);
+      const user = await usersService.adminUpdate(id as string, data);
 
       res.json({
         success: true,
@@ -173,7 +173,7 @@ export class UsersController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await usersService.delete(id);
+      const result = await usersService.delete(id as string);
 
       res.json({
         success: true,
@@ -191,7 +191,7 @@ export class UsersController {
   async getUserStatistics(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const stats = await usersService.getStatistics(id);
+      const stats = await usersService.getStatistics(id as string);
 
       res.json({
         success: true,

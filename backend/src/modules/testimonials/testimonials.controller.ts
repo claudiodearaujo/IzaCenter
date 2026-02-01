@@ -68,7 +68,7 @@ export class TestimonialsController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await testimonialsService.update(id, req.body);
+      const result = await testimonialsService.update(id as string, req.body);
       res.json(result);
     } catch (error) {
       next(error);
@@ -78,7 +78,7 @@ export class TestimonialsController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await testimonialsService.delete(id);
+      const result = await testimonialsService.delete(id as string);
       res.json(result);
     } catch (error) {
       next(error);

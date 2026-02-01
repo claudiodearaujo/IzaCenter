@@ -53,7 +53,7 @@ export class OrdersController {
     try {
       const clientId = req.user!.id;
       const { id } = req.params;
-      const order = await ordersService.getById(id, clientId);
+      const order = await ordersService.getById(id as string, clientId);
 
       res.json({
         success: true,
@@ -72,7 +72,7 @@ export class OrdersController {
     try {
       const clientId = req.user!.id;
       const { id } = req.params;
-      const result = await ordersService.cancel(id, clientId);
+      const result = await ordersService.cancel(id as string, clientId);
 
       res.json({
         success: true,
@@ -92,7 +92,7 @@ export class OrdersController {
       const clientId = req.user!.id;
       const { itemId } = req.params;
       const data = req.body as AddQuestionsDto;
-      const result = await ordersService.addQuestions(itemId, clientId, data);
+      const result = await ordersService.addQuestions(itemId as string, clientId, data);
 
       res.json({
         success: true,
@@ -133,7 +133,7 @@ export class OrdersController {
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const order = await ordersService.getById(id);
+      const order = await ordersService.getById(id as string);
 
       res.json({
         success: true,
@@ -152,7 +152,7 @@ export class OrdersController {
     try {
       const { id } = req.params;
       const data = req.body as UpdateOrderDto;
-      const order = await ordersService.update(id, data);
+      const order = await ordersService.update(id as string, data);
 
       res.json({
         success: true,
@@ -171,7 +171,7 @@ export class OrdersController {
   async cancel(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await ordersService.cancel(id);
+      const result = await ordersService.cancel(id as string);
 
       res.json({
         success: true,

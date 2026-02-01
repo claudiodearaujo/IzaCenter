@@ -16,7 +16,7 @@ export class CardsController {
   async findById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await cardsService.findById(id);
+      const result = await cardsService.findById(id as string);
       res.json(result);
     } catch (error) {
       next(error);
@@ -26,7 +26,7 @@ export class CardsController {
   async findByNumber(req: Request, res: Response, next: NextFunction) {
     try {
       const { number } = req.params;
-      const result = await cardsService.findByNumber(parseInt(number));
+      const result = await cardsService.findByNumber(parseInt(number as string));
       res.json(result);
     } catch (error) {
       next(error);
@@ -53,7 +53,7 @@ export class CardsController {
         ...req.body,
         imageUrl: req.body.imageUrl || (req.file as any)?.location,
       };
-      const result = await cardsService.update(id, data);
+      const result = await cardsService.update(id as string, data);
       res.json(result);
     } catch (error) {
       next(error);
@@ -63,7 +63,7 @@ export class CardsController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await cardsService.delete(id);
+      const result = await cardsService.delete(id as string);
       res.json(result);
     } catch (error) {
       next(error);

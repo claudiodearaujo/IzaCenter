@@ -25,7 +25,7 @@ export class ReadingsController {
   async findById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await readingsService.findById(id);
+      const result = await readingsService.findById(id as string);
       res.json(result);
     } catch (error) {
       next(error);
@@ -35,7 +35,7 @@ export class ReadingsController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await readingsService.update(id, req.body);
+      const result = await readingsService.update(id as string, req.body);
       res.json(result);
     } catch (error) {
       next(error);
@@ -46,7 +46,7 @@ export class ReadingsController {
     try {
       const { id } = req.params;
       const { status } = req.body;
-      const result = await readingsService.updateStatus(id, status);
+      const result = await readingsService.updateStatus(id as string, status);
       res.json(result);
     } catch (error) {
       next(error);
@@ -64,7 +64,7 @@ export class ReadingsController {
         return res.status(400).json({ message: 'Audio file is required' });
       }
 
-      const result = await readingsService.updateAudio(id, audioUrl);
+      const result = await readingsService.updateAudio(id as string, audioUrl);
       res.json(result);
     } catch (error) {
       next(error);
@@ -74,7 +74,7 @@ export class ReadingsController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await readingsService.delete(id);
+      const result = await readingsService.delete(id as string);
       res.json(result);
     } catch (error) {
       next(error);
@@ -105,7 +105,7 @@ export class ReadingsController {
     try {
       const { id } = req.params;
       const userId = req.user!.id;
-      const result = await readingsService.findById(id, userId);
+      const result = await readingsService.findById(id as string, userId);
       res.json(result);
     } catch (error) {
       next(error);

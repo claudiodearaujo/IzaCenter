@@ -26,7 +26,7 @@ export class AppointmentsController {
   async findById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await appointmentsService.findById(id);
+      const result = await appointmentsService.findById(id as string);
       res.json(result);
     } catch (error) {
       next(error);
@@ -36,7 +36,7 @@ export class AppointmentsController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await appointmentsService.update(id, req.body);
+      const result = await appointmentsService.update(id as string, req.body);
       res.json(result);
     } catch (error) {
       next(error);
@@ -47,7 +47,7 @@ export class AppointmentsController {
     try {
       const { id } = req.params;
       const { status } = req.body;
-      const result = await appointmentsService.update(id, { status });
+      const result = await appointmentsService.update(id as string, { status });
       res.json(result);
     } catch (error) {
       next(error);
@@ -59,7 +59,7 @@ export class AppointmentsController {
       const { id } = req.params;
       const { date, startTime, endTime } = req.body;
       const result = await appointmentsService.reschedule(
-        id,
+        id as string,
         new Date(date),
         startTime,
         endTime
@@ -85,7 +85,7 @@ export class AppointmentsController {
     try {
       const { id } = req.params;
       const { reason } = req.body;
-      const result = await appointmentsService.cancel(id, reason);
+      const result = await appointmentsService.cancel(id as string, reason);
       res.json(result);
     } catch (error) {
       next(error);

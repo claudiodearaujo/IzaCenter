@@ -25,7 +25,7 @@ export class CategoriesController {
   async findById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await categoriesService.findById(id);
+      const result = await categoriesService.findById(id as string);
       res.json(result);
     } catch (error) {
       next(error);
@@ -35,7 +35,7 @@ export class CategoriesController {
   async findBySlug(req: Request, res: Response, next: NextFunction) {
     try {
       const { slug } = req.params;
-      const result = await categoriesService.findBySlug(slug);
+      const result = await categoriesService.findBySlug(slug as string);
       res.json(result);
     } catch (error) {
       next(error);
@@ -54,7 +54,7 @@ export class CategoriesController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await categoriesService.update(id, req.body);
+      const result = await categoriesService.update(id as string, req.body);
       res.json(result);
     } catch (error) {
       next(error);
@@ -65,7 +65,7 @@ export class CategoriesController {
     try {
       const { id } = req.params;
       const { order } = req.body;
-      const result = await categoriesService.reorder(id, order);
+      const result = await categoriesService.reorder(id as string, order);
       res.json(result);
     } catch (error) {
       next(error);
@@ -75,7 +75,7 @@ export class CategoriesController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await categoriesService.delete(id);
+      const result = await categoriesService.delete(id as string);
       res.json(result);
     } catch (error) {
       next(error);
