@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: Izabela-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist/frontend/browser
+
+    # CRÍTICO: Regras de roteamento para SPA Angular
+    # Redireciona todas as requisições para index.html
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
