@@ -1,0 +1,11 @@
+# robots.txt para Izabela Tarot
+# https://www.izabelatarot.com.br
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /cliente/
+Disallow: /auth/
+
+# Sitemap
+Sitemap: https://www.izabelatarot.com.br/sitemap.xml

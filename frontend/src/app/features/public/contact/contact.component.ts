@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -6,6 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { NotificationService } from '../../../core/services/notification.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SeoService } from '../../../core/services/seo.service';
 
 @Component({
   selector: 'app-contact',
@@ -14,9 +15,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.css'
 })
-export class ContactComponent {
+export class ContactComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private translate = inject(TranslateService);
+  private seoService = inject(SeoService);
 
   isLoading = signal(false);
 
@@ -26,6 +28,21 @@ export class ContactComponent {
     subject: '',
     message: ''
   };
+
+  ngOnInit(): void {
+    this.seoService.setMeta({
+      title: 'Contato',
+      description: 'Entre em contato com Izabela Santos para agendar sua leitura de tarot ou tirar dúvidas sobre os serviços.',
+      url: 'https://www.izabelatarot.com.br/contato'
+    });
+
+    this.seoService.setSchema(
+      this.seoService.getBreadcrumbSchema([
+        { name: 'Início', url: '/' },
+        { name: 'Contato', url: '/contato' }
+      ])
+    );
+  }
 
   get contactInfo() {
     return [

@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SeoService } from '../../../core/services/seo.service';
 
 @Component({
   selector: 'app-services',
@@ -11,8 +12,28 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
-export class ServicesComponent {
+export class ServicesComponent implements OnInit {
   private translate = inject(TranslateService);
+  private seoService = inject(SeoService);
+
+  ngOnInit(): void {
+    this.seoService.setMeta({
+      title: 'Serviços de Tarot',
+      description: 'Conheça os serviços de leitura de tarot e baralho cigano oferecidos por Izabela Santos: leitura por perguntas, sessões ao vivo, leitura mensal e especial.',
+      url: 'https://www.izabelatarot.com.br/servicos'
+    });
+
+    this.seoService.setSchema([
+      this.seoService.getServiceSchema(this.services.map(s => ({
+        name: s.title,
+        description: s.description
+      }))),
+      this.seoService.getBreadcrumbSchema([
+        { name: 'Início', url: '/' },
+        { name: 'Serviços', url: '/servicos' }
+      ])
+    ]);
+  }
 
   get services() {
     return [

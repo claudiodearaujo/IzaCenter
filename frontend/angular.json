@@ -31,7 +31,10 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
-              }  , {
+              },
+              "src/robots.txt",
+              "src/sitemap.xml",
+              {
                 "glob": "_redirects",
                 "input": "./",
                 "output": "/"
