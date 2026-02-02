@@ -2,7 +2,6 @@ import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListen
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
-import { LocationStrategy,  PathLocationStrategy  } from '@angular/common';
 import { providePrimeNG } from 'primeng/config';
 import { MessageService } from 'primeng/api';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -25,7 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([authInterceptor])),
-    { provide: LocationStrategy, useClass: PathLocationStrategy },
+    // Angular usa PathLocationStrategy por padrão - URLs limpas sem #
     importProvidersFrom(
       TranslateModule.forRoot({
         defaultLanguage: 'pt-BR',
