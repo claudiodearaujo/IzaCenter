@@ -51,7 +51,7 @@
 
     <!-- Questions -->
     @if (reading()?.orderItem?.clientQuestions?.length) {
-    <div class="glass-card p-6 mb-6 bg-gradient-to-r from-primary-400/10 to-primary-600/10">
+    <div class="glass-card p-6 mb-6 bg-linear-to-r from-primary-400/10 to-primary-600/10">
       <h3 class="heading-3 text-primary mb-4 flex items-center gap-2">
         <i class="pi pi-question-circle"></i>
         {{ 'admin.readings.clientQuestions' | translate }}
@@ -118,13 +118,13 @@
             <div class="p-4 bg-dark/30 rounded-lg">
               <div class="flex gap-4">
                 <!-- Card Image -->
-                <div class="flex-shrink-0 w-24">
+                <div class="shrink-0 w-24">
                   @if (card.card?.imageUrl) {
                   <img [src]="card.card?.imageUrl" [alt]="card.card?.name" class="w-full rounded-lg cursor-pointer"
                     (click)="openCardDialog($index)" />
                   } @else {
                   <div
-                    class="w-full aspect-[2/3] bg-gradient-mystical rounded-lg flex items-center justify-center cursor-pointer"
+                    class="w-full aspect-2/3 bg-gradient-mystical rounded-lg flex items-center justify-center cursor-pointer"
                     (click)="openCardDialog($index)">
                     <i class="pi pi-star text-white/50 text-2xl"></i>
                   </div>
@@ -248,7 +248,7 @@
       @if (card.imageUrl) {
       <img [src]="card.imageUrl" [alt]="card.name" class="w-full rounded-lg mb-2" />
       } @else {
-      <div class="w-full aspect-[2/3] bg-gradient-mystical rounded-lg flex items-center justify-center mb-2">
+      <div class="w-full aspect-2/3 bg-gradient-mystical rounded-lg flex items-center justify-center mb-2">
         <i class="pi pi-star text-white/50 text-xl"></i>
       </div>
       }

@@ -135,9 +135,9 @@ export class DashboardComponent implements OnInit {
     const classes: Record<string, string> = {
       PENDING: 'bg-yellow-500/20 text-yellow-400',
       WAITING: 'bg-yellow-500/20 text-yellow-400',
-      PAID: 'bg-blue-500/20 text-blue-400',
-      PROCESSING: 'bg-blue-500/20 text-blue-400',
-      IN_PROGRESS: 'bg-blue-500/20 text-blue-400',
+      PAID: 'bg-primary-500/20 text-primary-400',
+      PROCESSING: 'bg-primary-500/20 text-primary-400',
+      IN_PROGRESS: 'bg-primary-500/20 text-primary-400',
       COMPLETED: 'bg-green-500/20 text-green-400',
       PUBLISHED: 'bg-green-500/20 text-green-400',
       CANCELLED: 'bg-red-500/20 text-red-400',

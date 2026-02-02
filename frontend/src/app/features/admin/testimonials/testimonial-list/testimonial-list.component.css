@@ -11,25 +11,25 @@
 
 :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
   background: rgba(0, 0, 0, 0.3);
-  color: var(--secondary);
+  color: var(--primary-700);
   border: none;
-  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+  border-bottom: 1px solid rgba(217, 119, 6, 0.1);
   padding: 1rem;
 }
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr {
   background: transparent;
-  color: var(--primary);
+  color: var(--primary-900);
   transition: background 0.2s;
 }
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
-  background: rgba(201, 167, 235, 0.05);
+  background: rgba(217, 119, 6, 0.05);
 }
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
   border: none;
-  border-bottom: 1px solid rgba(201, 167, 235, 0.05);
+  border-bottom: 1px solid rgba(217, 119, 6, 0.05);
   padding: 1rem;
 }
 
@@ -50,39 +50,39 @@
 }
 
 :host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
-  color: var(--primary);
+  color: var(--primary-700);
 }
 
 :host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-  background: var(--primary);
-  color: var(--dark);
+  background: var(--primary-600);
+  color: white;
 }
 
 /* Input styling */
 :host ::ng-deep .p-inputtext {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(201, 167, 235, 0.2);
-  color: var(--primary);
+  border: 1px solid rgba(217, 119, 6, 0.2);
+  color: var(--primary-900);
 }
 
 :host ::ng-deep .p-inputtext:enabled:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(201, 167, 235, 0.2);
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2);
 }
 
 /* Input icon */
 :host ::ng-deep .p-input-icon-left > i {
-  color: var(--secondary);
+  color: var(--primary-600);
 }
 
 /* Dropdown styling */
 :host ::ng-deep .p-dropdown {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(201, 167, 235, 0.2);
+  border: 1px solid rgba(217, 119, 6, 0.2);
 }
 
 :host ::ng-deep .p-dropdown .p-dropdown-label {
-  color: var(--primary);
+  color: var(--primary-900);
 }
 
 /* Stats cards colors */
@@ -95,21 +95,21 @@
 }
 
 .bg-accent\/20 {
-  background: rgba(217, 176, 255, 0.2);
+  background: rgba(245, 158, 11, 0.2);
 }
 
 .bg-purple-500\/20 {
-  background: rgba(147, 51, 234, 0.2);
+  background: rgba(217, 119, 6, 0.2);
 }
 
 /* Avatar placeholder */
 .bg-gradient-mystical {
-  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+  background: var(--gradient-gold);
 }
 
 /* Rating styling */
 :host ::ng-deep .p-rating .p-rating-item .p-rating-icon {
-  color: rgba(201, 167, 235, 0.3);
+  color: rgba(217, 119, 6, 0.3);
 }
 
 :host ::ng-deep .p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
@@ -155,12 +155,12 @@
 :host ::ng-deep .p-button-text {
   background: transparent;
   border: none;
-  color: var(--secondary);
+  color: var(--primary-700);
 }
 
 :host ::ng-deep .p-button-text:enabled:hover {
-  background: rgba(201, 167, 235, 0.1);
-  color: var(--primary);
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--primary-600);
 }
 
 :host ::ng-deep .p-button-danger.p-button-text {
@@ -174,15 +174,15 @@
 /* Dialog styling */
 :host ::ng-deep .p-dialog {
   background: linear-gradient(145deg, 
-    rgba(26, 11, 46, 0.98) 0%, 
-    rgba(13, 5, 24, 0.98) 100%);
-  border: 1px solid rgba(201, 167, 235, 0.1);
+    rgba(26, 24, 20, 0.98) 0%, 
+    rgba(26, 24, 20, 0.98) 100%);
+  border: 1px solid rgba(217, 119, 6, 0.1);
 }
 
 :host ::ng-deep .p-dialog .p-dialog-header {
   background: transparent;
-  color: var(--primary);
-  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+  color: var(--primary-600);
+  border-bottom: 1px solid rgba(217, 119, 6, 0.1);
 }
 
 :host ::ng-deep .p-dialog .p-dialog-content {
@@ -198,19 +198,19 @@
 /* Confirm dialog */
 :host ::ng-deep .custom-confirm-dialog {
   background: linear-gradient(145deg, 
-    rgba(26, 11, 46, 0.98) 0%, 
-    rgba(13, 5, 24, 0.98) 100%);
-  border: 1px solid rgba(201, 167, 235, 0.1);
+    rgba(26, 24, 20, 0.98) 0%, 
+    rgba(26, 24, 20, 0.98) 100%);
+  border: 1px solid rgba(217, 119, 6, 0.1);
 }
 
 :host ::ng-deep .custom-confirm-dialog .p-dialog-header {
   background: transparent;
-  color: var(--primary);
+  color: var(--primary-600);
 }
 
 :host ::ng-deep .custom-confirm-dialog .p-dialog-content {
   background: transparent;
-  color: var(--secondary);
+  color: var(--primary-800);
 }
 
 :host ::ng-deep .custom-confirm-dialog .p-dialog-footer {

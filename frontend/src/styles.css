@@ -111,6 +111,10 @@
     --shadow-gold-lg: 0 10px 15px rgba(180, 83, 9, 0.2);
     --glow-gold: 0 0 20px rgba(245, 158, 11, 0.4);
 
+    --primary: var(--primary-600);
+    --secondary: var(--primary-800);
+    --accent: var(--primary-500);
+
     /* Semânticas */
     --success: #10b981;
     --warning: #f59e0b;
