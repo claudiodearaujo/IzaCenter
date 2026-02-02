@@ -15,7 +15,7 @@
 
 /* Gradient background */
 .bg-gradient-mystical {
-  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+  background: var(--gradient-gold);
 }
 
 /* Dark background */
@@ -25,7 +25,7 @@
 
 /* Border colors */
 .border-primary\/10 {
-  border-color: rgba(201, 167, 235, 0.1);
+  border-color: rgba(217, 119, 6, 0.1);
 }
 
 /* Card hover */
@@ -40,5 +40,5 @@ img {
 
 /* Skeleton styling */
 :host ::ng-deep .p-skeleton {
-  background-color: rgba(201, 167, 235, 0.1);
+  background-color: rgba(217, 119, 6, 0.1);
 }

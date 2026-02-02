@@ -6,7 +6,7 @@
 
 /* Gradient backgrounds */
 .bg-gradient-mystical {
-  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+  background: var(--gradient-gold);
 }
 
 /* Dark background */
@@ -37,13 +37,13 @@
 :host ::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
   background: transparent;
   border: none;
-  color: var(--secondary);
+  color: var(--primary-800);
   padding: 1rem 1.5rem;
 }
 
 :host ::ng-deep .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-  color: var(--primary);
-  border-bottom: 2px solid var(--primary);
+  color: var(--primary-700);
+  border-bottom: 2px solid var(--primary-500);
 }
 
 :host ::ng-deep .p-tabview .p-tabview-panels {
@@ -54,26 +54,26 @@
 /* Dialog styling */
 :host ::ng-deep .p-dialog {
   background: linear-gradient(145deg, 
-    rgba(26, 11, 46, 0.98) 0%, 
-    rgba(13, 5, 24, 0.98) 100%);
-  border: 1px solid rgba(201, 167, 235, 0.1);
+    rgba(26, 24, 20, 0.98) 0%, 
+    rgba(26, 24, 20, 0.98) 100%);
+  border: 1px solid rgba(217, 119, 6, 0.1);
   backdrop-filter: blur(10px);
 }
 
 :host ::ng-deep .p-dialog .p-dialog-header {
   background: transparent;
-  color: var(--primary);
-  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
+  color: var(--primary-600);
+  border-bottom: 1px solid rgba(217, 119, 6, 0.1);
 }
 
 :host ::ng-deep .p-dialog .p-dialog-content {
   background: transparent;
-  color: var(--secondary);
+  color: var(--primary-800);
 }
 
 :host ::ng-deep .p-dialog .p-dialog-footer {
   background: transparent;
-  border-top: 1px solid rgba(201, 167, 235, 0.1);
+  border-top: 1px solid rgba(217, 119, 6, 0.1);
 }
 
 /* Card hover */
@@ -83,10 +83,10 @@
 
 /* Skeleton styling */
 :host ::ng-deep .p-skeleton {
-  background-color: rgba(201, 167, 235, 0.1);
+  background-color: rgba(217, 119, 6, 0.1);
 }
 
 /* Info section */
 .bg-primary\/20 {
-  background: rgba(201, 167, 235, 0.2);
+  background: rgba(217, 119, 6, 0.2);
 }

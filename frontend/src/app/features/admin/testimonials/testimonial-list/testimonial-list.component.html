@@ -49,8 +49,8 @@
         </div>
       </div>
       <div class="glass-card p-4 flex items-center gap-4">
-        <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
-          <i class="pi pi-star text-xl text-purple-400"></i>
+        <div class="w-12 h-12 bg-primary-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-star text-xl text-primary-400"></i>
         </div>
         <div>
           <p class="text-2xl font-bold text-primary">
@@ -67,25 +67,13 @@
         <div class="flex-1">
           <span class="p-input-icon-left w-full">
             <i class="pi pi-search"></i>
-            <input
-              pInputText
-              [(ngModel)]="searchTerm"
-              [placeholder]="'admin.testimonials.searchClient' | translate"
-              class="w-full"
-              (keyup.enter)="onSearch()"
-            />
+            <input pInputText [(ngModel)]="searchTerm" [placeholder]="'admin.testimonials.searchClient' | translate"
+              class="w-full" (keyup.enter)="onSearch()" />
           </span>
         </div>
         <div class="w-full md:w-48">
-          <p-select
-            [options]="statusOptions"
-            [(ngModel)]="selectedStatus"
-            optionLabel="label"
-            optionValue="value"
-            [placeholder]="'common.status' | translate"
-            (onChange)="onSearch()"
-            styleClass="w-full"
-          />
+          <p-select [options]="statusOptions" [(ngModel)]="selectedStatus" optionLabel="label" optionValue="value"
+            [placeholder]="'common.status' | translate" (onChange)="onSearch()" styleClass="w-full" />
         </div>
         <button pButton class="btn-primary" (click)="onSearch()">
           <i class="pi pi-search mr-2"></i>
@@ -96,17 +84,9 @@
 
     <!-- Table -->
     <div class="glass-card overflow-hidden">
-      <p-table
-        [value]="testimonials()"
-        [loading]="loading()"
-        [paginator]="true"
-        [rows]="10"
-        [totalRecords]="totalRecords()"
-        [lazy]="true"
-        (onLazyLoad)="loadTestimonials($event)"
-        [rowHover]="true"
-        styleClass="p-datatable-striped"
-      >
+      <p-table [value]="testimonials()" [loading]="loading()" [paginator]="true" [rows]="10"
+        [totalRecords]="totalRecords()" [lazy]="true" (onLazyLoad)="loadTestimonials($event)" [rowHover]="true"
+        styleClass="p-datatable-striped">
         <ng-template pTemplate="header">
           <tr>
             <th>{{ 'admin.testimonials.client' | translate }}</th>
@@ -123,17 +103,15 @@
             <td>
               <div class="flex items-center gap-3">
                 @if (testimonial.clientAvatarUrl || testimonial.client?.avatarUrl) {
-                  <img
-                    [src]="testimonial.clientAvatarUrl || testimonial.client?.avatarUrl"
-                    [alt]="testimonial.clientName || testimonial.client?.fullName"
-                    class="w-10 h-10 rounded-full object-cover"
-                  />
+                <img [src]="testimonial.clientAvatarUrl || testimonial.client?.avatarUrl"
+                  [alt]="testimonial.clientName || testimonial.client?.fullName"
+                  class="w-10 h-10 rounded-full object-cover" />
                 } @else {
-                  <div class="w-10 h-10 rounded-full bg-gradient-mystical flex items-center justify-center">
-                    <span class="text-white font-bold text-sm">
-                      {{ (testimonial.clientName || testimonial.client?.fullName)?.charAt(0).toUpperCase() }}
-                    </span>
-                  </div>
+                <div class="w-10 h-10 rounded-full bg-gradient-mystical flex items-center justify-center">
+                  <span class="text-white font-bold text-sm">
+                    {{ (testimonial.clientName || testimonial.client?.fullName)?.charAt(0).toUpperCase() }}
+                  </span>
+                </div>
                 }
                 <div>
                   <p class="text-primary font-medium">{{ testimonial.clientName || testimonial.client?.fullName }}</p>
@@ -141,74 +119,49 @@
               </div>
             </td>
             <td>
-              <p
-                class="text-secondary cursor-pointer hover:text-primary transition-colors"
-                (click)="viewTestimonial(testimonial)"
-              >
+              <p class="text-secondary cursor-pointer hover:text-primary transition-colors"
+                (click)="viewTestimonial(testimonial)">
                 "{{ truncateContent(testimonial.content) }}"
               </p>
             </td>
             <td>
-              <p-rating
-                [(ngModel)]="testimonial.rating"
-                [readonly]="true"
-              />
+              <p-rating [(ngModel)]="testimonial.rating" [readonly]="true" />
             </td>
             <td>
               <p-tag
                 [value]="testimonial.isApproved ? ('admin.testimonials.approved' | translate) : ('admin.testimonials.pending' | translate)"
-                [severity]="testimonial.isApproved ? 'success' : 'warn'"
-              />
+                [severity]="testimonial.isApproved ? 'success' : 'warn'" />
             </td>
             <td class="text-center">
               @if (testimonial.isApproved) {
-                <button
-                  pButton
-                  [class]="testimonial.isFeatured ? 'p-button-warning' : 'p-button-text'"
-                  (click)="toggleHighlight(testimonial)"
-                  [pTooltip]="testimonial.isFeatured ? ('admin.testimonials.removeFeatured' | translate) : ('admin.testimonials.addFeatured' | translate)"
-                >
-                  <i class="pi pi-star{{ testimonial.isFeatured ? '-fill' : '' }}"></i>
-                </button>
+              <button pButton [class]="testimonial.isFeatured ? 'p-button-warning' : 'p-button-text'"
+                (click)="toggleHighlight(testimonial)"
+                [pTooltip]="testimonial.isFeatured ? ('admin.testimonials.removeFeatured' | translate) : ('admin.testimonials.addFeatured' | translate)">
+                <i class="pi pi-star{{ testimonial.isFeatured ? '-fill' : '' }}"></i>
+              </button>
               } @else {
-                <span class="text-secondary/30">-</span>
+              <span class="text-secondary/30">-</span>
               }
             </td>
             <td class="text-secondary text-sm">{{ formatDate(testimonial.createdAt) }}</td>
             <td>
               <div class="flex gap-1">
-                <button
-                  pButton
-                  class="p-button-text p-button-sm"
-                  [pTooltip]="'admin.testimonials.view' | translate"
-                  (click)="viewTestimonial(testimonial)"
-                >
+                <button pButton class="p-button-text p-button-sm" [pTooltip]="'admin.testimonials.view' | translate"
+                  (click)="viewTestimonial(testimonial)">
                   <i class="pi pi-eye"></i>
                 </button>
                 @if (!testimonial.isApproved) {
-                  <button
-                    pButton
-                    class="p-button-success p-button-sm"
-                    [pTooltip]="'admin.testimonials.approve' | translate"
-                    (click)="approveTestimonial(testimonial)"
-                  >
-                    <i class="pi pi-check"></i>
-                  </button>
-                  <button
-                    pButton
-                    class="p-button-danger p-button-sm"
-                    [pTooltip]="'admin.testimonials.reject' | translate"
-                    (click)="rejectTestimonial(testimonial)"
-                  >
-                    <i class="pi pi-times"></i>
-                  </button>
+                <button pButton class="p-button-success p-button-sm"
+                  [pTooltip]="'admin.testimonials.approve' | translate" (click)="approveTestimonial(testimonial)">
+                  <i class="pi pi-check"></i>
+                </button>
+                <button pButton class="p-button-danger p-button-sm" [pTooltip]="'admin.testimonials.reject' | translate"
+                  (click)="rejectTestimonial(testimonial)">
+                  <i class="pi pi-times"></i>
+                </button>
                 }
-                <button
-                  pButton
-                  class="p-button-danger p-button-text p-button-sm"
-                  [pTooltip]="'common.delete' | translate"
-                  (click)="confirmDelete(testimonial)"
-                >
+                <button pButton class="p-button-danger p-button-text p-button-sm"
+                  [pTooltip]="'common.delete' | translate" (click)="confirmDelete(testimonial)">
                   <i class="pi pi-trash"></i>
                 </button>
               </div>
@@ -229,91 +182,70 @@
 </section>
 
 <!-- View Dialog -->
-<p-dialog
-  [(visible)]="viewDialogVisible"
-  [modal]="true"
-  [closable]="true"
-  [style]="{width: '90vw', maxWidth: '600px'}"
-  [header]="'admin.testimonials.testimonial' | translate"
->
+<p-dialog [(visible)]="viewDialogVisible" [modal]="true" [closable]="true" [style]="{width: '90vw', maxWidth: '600px'}"
+  [header]="'admin.testimonials.testimonial' | translate">
   @if (selectedTestimonial()) {
-    <div class="p-4 space-y-4">
-      <!-- User Info -->
-      <div class="flex items-center gap-4">
-        @if (selectedTestimonial()?.clientAvatarUrl || selectedTestimonial()?.client?.avatarUrl) {
-          <img
-            [src]="selectedTestimonial()?.clientAvatarUrl || selectedTestimonial()?.client?.avatarUrl"
-            [alt]="selectedTestimonial()?.clientName || selectedTestimonial()?.client?.fullName"
-            class="w-16 h-16 rounded-full object-cover"
-          />
-        } @else {
-          <div class="w-16 h-16 rounded-full bg-gradient-mystical flex items-center justify-center">
-            <span class="text-white font-bold text-xl">
-              {{ (selectedTestimonial()?.clientName ?? selectedTestimonial()?.client?.fullName ?? '')?.charAt(0)?.toUpperCase() }}
-            </span>
-          </div>
-        }
-        <div>
-          <p class="text-primary font-medium text-lg">{{ selectedTestimonial()?.clientName || selectedTestimonial()?.client?.fullName }}</p>
-          @if (selectedTestimonial()?.client?.email) {
-            <p class="text-secondary text-sm">{{ selectedTestimonial()?.client?.email }}</p>
-          }
-        </div>
-      </div>
-
-      <!-- Rating -->
-      <div class="flex items-center gap-2">
-        <p-rating
-          [ngModel]="selectedTestimonial()?.rating"
-          [readonly]="true"
-        />
-        <span class="text-secondary">({{ selectedTestimonial()?.rating }}/5)</span>
-      </div>
-
-      <!-- Content -->
-      <div class="p-4 bg-dark/30 rounded-lg">
-        <p class="text-primary italic leading-relaxed">
-          "{{ selectedTestimonial()?.content }}"
-        </p>
-      </div>
-
-      <!-- Meta -->
-      <div class="flex items-center justify-between text-secondary text-sm">
-        <span>
-          {{ 'admin.testimonials.submittedOn' | translate }} {{ selectedTestimonial() ? formatDate(selectedTestimonial()!.createdAt) : '' }}
+  <div class="p-4 space-y-4">
+    <!-- User Info -->
+    <div class="flex items-center gap-4">
+      @if (selectedTestimonial()?.clientAvatarUrl || selectedTestimonial()?.client?.avatarUrl) {
+      <img [src]="selectedTestimonial()?.clientAvatarUrl || selectedTestimonial()?.client?.avatarUrl"
+        [alt]="selectedTestimonial()?.clientName || selectedTestimonial()?.client?.fullName"
+        class="w-16 h-16 rounded-full object-cover" />
+      } @else {
+      <div class="w-16 h-16 rounded-full bg-gradient-mystical flex items-center justify-center">
+        <span class="text-white font-bold text-xl">
+          {{ (selectedTestimonial()?.clientName ?? selectedTestimonial()?.client?.fullName ??
+          '')?.charAt(0)?.toUpperCase() }}
         </span>
-        <p-tag
-          [value]="getStatusLabel(selectedTestimonial()!)"
-          [severity]="getStatusSeverity(selectedTestimonial()!)"
-        />
       </div>
-
-      <!-- Actions -->
-      @if (!selectedTestimonial()?.isApproved) {
-        <div class="flex gap-3 pt-4 border-t border-primary/10">
-          <button
-            pButton
-            class="btn-primary flex-1"
-            (click)="approveTestimonial(selectedTestimonial()!)"
-          >
-            <i class="pi pi-check mr-2"></i>
-            {{ 'admin.testimonials.approve' | translate }}
-          </button>
-          <button
-            pButton
-            class="btn-outline flex-1"
-            (click)="rejectTestimonial(selectedTestimonial()!)"
-          >
-            <i class="pi pi-times mr-2"></i>
-            {{ 'admin.testimonials.reject' | translate }}
-          </button>
-        </div>
       }
+      <div>
+        <p class="text-primary font-medium text-lg">{{ selectedTestimonial()?.clientName ||
+          selectedTestimonial()?.client?.fullName }}</p>
+        @if (selectedTestimonial()?.client?.email) {
+        <p class="text-secondary text-sm">{{ selectedTestimonial()?.client?.email }}</p>
+        }
+      </div>
     </div>
+
+    <!-- Rating -->
+    <div class="flex items-center gap-2">
+      <p-rating [ngModel]="selectedTestimonial()?.rating" [readonly]="true" />
+      <span class="text-secondary">({{ selectedTestimonial()?.rating }}/5)</span>
+    </div>
+
+    <!-- Content -->
+    <div class="p-4 bg-dark/30 rounded-lg">
+      <p class="text-primary italic leading-relaxed">
+        "{{ selectedTestimonial()?.content }}"
+      </p>
+    </div>
+
+    <!-- Meta -->
+    <div class="flex items-center justify-between text-secondary text-sm">
+      <span>
+        {{ 'admin.testimonials.submittedOn' | translate }} {{ selectedTestimonial() ?
+        formatDate(selectedTestimonial()!.createdAt) : '' }}
+      </span>
+      <p-tag [value]="getStatusLabel(selectedTestimonial()!)" [severity]="getStatusSeverity(selectedTestimonial()!)" />
+    </div>
+
+    <!-- Actions -->
+    @if (!selectedTestimonial()?.isApproved) {
+    <div class="flex gap-3 pt-4 border-t border-primary/10">
+      <button pButton class="btn-primary flex-1" (click)="approveTestimonial(selectedTestimonial()!)">
+        <i class="pi pi-check mr-2"></i>
+        {{ 'admin.testimonials.approve' | translate }}
+      </button>
+      <button pButton class="btn-outline flex-1" (click)="rejectTestimonial(selectedTestimonial()!)">
+        <i class="pi pi-times mr-2"></i>
+        {{ 'admin.testimonials.reject' | translate }}
+      </button>
+    </div>
+    }
+  </div>
   }
 </p-dialog>
 
-<p-confirmDialog
-  styleClass="custom-confirm-dialog"
-  [style]="{width: '400px'}"
-/>
+<p-confirmDialog styleClass="custom-confirm-dialog" [style]="{width: '400px'}" />

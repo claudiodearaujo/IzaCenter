@@ -116,8 +116,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   initCharts() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const primaryColor = '#c9a7eb';
+    const primaryColor = '#F59E0B';
 
     this.revenueChartOptions = {
       maintainAspectRatio: false,
@@ -128,12 +127,12 @@ export class AdminDashboardComponent implements OnInit {
       },
       scales: {
         x: {
-          ticks: { color: 'rgba(160, 132, 184, 0.7)' },
-          grid: { color: 'rgba(201, 167, 235, 0.1)' },
+          ticks: { color: 'rgba(120, 53, 15, 0.7)' },
+          grid: { color: 'rgba(217, 119, 6, 0.1)' },
         },
         y: {
-          ticks: { color: 'rgba(160, 132, 184, 0.7)' },
-          grid: { color: 'rgba(201, 167, 235, 0.1)' },
+          ticks: { color: 'rgba(120, 53, 15, 0.7)' },
+          grid: { color: 'rgba(217, 119, 6, 0.1)' },
         },
       },
     };
@@ -145,10 +144,10 @@ export class AdminDashboardComponent implements OnInit {
         {
           data: [45, 25, 20, 10],
           backgroundColor: [
-            'rgba(147, 51, 234, 0.8)',
-            'rgba(201, 167, 235, 0.8)',
-            'rgba(217, 176, 255, 0.8)',
+            'rgba(217, 119, 6, 0.8)',
             'rgba(245, 158, 11, 0.8)',
+            'rgba(252, 211, 77, 0.8)',
+            'rgba(180, 83, 9, 0.8)',
           ],
         },
       ],
@@ -160,7 +159,7 @@ export class AdminDashboardComponent implements OnInit {
         legend: {
           position: 'bottom',
           labels: {
-            color: 'rgba(160, 132, 184, 0.7)',
+            color: 'rgba(120, 53, 15, 0.7)',
           },
         },
       },
@@ -184,8 +183,8 @@ export class AdminDashboardComponent implements OnInit {
       PENDING: 'bg-yellow-500/20 text-yellow-400',
       WAITING: 'bg-yellow-500/20 text-yellow-400',
       PAID: 'bg-blue-500/20 text-blue-400',
-      PROCESSING: 'bg-purple-500/20 text-purple-400',
-      IN_PROGRESS: 'bg-purple-500/20 text-purple-400',
+      PROCESSING: 'bg-primary-500/20 text-primary-400',
+      IN_PROGRESS: 'bg-primary-500/20 text-primary-400',
       COMPLETED: 'bg-green-500/20 text-green-400',
     };
     return classes[status] || 'bg-gray-500/20 text-gray-400';

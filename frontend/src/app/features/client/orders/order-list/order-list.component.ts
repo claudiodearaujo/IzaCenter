@@ -106,7 +106,7 @@ export class OrderListComponent implements OnInit {
     const classes: Record<string, string> = {
       PENDING: 'bg-yellow-500/20 text-yellow-400',
       PAID: 'bg-blue-500/20 text-blue-400',
-      PROCESSING: 'bg-purple-500/20 text-purple-400',
+      PROCESSING: 'bg-primary-500/20 text-primary-400',
       COMPLETED: 'bg-green-500/20 text-green-400',
       CANCELLED: 'bg-red-500/20 text-red-400',
       REFUNDED: 'bg-red-500/20 text-red-400',

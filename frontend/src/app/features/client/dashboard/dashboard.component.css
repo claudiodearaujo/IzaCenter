@@ -15,11 +15,11 @@
 
 /* Gradient backgrounds */
 .bg-gradient-mystical {
-  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+  background: var(--gradient-gold-rich);
 }
 
 .bg-gradient-gold {
-  background: linear-gradient(135deg, #f59e0b 0%, #fcd34d 100%);
+  background: var(--gradient-gold);
 }
 
 /* List items */

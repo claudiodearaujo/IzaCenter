@@ -6,7 +6,7 @@
 
 /* Gradient backgrounds */
 .bg-gradient-mystical {
-  background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+  background: var(--gradient-gold);
 }
 
 /* Dark background */
@@ -16,12 +16,12 @@
 
 /* Card image */
 .card-item img {
-  box-shadow: 0 10px 30px rgba(147, 51, 234, 0.3);
+  box-shadow: var(--shadow-gold-lg);
 }
 
 /* Keywords */
 .bg-primary\/10 {
-  background: rgba(201, 167, 235, 0.1);
+  background: rgba(217, 119, 6, 0.1);
 }
 
 /* Advice gradient */
@@ -30,12 +30,12 @@
 }
 
 .from-accent\/10 {
-  --tw-gradient-from: rgba(217, 176, 255, 0.1);
+  --tw-gradient-from: rgba(252, 211, 77, 0.1);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
 .to-purple-600\/10 {
-  --tw-gradient-to: rgba(147, 51, 234, 0.1);
+  --tw-gradient-to: rgba(217, 119, 6, 0.1);
 }
 
 /* Whitespace */
@@ -91,10 +91,10 @@ audio {
 
 /* Skeleton styling */
 :host ::ng-deep .p-skeleton {
-  background-color: rgba(201, 167, 235, 0.1);
+  background-color: rgba(217, 119, 6, 0.1);
 }
 
 /* Divider styling */
 :host ::ng-deep .p-divider.p-divider-horizontal {
-  border-top: 1px solid rgba(201, 167, 235, 0.1);
+  border-top: 1px solid rgba(217, 119, 6, 0.1);
 }
