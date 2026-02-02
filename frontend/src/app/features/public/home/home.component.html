@@ -1,10 +1,14 @@
 <!-- Hero Section -->
-<section class="relative min-h-[90vh] flex items-center overflow-hidden px-4 sm:px-6 lg:px-8" style="background: linear-gradient(to bottom right, #faf5ff, white, #fdf2f8);">
+<section class="relative min-h-[90vh] flex items-center overflow-hidden px-4 sm:px-6 lg:px-8"
+  style="background: linear-gradient(to bottom right, #faf5ff, white, #fdf2f8);">
   <!-- Background decorations -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute top-20 left-10 w-64 h-64 rounded-full blur-3xl" style="background: rgba(233, 213, 255, 0.3);"></div>
-    <div class="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl" style="background: rgba(251, 207, 232, 0.3);"></div>
-    <img src="assets/images/hero-crystal-ball.svg" alt="" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[28rem] h-[28rem] opacity-10 pointer-events-none" />
+    <div class="absolute top-20 left-10 w-64 h-64 rounded-full blur-3xl" style="background: rgba(233, 213, 255, 0.3);">
+    </div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl"
+      style="background: rgba(251, 207, 232, 0.3);"></div>
+    <img src="assets/images/hero-crystal-ball.svg" alt=""
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[28rem] h-[28rem] opacity-10 pointer-events-none" />
   </div>
 
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
@@ -18,7 +22,8 @@
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a routerLink="/loja">
-          <p-button [label]="'home.services.viewAll' | translate" icon="pi pi-arrow-right" iconPos="right" size="large" />
+          <p-button [label]="'home.services.viewAll' | translate" icon="pi pi-arrow-right" iconPos="right"
+            size="large" />
         </a>
         <a routerLink="/sobre">
           <p-button label="Conheça a Izabela" [outlined]="true" size="large" />
@@ -38,10 +43,11 @@
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid md:grid-cols-2 gap-12 items-center">
       <div class="relative">
-        <div class="aspect-square rounded-3xl overflow-hidden flex items-center justify-center" style="background: linear-gradient(to bottom right, #f3e8ff, #fce7f3);">
-          <img src="assets/images/izabela-profile.svg" alt="Izabela Santos" class="w-full h-full object-cover" />
+        <div class="aspect-square rounded-3xl overflow-hidden flex items-center justify-center"
+          style="background: linear-gradient(to bottom right, #f3e8ff, #fce7f3);">
+          <img src="assets/images/profile5.jpeg" alt="Izabela Santos" class="w-full h-full object-cover" />
         </div>
-          </div>
+      </div>
       <div>
         <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'nav.about' | translate }}</span>
         <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2 mb-6">
@@ -73,7 +79,8 @@
 <section class="py-28 px-4 sm:px-6 lg:px-8" style="background: linear-gradient(to bottom, #fafafa, white);" mb-0>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'home.services.title' | translate }}</span>
+      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'home.services.title' | translate
+        }}</span>
       <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2">
         {{ 'home.services.subtitle' | translate }}
       </h2>
@@ -81,15 +88,16 @@
 
     <div class="grid md:grid-cols-3 gap-8" @listAnimation>
       @for (service of services; track service.titleKey) {
-        <a [routerLink]="service.link"
-           class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 text-center">
-          <img [src]="service.icon" [alt]="service.titleKey | translate" class="w-20 h-20 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-          <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-3">{{ service.titleKey | translate }}</h3>
-          <p class="text-neutral-600 mb-4">{{ service.descriptionKey | translate }}</p>
-          <span class="text-primary-600 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-            {{ 'common.view' | translate }} <i class="pi pi-arrow-right text-sm"></i>
-          </span>
-        </a>
+      <a [routerLink]="service.link"
+        class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 text-center">
+        <img [src]="service.icon" [alt]="service.titleKey | translate"
+          class="w-20 h-20 mx-auto mb-4 group-hover:scale-110 transition-transform" />
+        <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-3">{{ service.titleKey | translate }}</h3>
+        <p class="text-neutral-600 mb-4">{{ service.descriptionKey | translate }}</p>
+        <span class="text-primary-600 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+          {{ 'common.view' | translate }} <i class="pi pi-arrow-right text-sm"></i>
+        </span>
+      </a>
       }
     </div>
   </div>
@@ -99,7 +107,8 @@
 <section class="py-28 px-4 sm:px-6 lg:px-8 bg-white mb-0">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'home.testimonials.title' | translate }}</span>
+      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'home.testimonials.title' |
+        translate }}</span>
       <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2">
         {{ 'home.testimonials.subtitle' | translate }}
       </h2>
@@ -107,7 +116,7 @@
 
     <div class="grid md:grid-cols-3 gap-8">
       @for (testimonial of testimonials(); track testimonial.id) {
-        <app-testimonial-card [testimonial]="testimonial" />
+      <app-testimonial-card [testimonial]="testimonial" />
       }
     </div>
 
@@ -120,7 +129,8 @@
 </section>
 
 <!-- CTA Section -->
-<section class="py-28 px-4 sm:px-6 lg:px-8 text-white mb-0" style="background: linear-gradient(to right, #7c3aed, #9333ea, #7c3aed);">
+<section class="py-28 px-4 sm:px-6 lg:px-8 text-white mb-0"
+  style="background: linear-gradient(to right, #7c3aed, #9333ea, #7c3aed);">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <img src="assets/images/cta-sparkle.svg" alt="" class="w-16 h-16 mx-auto mb-6" />
     <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">

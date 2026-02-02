@@ -3,34 +3,34 @@
     <div class="flex items-center justify-between">
       <!-- Logo -->
       <a routerLink="/" class="flex items-center gap-2" (click)="closeMenu()">
-        <span class="text-2xl font-decorative text-primary-700">✨</span>
+        <img src="assets/images/logo.jpeg" alt="Izabela Tarot" class="h-10 w-10 rounded-full object-cover">
         <span class="text-xl font-serif font-semibold text-primary-800">Izabela Tarot</span>
       </a>
 
       <!-- Desktop Navigation -->
       <div class="hidden lg:flex items-center gap-6">
         <a routerLink="/" routerLinkActive="text-primary-600" [routerLinkActiveOptions]="{exact: true}"
-           class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
           {{ 'nav.home' | translate }}
         </a>
         <a routerLink="/sobre" routerLinkActive="text-primary-600"
-           class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
           {{ 'nav.about' | translate }}
         </a>
         <a routerLink="/servicos" routerLinkActive="text-primary-600"
-           class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
           {{ 'nav.services' | translate }}
         </a>
         <a routerLink="/loja" routerLinkActive="text-primary-600"
-           class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
           {{ 'nav.shop' | translate }}
         </a>
         <a routerLink="/depoimentos" routerLinkActive="text-primary-600"
-           class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
           {{ 'nav.testimonials' | translate }}
         </a>
         <a routerLink="/contato" routerLinkActive="text-primary-600"
-           class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium">
           {{ 'nav.contact' | translate }}
         </a>
       </div>
@@ -41,41 +41,40 @@
         <app-language-selector />
 
         <!-- Cart -->
-        <a routerLink="/carrinho" class="relative p-2 text-neutral-700 hover:text-primary-600 transition-colors text-xl">
+        <a routerLink="/carrinho"
+          class="relative p-2 text-neutral-700 hover:text-primary-600 transition-colors text-xl">
           🛒
           @if (cartItemCount() > 0) {
-            <span class="absolute -top-1 -right-1 bg-primary-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-              {{ cartItemCount() }}
-            </span>
+          <span
+            class="absolute -top-1 -right-1 bg-primary-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+            {{ cartItemCount() }}
+          </span>
           }
         </a>
 
         @if (isAuthenticated()) {
-          <!-- User Menu -->
-          <div class="flex items-center gap-3">
-            @if (isAdmin()) {
-              <a routerLink="/admin"
-                 class="text-sm font-medium text-primary-600 hover:text-primary-700">
-                {{ 'nav.adminPanel' | translate }}
-              </a>
-            } @else {
-              <a routerLink="/cliente"
-                 class="text-sm font-medium text-primary-600 hover:text-primary-700">
-                {{ 'nav.myArea' | translate }}
-              </a>
-            }
-            <button (click)="logout()"
-                    class="text-sm text-neutral-600 hover:text-neutral-800">
-              {{ 'nav.logout' | translate }}
-            </button>
-          </div>
+        <!-- User Menu -->
+        <div class="flex items-center gap-3">
+          @if (isAdmin()) {
+          <a routerLink="/admin" class="text-sm font-medium text-primary-600 hover:text-primary-700">
+            {{ 'nav.adminPanel' | translate }}
+          </a>
+          } @else {
+          <a routerLink="/cliente" class="text-sm font-medium text-primary-600 hover:text-primary-700">
+            {{ 'nav.myArea' | translate }}
+          </a>
+          }
+          <button (click)="logout()" class="text-sm text-neutral-600 hover:text-neutral-800">
+            {{ 'nav.logout' | translate }}
+          </button>
+        </div>
         } @else {
-          <a routerLink="/auth/login">
-            <p-button [label]="'nav.login' | translate" [outlined]="true" size="small" />
-          </a>
-          <a routerLink="/auth/cadastro">
-            <p-button [label]="'nav.register' | translate" size="small" />
-          </a>
+        <a routerLink="/auth/login">
+          <p-button [label]="'nav.login' | translate" [outlined]="true" size="small" />
+        </a>
+        <a routerLink="/auth/cadastro">
+          <p-button [label]="'nav.register' | translate" size="small" />
+        </a>
         }
       </div>
 
@@ -88,78 +87,76 @@
 
     <!-- Mobile Navigation -->
     @if (isMenuOpen()) {
-      <div class="lg:hidden mt-4 pb-4 border-t border-neutral-200 pt-4">
-        <div class="flex flex-col gap-3">
-          <a routerLink="/" (click)="closeMenu()"
-             class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
-            {{ 'nav.home' | translate }}
-          </a>
-          <a routerLink="/sobre" (click)="closeMenu()"
-             class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
-            {{ 'nav.about' | translate }}
-          </a>
-          <a routerLink="/servicos" (click)="closeMenu()"
-             class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
-            {{ 'nav.services' | translate }}
-          </a>
-          <a routerLink="/loja" (click)="closeMenu()"
-             class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
-            {{ 'nav.shop' | translate }}
-          </a>
-          <a routerLink="/depoimentos" (click)="closeMenu()"
-             class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
-            {{ 'nav.testimonials' | translate }}
-          </a>
-          <a routerLink="/contato" (click)="closeMenu()"
-             class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
-            {{ 'nav.contact' | translate }}
-          </a>
+    <div class="lg:hidden mt-4 pb-4 border-t border-neutral-200 pt-4">
+      <div class="flex flex-col gap-3">
+        <a routerLink="/" (click)="closeMenu()"
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
+          {{ 'nav.home' | translate }}
+        </a>
+        <a routerLink="/sobre" (click)="closeMenu()"
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
+          {{ 'nav.about' | translate }}
+        </a>
+        <a routerLink="/servicos" (click)="closeMenu()"
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
+          {{ 'nav.services' | translate }}
+        </a>
+        <a routerLink="/loja" (click)="closeMenu()"
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
+          {{ 'nav.shop' | translate }}
+        </a>
+        <a routerLink="/depoimentos" (click)="closeMenu()"
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
+          {{ 'nav.testimonials' | translate }}
+        </a>
+        <a routerLink="/contato" (click)="closeMenu()"
+          class="text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
+          {{ 'nav.contact' | translate }}
+        </a>
 
-          <div class="border-t border-neutral-200 pt-3 mt-2">
-            <!-- Language Selector Mobile -->
-            <div class="py-2">
-              <app-language-selector />
-            </div>
-
-            <a routerLink="/carrinho" (click)="closeMenu()"
-               class="flex items-center gap-2 text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
-              🛒
-              {{ 'nav.cart' | translate }}
-              @if (cartItemCount() > 0) {
-                <span class="bg-primary-600 text-white text-xs px-2 py-0.5 rounded-full">
-                  {{ cartItemCount() }}
-                </span>
-              }
-            </a>
+        <div class="border-t border-neutral-200 pt-3 mt-2">
+          <!-- Language Selector Mobile -->
+          <div class="py-2">
+            <app-language-selector />
           </div>
 
-          <div class="border-t border-neutral-200 pt-3 mt-2 flex flex-col gap-2">
-            @if (isAuthenticated()) {
-              @if (isAdmin()) {
-                <a routerLink="/admin" (click)="closeMenu()"
-                   class="text-primary-600 font-medium py-2">
-                  {{ 'nav.adminPanel' | translate }}
-                </a>
-              } @else {
-                <a routerLink="/cliente" (click)="closeMenu()"
-                   class="text-primary-600 font-medium py-2">
-                  {{ 'nav.myArea' | translate }}
-                </a>
-              }
-              <button (click)="logout()" class="text-left text-neutral-600 py-2">
-                {{ 'nav.logout' | translate }}
-              </button>
-            } @else {
-              <a routerLink="/auth/login" (click)="closeMenu()">
-                <p-button [label]="'nav.login' | translate" [outlined]="true" styleClass="w-full" />
-              </a>
-              <a routerLink="/auth/cadastro" (click)="closeMenu()">
-                <p-button [label]="'nav.register' | translate" styleClass="w-full" />
-              </a>
+          <a routerLink="/carrinho" (click)="closeMenu()"
+            class="flex items-center gap-2 text-neutral-700 hover:text-primary-600 transition-colors font-medium py-2">
+            🛒
+            {{ 'nav.cart' | translate }}
+            @if (cartItemCount() > 0) {
+            <span class="bg-primary-600 text-white text-xs px-2 py-0.5 rounded-full">
+              {{ cartItemCount() }}
+            </span>
             }
-          </div>
+          </a>
+        </div>
+
+        <div class="border-t border-neutral-200 pt-3 mt-2 flex flex-col gap-2">
+          @if (isAuthenticated()) {
+          @if (isAdmin()) {
+          <a routerLink="/admin" (click)="closeMenu()" class="text-primary-600 font-medium py-2">
+            {{ 'nav.adminPanel' | translate }}
+          </a>
+          } @else {
+          <a routerLink="/cliente" (click)="closeMenu()" class="text-primary-600 font-medium py-2">
+            {{ 'nav.myArea' | translate }}
+          </a>
+          }
+          <button (click)="logout()" class="text-left text-neutral-600 py-2">
+            {{ 'nav.logout' | translate }}
+          </button>
+          } @else {
+          <a routerLink="/auth/login" (click)="closeMenu()">
+            <p-button [label]="'nav.login' | translate" [outlined]="true" styleClass="w-full" />
+          </a>
+          <a routerLink="/auth/cadastro" (click)="closeMenu()">
+            <p-button [label]="'nav.register' | translate" styleClass="w-full" />
+          </a>
+          }
         </div>
       </div>
+    </div>
     }
   </nav>
 </header>
