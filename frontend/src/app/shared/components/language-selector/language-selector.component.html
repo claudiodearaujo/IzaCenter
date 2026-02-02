@@ -1,0 +1,19 @@
+<div class="language-dropdown">
+    <button type="button" class="dropdown-toggle" (click)="toggleDropdown()" (keydown.escape)="closeDropdown()">
+        <img [src]="'assets/images/flags/' + getCurrentFlag() + '.svg'" [alt]="getCurrentLanguageName()"
+            class="flag-icon" />
+        <span class="dropdown-arrow">▼</span>
+    </button>
+
+    @if (isOpen) {
+    <div class="dropdown-menu" (clickOutside)="closeDropdown()">
+        @for (language of languages; track language.code) {
+        <button type="button" class="dropdown-item" [class.selected]="language.code === selectedLanguageCode"
+            (click)="selectLanguage(language.code)">
+            <img [src]="'assets/images/flags/' + language.flag + '.svg'" [alt]="language.name" class="flag-icon" />
+            <span class="language-name">{{ language.name }}</span>
+        </button>
+        }
+    </div>
+    }
+</div>
