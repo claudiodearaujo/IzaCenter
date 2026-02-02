@@ -7,14 +7,8 @@ import { ValidationService } from '../../../core/services/validation.service';
   selector: 'app-validation-error',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    @if (validationService.hasError(control)) {
-      <small class="text-red-600 text-xs mt-1 block">
-        {{ validationService.getErrorMessage(control) }}
-      </small>
-    }
-  `,
-  styles: []
+  templateUrl: './validation-error.component.html',
+  styleUrl: './validation-error.component.css'
 })
 export class ValidationErrorComponent {
   @Input() control: AbstractControl | null = null;
