@@ -101,12 +101,12 @@
         <div class="card-item">
           <div class="flex flex-col md:flex-row gap-6">
             <!-- Card Image -->
-            <div class="flex-shrink-0 w-full md:w-40">
+            <div class="shrink-0 w-full md:w-40">
               @if (card.card.imageUrl) {
               <img [src]="card.card.imageUrl" [alt]="card.card.name"
-                class="w-full max-w-[160px] mx-auto rounded-lg shadow-lg" />
+                class="w-full max-w-40 mx-auto rounded-lg shadow-lg" />
               } @else {
-              <div class="w-[160px] h-[280px] mx-auto bg-gradient-mystical rounded-lg flex items-center justify-center">
+              <div class="w-40 h-70 mx-auto bg-gradient-mystical rounded-lg flex items-center justify-center">
                 <i class="pi pi-star text-3xl text-white/50"></i>
               </div>
               }
@@ -159,7 +159,7 @@
 
     <!-- Advice -->
     @if (reading()?.advice) {
-    <div class="glass-card p-8 mb-8 bg-gradient-to-r from-primary-400/10 to-primary-600/10">
+    <div class="glass-card p-8 mb-8 bg-linear-to-r from-primary-400/10 to-primary-600/10">
       <h2 class="heading-3 text-primary mb-4 flex items-center gap-3">
         <i class="pi pi-lightbulb text-accent"></i>
         Conselho
