@@ -25,14 +25,14 @@
           <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'auth.register.email' |
             translate }}</label>
           <input pInputText id="email" [(ngModel)]="form.email" name="email" type="email" class="w-full"
-            placeholder="seu@email.com" required />
+            [placeholder]="'auth.register.emailPlaceholder' | translate" required />
         </div>
 
         <div>
           <label for="phone" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'auth.register.phone' |
             translate }}</label>
           <p-inputMask id="phone" [(ngModel)]="form.phone" name="phone" mask="(99) 99999-9999"
-            placeholder="(31) 99999-9999" styleClass="w-full" />
+            [placeholder]="'auth.register.phonePlaceholder' | translate" styleClass="w-full" />
         </div>
 
         <div>

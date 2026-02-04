@@ -60,12 +60,12 @@
           <label for="fullName" class="block text-secondary text-sm mb-2">
             Nome Completo *
           </label>
-          <input 
-            pInputText 
+          <input
+            pInputText
             id="fullName"
             [(ngModel)]="profileForm.fullName"
             class="w-full"
-            placeholder="Seu nome completo"
+            [placeholder]="'client.profile.fullNamePlaceholder' | translate"
           />
         </div>
 
@@ -144,14 +144,14 @@
           <label for="currentPassword" class="block text-secondary text-sm mb-2">
             Senha Atual
           </label>
-          <p-password 
+          <p-password
             id="currentPassword"
             [(ngModel)]="passwordForm.currentPassword"
             [feedback]="false"
             [toggleMask]="true"
             styleClass="w-full"
             inputStyleClass="w-full"
-            placeholder="Digite sua senha atual"
+            [placeholder]="'client.profile.currentPasswordPlaceholder' | translate"
           />
         </div>
 
@@ -162,13 +162,13 @@
           <label for="newPassword" class="block text-secondary text-sm mb-2">
             Nova Senha
           </label>
-          <p-password 
+          <p-password
             id="newPassword"
             [(ngModel)]="passwordForm.newPassword"
             [toggleMask]="true"
             styleClass="w-full"
             inputStyleClass="w-full"
-            placeholder="Digite a nova senha"
+            [placeholder]="'client.profile.newPasswordPlaceholder' | translate"
             promptLabel="Escolha uma senha"
             weakLabel="Fraca"
             mediumLabel="Média"
@@ -181,14 +181,14 @@
           <label for="confirmPassword" class="block text-secondary text-sm mb-2">
             Confirmar Nova Senha
           </label>
-          <p-password 
+          <p-password
             id="confirmPassword"
             [(ngModel)]="passwordForm.confirmPassword"
             [feedback]="false"
             [toggleMask]="true"
             styleClass="w-full"
             inputStyleClass="w-full"
-            placeholder="Confirme a nova senha"
+            [placeholder]="'client.profile.confirmPasswordPlaceholder' | translate"
           />
         </div>
       </div>

@@ -54,7 +54,7 @@
                     pInputText
                     [(ngModel)]="settings.siteName"
                     class="w-full"
-                    placeholder="Izabela Tarot"
+                    [placeholder]="'admin.settings.siteNamePlaceholder' | translate"
                   />
                 </div>
                 <div>
@@ -75,18 +75,18 @@
                   [(ngModel)]="settings.siteDescription"
                   [rows]="3"
                   class="w-full"
-                  placeholder="Breve descrição do site..."
+                  [placeholder]="'admin.settings.siteDescriptionPlaceholder' | translate"
                 ></textarea>
               </div>
             </div>
 
             <!-- Logo & Favicon -->
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Logo e Favicon</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.sections.logoFavicon' | translate }}</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Logo</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.logo' | translate }}</label>
                   <div class="flex items-center gap-4">
                     @if (logoPreview()) {
                       <img 
@@ -96,7 +96,7 @@
                       />
                     } @else {
                       <div class="h-16 w-32 bg-dark/30 rounded flex items-center justify-center">
-                        <span class="text-secondary/50">Sem logo</span>
+                        <span class="text-secondary/50">{{ 'admin.settings.noLogo' | translate }}</span>
                       </div>
                     }
                     <p-fileUpload 
@@ -114,7 +114,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Favicon</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.favicon' | translate }}</label>
                   <div class="flex items-center gap-4">
                     @if (faviconPreview()) {
                       <img 
@@ -145,13 +145,13 @@
 
             <!-- Features -->
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Funcionalidades</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.sections.features' | translate }}</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
                   <div>
                     <p class="text-primary">Modo Manutenção</p>
-                    <p class="text-secondary/60 text-xs">Site offline para visitantes</p>
+                    <p class="text-secondary/60 text-xs">{{ 'admin.settings.siteOfflineDescription' | translate }}</p>
                   </div>
                   <p-toggleButton 
                     [(ngModel)]="settings.maintenanceMode"
@@ -162,7 +162,7 @@
 
                 <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
                   <div>
-                    <p class="text-primary">Permitir Cadastro</p>
+                    <p class="text-primary">{{ 'admin.settings.allowRegistration' | translate }}</p>
                     <p class="text-secondary/60 text-xs">Novos usuários podem se registrar</p>
                   </div>
                   <p-toggleButton 
@@ -174,8 +174,8 @@
 
                 <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
                   <div>
-                    <p class="text-primary">Permitir Depoimentos</p>
-                    <p class="text-secondary/60 text-xs">Clientes podem enviar depoimentos</p>
+                    <p class="text-primary">{{ 'admin.settings.allowTestimonials' | translate }}</p>
+                    <p class="text-secondary/60 text-xs">{{ 'admin.settings.allowTestimonialsDescription' | translate }}</p>
                   </div>
                   <p-toggleButton 
                     [(ngModel)]="settings.allowTestimonials"
@@ -186,8 +186,8 @@
 
                 <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
                   <div>
-                    <p class="text-primary">Pagamento Online</p>
-                    <p class="text-secondary/60 text-xs">Aceitar pagamentos via Stripe</p>
+                    <p class="text-primary">{{ 'admin.settings.onlinePayment' | translate }}</p>
+                    <p class="text-secondary/60 text-xs">{{ 'admin.settings.onlinePaymentDescription' | translate }}</p>
                   </div>
                   <p-toggleButton 
                     [(ngModel)]="settings.allowOnlinePayment"
@@ -227,9 +227,9 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-secondary text-sm mb-2">WhatsApp</label>
-                  <input 
-                    pInputText 
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.whatsapp' | translate }}</label>
+                  <input
+                    pInputText
                     [(ngModel)]="settings.whatsapp"
                     class="w-full"
                     placeholder="5511999999999"
@@ -237,18 +237,18 @@
                 </div>
                 <div>
                   <label class="block text-secondary text-sm mb-2">Endereço</label>
-                  <input 
-                    pInputText 
+                  <input
+                    pInputText
                     [(ngModel)]="settings.address"
                     class="w-full"
-                    placeholder="São Paulo, SP"
+                    [placeholder]="'admin.settings.locationPlaceholder' | translate"
                   />
                 </div>
               </div>
             </div>
 
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Redes Sociais</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.sections.socialMedia' | translate }}</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -317,12 +317,12 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Dias de Funcionamento</label>
-                  <input 
-                    pInputText 
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.operatingDays' | translate }}</label>
+                  <input
+                    pInputText
                     [(ngModel)]="settings.workingDays"
                     class="w-full"
-                    placeholder="Segunda a Sexta"
+                    [placeholder]="'admin.settings.operatingDaysPlaceholder' | translate"
                   />
                 </div>
                 <div>
@@ -348,29 +348,29 @@
               <div class="space-y-4">
                 <div>
                   <label class="block text-secondary text-sm mb-2">Título do Hero</label>
-                  <input 
-                    pInputText 
+                  <input
+                    pInputText
                     [(ngModel)]="settings.homeHeroTitle"
                     class="w-full"
-                    placeholder="Descubra seu Destino"
+                    [placeholder]="'admin.settings.taglinePlaceholder' | translate"
                   />
                 </div>
                 <div>
                   <label class="block text-secondary text-sm mb-2">Subtítulo do Hero</label>
-                  <textarea 
-                    pInputTextarea 
+                  <textarea
+                    pInputTextarea
                     [(ngModel)]="settings.homeHeroSubtitle"
                     [rows]="2"
                     class="w-full"
-                    placeholder="Leituras de tarot cigano..."
+                    [placeholder]="'admin.settings.shortDescriptionPlaceholder' | translate"
                   ></textarea>
                 </div>
               </div>
             </div>
 
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Texto Sobre</h3>
-              <p-editor 
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.sections.aboutText' | translate }}</h3>
+              <p-editor
                 [(ngModel)]="settings.aboutText"
                 [style]="{'height':'200px'}"
               />
@@ -382,25 +382,25 @@
         <p-tabpanel value="4">
           <div class="space-y-6 p-4">
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Rastreamento</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.sections.tracking' | translate }}</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Google Analytics ID</label>
-                  <input 
-                    pInputText 
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.googleAnalyticsId' | translate }}</label>
+                  <input
+                    pInputText
                     [(ngModel)]="settings.googleAnalyticsId"
                     class="w-full"
-                    placeholder="G-XXXXXXXXXX"
+                    [placeholder]="'admin.settings.googleAnalyticsPlaceholder' | translate"
                   />
                 </div>
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Facebook Pixel ID</label>
-                  <input 
-                    pInputText 
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.facebookPixelId' | translate }}</label>
+                  <input
+                    pInputText
                     [(ngModel)]="settings.facebookPixelId"
                     class="w-full"
-                    placeholder="XXXXXXXXXXXXXXX"
+                    [placeholder]="'admin.settings.facebookPixelPlaceholder' | translate"
                   />
                 </div>
               </div>

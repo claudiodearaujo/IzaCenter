@@ -23,7 +23,7 @@
           <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'auth.login.email' | translate
             }}</label>
           <input pInputText id="email" [(ngModel)]="form.email" name="email" type="email" class="w-full"
-            placeholder="seu@email.com" required />
+            [placeholder]="'auth.login.emailPlaceholder' | translate" required />
         </div>
 
         <div>
