@@ -46,10 +46,10 @@ export class ContactComponent implements OnInit {
 
   get contactInfo() {
     return [
-      { icon: 'pi-envelope', label: this.translate.instant('contact.info.email.label'), value: 'izabela.ayurvida@gmail.com' },
-      { icon: 'pi-instagram', label: this.translate.instant('contact.info.instagram.label'), value: '@izabela.tarot' },
+      { icon: 'pi-envelope', label: this.translate.instant('contact.info.email.label'), value: this.translate.instant('contact.info.email.value') },
+      { icon: 'pi-instagram', label: this.translate.instant('contact.info.instagram.label'), value: this.translate.instant('contact.info.instagram.value') },
       { icon: 'pi-clock', label: this.translate.instant('contact.info.schedule.label'), value: this.translate.instant('contact.info.schedule.value') },
-      { icon: 'pi-map-marker', label: this.translate.instant('contact.info.location.label'), value: 'Belo Horizonte, MG' }
+      { icon: 'pi-map-marker', label: this.translate.instant('contact.info.location.label'), value: this.translate.instant('contact.info.location.value') }
     ];
   }
 

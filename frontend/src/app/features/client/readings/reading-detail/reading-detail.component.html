@@ -6,7 +6,7 @@
     <a routerLink="/cliente/leituras"
       class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6 print:hidden">
       <i class="pi pi-arrow-left mr-2"></i>
-      Voltar para leituras
+      {{ 'client.readings.detail.backLabel' | translate }}
     </a>
 
     @if (loading()) {
@@ -21,10 +21,10 @@
     <!-- Error State -->
     <div class="glass-card p-12 text-center">
       <i class="pi pi-exclamation-triangle text-5xl text-red-400 mb-4"></i>
-      <h2 class="heading-2 text-primary mb-4">Erro ao carregar leitura</h2>
+      <h2 class="heading-2 text-primary mb-4">{{ 'client.readings.detail.errorLoading' | translate }}</h2>
       <p class="text-secondary mb-6">{{ error() }}</p>
       <a routerLink="/cliente/leituras" class="btn-primary inline-block">
-        Voltar para Leituras
+        {{ 'client.readings.detail.backButton' | translate }}
       </a>
     </div>
     } @else if (reading()) {
@@ -39,14 +39,14 @@
       <p class="text-secondary mb-2">{{ reading()?.product?.name }}</p>
       @if (reading()?.publishedAt) {
       <p class="text-secondary/60 text-sm">
-        Publicada em {{ formatDate(reading()!.publishedAt!) }}
+        {{ 'client.readings.detail.publishedOn' | translate }} {{ formatDate(reading()!.publishedAt!) }}
       </p>
       }
 
       <!-- Questions -->
       @if (reading()?.orderItem?.questions?.length) {
       <div class="mt-6 p-4 bg-dark/30 rounded-lg max-w-lg mx-auto">
-        <p class="text-secondary text-sm mb-2">Sua(s) pergunta(s):</p>
+        <p class="text-secondary text-sm mb-2">{{ 'client.readings.detail.yourQuestions' | translate }}</p>
         @for (question of reading()?.orderItem?.questions ?? []; track $index) {
         <p class="text-primary italic">"{{ question }}"</p>
         }
@@ -58,12 +58,12 @@
         @if (reading()?.audioUrl) {
         <button class="btn-outline" (click)="audioPlaying.set(!audioPlaying())">
           <i class="pi" [class]="audioPlaying() ? 'pi-pause' : 'pi-play'" class="mr-2"></i>
-          {{ audioPlaying() ? 'Pausar' : 'Ouvir' }} Áudio
+          {{ audioPlaying() ? ('client.readings.detail.pause' | translate) : ('client.readings.detail.listen' | translate) }} {{ 'client.readings.detail.audio' | translate }}
         </button>
         }
         <button class="btn-outline" (click)="printReading()">
           <i class="pi pi-print mr-2"></i>
-          Imprimir
+          {{ 'client.readings.detail.print' | translate }}
         </button>
       </div>
 
@@ -80,7 +80,7 @@
     <div class="glass-card p-8 mb-8">
       <h2 class="heading-3 text-primary mb-4 flex items-center gap-3">
         <i class="pi pi-star-fill text-accent"></i>
-        Introdução
+        {{ 'client.readings.sections.introduction' | translate }}
       </h2>
       <p class="text-secondary leading-relaxed whitespace-pre-line">
         {{ reading()?.introduction }}
@@ -93,7 +93,7 @@
     <div class="glass-card p-8 mb-8">
       <h2 class="heading-3 text-primary mb-6 flex items-center gap-3">
         <i class="pi pi-th-large text-accent"></i>
-        As Cartas
+        {{ 'client.readings.sections.cards' | translate }}
       </h2>
 
       <div class="space-y-8">
@@ -116,7 +116,7 @@
             <div class="flex-1">
               <div class="flex items-start justify-between mb-3">
                 <div>
-                  <span class="text-accent text-sm">{{ card.positionName || 'Posição ' + card.position }}</span>
+                  <span class="text-accent text-sm">{{ card.positionName || ('client.readings.detail.position' | translate) + ' ' + card.position }}</span>
                   <h3 class="heading-4 text-primary">{{ card.card.name }}</h3>
                 </div>
               </div>
@@ -150,7 +150,7 @@
     <div class="glass-card p-8 mb-8">
       <h2 class="heading-3 text-primary mb-4 flex items-center gap-3">
         <i class="pi pi-eye text-accent"></i>
-        Visão Geral
+        {{ 'client.readings.sections.overview' | translate }}
       </h2>
       <p class="text-secondary leading-relaxed whitespace-pre-line">
         {{ reading()?.generalInterpretation }}
@@ -162,7 +162,7 @@
     <div class="glass-card p-8 mb-8 bg-linear-to-r from-primary-400/10 to-primary-600/10">
       <h2 class="heading-3 text-primary mb-4 flex items-center gap-3">
         <i class="pi pi-lightbulb text-accent"></i>
-        Conselho
+        {{ 'client.readings.sections.advice' | translate }}
       </h2>
       <p class="text-secondary leading-relaxed whitespace-pre-line">
         {{ reading()?.advice }}
@@ -175,7 +175,7 @@
     <div class="glass-card p-8 mb-8">
       <h2 class="heading-3 text-primary mb-4 flex items-center gap-3">
         <i class="pi pi-heart-fill text-accent"></i>
-        Conclusão
+        {{ 'client.readings.sections.conclusion' | translate }}
       </h2>
       <p class="text-secondary leading-relaxed whitespace-pre-line">
         {{ reading()?.conclusion }}
@@ -186,21 +186,21 @@
     <!-- Signature -->
     <div class="glass-card p-8 text-center">
       <p class="text-secondary italic mb-4">
-        "Que as estrelas iluminem seu caminho e as cartas guiem sua jornada."
+        {{ 'client.readings.detail.signature.quote' | translate }}
       </p>
-      <p class="text-primary font-medium">Com amor e luz,</p>
-      <p class="text-accent text-xl font-heading">Izabela</p>
+      <p class="text-primary font-medium">{{ 'client.readings.detail.signature.greeting' | translate }}</p>
+      <p class="text-accent text-xl font-heading">{{ 'client.readings.detail.signature.name' | translate }}</p>
     </div>
 
     <!-- Bottom Actions - hide on print -->
     <div class="flex justify-center gap-4 mt-8 print:hidden">
       <a routerLink="/cliente/leituras" class="btn-outline">
         <i class="pi pi-arrow-left mr-2"></i>
-        Voltar para Leituras
+        {{ 'client.readings.detail.backButton2' | translate }}
       </a>
       <a routerLink="/loja" class="btn-primary">
         <i class="pi pi-shopping-cart mr-2"></i>
-        Nova Consulta
+        {{ 'client.readings.detail.newConsultation' | translate }}
       </a>
     </div>
     }

@@ -20,7 +20,7 @@
       <!-- Error State -->
       <div class="glass-card p-12 text-center">
         <i class="pi pi-exclamation-triangle text-5xl text-red-400 mb-4"></i>
-        <h2 class="heading-2 text-primary mb-4">Erro ao carregar pedido</h2>
+        <h2 class="heading-2 text-primary mb-4">{{ 'client.orders.detail.errorLoading' | translate }}</h2>
         <p class="text-secondary mb-6">{{ error() }}</p>
         <a routerLink="/cliente/pedidos" class="btn-primary inline-block">
           Voltar para Pedidos
@@ -50,7 +50,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Order Items -->
         <div class="lg:col-span-2 space-y-4">
-          <h2 class="heading-3 text-primary">Itens do Pedido</h2>
+          <h2 class="heading-3 text-primary">{{ 'client.orders.detail.orderItems' | translate }}</h2>
 
           @for (item of order()?.items; track item.id) {
             <div class="glass-card p-6">
