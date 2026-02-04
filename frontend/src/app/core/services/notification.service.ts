@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 
 @Injectable({
@@ -6,38 +7,43 @@ import { MessageService } from 'primeng/api';
 })
 export class NotificationService {
   private messageService = inject(MessageService);
+  private translateService = inject(TranslateService);
 
-  showSuccess(message: string, title: string = 'Sucesso'): void {
+  showSuccess(message: string, title?: string): void {
+    const finalTitle = title || this.translateService.instant('notifications.success');
     this.messageService.add({
       severity: 'success',
-      summary: title,
+      summary: finalTitle,
       detail: message,
       life: 3000
     });
   }
 
-  showError(message: string, title: string = 'Erro'): void {
+  showError(message: string, title?: string): void {
+    const finalTitle = title || this.translateService.instant('notifications.error');
     this.messageService.add({
       severity: 'error',
-      summary: title,
+      summary: finalTitle,
       detail: message,
       life: 5000
     });
   }
 
-  showWarning(message: string, title: string = 'Atenção'): void {
+  showWarning(message: string, title?: string): void {
+    const finalTitle = title || this.translateService.instant('notifications.warning');
     this.messageService.add({
       severity: 'warn',
-      summary: title,
+      summary: finalTitle,
       detail: message,
       life: 4000
     });
   }
 
-  showInfo(message: string, title: string = 'Informação'): void {
+  showInfo(message: string, title?: string): void {
+    const finalTitle = title || this.translateService.instant('notifications.info');
     this.messageService.add({
       severity: 'info',
-      summary: title,
+      summary: finalTitle,
       detail: message,
       life: 3000
     });

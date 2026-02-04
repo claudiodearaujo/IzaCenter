@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -20,16 +20,17 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private notificationService = inject(NotificationService);
   private router = inject(Router);
+  private translateService = inject(TranslateService);
 
   isLoading = signal(false);
   form = { email: '', password: '' };
 
   async onSubmit(): Promise<void> {
     this.isLoading.set(true);
-    
+
     this.authService.login(this.form).subscribe({
       next: (response) => {
-        this.notificationService.showSuccess('Login realizado com sucesso!');
+        this.notificationService.showSuccess(this.translateService.instant('auth.messages.login.successMessage'));
         const user = response.data.user;
         if (user.role === 'ADMIN') {
           this.router.navigate(['/admin']);
@@ -38,7 +39,8 @@ export class LoginComponent {
         }
       },
       error: (error) => {
-        this.notificationService.showError(error.error?.message || 'Erro ao fazer login');
+        const errorMsg = error.error?.message || this.translateService.instant('auth.messages.login.errorMessage');
+        this.notificationService.showError(errorMsg);
         this.isLoading.set(false);
       }
     });

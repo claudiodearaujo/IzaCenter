@@ -1,4 +1,26 @@
 {
+  "error": {
+    "interceptor": {
+      "unexpectedError": "Une erreur inattendue s'est produite",
+      "sessionExpired": "Session expirée. Veuillez vous connecter à nouveau.",
+      "unauthorized": "Vous n'avez pas la permission d'accéder à cette ressource.",
+      "notFound": "Ressource non trouvée.",
+      "invalidData": "Données invalides.",
+      "serverError": "Erreur interne du serveur. Veuillez réessayer plus tard."
+    }
+  },
+  "notifications": {
+    "success": "Succès",
+    "error": "Erreur",
+    "warning": "Attention",
+    "info": "Information"
+  },
+  "languages": {
+    "portuguese": "Português",
+    "english": "English",
+    "spanish": "Español",
+    "french": "Français"
+  },
   "nav": {
     "home": "Accueil",
     "about": "À propos",
@@ -24,6 +46,9 @@
     "faq": "FAQ",
     "admin": "Admin"
   },
+  "app": {
+    "name": "Izabela Tarot"
+  },
   "auth": {
     "login": {
       "title": "Connexion",
@@ -34,7 +59,8 @@
       "forgotPassword": "Mot de passe oublié ?",
       "loginButton": "Se connecter",
       "noAccount": "Vous n'avez pas de compte ?",
-      "registerLink": "Inscrivez-vous"
+      "registerLink": "Inscrivez-vous",
+      "emailPlaceholder": "votre@email.com"
     },
     "register": {
       "title": "S'inscrire",
@@ -46,14 +72,17 @@
       "phone": "Téléphone",
       "registerButton": "S'inscrire",
       "hasAccount": "Vous avez déjà un compte ?",
-      "loginLink": "Connectez-vous"
+      "loginLink": "Connectez-vous",
+      "emailPlaceholder": "votre@email.com",
+      "phonePlaceholder": "(00) 00000-0000"
     },
     "forgotPassword": {
       "title": "Mot de passe oublié ?",
       "subtitle": "Entrez votre e-mail pour récupérer",
       "email": "E-mail",
       "sendButton": "Envoyer",
-      "backToLogin": "Retour à la connexion"
+      "backToLogin": "Retour à la connexion",
+      "emailPlaceholder": "votre@email.com"
     },
     "resetPassword": {
       "title": "Réinitialiser le mot de passe",
@@ -61,13 +90,31 @@
       "password": "Nouveau mot de passe",
       "confirmPassword": "Confirmer le mot de passe",
       "resetButton": "Réinitialiser"
+    },
+    "messages": {
+      "login": {
+        "successMessage": "Connexion réussie !",
+        "errorMessage": "Erreur lors de la connexion"
+      },
+      "register": {
+        "passwordMismatch": "Les mots de passe ne correspondent pas",
+        "successMessage": "Inscription réussie !",
+        "errorMessage": "Erreur lors de l'inscription"
+      }
     }
   },
   "home": {
     "hero": {
       "title": "Découvrez votre chemin avec le Tarot",
       "subtitle": "Guidance, clarté et soutien à travers les cartes",
-      "cta": "Prendre rendez-vous"
+      "cta": "Prendre rendez-vous",
+      "aboutButton": "Rencontrez Izabela"
+    },
+    "about": {
+      "name": "Izabela Santos",
+      "greeting": "Bonjour, je suis Izabela Santos",
+      "bio": "Tarologue, thérapeute intégrative et étudiante en psychologie analytique jungienne. Ma passion pour le tarot a commencé comme une quête personnelle de connaissance de soi et s'est transformée en une vocation pour aider d'autres personnes dans leurs parcours.",
+      "learnMore": "En Savoir Plus"
     },
     "services": {
       "title": "Services",
@@ -144,21 +191,29 @@
       "statusPublished": "Publiée",
       "statusPublishedDesc": "Votre lecture est prête ! Cliquez pour y accéder",
       "detail": {
-        "backToReadings": "Retour aux lectures",
-        "errorTitle": "Erreur lors du chargement de la lecture",
-        "backToReadingsBtn": "Retour aux Lectures",
+        "backLabel": "Retour aux lectures",
+        "errorLoading": "Erreur lors du chargement de la lecture",
+        "backButton": "Retour aux Lectures",
+        "backButton2": "Retour aux Lectures",
         "yourQuestions": "Votre/Vos question(s) :",
-        "listenAudio": "Écouter",
-        "pauseAudio": "Pause",
+        "listen": "Écouter",
+        "pause": "Pause",
+        "audio": "Audio",
         "print": "Imprimer",
-        "introduction": "Introduction",
-        "theCards": "Les Cartes",
+        "sections": {
+          "introduction": "Introduction",
+          "cards": "Les Cartes",
+          "overview": "Vue d'ensemble",
+          "advice": "Conseil",
+          "conclusion": "Conclusion"
+        },
         "position": "Position",
-        "overview": "Vue d'ensemble",
-        "advice": "Conseil",
-        "conclusion": "Conclusion",
-        "signature": "Que les étoiles illuminent votre chemin et que les cartes guident votre voyage.",
-        "withLove": "Avec amour et lumière,",
+        "publishedOn": "Publiée le",
+        "signature": {
+          "quote": "Que les étoiles illuminent votre chemin et que les cartes guident votre voyage.",
+          "greeting": "Avec amour et lumière,",
+          "name": "Izabela"
+        },
         "newConsultation": "Nouvelle Consultation"
       }
     },
@@ -167,6 +222,7 @@
       "subtitle": "Gérez vos sessions en direct et suivez votre historique de rendez-vous",
       "tabUpcoming": "À venir",
       "tabHistory": "Historique",
+      "none": "Aucun rendez-vous",
       "noUpcoming": "Aucun rendez-vous",
       "noUpcomingMessage": "Vous n'avez aucun rendez-vous à venir. Explorez nos consultations en direct pour planifier une session.",
       "viewConsultations": "Voir les Consultations",
@@ -200,6 +256,7 @@
       "title": "Mes Commandes",
       "subtitle": "Suivez l'historique et le statut de vos commandes",
       "newConsultation": "Nouvelle Consultation",
+      "noneFound": "Aucune commande trouvée",
       "noOrders": "Aucune commande trouvée",
       "noOrdersMessage": "Vous n'avez passé aucune commande. Explorez nos consultations et commencez votre voyage de découverte de soi.",
       "exploreConsultations": "Explorer les Consultations",
@@ -329,7 +386,8 @@
       "orders": "Commandes",
       "clients": "Clients",
       "availability": "Disponibilité",
-      "reports": "Rapports"
+      "reports": "Rapports",
+      "administratorLabel": "Administrateur"
     },
     "products": {
       "title": "Produits",
@@ -980,17 +1038,20 @@
     "info": {
       "title": "Informations de Contact",
       "email": {
-        "label": "E-mail"
+        "label": "E-mail",
+        "value": "izabela.ayurvida@gmail.com"
       },
       "instagram": {
-        "label": "Instagram"
+        "label": "Instagram",
+        "value": "@izabela.tarot"
       },
       "schedule": {
         "label": "Horaires",
         "value": "Lun - Ven : 9h à 18h"
       },
       "location": {
-        "label": "Localisation"
+        "label": "Localisation",
+        "value": "Belo Horizonte, MG"
       }
     },
     "social": {
@@ -1030,6 +1091,7 @@
   "testimonials": {
     "title": "Témoignages",
     "subtitle": "Découvrez ce que mes clients disent des lectures.",
+    "clientLabel": "Client",
     "items": {
       "item1": "La lecture d'Izabela a été transformatrice. Elle m'a aidé à mieux comprendre mon moment professionnel et à prendre des décisions importantes.",
       "item2": "Clarté et accueil dans chaque mot. Je le recommande vivement à tous ceux qui recherchent une véritable guidance.",

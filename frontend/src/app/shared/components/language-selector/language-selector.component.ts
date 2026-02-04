@@ -21,17 +21,21 @@ export class LanguageSelectorComponent {
 
   isOpen = false;
 
-  languages: Language[] = [
-    { code: 'pt-BR', name: 'Português', flag: 'br' },
-    { code: 'en', name: 'English', flag: 'us' },
-    { code: 'es', name: 'Español', flag: 'es' },
-    { code: 'fr', name: 'Français', flag: 'fr' }
-  ];
-
+  languages: Language[] = [];
   selectedLanguageCode: string;
 
   constructor() {
     this.selectedLanguageCode = this.translate.currentLang || 'pt-BR';
+    this.initializeLanguages();
+  }
+
+  private initializeLanguages(): void {
+    this.languages = [
+      { code: 'pt-BR', name: this.translate.instant('languages.portuguese'), flag: 'br' },
+      { code: 'en', name: this.translate.instant('languages.english'), flag: 'us' },
+      { code: 'es', name: this.translate.instant('languages.spanish'), flag: 'es' },
+      { code: 'fr', name: this.translate.instant('languages.french'), flag: 'fr' }
+    ];
   }
 
   @HostListener('document:click', ['$event'])
@@ -63,6 +67,6 @@ export class LanguageSelectorComponent {
 
   getCurrentLanguageName(): string {
     const current = this.languages.find(l => l.code === this.selectedLanguageCode);
-    return current?.name || 'Português';
+    return current?.name || this.translate.instant('languages.portuguese');
   }
 }
