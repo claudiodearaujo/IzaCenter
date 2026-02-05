@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { fadeInUp, listAnimation } from '../../../shared/animations/fade.animation';
 import { TestimonialCardComponent, Testimonial } from '../../../shared/components/testimonial-card/testimonial-card.component';
 import { Product } from '../../../core/models/product.model';
@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit {
   private cartService = inject(CartService);
   private notificationService = inject(NotificationService);
   private seoService = inject(SeoService);
+  private translate = inject(TranslateService);
 
   featuredProducts = signal<Product[]>([]);
   testimonials = signal<Testimonial[]>([]);
@@ -56,10 +57,10 @@ export class HomeComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    // SEO Configuration
+    // SEO Configuration with translated content
     this.seoService.setMeta({
-      title: 'Leituras de Tarot e Baralho Cigano',
-      description: 'Leituras de tarot e baralho cigano Lenormand com Izabela Santos. Orientação para vida profissional, saúde e relacionamentos.',
+      title: this.translate.instant('seo.home.title'),
+      description: this.translate.instant('seo.home.description'),
       url: 'https://www.izabelatarot.com.br/'
     });
 

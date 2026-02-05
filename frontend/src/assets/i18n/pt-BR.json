@@ -1129,5 +1129,20 @@
       "item5": "A sessão online foi incrível. Me senti muito acolhida e recebi orientações valiosas.",
       "item6": "O jogo mensal me ajuda a planejar meu mês com mais consciência. Super recomendo!"
     }
+  },
+  "seo": {
+    "siteName": "Izabela Tarot",
+    "home": {
+      "title": "Leituras de Tarot e Baralho Cigano",
+      "description": "Leituras de tarot e baralho cigano Lenormand com Izabela Santos. Orientação pessoal, clareza e acolhimento através das cartas."
+    },
+    "contact": {
+      "title": "Contato",
+      "description": "Entre em contato com Izabela Santos para agendar sua leitura de tarot ou tirar dúvidas sobre os serviços."
+    }
+  },
+  "breadcrumb": {
+    "home": "Início",
+    "contact": "Contato"
   }
 }

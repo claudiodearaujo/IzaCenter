@@ -31,15 +31,15 @@ export class ContactComponent implements OnInit {
 
   ngOnInit(): void {
     this.seoService.setMeta({
-      title: 'Contato',
-      description: 'Entre em contato com Izabela Santos para agendar sua leitura de tarot ou tirar dúvidas sobre os serviços.',
+      title: this.translate.instant('seo.contact.title'),
+      description: this.translate.instant('seo.contact.description'),
       url: 'https://www.izabelatarot.com.br/contato'
     });
 
     this.seoService.setSchema(
       this.seoService.getBreadcrumbSchema([
-        { name: 'Início', url: '/' },
-        { name: 'Contato', url: '/contato' }
+        { name: this.translate.instant('breadcrumb.home'), url: '/' },
+        { name: this.translate.instant('breadcrumb.contact'), url: '/contato' }
       ])
     );
   }

@@ -1127,5 +1127,20 @@
       "item5": "La session en ligne était incroyable. Je me suis sentie très bien accueillie et j'ai reçu des conseils précieux.",
       "item6": "La lecture mensuelle m'aide à planifier mon mois avec plus de conscience. Je recommande fortement !"
     }
+  },
+  "seo": {
+    "siteName": "Izabela Tarot",
+    "home": {
+      "title": "Lectures de Tarot et Cartes Gitanes",
+      "description": "Lectures de tarot et cartes gitanes Lenormand avec Izabela Santos. Guidance personnel, clarté et soutien par les cartes."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Contactez Izabela Santos pour planifier votre lecture de tarot ou poser des questions sur les services."
+    }
+  },
+  "breadcrumb": {
+    "home": "Accueil",
+    "contact": "Contact"
   }
 }

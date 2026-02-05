@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface SeoMetaData {
   title: string;
@@ -24,10 +25,15 @@ export class SeoService {
   private readonly meta = inject(Meta);
   private readonly titleService = inject(Title);
   private readonly document = inject(DOCUMENT);
+  private readonly translate = inject(TranslateService);
 
   private readonly baseUrl = 'https://www.izabelatarot.com.br';
   private readonly siteName = 'Izabela Tarot';
   private readonly defaultImage = `${this.baseUrl}/assets/images/og-image.jpg`;
+
+  constructor() {
+    // siteName is constant as it's a proper name, but can be overridden if needed
+  }
 
   /**
    * Set meta tags for a page

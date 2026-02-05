@@ -1127,5 +1127,20 @@
       "item5": "The online session was incredible. I felt very welcomed and received valuable guidance.",
       "item6": "The monthly reading helps me plan my month with more awareness. I highly recommend it!"
     }
+  },
+  "seo": {
+    "siteName": "Izabela Tarot",
+    "home": {
+      "title": "Tarot and Gypsy Card Readings",
+      "description": "Tarot and Lenormand gypsy card readings with Izabela Santos. Personal guidance, clarity and support through the cards."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Contact Izabela Santos to schedule your tarot reading or answer questions about services."
+    }
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "contact": "Contact"
   }
 }

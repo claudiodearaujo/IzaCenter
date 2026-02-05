@@ -1127,5 +1127,20 @@
       "item5": "La sesión online fue increíble. Me sentí muy acogida y recibí orientaciones valiosas.",
       "item6": "La lectura mensual me ayuda a planificar mi mes con más conciencia. ¡Super recomiendo!"
     }
+  },
+  "seo": {
+    "siteName": "Izabela Tarot",
+    "home": {
+      "title": "Lecturas de Tarot y Baraja Gitana",
+      "description": "Lecturas de tarot y baraja gitana Lenormand con Izabela Santos. Orientación personal, claridad y apoyo a través de las cartas."
+    },
+    "contact": {
+      "title": "Contacto",
+      "description": "Póngase en contacto con Izabela Santos para programar su lectura de tarot o hacer preguntas sobre los servicios."
+    }
+  },
+  "breadcrumb": {
+    "home": "Inicio",
+    "contact": "Contacto"
   }
 }
