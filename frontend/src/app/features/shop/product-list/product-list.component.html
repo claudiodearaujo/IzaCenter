@@ -45,6 +45,20 @@
           />
         </div>
 
+        <!-- Type Filter -->
+        <div class="min-w-[180px]">
+          <p-select
+            [options]="typeOptions"
+            [(ngModel)]="selectedType"
+            (onChange)="onTypeChange($event.value)"
+            optionLabel="label"
+            optionValue="value"
+            [placeholder]="'shop.productList.filterByType' | translate"
+            [showClear]="true"
+            styleClass="w-full"
+          />
+        </div>
+
         <!-- Sort -->
         <div class="min-w-[180px]">
           <p-select
@@ -54,6 +68,34 @@
             optionLabel="label"
             optionValue="value"
             styleClass="w-full"
+          />
+        </div>
+      </div>
+
+      <!-- Price Range Filters -->
+      <div class="flex flex-wrap gap-4 items-center mt-4 pt-4 border-t border-primary/10">
+        <span class="text-secondary text-sm">{{ 'shop.productList.priceRange' | translate }}:</span>
+        <div class="flex items-center gap-2">
+          <p-inputnumber
+            [(ngModel)]="minPrice"
+            [placeholder]="'shop.productList.minPrice' | translate"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            [min]="0"
+            (onBlur)="onPriceFilter()"
+            styleClass="w-36"
+          />
+          <span class="text-secondary">—</span>
+          <p-inputnumber
+            [(ngModel)]="maxPrice"
+            [placeholder]="'shop.productList.maxPrice' | translate"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            [min]="0"
+            (onBlur)="onPriceFilter()"
+            styleClass="w-36"
           />
         </div>
       </div>
@@ -94,7 +136,7 @@
         </p>
         <button
           class="btn-secondary"
-          (click)="selectedCategory.set(null); searchTerm.set(''); loadProducts()"
+          (click)="selectedCategory.set(null); selectedType.set(null); minPrice.set(null); maxPrice.set(null); searchTerm.set(''); loadProducts()"
         >
           {{ 'shop.productList.clearFilters' | translate }}
         </button>

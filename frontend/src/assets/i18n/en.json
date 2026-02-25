@@ -727,7 +727,23 @@
       "startTime": "Start",
       "endTime": "End",
       "saved": "Settings saved successfully",
-      "errorSaving": "Error saving settings"
+      "errorSaving": "Error saving settings",
+      "save": "Save",
+      "saveAll": "Save Settings",
+      "open": "Open",
+      "closed": "Closed",
+      "from": "From",
+      "to": "To",
+      "dayOff": "Day Off",
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
     },
     "reports": {
       "title": "Reports",
@@ -747,7 +763,10 @@
       "sold": "Sold",
       "productRevenue": "Revenue",
       "errorLoading": "Error loading reports",
-      "growth": "growth"
+      "growth": "growth",
+      "active": "active",
+      "noChartData": "No data available for the selected period",
+      "noProducts": "No products found"
     }
   },
   "common": {
@@ -825,7 +844,17 @@
       "fastDelivery": "Fast Delivery",
       "fastDeliveryDescription": "Your reading is prepared with care and delivered within 48 business hours after payment confirmation.",
       "confidential": "100% Confidential",
-      "confidentialDescription": "Your questions and readings are completely private and treated with total secrecy."
+      "confidentialDescription": "Your questions and readings are completely private and treated with total secrecy.",
+      "filterByType": "Filter by type",
+      "allTypes": "All types",
+      "priceRange": "Price range",
+      "minPrice": "Min price",
+      "maxPrice": "Max price",
+      "applyFilters": "Apply",
+      "typeQuestion": "Questions",
+      "typeSession": "Session",
+      "typeMonthly": "Monthly",
+      "typeSpecial": "Special"
     },
     "productDetail": {
       "home": "Home",

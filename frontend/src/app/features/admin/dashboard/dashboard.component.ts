@@ -139,7 +139,12 @@ export class AdminDashboardComponent implements OnInit {
 
     // Orders Chart
     this.ordersChartData = {
-      labels: ['Perguntas', 'Sessões', 'Mensal', 'Especial'],
+      labels: [
+        this.translate.instant('admin.products.typeQuestion'),
+        this.translate.instant('admin.products.typeSession'),
+        this.translate.instant('admin.products.typeMonthly'),
+        this.translate.instant('admin.products.typeSpecial'),
+      ],
       datasets: [
         {
           data: [45, 25, 20, 10],

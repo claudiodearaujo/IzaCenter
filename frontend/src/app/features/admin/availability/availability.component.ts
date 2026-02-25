@@ -20,7 +20,7 @@ import { NotificationService } from '../../../core/services/notification.service
 
 export interface WeekdayConfig {
   day: string;
-  dayName: string;
+  labelKey: string;
   enabled: boolean;
   startTime: string;
   endTime: string;
@@ -35,13 +35,13 @@ export interface ScheduleSettings {
 }
 
 const DEFAULT_WEEKDAYS: WeekdayConfig[] = [
-  { day: 'monday', dayName: 'Segunda-feira', enabled: true, startTime: '09:00', endTime: '18:00' },
-  { day: 'tuesday', dayName: 'Terça-feira', enabled: true, startTime: '09:00', endTime: '18:00' },
-  { day: 'wednesday', dayName: 'Quarta-feira', enabled: true, startTime: '09:00', endTime: '18:00' },
-  { day: 'thursday', dayName: 'Quinta-feira', enabled: true, startTime: '09:00', endTime: '18:00' },
-  { day: 'friday', dayName: 'Sexta-feira', enabled: true, startTime: '09:00', endTime: '18:00' },
-  { day: 'saturday', dayName: 'Sábado', enabled: false, startTime: '09:00', endTime: '13:00' },
-  { day: 'sunday', dayName: 'Domingo', enabled: false, startTime: '09:00', endTime: '13:00' },
+  { day: 'monday', labelKey: 'admin.availability.days.monday', enabled: true, startTime: '09:00', endTime: '18:00' },
+  { day: 'tuesday', labelKey: 'admin.availability.days.tuesday', enabled: true, startTime: '09:00', endTime: '18:00' },
+  { day: 'wednesday', labelKey: 'admin.availability.days.wednesday', enabled: true, startTime: '09:00', endTime: '18:00' },
+  { day: 'thursday', labelKey: 'admin.availability.days.thursday', enabled: true, startTime: '09:00', endTime: '18:00' },
+  { day: 'friday', labelKey: 'admin.availability.days.friday', enabled: true, startTime: '09:00', endTime: '18:00' },
+  { day: 'saturday', labelKey: 'admin.availability.days.saturday', enabled: false, startTime: '09:00', endTime: '13:00' },
+  { day: 'sunday', labelKey: 'admin.availability.days.sunday', enabled: false, startTime: '09:00', endTime: '13:00' },
 ];
 
 @Component({
@@ -114,7 +114,7 @@ export class AdminAvailabilityComponent implements OnInit {
 
     const businessHours: BusinessHour[] = this.scheduleSettings.weekdays.map((wd) => ({
       day: wd.day,
-      dayName: wd.dayName,
+      dayName: this.translate.instant(wd.labelKey),
       isOpen: wd.enabled,
       start: wd.startTime,
       end: wd.endTime,

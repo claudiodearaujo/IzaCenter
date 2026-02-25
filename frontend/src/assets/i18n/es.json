@@ -727,7 +727,23 @@
       "startTime": "Inicio",
       "endTime": "Fin",
       "saved": "Configuración guardada exitosamente",
-      "errorSaving": "Error al guardar la configuración"
+      "errorSaving": "Error al guardar la configuración",
+      "save": "Guardar",
+      "saveAll": "Guardar Configuración",
+      "open": "Abierto",
+      "closed": "Cerrado",
+      "from": "Desde",
+      "to": "Hasta",
+      "dayOff": "Día libre",
+      "days": {
+        "monday": "Lunes",
+        "tuesday": "Martes",
+        "wednesday": "Miércoles",
+        "thursday": "Jueves",
+        "friday": "Viernes",
+        "saturday": "Sábado",
+        "sunday": "Domingo"
+      }
     },
     "reports": {
       "title": "Informes",
@@ -747,7 +763,10 @@
       "sold": "Vendidos",
       "productRevenue": "Ingresos",
       "errorLoading": "Error al cargar informes",
-      "growth": "crecimiento"
+      "growth": "crecimiento",
+      "active": "activos",
+      "noChartData": "No hay datos disponibles para el período seleccionado",
+      "noProducts": "No se encontraron productos"
     }
   },
   "common": {
@@ -825,7 +844,17 @@
       "fastDelivery": "Entrega Rápida",
       "fastDeliveryDescription": "Tu lectura se prepara con cuidado y se entrega en hasta 48 horas hábiles después de la confirmación del pago.",
       "confidential": "100% Confidencial",
-      "confidentialDescription": "Tus preguntas y lecturas son completamente privadas y tratadas con total confidencialidad."
+      "confidentialDescription": "Tus preguntas y lecturas son completamente privadas y tratadas con total confidencialidad.",
+      "filterByType": "Filtrar por tipo",
+      "allTypes": "Todos los tipos",
+      "priceRange": "Rango de precio",
+      "minPrice": "Precio mínimo",
+      "maxPrice": "Precio máximo",
+      "applyFilters": "Aplicar",
+      "typeQuestion": "Preguntas",
+      "typeSession": "Sesión",
+      "typeMonthly": "Mensual",
+      "typeSpecial": "Especial"
     },
     "productDetail": {
       "home": "Inicio",

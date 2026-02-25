@@ -7,12 +7,13 @@ import { FormsModule } from '@angular/forms';
 
 import { Select } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card.component';
 import { ApiService } from '../../../core/services/api.service';
-import { Product, ProductCategory } from '../../../core/models/product.model';
+import { Product, ProductCategory, ProductType } from '../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-list',
@@ -22,6 +23,7 @@ import { Product, ProductCategory } from '../../../core/models/product.model';
     FormsModule,
     Select,
     InputTextModule,
+    InputNumberModule,
     SkeletonModule,
     ProductCardComponent,
     TranslateModule,
@@ -39,6 +41,9 @@ export class ProductListComponent implements OnInit {
   loading = signal(true);
 
   selectedCategory = signal<string | null>(null);
+  selectedType = signal<ProductType | null>(null);
+  minPrice = signal<number | null>(null);
+  maxPrice = signal<number | null>(null);
   searchTerm = signal('');
   sortOption = signal('newest');
 
@@ -48,6 +53,16 @@ export class ProductListComponent implements OnInit {
       { label: this.translate.instant('shop.productList.sortPriceLow'), value: 'price_asc' },
       { label: this.translate.instant('shop.productList.sortPriceHigh'), value: 'price_desc' },
       { label: this.translate.instant('shop.productList.sortNameAZ'), value: 'name_asc' },
+    ];
+  }
+
+  get typeOptions() {
+    return [
+      { label: this.translate.instant('shop.productList.allTypes'), value: null },
+      { label: this.translate.instant('shop.productList.typeQuestion'), value: 'QUESTION' },
+      { label: this.translate.instant('shop.productList.typeSession'), value: 'SESSION' },
+      { label: this.translate.instant('shop.productList.typeMonthly'), value: 'MONTHLY' },
+      { label: this.translate.instant('shop.productList.typeSpecial'), value: 'SPECIAL' },
     ];
   }
 
@@ -82,6 +97,18 @@ export class ProductListComponent implements OnInit {
       params.categoryId = this.selectedCategory();
     }
 
+    if (this.selectedType()) {
+      params.productType = this.selectedType();
+    }
+
+    if (this.minPrice() !== null && this.minPrice()! >= 0) {
+      params.minPrice = this.minPrice();
+    }
+
+    if (this.maxPrice() !== null && this.maxPrice()! > 0) {
+      params.maxPrice = this.maxPrice();
+    }
+
     if (this.searchTerm()) {
       params.search = this.searchTerm();
     }
@@ -99,6 +126,15 @@ export class ProductListComponent implements OnInit {
 
   onCategoryChange(categoryId: string | null) {
     this.selectedCategory.set(categoryId);
+    this.loadProducts();
+  }
+
+  onTypeChange(productType: ProductType | null) {
+    this.selectedType.set(productType);
+    this.loadProducts();
+  }
+
+  onPriceFilter() {
     this.loadProducts();
   }
 
