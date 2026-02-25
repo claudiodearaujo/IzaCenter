@@ -12,6 +12,7 @@ export {
   calculateDiscountPercentage,
   paginate,
   buildPaginationMeta,
+  buildCursorMeta,
   omit,
   pick,
   delay,

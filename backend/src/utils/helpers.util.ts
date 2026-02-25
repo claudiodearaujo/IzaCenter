@@ -177,3 +177,15 @@ export function addHours(date: Date, hours: number): Date {
   result.setHours(result.getHours() + hours);
   return result;
 }
+
+/**
+ * Build cursor-based pagination meta
+ */
+export function buildCursorMeta(
+  items: { id: string }[],
+  limit: number
+): { hasNextPage: boolean; nextCursor: string | null } {
+  const hasNextPage = items.length === limit;
+  const nextCursor = hasNextPage ? items[items.length - 1].id : null;
+  return { hasNextPage, nextCursor };
+}

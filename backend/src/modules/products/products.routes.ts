@@ -4,7 +4,7 @@ import { Router } from 'express';
 import { productsController } from './products.controller';
 import { validate, idParamsSchema } from '../../middlewares/validate.middleware';
 import { authenticate, requireAdmin, optionalAuth } from '../../middlewares/auth.middleware';
-import { uploadImage } from '../../middlewares/upload.middleware';
+import { uploadImage, compressImageMiddleware } from '../../middlewares/upload.middleware';
 import {
   createProductSchema,
   updateProductSchema,
@@ -104,6 +104,42 @@ router.get(
 router.get(
   '/public/featured',
   productsController.getFeatured.bind(productsController)
+);
+
+/**
+ * @openapi
+ * /products/public/cursor:
+ *   get:
+ *     tags: [Products]
+ *     summary: List active products with cursor-based pagination (public)
+ *     description: More efficient than offset pagination for large datasets.
+ *     security: []
+ *     parameters:
+ *       - in: query
+ *         name: cursor
+ *         schema:
+ *           type: string
+ *         description: Cursor ID from the previous page's nextCursor
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 12
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: categoryId
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Products with cursor pagination metadata
+ */
+router.get(
+  '/public/cursor',
+  productsController.listCursor.bind(productsController)
 );
 
 /**
@@ -321,6 +357,7 @@ router.post(
   requireAdmin,
   validate(idParamsSchema, 'params'),
   uploadImage.single('cover'),
+  compressImageMiddleware({ maxWidthOrHeight: 1200, quality: 85, format: 'webp' }),
   productsController.updateCover.bind(productsController)
 );
 

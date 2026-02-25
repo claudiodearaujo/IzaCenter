@@ -131,6 +131,27 @@
       </div>
     </div>
 
+    <!-- Communication Preferences -->
+    <div class="glass-card p-8 mb-8">
+      <h2 class="text-xl font-semibold mb-6">{{ 'client.profile.communicationPreferences' | translate }}</h2>
+      <div class="space-y-4">
+        <div class="flex items-center justify-between p-4 bg-surface-50 rounded-lg">
+          <div>
+            <p class="font-medium text-sm">{{ 'client.profile.emailNotifications' | translate }}</p>
+            <p class="text-secondary/70 text-xs mt-0.5">{{ 'client.profile.emailNotificationsDesc' | translate }}</p>
+          </div>
+          <p-toggleswitch [(ngModel)]="profileForm.notificationEmail" (onChange)="saveProfile()" />
+        </div>
+        <div class="flex items-center justify-between p-4 bg-surface-50 rounded-lg">
+          <div>
+            <p class="font-medium text-sm">{{ 'client.profile.whatsappNotifications' | translate }}</p>
+            <p class="text-secondary/70 text-xs mt-0.5">{{ 'client.profile.whatsappNotificationsDesc' | translate }}</p>
+          </div>
+          <p-toggleswitch [(ngModel)]="profileForm.notificationWhatsapp" (onChange)="saveProfile()" />
+        </div>
+      </div>
+    </div>
+
     <!-- Password Form -->
     <div class="glass-card p-8 mb-8">
       <h3 class="heading-3 text-primary mb-6 flex items-center gap-2">

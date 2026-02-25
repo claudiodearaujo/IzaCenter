@@ -11,7 +11,8 @@
     "register": "S'inscrire",
     "logout": "Déconnexion",
     "myArea": "Mon Espace",
-    "adminPanel": "Panneau Admin"
+    "adminPanel": "Panneau Admin",
+    "search": "Rechercher des produits"
   },
   "footer": {
     "quickLinks": "Liens Rapides",
@@ -303,7 +304,12 @@
       "passwordChanged": "Mot de passe modifié avec succès !",
       "passwordError": "Erreur lors du changement de mot de passe",
       "avatarUpdated": "Avatar mis à jour !",
-      "avatarError": "Erreur lors du téléchargement de l'avatar"
+      "avatarError": "Erreur lors du téléchargement de l'avatar",
+      "communicationPreferences": "Préférences de communication",
+      "emailNotifications": "Notifications par email",
+      "emailNotificationsDesc": "Recevez des mises à jour sur vos tirages, rendez-vous et commandes par email",
+      "whatsappNotifications": "Notifications WhatsApp",
+      "whatsappNotificationsDesc": "Recevez des rappels et des mises à jour via WhatsApp"
     },
     "menu": {
       "dashboard": "Tableau de bord",
@@ -1302,5 +1308,10 @@
     "privacyLink": "Politique de Confidentialité",
     "accept": "Accepter",
     "decline": "Refuser"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "empty": "Aucune notification"
   }
 }

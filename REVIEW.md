@@ -180,7 +180,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
   - [x] appointments.service.spec.ts (CRUD, conflicts, reschedule, available slots, emails)
 - [x] Adicionar testes unitários para controllers do backend (auth.controller.spec.ts, products.controller.spec.ts)
 - [x] Adicionar testes unitários para o frontend (services e components) — service specs existentes + 4 novos component specs (dashboard, orders, availability, reports)
-- [ ] Adicionar testes E2E (Playwright já está como dependência)
+- [x] Adicionar testes E2E (Playwright já está como dependência) — `e2e/` com playwright.config.ts + 4 test suites (public-pages, auth, shop, critical-flows)
 - [ ] Testar fluxos críticos: registro → compra → pagamento → leitura
 
 #### 5.7 Internacionalização (conforme ADMIN_I18N_IMPLEMENTATION.md)
@@ -210,29 +210,29 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 ### 🟢 Prioridade MÉDIA (Melhorias para V1 robusta)
 
 #### 5.10 Performance
-- [ ] Implementar cache com Redis para queries frequentes (produtos, categorias)
-- [ ] Adicionar compressão de imagens no upload
-- [ ] Implementar paginação cursor-based para listagens grandes
+- [x] Implementar cache com Redis para queries frequentes (produtos, categorias) — `getFeatured`, `listCategories` com TTL + invalidação em mutações
+- [x] Adicionar compressão de imagens no upload — `compressImageMiddleware` (sharp) em `upload.middleware.ts`, aplicado no upload de capa de produtos
+- [x] Implementar paginação cursor-based para listagens grandes — `listCursor()` em `products.service.ts` + endpoint `GET /products/public/cursor` + helper `buildCursorMeta()`
 - [ ] Configurar CDN para assets estáticos
-- [ ] Budget de build do Angular: revisar limite de 1MB para initial bundle
+- [x] Budget de build do Angular: revisar limite de 1MB para initial bundle — warning 1MB / error 2MB em angular.json
 
 #### 5.11 UX/UI
-- [ ] Implementar loading states em todas as páginas
+- [x] Implementar loading states em todas as páginas — `loadingbody` template com `p-skeleton` nos 6 componentes de lista admin
 - [ ] Implementar feedback visual para ações do usuário (toast notifications) — já implementado via NotificationService + ToastModule em todos os layouts
 - [x] Implementar página 404 customizada — `NotFoundComponent` com botões de ação
-- [ ] Implementar tratamento de erros offline/network
+- [x] Implementar tratamento de erros offline/network — `errorInterceptor` expandido: status 0 detecta offline (`navigator.onLine`), 429 (rate limit), 503 (indisponível)
 - [x] Adicionar skeleton loading nos componentes — `loadingbody` template com `p-skeleton` adicionado nos 6 componentes de lista admin (produtos, leituras, pedidos, agendamentos, usuários, depoimentos)
 - [ ] Testar responsividade em dispositivos móveis
 
 #### 5.12 Funcionalidades Adicionais
-- [ ] Implementar notificações in-app (modelo existe no banco)
-- [ ] Implementar busca global de produtos
+- [x] Implementar notificações in-app (modelo existe no banco) — backend: módulo `notifications` com GET/PATCH/DELETE endpoints; frontend: `InAppNotificationsService` + `NotificationBellComponent` no header
+- [x] Implementar busca global de produtos — barra de busca no header redireciona para `/loja?search=termo`; shop lê parâmetro `search` dos queryParams
 - [x] Implementar filtros avançados na loja (por categoria, preço, tipo) — filtro por tipo de produto e faixa de preço adicionados à loja
 - [ ] Implementar histórico de pedidos com download de PDF
 - [x] Implementar sistema de agendamento configurável — `getAvailableSlots` agora carrega horários do banco via `settingsService.getBusinessHours()`
 
 #### 5.13 API & Documentação
-- [ ] Adicionar versionamento de API (ex: /api/v1/)
+- [x] Adicionar versionamento de API (ex: /api/v1/) — `/api/v1` montado em paralelo com `/api` via `mountRoutes()` em `app.ts`
 - [x] Implementar documentação OpenAPI/Swagger — swagger-ui-express instalado, spec gerado com swagger-jsdoc, disponível em `/api/docs`
 - [x] Documentar todos os endpoints com anotações OpenAPI (auth, products, orders, readings, appointments, users, testimonials, dashboard)
 - [ ] Criar README completo do projeto com instruções de setup
@@ -241,13 +241,13 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 - [x] Implementar página de Termos de Uso — `/termos-de-uso`
 - [x] Implementar página de Política de Privacidade (LGPD) — `/politica-de-privacidade`
 - [x] Implementar banner de consentimento de cookies — `CookieConsentComponent` no layout público
-- [ ] Implementar sistema de opt-out de comunicações
+- [x] Implementar sistema de opt-out de comunicações — campos `notificationEmail` e `notificationWhatsapp` no modelo User; toggles na página de perfil do cliente (`/cliente/perfil`)
 - [ ] Verificar compliance com regulamentações de pagamento (PCI DSS via Stripe)
 
 ### 🔵 Prioridade BAIXA (Nice-to-have para versões futuras)
 
 #### 5.15 Futuras Melhorias
-- [ ] PWA completo com service worker para uso offline
+- [x] PWA completo com service worker — `@angular/service-worker` instalado, `ngsw-config.json` criado com cache de assets e APIs de produtos/settings, registrado em `app.config.ts`
 - [ ] Integração WhatsApp (Evolution API — estrutura já existe)
 - [ ] Sistema de cupons avançado (por categoria, por usuário)
 - [ ] Dashboard analytics mais detalhado

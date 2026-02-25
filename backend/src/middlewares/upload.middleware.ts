@@ -1,8 +1,9 @@
 // apps/backend/src/middlewares/upload.middleware.ts
 
 import multer, { FileFilterCallback } from 'multer';
-import { Request } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import path from 'path';
+import sharp from 'sharp';
 import { AppError } from './error.middleware';
 
 // Allowed MIME types
@@ -135,4 +136,86 @@ export function getUploadFolder(mimetype: string): string {
     return 'documents';
   }
   return 'files';
+}
+
+/**
+ * Image compression options
+ */
+export interface CompressImageOptions {
+  maxWidthOrHeight?: number;
+  quality?: number;
+  format?: 'jpeg' | 'webp' | 'png';
+}
+
+/**
+ * Compress an uploaded image buffer using sharp.
+ * Resizes to a maximum dimension and converts to the target format.
+ *
+ * @param file - Multer file object (in memory)
+ * @param options - Compression options
+ * @returns Modified file object with compressed buffer
+ */
+export async function compressImage(
+  file: Express.Multer.File,
+  options: CompressImageOptions = {}
+): Promise<Express.Multer.File> {
+  const { maxWidthOrHeight = 1920, quality = 80, format = 'webp' } = options;
+
+  // Only compress images
+  if (!ALLOWED_IMAGE_TYPES.includes(file.mimetype)) {
+    return file;
+  }
+
+  let pipeline = sharp(file.buffer).resize(maxWidthOrHeight, maxWidthOrHeight, {
+    fit: 'inside',
+    withoutEnlargement: true,
+  });
+
+  switch (format) {
+    case 'webp':
+      pipeline = pipeline.webp({ quality });
+      break;
+    case 'jpeg':
+      pipeline = pipeline.jpeg({ quality });
+      break;
+    case 'png':
+      pipeline = pipeline.png({ compressionLevel: 8 });
+      break;
+  }
+
+  const compressedBuffer = await pipeline.toBuffer();
+
+  return {
+    ...file,
+    buffer: compressedBuffer,
+    size: compressedBuffer.length,
+    mimetype: `image/${format}`,
+    originalname: path.basename(file.originalname, path.extname(file.originalname)) + `.${format}`,
+  };
+}
+
+/**
+ * Express middleware to compress uploaded images automatically.
+ * Compresses the `file` (single) or `files` (array) in req after multer.
+ */
+export function compressImageMiddleware(options: CompressImageOptions = {}) {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      if (req.file && ALLOWED_IMAGE_TYPES.includes(req.file.mimetype)) {
+        req.file = await compressImage(req.file, options);
+      }
+      if (req.files) {
+        const files = Array.isArray(req.files) ? req.files : Object.values(req.files).flat();
+        for (const file of files as Express.Multer.File[]) {
+          if (ALLOWED_IMAGE_TYPES.includes(file.mimetype)) {
+            const compressed = await compressImage(file, options);
+            Object.assign(file, compressed);
+          }
+        }
+      }
+      next();
+    } catch (err) {
+      next(err);
+    }
+  };
 }

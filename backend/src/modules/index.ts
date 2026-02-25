@@ -12,3 +12,4 @@ export { categoriesRoutes } from './categories';
 export { testimonialsRoutes } from './testimonials';
 export { settingsRoutes } from './settings';
 export { dashboardRoutes } from './dashboard';
+export { notificationsRoutes } from './notifications';

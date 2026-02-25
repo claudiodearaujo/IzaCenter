@@ -40,6 +40,29 @@
         <!-- Language Selector -->
         <app-language-selector />
 
+        <!-- Global Search -->
+        <div class="relative flex items-center">
+          @if (isSearchOpen()) {
+            <input
+              type="text"
+              class="border border-neutral-200 rounded-full px-4 py-1.5 text-sm w-52 outline-none focus:border-primary-400"
+              [placeholder]="'shop.productList.searchPlaceholder' | translate"
+              [(ngModel)]="globalSearchTerm"
+              (keyup.enter)="onGlobalSearch()"
+              (keyup.escape)="toggleSearch()"
+              autofocus
+            />
+          }
+          <button
+            (click)="isSearchOpen() ? onGlobalSearch() : toggleSearch()"
+            class="p-2 text-neutral-700 hover:text-primary-700 transition-colors"
+            [attr.aria-label]="'nav.search' | translate"
+            type="button"
+          >
+            <i class="pi pi-search text-lg"></i>
+          </button>
+        </div>
+
         <!-- Cart -->
         <a routerLink="/carrinho"
           class="relative p-2 text-neutral-700 hover:text-primary-700 transition-colors text-xl">
@@ -55,6 +78,8 @@
         @if (isAuthenticated()) {
         <!-- User Menu -->
         <div class="flex items-center gap-3">
+          <!-- In-App Notifications -->
+          <app-notification-bell />
           @if (isAdmin()) {
           <a routerLink="/admin" class="text-sm font-medium text-primary-700 hover:text-primary-800">
             {{ 'nav.adminPanel' | translate }}

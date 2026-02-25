@@ -11,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { FileUploadModule, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { DividerModule } from 'primeng/divider';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { ApiService } from '../../../core/services/api.service';
@@ -29,6 +30,7 @@ import { NotificationService } from '../../../core/services/notification.service
     PasswordModule,
     FileUploadModule,
     DividerModule,
+    ToggleSwitchModule,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
@@ -46,6 +48,8 @@ export class ProfileComponent implements OnInit {
     fullName: '',
     phone: '',
     birthDate: '',
+    notificationEmail: true,
+    notificationWhatsapp: true,
   };
   savingProfile = signal(false);
 
@@ -73,6 +77,8 @@ export class ProfileComponent implements OnInit {
         birthDate: currentUser.birthDate
           ? new Date(currentUser.birthDate).toISOString().split('T')[0]
           : '',
+        notificationEmail: (currentUser as any).notificationEmail ?? true,
+        notificationWhatsapp: (currentUser as any).notificationWhatsapp ?? true,
       };
     }
   }
