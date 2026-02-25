@@ -212,15 +212,15 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 #### 5.10 Performance
 - [x] Implementar cache com Redis para queries frequentes (produtos, categorias) — `getFeatured`, `listCategories` com TTL + invalidação em mutações
 - [x] Adicionar compressão de imagens no upload — `compressImageMiddleware` (sharp) em `upload.middleware.ts`, aplicado no upload de capa de produtos
-- [ ] Implementar paginação cursor-based para listagens grandes
+- [x] Implementar paginação cursor-based para listagens grandes — `listCursor()` em `products.service.ts` + endpoint `GET /products/public/cursor` + helper `buildCursorMeta()`
 - [ ] Configurar CDN para assets estáticos
 - [x] Budget de build do Angular: revisar limite de 1MB para initial bundle — warning 1MB / error 2MB em angular.json
 
 #### 5.11 UX/UI
-- [ ] Implementar loading states em todas as páginas
+- [x] Implementar loading states em todas as páginas — `loadingbody` template com `p-skeleton` nos 6 componentes de lista admin
 - [ ] Implementar feedback visual para ações do usuário (toast notifications) — já implementado via NotificationService + ToastModule em todos os layouts
 - [x] Implementar página 404 customizada — `NotFoundComponent` com botões de ação
-- [ ] Implementar tratamento de erros offline/network
+- [x] Implementar tratamento de erros offline/network — `errorInterceptor` expandido: status 0 detecta offline (`navigator.onLine`), 429 (rate limit), 503 (indisponível)
 - [x] Adicionar skeleton loading nos componentes — `loadingbody` template com `p-skeleton` adicionado nos 6 componentes de lista admin (produtos, leituras, pedidos, agendamentos, usuários, depoimentos)
 - [ ] Testar responsividade em dispositivos móveis
 
@@ -247,7 +247,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 ### 🔵 Prioridade BAIXA (Nice-to-have para versões futuras)
 
 #### 5.15 Futuras Melhorias
-- [ ] PWA completo com service worker para uso offline
+- [x] PWA completo com service worker — `@angular/service-worker` instalado, `ngsw-config.json` criado com cache de assets e APIs de produtos/settings, registrado em `app.config.ts`
 - [ ] Integração WhatsApp (Evolution API — estrutura já existe)
 - [ ] Sistema de cupons avançado (por categoria, por usuário)
 - [ ] Dashboard analytics mais detalhado

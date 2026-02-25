@@ -53,6 +53,24 @@ export class ProductsController {
   }
 
   /**
+   * GET /products/public/cursor
+   * List active products with cursor-based pagination (public)
+   */
+  async listCursor(req: Request, res: Response, next: NextFunction) {
+    try {
+      const cursor = req.query['cursor'] as string | undefined;
+      const limit = parseInt(req.query['limit'] as string) || 12;
+      const search = req.query['search'] as string | undefined;
+      const categoryId = req.query['categoryId'] as string | undefined;
+
+      const result = await productsService.listCursor({ cursor, limit, search, categoryId });
+      res.json({ success: true, ...result });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * GET /products/public/:slug
    * Get product by slug (public)
    */
