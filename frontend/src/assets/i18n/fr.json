@@ -256,7 +256,8 @@
         "productTypeQuestion": "Questions",
         "productTypeSession": "Session",
         "productTypeMonthly": "Mensuel",
-        "productTypeSpecial": "Spécial"
+        "productTypeSpecial": "Spécial",
+        "downloadPdf": "Télécharger PDF"
       }
     },
     "profile": {

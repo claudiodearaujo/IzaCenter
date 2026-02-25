@@ -38,12 +38,22 @@
               Realizado em {{ formatDate(order()!.createdAt) }}
             </p>
           </div>
-          <span 
-            class="inline-block px-4 py-2 rounded-lg text-sm font-medium border"
-            [class]="getStatusClass(order()!.status)"
-          >
-            {{ getStatusLabel(order()!.status) }}
-          </span>
+          <div class="flex items-center gap-3">
+            <span 
+              class="inline-block px-4 py-2 rounded-lg text-sm font-medium border"
+              [class]="getStatusClass(order()!.status)"
+            >
+              {{ getStatusLabel(order()!.status) }}
+            </span>
+            <button
+              (click)="downloadPdf()"
+              class="btn-outline text-sm flex items-center gap-2 print:hidden"
+              [title]="'client.orders.detail.downloadPdf' | translate"
+            >
+              <i class="pi pi-download"></i>
+              {{ 'client.orders.detail.downloadPdf' | translate }}
+            </button>
+          </div>
         </div>
       </div>
 

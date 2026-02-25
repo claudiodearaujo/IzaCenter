@@ -228,14 +228,14 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 - [x] Implementar notificações in-app (modelo existe no banco) — backend: módulo `notifications` com GET/PATCH/DELETE endpoints; frontend: `InAppNotificationsService` + `NotificationBellComponent` no header
 - [x] Implementar busca global de produtos — barra de busca no header redireciona para `/loja?search=termo`; shop lê parâmetro `search` dos queryParams
 - [x] Implementar filtros avançados na loja (por categoria, preço, tipo) — filtro por tipo de produto e faixa de preço adicionados à loja
-- [ ] Implementar histórico de pedidos com download de PDF
+- [x] Implementar histórico de pedidos com download de PDF — botão "Baixar PDF" na página de detalhes do pedido (`/cliente/pedidos/:id`) usando `window.print()` com estilos de impressão
 - [x] Implementar sistema de agendamento configurável — `getAvailableSlots` agora carrega horários do banco via `settingsService.getBusinessHours()`
 
 #### 5.13 API & Documentação
 - [x] Adicionar versionamento de API (ex: /api/v1/) — `/api/v1` montado em paralelo com `/api` via `mountRoutes()` em `app.ts`
 - [x] Implementar documentação OpenAPI/Swagger — swagger-ui-express instalado, spec gerado com swagger-jsdoc, disponível em `/api/docs`
 - [x] Documentar todos os endpoints com anotações OpenAPI (auth, products, orders, readings, appointments, users, testimonials, dashboard)
-- [ ] Criar README completo do projeto com instruções de setup
+- [x] Criar README completo do projeto com instruções de setup — seções de pré-requisitos, variáveis de ambiente, Stripe webhooks, testes, build, deploy, estrutura do projeto, usuários de teste
 
 #### 5.14 Legal & Compliance
 - [x] Implementar página de Termos de Uso — `/termos-de-uso`

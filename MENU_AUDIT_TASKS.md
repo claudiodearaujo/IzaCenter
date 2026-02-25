@@ -179,24 +179,13 @@ Existem rotas em `app.routes.ts` que não estão refletidas no menu:
 ### Prioridade 2 - IMPORTANTE
 
 #### **Tarefa 2.1: Adicionar Itens Faltantes ao Menu Admin**
-- **Status:** ⚠️ Inconsistência
+- **Status:** ✅ Implementado
 - **O que fazer:**
-  - [ ] Adicionar "Categorias" ao menu (rota existe: `/admin/categorias`)
-  - [ ] Adicionar "Cartas" ao menu (rota existe: `/admin/cartas`)
-  - [ ] Adicionar "Depoimentos" ao menu (rota existe: `/admin/depoimentos`)
-  - [ ] Adicionar "Configurações" ao menu (rota existe: `/admin/configuracoes`)
+  - [x] Adicionar "Categorias" ao menu (rota existe: `/admin/categorias`)
+  - [x] Adicionar "Cartas" ao menu (rota existe: `/admin/cartas`)
+  - [x] Adicionar "Depoimentos" ao menu (rota existe: `/admin/depoimentos`)
+  - [x] Adicionar "Configurações" ao menu (rota existe: `/admin/configuracoes`)
 - **Arquivo:** `frontend/src/app/layouts/admin-layout/admin-layout.component.ts`
-- **Mudança necessária:** Expandir array `menuItems` com 4 novos itens
-- **Exemplo:**
-  ```typescript
-  menuItems = [
-    // ... itens existentes ...
-    { labelKey: 'admin.menu.categories', icon: 'pi-th-large', route: '/admin/categorias' },
-    { labelKey: 'admin.menu.cards', icon: 'pi-images', route: '/admin/cartas' },
-    { labelKey: 'admin.menu.testimonials', icon: 'pi-comments', route: '/admin/depoimentos' },
-    { labelKey: 'admin.menu.settings', icon: 'pi-cog', route: '/admin/configuracoes' }
-  ];
-  ```
 
 ---
 
