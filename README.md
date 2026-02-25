@@ -74,6 +74,7 @@ Copie `backend/.env.example` para `backend/.env` e configure:
 | `SMTP_PASS` | Senha SMTP | ✅ |
 | `FRONTEND_URL` | URL do frontend (para CORS e e-mails) | ✅ |
 | `REDIS_URL` | URL do Redis (token blacklist) | ⚠️ Prod |
+| `SENTRY_DSN` | DSN do Sentry (monitoramento de erros) | ⚠️ Prod |
 
 ### Configuração do Stripe (Webhooks)
 
@@ -146,6 +147,16 @@ O projeto inclui configurações para deploy no [Render](https://render.com):
 - **Frontend:** Configuração via `render.yaml` na raiz
 
 Configure as variáveis de ambiente no painel do Render antes do primeiro deploy.
+
+#### Secrets do GitHub Actions
+
+Para CI/CD automático, configure os seguintes secrets no GitHub:
+
+| Secret | Descrição |
+|--------|-----------|
+| `RENDER_BACKEND_DEPLOY_HOOK` | Webhook de deploy do backend no Render |
+| `RENDER_FRONTEND_DEPLOY_HOOK` | Webhook de deploy do frontend no Render |
+| `E2E_BASE_URL` | URL base para testes E2E (ex: `https://seu-frontend.onrender.com`) |
 
 ### Docker
 

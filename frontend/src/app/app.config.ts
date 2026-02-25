@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, isDevMode, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, importProvidersFrom, isDevMode, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
@@ -7,11 +7,13 @@ import { providePrimeNG } from 'primeng/config';
 import { MessageService } from 'primeng/api';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import * as Sentry from '@sentry/angular';
 
 import { routes } from './app.routes';
 import LivriaPreset from './themes/livria-preset';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { environment } from '../environments/environment';
 
 // Factory function for TranslateHttpLoader
 export function createTranslateLoader(http: HttpClient) {
@@ -21,6 +23,10 @@ export function createTranslateLoader(http: HttpClient) {
 export const appConfig: ApplicationConfig = {
   providers: [
     MessageService,
+    // Use Sentry's error handler when DSN is configured, otherwise fall back to default
+    ...(environment.sentryDsn
+      ? [{ provide: ErrorHandler, useValue: Sentry.createErrorHandler({ showDialog: false }) }]
+      : []),
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),

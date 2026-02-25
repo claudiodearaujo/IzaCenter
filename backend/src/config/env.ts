@@ -50,7 +50,10 @@ export const env = {
   
   // Redis (optional)
   REDIS_URL: process.env.REDIS_URL || '',
-  
+
+  // Sentry (optional — error monitoring)
+  SENTRY_DSN: process.env.SENTRY_DSN || '',
+
   // Helpers
   isDevelopment: process.env.NODE_ENV === 'development',
   isProduction: process.env.NODE_ENV === 'production',

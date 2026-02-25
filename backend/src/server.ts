@@ -1,5 +1,9 @@
 // apps/backend/src/server.ts
 
+// Sentry must be initialized before any other imports
+import { initSentry } from './config/sentry';
+initSentry();
+
 import app from './app';
 import { env, connectDatabase, disconnectDatabase } from './config';
 
