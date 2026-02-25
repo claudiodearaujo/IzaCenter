@@ -1,0 +1,261 @@
+<!-- apps/frontend/src/app/features/admin/orders/order-list/order-list.component.html -->
+
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">
+          <i class="pi pi-shopping-cart mr-3"></i>
+          {{ 'admin.orders.title' | translate }}
+        </h1>
+        <p class="text-secondary">{{ 'admin.orders.subtitle' | translate }}</p>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-clock text-xl text-yellow-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ pendingCount() }}
+          </p>
+          <p class="text-secondary text-sm">{{ 'admin.orders.pending' | translate }}</p>
+        </div>
+      </div>
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-credit-card text-xl text-blue-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ paidCount() }}
+          </p>
+          <p class="text-secondary text-sm">{{ 'admin.orders.paid' | translate }}</p>
+        </div>
+      </div>
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-check-circle text-xl text-green-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ completedCount() }}
+          </p>
+          <p class="text-secondary text-sm">{{ 'admin.orders.completed' | translate }}</p>
+        </div>
+      </div>
+      <div class="glass-card p-4 flex items-center gap-4">
+        <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
+          <i class="pi pi-times-circle text-xl text-red-400"></i>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-primary">
+            {{ cancelledCount() }}
+          </p>
+          <p class="text-secondary text-sm">{{ 'admin.orders.cancelled' | translate }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="glass-card p-4 mb-6">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <span class="p-input-icon-left w-full">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              [(ngModel)]="searchTerm"
+              [placeholder]="'admin.orders.searchClient' | translate"
+              class="w-full"
+              (keyup.enter)="onSearch()"
+            />
+          </span>
+        </div>
+        <div class="w-full md:w-48">
+          <p-select
+            [options]="statusOptions"
+            [(ngModel)]="selectedStatus"
+            optionLabel="label"
+            optionValue="value"
+            [placeholder]="'common.status' | translate"
+            (onChange)="onSearch()"
+            styleClass="w-full"
+          />
+        </div>
+        <button pButton class="btn-primary" (click)="onSearch()">
+          <i class="pi pi-search mr-2"></i>
+          {{ 'common.search' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-card overflow-hidden">
+      <p-table
+        [value]="orders()"
+        [loading]="loading()"
+        [paginator]="true"
+        [rows]="10"
+        [totalRecords]="totalRecords()"
+        [lazy]="true"
+        (onLazyLoad)="loadOrders($event)"
+        [rowHover]="true"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>{{ 'admin.orders.orderNumber' | translate }}</th>
+            <th>{{ 'admin.orders.client' | translate }}</th>
+            <th>{{ 'admin.orders.items' | translate }}</th>
+            <th>{{ 'admin.orders.total' | translate }}</th>
+            <th>{{ 'common.status' | translate }}</th>
+            <th>{{ 'admin.orders.date' | translate }}</th>
+            <th>{{ 'common.actions' | translate }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+          <tr>
+            <td>
+              <span class="text-primary font-medium">{{ order.orderNumber }}</span>
+            </td>
+            <td>
+              <div>
+                <p class="text-primary font-medium">{{ order.client?.fullName }}</p>
+                <p class="text-secondary text-xs">{{ order.client?.email }}</p>
+              </div>
+            </td>
+            <td>
+              <div>
+                @for (item of order.items; track item.id) {
+                  <p class="text-primary text-sm">
+                    {{ item.quantity }}x {{ item.productName }}
+                  </p>
+                }
+              </div>
+            </td>
+            <td>
+              <span class="text-primary font-medium">{{ formatCurrency(order.total) }}</span>
+            </td>
+            <td>
+              <p-tag
+                [value]="getStatusLabel(order.status)"
+                [severity]="getStatusSeverity(order.status)"
+              />
+            </td>
+            <td>
+              <span class="text-primary">{{ formatDate(order.createdAt) }}</span>
+            </td>
+            <td>
+              <div class="flex gap-1">
+                @if (order.status === 'PAID') {
+                  <button
+                    pButton
+                    class="p-button-info p-button-sm"
+                    [pTooltip]="'admin.orders.markProcessing' | translate"
+                    (click)="updateStatus(order.id, 'PROCESSING', translate.instant('admin.orders.processingSuccess'))"
+                  >
+                    <i class="pi pi-sync"></i>
+                  </button>
+                }
+                @if (order.status === 'PROCESSING') {
+                  <button
+                    pButton
+                    class="p-button-success p-button-sm"
+                    [pTooltip]="'admin.orders.markCompleted' | translate"
+                    (click)="updateStatus(order.id, 'COMPLETED', translate.instant('admin.orders.completedSuccess'))"
+                  >
+                    <i class="pi pi-check-circle"></i>
+                  </button>
+                }
+                @if (order.status !== 'CANCELLED' && order.status !== 'COMPLETED' && order.status !== 'REFUNDED') {
+                  <button
+                    pButton
+                    class="p-button-danger p-button-sm"
+                    [pTooltip]="'common.cancel' | translate"
+                    (click)="cancelOrder(order)"
+                  >
+                    <i class="pi pi-times"></i>
+                  </button>
+                }
+                <button
+                  pButton
+                  class="p-button-text p-button-sm"
+                  [pTooltip]="'admin.orders.notes' | translate"
+                  (click)="openNotesDialog(order)"
+                >
+                  <i class="pi pi-file-edit"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7" class="text-center py-8">
+              <i class="pi pi-shopping-cart text-4xl text-secondary/30 mb-4"></i>
+              <p class="text-secondary">{{ 'admin.orders.noOrders' | translate }}</p>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</section>
+
+<!-- Notes Dialog -->
+<p-dialog
+  [(visible)]="notesDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{width: '500px'}"
+  [header]="'admin.orders.notesTitle' | translate"
+>
+  <div class="space-y-4 p-2">
+    @if (selectedOrder()) {
+      <div class="p-4 bg-dark/30 rounded-lg">
+        <p class="text-primary font-medium">{{ selectedOrder()?.client?.fullName }}</p>
+        <p class="text-secondary text-sm">
+          {{ selectedOrder()?.orderNumber }} — {{ formatDate(selectedOrder()!.createdAt) }}
+        </p>
+      </div>
+    }
+
+    <div>
+      <label class="block text-secondary text-sm mb-2">{{ 'admin.orders.notes' | translate }}</label>
+      <textarea
+        pInputTextarea
+        [(ngModel)]="notes"
+        [rows]="6"
+        class="w-full"
+        [placeholder]="'admin.orders.notesPlaceholder' | translate"
+      ></textarea>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3 pt-4">
+      <button pButton class="btn-outline" (click)="notesDialogVisible.set(false)">
+        {{ 'common.cancel' | translate }}
+      </button>
+      <button
+        pButton
+        class="btn-primary"
+        [loading]="saving()"
+        (click)="saveNotes()"
+      >
+        <i class="pi pi-save mr-2"></i>
+        {{ 'common.save' | translate }}
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog
+  styleClass="custom-confirm-dialog"
+  [style]="{width: '400px'}"
+/>
