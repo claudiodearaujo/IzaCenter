@@ -93,6 +93,13 @@ export const ADMIN_ROUTES: Routes = [
       ),
   },
   {
+    path: 'disponibilidade',
+    loadComponent: () =>
+      import('./availability/availability.component').then(
+        (m) => m.AdminAvailabilityComponent
+      ),
+  },
+  {
     path: 'configuracoes',
     loadComponent: () =>
       import('./settings/settings.component').then((m) => m.SettingsComponent),
