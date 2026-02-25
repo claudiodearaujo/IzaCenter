@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 
 import { env } from './config/env';
+import { Sentry } from './config/sentry';
 import { notFoundHandler, errorHandler, generalLimiter } from './middlewares';
 import { auditLogger } from './middlewares/audit.middleware';
 import { swaggerSpec } from './config/swagger';
@@ -213,6 +214,9 @@ if (env.isDevelopment) {
 // =============================================
 // ERROR HANDLING
 // =============================================
+
+// Sentry error handler (must be before custom error handler)
+Sentry.setupExpressErrorHandler(app);
 
 // 404 handler
 app.use(notFoundHandler);

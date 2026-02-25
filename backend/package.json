@@ -26,6 +26,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
+    "@sentry/node": "^10.40.0",
     "@supabase/supabase-js": "^2.89.0",
     "@types/bcrypt": "^6.0.0",
     "@types/compression": "^1.8.1",

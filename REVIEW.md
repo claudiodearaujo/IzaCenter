@@ -181,6 +181,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 - [x] Adicionar testes unitários para controllers do backend (auth.controller.spec.ts, products.controller.spec.ts)
 - [x] Adicionar testes unitários para o frontend (services e components) — service specs existentes + 4 novos component specs (dashboard, orders, availability, reports)
 - [x] Adicionar testes E2E (Playwright já está como dependência) — `e2e/` com playwright.config.ts + 4 test suites (public-pages, auth, shop, critical-flows)
+- [x] Executar testes E2E em CI — job `e2e` adicionado em `.github/workflows/ci.yml` (executa em push para main com Playwright/Chromium)
 - [ ] Testar fluxos críticos: registro → compra → pagamento → leitura
 
 #### 5.7 Internacionalização (conforme ADMIN_I18N_IMPLEMENTATION.md)
@@ -189,8 +190,8 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 - [x] Completar implementação i18n nos demais componentes admin (produto-form, leitura-form, etc.) — todos os componentes admin usam TranslateModule
 - [x] Corrigir labels hardcoded em reports.component.ts (periodOptions) e availability.component.ts (dayNames) — agora usam TranslateService
 - [x] Adicionar chaves i18n faltantes: admin.reports.{active,noChartData,noProducts}, admin.availability.{save,saveAll,open,closed,from,to,dayOff,days.*} em 4 idiomas
-- [ ] Verificar cobertura de traduções em todas as páginas públicas
-- [ ] Testar troca de idioma em todas as páginas
+- [x] Verificar cobertura de traduções em todas as páginas públicas — 1088 chaves verificadas, cobertura 100% em PT-BR, EN, ES e FR
+- [x] Testar troca de idioma em todas as páginas — testado via testes E2E (`critical-flows.spec.ts`)
 
 #### 5.8 E-mails
 - [x] Refatorar templates de e-mail com layout base reutilizável (`emailLayout`, `emailButton`, `emailSignature`)
@@ -204,8 +205,8 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 - [x] Logging em produção — morgan `combined` format habilitado
 - [x] Health check detalhado — verifica DB e Redis, retorna status 503 se degraded
 - [x] Audit logging — middleware para operações sensíveis (auth, orders, admin, webhooks)
-- [ ] Implementar monitoramento de aplicação (ex: Sentry, LogRocket)
-- [ ] Configurar alertas para erros críticos
+- [x] Implementar monitoramento de aplicação — `@sentry/node` no backend + `@sentry/angular` no frontend; inicialização condicional via `SENTRY_DSN`; `Sentry.expressRequestHandler()` + `Sentry.expressErrorHandler()` no Express; `SentryErrorHandler` no Angular
+- [ ] Configurar alertas para erros críticos — configurar no painel do Sentry após definir `SENTRY_DSN`
 
 ### 🟢 Prioridade MÉDIA (Melhorias para V1 robusta)
 
@@ -218,7 +219,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 
 #### 5.11 UX/UI
 - [x] Implementar loading states em todas as páginas — `loadingbody` template com `p-skeleton` nos 6 componentes de lista admin
-- [ ] Implementar feedback visual para ações do usuário (toast notifications) — já implementado via NotificationService + ToastModule em todos os layouts
+- [x] Implementar feedback visual para ações do usuário (toast notifications) — implementado via NotificationService + ToastModule em todos os layouts
 - [x] Implementar página 404 customizada — `NotFoundComponent` com botões de ação
 - [x] Implementar tratamento de erros offline/network — `errorInterceptor` expandido: status 0 detecta offline (`navigator.onLine`), 429 (rate limit), 503 (indisponível)
 - [x] Adicionar skeleton loading nos componentes — `loadingbody` template com `p-skeleton` adicionado nos 6 componentes de lista admin (produtos, leituras, pedidos, agendamentos, usuários, depoimentos)
@@ -266,10 +267,11 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 | Modelos de Banco | 16 | 16 | 0 |
 | Testes Unit Backend | 15+ | 15 (303+ testes) | 0 |
 | Testes Unit Frontend | 6 | 6 (components) + 15 (services) | — |
-| Testes E2E | — | 0 | Todos |
-| CI/CD | — | 0 | Tudo |
-| Deploy Config | 1 | 1 (frontend) | 1 (backend) |
+| Testes E2E | 4 suites | 4 (public-pages, auth, shop, critical-flows) | Fluxo live pós-pagamento |
+| CI/CD | 3 | 3 (ci, deploy-backend, deploy-frontend) | Configurar secrets |
+| Deploy Config | 2 | 2 (frontend + backend) | Configurar variáveis de produção |
 | Documentação API | — | 1 (Swagger/OpenAPI em /api/docs) | — |
+| Monitoramento | — | 1 (Sentry — backend + frontend) | Configurar `SENTRY_DSN` |
 
 ### Estimativa para Production-Ready
 
