@@ -101,7 +101,7 @@ export class AdminReportsComponent implements OnInit {
           pendingTestimonials: 0,
         });
         this.loading.set(false);
-        this.notification.error('admin.reports.errorLoading');
+        this.notification.error(this.translate.instant('admin.reports.errorLoading'));
       },
     });
   }

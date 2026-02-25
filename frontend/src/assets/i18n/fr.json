@@ -61,13 +61,23 @@
       "password": "Nouveau mot de passe",
       "confirmPassword": "Confirmer le mot de passe",
       "resetButton": "Réinitialiser"
+    },
+    "messages": {
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "loginSuccess": "Connexion réussie !",
+      "loginError": "Erreur lors de la connexion",
+      "registerSuccess": "Inscription réussie !",
+      "registerError": "Erreur lors de l'inscription",
+      "invalidResetToken": "Jeton invalide ou expiré",
+      "resetSuccess": "Mot de passe réinitialisé avec succès !"
     }
   },
   "home": {
     "hero": {
       "title": "Découvrez votre chemin avec le Tarot",
       "subtitle": "Guidance, clarté et soutien à travers les cartes",
-      "cta": "Prendre rendez-vous"
+      "cta": "Prendre rendez-vous",
+      "meetAbout": "Découvrir Izabela"
     },
     "services": {
       "title": "Services",
@@ -823,7 +833,8 @@
     "rejected": "Rejeté",
     "backToHome": "Retour à l'Accueil",
     "all": "Tous",
-    "upload": "Envoyer"
+    "upload": "Envoyer",
+    "learnMore": "En savoir plus"
   },
   "shop": {
     "productList": {

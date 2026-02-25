@@ -61,13 +61,23 @@
       "password": "Nova Senha",
       "confirmPassword": "Confirmar Senha",
       "resetButton": "Redefinir"
+    },
+    "messages": {
+      "passwordMismatch": "As senhas não coincidem",
+      "loginSuccess": "Login realizado com sucesso!",
+      "loginError": "Erro ao fazer login",
+      "registerSuccess": "Cadastro realizado com sucesso!",
+      "registerError": "Erro ao cadastrar",
+      "invalidResetToken": "Token inválido ou expirado",
+      "resetSuccess": "Senha redefinida com sucesso!"
     }
   },
   "home": {
     "hero": {
       "title": "Descubra seu caminho com o Tarot",
       "subtitle": "Orientação, clareza e acolhimento através das cartas",
-      "cta": "Agendar Consulta"
+      "cta": "Agendar Consulta",
+      "meetAbout": "Conheça a Izabela"
     },
     "services": {
       "title": "Serviços",
@@ -823,7 +833,8 @@
     "rejected": "Rejeitado",
     "backToHome": "Voltar ao Início",
     "all": "Todos",
-    "upload": "Enviar"
+    "upload": "Enviar",
+    "learnMore": "Saiba Mais"
   },
   "shop": {
     "productList": {
