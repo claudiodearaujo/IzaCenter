@@ -354,7 +354,7 @@ export class AppointmentsService {
     // Load business hours from settings (falls back to defaults if not configured)
     const defaultStart = '09:00';
     const defaultEnd = '18:00';
-    const defaultSlotDuration = 60; // minutes
+    const defaultSlotDuration = 30; // minutes
 
     let businessStart = defaultStart;
     let businessEnd = defaultEnd;

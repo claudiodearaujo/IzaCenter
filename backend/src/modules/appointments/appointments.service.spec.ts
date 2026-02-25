@@ -18,6 +18,23 @@ jest.mock('../../utils', () => ({
   emailTemplates: {},
 }));
 
+// Mock settings service to return default business hours
+jest.mock('../settings', () => ({
+  settingsService: {
+    getBusinessHours: jest.fn().mockResolvedValue({
+      data: [
+        { day: 'saturday', dayName: 'Sábado', isOpen: true, start: '09:00', end: '18:00' },
+        { day: 'sunday', dayName: 'Domingo', isOpen: true, start: '09:00', end: '18:00' },
+        { day: 'monday', dayName: 'Segunda', isOpen: true, start: '09:00', end: '18:00' },
+        { day: 'tuesday', dayName: 'Terça', isOpen: true, start: '09:00', end: '18:00' },
+        { day: 'wednesday', dayName: 'Quarta', isOpen: true, start: '09:00', end: '18:00' },
+        { day: 'thursday', dayName: 'Quinta', isOpen: true, start: '09:00', end: '18:00' },
+        { day: 'friday', dayName: 'Sexta', isOpen: true, start: '09:00', end: '18:00' },
+      ],
+    }),
+  },
+}));
+
 describe('AppointmentsService', () => {
   let service: AppointmentsService;
 
