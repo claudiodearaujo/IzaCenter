@@ -5,6 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 
 import { env } from './config/env';
 import { notFoundHandler, errorHandler, generalLimiter } from './middlewares';
@@ -58,6 +59,7 @@ app.use('/webhooks/stripe', stripeWebhook);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser());
 
 // =============================================
 // UTILITY MIDDLEWARES
@@ -66,9 +68,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Compression
 app.use(compression());
 
-// Logging (only in development)
+// Logging
 if (env.isDevelopment) {
   app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined'));
 }
 
 // Rate limiting

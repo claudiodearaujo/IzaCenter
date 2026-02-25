@@ -661,4 +661,171 @@ describe('OrdersService', () => {
       });
     });
   });
+
+  // =============================================
+  // HANDLE REFUND
+  // =============================================
+  describe('handleRefund', () => {
+    const paymentIntentId = 'pi_test123';
+
+    it('should refund order and send email', async () => {
+      // Arrange
+      const mockOrder = {
+        id: 'order-123',
+        orderNumber: 'ORD-2026-0001',
+        status: 'PAID',
+        stripePaymentIntentId: paymentIntentId,
+        client: {
+          id: 'client-123',
+          email: 'client@test.com',
+          fullName: 'Cliente Teste',
+        },
+      };
+      prismaMock.order.findFirst.mockResolvedValue(mockOrder as any);
+      prismaMock.order.update.mockResolvedValue({
+        ...mockOrder,
+        status: 'REFUNDED',
+        paymentStatus: 'REFUNDED',
+      } as any);
+
+      // Act
+      const result = await ordersService.handleRefund(paymentIntentId);
+
+      // Assert
+      expect(result?.status).toBe('REFUNDED');
+      expect(prismaMock.order.update).toHaveBeenCalledWith({
+        where: { id: 'order-123' },
+        data: {
+          status: 'REFUNDED',
+          paymentStatus: 'REFUNDED',
+        },
+      });
+    });
+
+    it('should return null if no order found for payment intent', async () => {
+      // Arrange
+      prismaMock.order.findFirst.mockResolvedValue(null);
+
+      // Act
+      const result = await ordersService.handleRefund(paymentIntentId);
+
+      // Assert
+      expect(result).toBeNull();
+      expect(prismaMock.order.update).not.toHaveBeenCalled();
+    });
+
+    it('should skip if order already refunded', async () => {
+      // Arrange
+      const mockOrder = {
+        id: 'order-123',
+        status: 'REFUNDED',
+        stripePaymentIntentId: paymentIntentId,
+        client: {
+          id: 'client-123',
+          email: 'client@test.com',
+          fullName: 'Cliente Teste',
+        },
+      };
+      prismaMock.order.findFirst.mockResolvedValue(mockOrder as any);
+
+      // Act
+      const result = await ordersService.handleRefund(paymentIntentId);
+
+      // Assert
+      expect(result).toEqual(mockOrder);
+      expect(prismaMock.order.update).not.toHaveBeenCalled();
+    });
+  });
+
+  // =============================================
+  // HANDLE PAYMENT FAILURE
+  // =============================================
+  describe('handlePaymentFailure', () => {
+    const orderId = 'order-123';
+
+    it('should mark order as failed', async () => {
+      // Arrange
+      const mockOrder = {
+        id: orderId,
+        status: 'PENDING',
+        paymentStatus: 'PENDING',
+      };
+      prismaMock.order.findUnique.mockResolvedValue(mockOrder as any);
+      prismaMock.order.update.mockResolvedValue({
+        ...mockOrder,
+        status: 'CANCELLED',
+        paymentStatus: 'FAILED',
+        cancelledAt: new Date(),
+      } as any);
+
+      // Act
+      const result = await ordersService.handlePaymentFailure(orderId);
+
+      // Assert
+      expect(result?.status).toBe('CANCELLED');
+      expect(result?.paymentStatus).toBe('FAILED');
+      expect(prismaMock.order.update).toHaveBeenCalledWith({
+        where: { id: orderId },
+        data: {
+          status: 'CANCELLED',
+          paymentStatus: 'FAILED',
+          cancelledAt: expect.any(Date),
+        },
+      });
+    });
+
+    it('should return null if order not found', async () => {
+      // Arrange
+      prismaMock.order.findUnique.mockResolvedValue(null);
+
+      // Act
+      const result = await ordersService.handlePaymentFailure(orderId);
+
+      // Assert
+      expect(result).toBeNull();
+      expect(prismaMock.order.update).not.toHaveBeenCalled();
+    });
+
+    it('should skip if order already cancelled', async () => {
+      // Arrange
+      const mockOrder = {
+        id: orderId,
+        status: 'CANCELLED',
+        paymentStatus: 'FAILED',
+      };
+      prismaMock.order.findUnique.mockResolvedValue(mockOrder as any);
+
+      // Act
+      const result = await ordersService.handlePaymentFailure(orderId);
+
+      // Assert
+      expect(result).toBeNull();
+      expect(prismaMock.order.update).not.toHaveBeenCalled();
+    });
+  });
+
+  // =============================================
+  // HANDLE PAYMENT SUCCESS (idempotency)
+  // =============================================
+  describe('handlePaymentSuccess - idempotency', () => {
+    const orderId = 'order-123';
+    const paymentIntentId = 'pi_test123';
+
+    it('should skip if order already has SUCCEEDED payment status', async () => {
+      // Arrange
+      const existingOrder = {
+        id: orderId,
+        status: 'PAID',
+        paymentStatus: 'SUCCEEDED',
+      };
+      prismaMock.order.findUnique.mockResolvedValue(existingOrder as any);
+
+      // Act
+      const result = await ordersService.handlePaymentSuccess(orderId, paymentIntentId);
+
+      // Assert
+      expect(result).toEqual(existingOrder);
+      expect(prismaMock.order.update).not.toHaveBeenCalled();
+    });
+  });
 });

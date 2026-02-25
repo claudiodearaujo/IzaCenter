@@ -5,8 +5,24 @@ import express from 'express';
 import { stripe, stripeHelpers } from '../../config/stripe';
 import { ordersService } from '../orders/orders.service';
 import { env } from '../../config/env';
+import { cache } from '../../config/redis';
 
 const router = Router();
+
+/**
+ * Check if a webhook event has already been processed (idempotency)
+ */
+async function isEventProcessed(eventId: string): Promise<boolean> {
+  return cache.exists(`webhook:${eventId}`);
+}
+
+/**
+ * Mark a webhook event as processed
+ */
+async function markEventProcessed(eventId: string): Promise<void> {
+  // Keep for 24 hours to prevent reprocessing
+  await cache.set(`webhook:${eventId}`, 'processed', 86400);
+}
 
 /**
  * POST /webhooks/stripe
@@ -28,7 +44,18 @@ router.post(
       return;
     }
 
-    console.log(`📥 Stripe webhook received: ${event.type}`);
+    console.log(`📥 Stripe webhook received: ${event.type} (${event.id})`);
+
+    // Idempotency check
+    try {
+      if (await isEventProcessed(event.id)) {
+        console.log(`⏭️ Event ${event.id} already processed, skipping`);
+        res.json({ received: true, deduplicated: true });
+        return;
+      }
+    } catch {
+      // If Redis is unavailable, proceed without idempotency
+    }
 
     try {
       switch (event.type) {
@@ -66,8 +93,8 @@ router.post(
           const orderId = session.metadata?.orderId;
 
           if (orderId) {
-            console.log(`❌ Order ${orderId} async payment failed`);
-            // Could update order status to PAYMENT_FAILED
+            await ordersService.handlePaymentFailure(orderId);
+            console.log(`❌ Order ${orderId} async payment failed — status updated`);
           }
           break;
         }
@@ -86,13 +113,23 @@ router.post(
 
         case 'charge.refunded': {
           const charge = event.data.object;
-          console.log(`↩️ Charge refunded: ${charge.id}`);
-          // Could update order status to REFUNDED
+          const paymentIntentId = charge.payment_intent as string;
+          if (paymentIntentId) {
+            await ordersService.handleRefund(paymentIntentId);
+            console.log(`↩️ Charge refunded: ${charge.id} — order status updated`);
+          }
           break;
         }
 
         default:
           console.log(`ℹ️ Unhandled event type: ${event.type}`);
+      }
+
+      // Mark event as processed for idempotency
+      try {
+        await markEventProcessed(event.id);
+      } catch {
+        // Non-critical: continue even if Redis fails
       }
 
       res.json({ received: true });

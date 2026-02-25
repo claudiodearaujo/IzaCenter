@@ -1,0 +1,19 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  deploy:
+    name: Deploy Frontend to Render
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" \
+            "${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}"
+        env:
+          RENDER_FRONTEND_DEPLOY_HOOK: ${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}
