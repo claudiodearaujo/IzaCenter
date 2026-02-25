@@ -6,10 +6,31 @@ import { authenticate, requireAdmin } from '../../middlewares/auth.middleware';
 
 const router = Router();
 
-// Public routes
+/**
+ * @openapi
+ * /settings/public:
+ *   get:
+ *     tags: [Settings]
+ *     summary: Get public site settings
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: Public settings (site name, logo, enabled features)
+ */
 router.get('/settings/public', settingsController.getPublic.bind(settingsController));
 
-// Admin routes
+/**
+ * @openapi
+ * /admin/settings:
+ *   get:
+ *     tags: [Settings]
+ *     summary: Get all settings (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: All settings sections
+ */
 router.get(
   '/admin/settings',
   authenticate,
@@ -17,7 +38,32 @@ router.get(
   settingsController.getAll.bind(settingsController)
 );
 
-// General settings
+/**
+ * @openapi
+ * /admin/settings/general:
+ *   get:
+ *     tags: [Settings]
+ *     summary: Get general settings (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: General settings
+ *   put:
+ *     tags: [Settings]
+ *     summary: Update general settings (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Settings updated
+ */
 router.get(
   '/admin/settings/general',
   authenticate,
@@ -32,7 +78,32 @@ router.put(
   settingsController.updateGeneral.bind(settingsController)
 );
 
-// Contact settings
+/**
+ * @openapi
+ * /admin/settings/contact:
+ *   get:
+ *     tags: [Settings]
+ *     summary: Get contact settings (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Contact settings
+ *   put:
+ *     tags: [Settings]
+ *     summary: Update contact settings (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Settings updated
+ */
 router.get(
   '/admin/settings/contact',
   authenticate,
@@ -47,7 +118,46 @@ router.put(
   settingsController.updateContact.bind(settingsController)
 );
 
-// Business hours
+/**
+ * @openapi
+ * /admin/settings/business-hours:
+ *   get:
+ *     tags: [Settings]
+ *     summary: Get business hours configuration (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Business hours per weekday
+ *   put:
+ *     tags: [Settings]
+ *     summary: Update business hours (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 day:
+ *                   type: string
+ *                   enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+ *                 isOpen:
+ *                   type: boolean
+ *                 start:
+ *                   type: string
+ *                   example: "09:00"
+ *                 end:
+ *                   type: string
+ *                   example: "18:00"
+ *     responses:
+ *       200:
+ *         description: Business hours updated
+ */
 router.get(
   '/admin/settings/business-hours',
   authenticate,
@@ -62,7 +172,32 @@ router.put(
   settingsController.updateBusinessHours.bind(settingsController)
 );
 
-// Content settings
+/**
+ * @openapi
+ * /admin/settings/content:
+ *   get:
+ *     tags: [Settings]
+ *     summary: Get content settings (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Content settings (hero text, about, etc.)
+ *   put:
+ *     tags: [Settings]
+ *     summary: Update content settings (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Settings updated
+ */
 router.get(
   '/admin/settings/content',
   authenticate,
@@ -77,7 +212,32 @@ router.put(
   settingsController.updateContent.bind(settingsController)
 );
 
-// Analytics settings
+/**
+ * @openapi
+ * /admin/settings/analytics:
+ *   get:
+ *     tags: [Settings]
+ *     summary: Get analytics settings (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Analytics settings
+ *   put:
+ *     tags: [Settings]
+ *     summary: Update analytics settings (admin)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Settings updated
+ */
 router.get(
   '/admin/settings/analytics',
   authenticate,

@@ -234,7 +234,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 #### 5.13 API & Documentação
 - [ ] Adicionar versionamento de API (ex: /api/v1/)
 - [x] Implementar documentação OpenAPI/Swagger — swagger-ui-express instalado, spec gerado com swagger-jsdoc, disponível em `/api/docs`
-- [x] Documentar endpoints de autenticação e produtos com anotações OpenAPI
+- [x] Documentar todos os endpoints com anotações OpenAPI (auth, products, orders, readings, appointments, users, testimonials, dashboard)
 - [ ] Criar README completo do projeto com instruções de setup
 
 #### 5.14 Legal & Compliance
