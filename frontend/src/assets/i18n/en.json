@@ -638,7 +638,36 @@
       "saveSuccess": "Settings saved successfully",
       "saveError": "Error saving settings",
       "save": "Save Settings",
-      "reset": "Restore Defaults"
+      "reset": "Restore Defaults",
+      "contact": "Contact",
+      "logoFavicon": "Logo & Favicon",
+      "logo": "Logo",
+      "noLogo": "No logo",
+      "logoHint": "Recommended: transparent PNG, 200x60px",
+      "favicon": "Favicon",
+      "faviconHint": "PNG or ICO, 32x32px",
+      "features": "Features",
+      "maintenanceMode": "Maintenance Mode",
+      "maintenanceModeHint": "Site offline for visitors",
+      "allowRegistration": "Allow Registration",
+      "allowRegistrationHint": "New users can register",
+      "allowTestimonials": "Allow Testimonials",
+      "allowTestimonialsHint": "Clients can submit testimonials",
+      "allowOnlinePayment": "Online Payment",
+      "allowOnlinePaymentHint": "Accept payments via Stripe",
+      "contactInfo": "Contact Information",
+      "businessHours": "Business Hours",
+      "serviceHours": "Service Hours",
+      "workingDays": "Working Days",
+      "appointmentNotice": "Appointment Notice Period",
+      "homePage": "Home Page",
+      "heroTitle": "Hero Title",
+      "heroSubtitle": "Hero Subtitle",
+      "aboutText": "About Text",
+      "tracking": "Tracking",
+      "maintenance": "Maintenance",
+      "clearCacheHint": "Clear the system cache to apply changes immediately.",
+      "clearCache": "Clear Cache"
     },
     "menu": {
       "dashboard": "Dashboard",
@@ -774,7 +803,8 @@
     "approved": "Approved",
     "rejected": "Rejected",
     "backToHome": "Back to Home",
-    "all": "All"
+    "all": "All",
+    "upload": "Upload"
   },
   "shop": {
     "productList": {

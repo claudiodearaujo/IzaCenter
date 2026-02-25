@@ -185,7 +185,8 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 
 #### 5.7 Internacionalização (conforme ADMIN_I18N_IMPLEMENTATION.md)
 - [x] Adicionar chaves i18n para admin.orders, admin.availability, admin.reports (4 idiomas)
-- [ ] Completar implementação i18n nos componentes admin existentes
+- [x] Completar implementação i18n nos componentes admin existentes (settings.component.html)
+- [ ] Completar implementação i18n nos demais componentes admin (produto-form, leitura-form, etc.)
 - [ ] Verificar cobertura de traduções em todas as páginas públicas
 - [ ] Testar troca de idioma em todas as páginas
 

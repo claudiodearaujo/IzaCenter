@@ -638,7 +638,36 @@
       "saveSuccess": "Configurações salvas com sucesso",
       "saveError": "Erro ao salvar configurações",
       "save": "Salvar Configurações",
-      "reset": "Restaurar Padrões"
+      "reset": "Restaurar Padrões",
+      "contact": "Contato",
+      "logoFavicon": "Logo e Favicon",
+      "logo": "Logo",
+      "noLogo": "Sem logo",
+      "logoHint": "Recomendado: PNG transparente, 200x60px",
+      "favicon": "Favicon",
+      "faviconHint": "PNG ou ICO, 32x32px",
+      "features": "Funcionalidades",
+      "maintenanceMode": "Modo Manutenção",
+      "maintenanceModeHint": "Site offline para visitantes",
+      "allowRegistration": "Permitir Cadastro",
+      "allowRegistrationHint": "Novos usuários podem se registrar",
+      "allowTestimonials": "Permitir Depoimentos",
+      "allowTestimonialsHint": "Clientes podem enviar depoimentos",
+      "allowOnlinePayment": "Pagamento Online",
+      "allowOnlinePaymentHint": "Aceitar pagamentos via Stripe",
+      "contactInfo": "Informações de Contato",
+      "businessHours": "Horário de Funcionamento",
+      "serviceHours": "Horário de Atendimento",
+      "workingDays": "Dias de Funcionamento",
+      "appointmentNotice": "Antecedência para Agendamento",
+      "homePage": "Página Inicial",
+      "heroTitle": "Título do Hero",
+      "heroSubtitle": "Subtítulo do Hero",
+      "aboutText": "Texto Sobre",
+      "tracking": "Rastreamento",
+      "maintenance": "Manutenção",
+      "clearCacheHint": "Limpe o cache do sistema para aplicar alterações imediatamente.",
+      "clearCache": "Limpar Cache"
     },
     "menu": {
       "dashboard": "Dashboard",
@@ -774,7 +803,8 @@
     "approved": "Aprovado",
     "rejected": "Rejeitado",
     "backToHome": "Voltar ao Início",
-    "all": "Todos"
+    "all": "Todos",
+    "upload": "Enviar"
   },
   "shop": {
     "productList": {

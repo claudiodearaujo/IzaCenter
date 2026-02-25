@@ -638,7 +638,36 @@
       "saveSuccess": "Paramètres enregistrés avec succès",
       "saveError": "Erreur lors de l'enregistrement des paramètres",
       "save": "Enregistrer les Paramètres",
-      "reset": "Restaurer les Valeurs par Défaut"
+      "reset": "Restaurer les Valeurs par Défaut",
+      "contact": "Contact",
+      "logoFavicon": "Logo & Favicon",
+      "logo": "Logo",
+      "noLogo": "Pas de logo",
+      "logoHint": "Recommandé: PNG transparent, 200x60px",
+      "favicon": "Favicon",
+      "faviconHint": "PNG ou ICO, 32x32px",
+      "features": "Fonctionnalités",
+      "maintenanceMode": "Mode Maintenance",
+      "maintenanceModeHint": "Site hors ligne pour les visiteurs",
+      "allowRegistration": "Autoriser l'Inscription",
+      "allowRegistrationHint": "Les nouveaux utilisateurs peuvent s'inscrire",
+      "allowTestimonials": "Autoriser les Témoignages",
+      "allowTestimonialsHint": "Les clients peuvent soumettre des témoignages",
+      "allowOnlinePayment": "Paiement en Ligne",
+      "allowOnlinePaymentHint": "Accepter les paiements via Stripe",
+      "contactInfo": "Informations de Contact",
+      "businessHours": "Heures d'Ouverture",
+      "serviceHours": "Heures de Service",
+      "workingDays": "Jours Ouvrables",
+      "appointmentNotice": "Préavis pour Rendez-vous",
+      "homePage": "Page d'Accueil",
+      "heroTitle": "Titre du Hero",
+      "heroSubtitle": "Sous-titre du Hero",
+      "aboutText": "Texte À Propos",
+      "tracking": "Suivi",
+      "maintenance": "Maintenance",
+      "clearCacheHint": "Videz le cache du système pour appliquer les changements immédiatement.",
+      "clearCache": "Vider le Cache"
     },
     "menu": {
       "dashboard": "Tableau de bord",
@@ -774,7 +803,8 @@
     "approved": "Approuvé",
     "rejected": "Rejeté",
     "backToHome": "Retour à l'Accueil",
-    "all": "Tous"
+    "all": "Tous",
+    "upload": "Envoyer"
   },
   "shop": {
     "productList": {
