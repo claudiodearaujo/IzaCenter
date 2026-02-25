@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 
 import { env } from './config/env';
 import { notFoundHandler, errorHandler, generalLimiter } from './middlewares';
+import { auditLogger } from './middlewares/audit.middleware';
 import {
   authRoutes,
   usersRoutes,
@@ -78,16 +79,47 @@ if (env.isDevelopment) {
 // Rate limiting
 app.use(generalLimiter);
 
+// Audit logging for sensitive operations
+app.use(auditLogger);
+
 // =============================================
 // HEALTH CHECK
 // =============================================
 
-app.get('/health', (req: Request, res: Response) => {
-  res.json({
-    status: 'ok',
+app.get('/health', async (req: Request, res: Response) => {
+  const checks: Record<string, string> = {};
+
+  // Database check
+  try {
+    const { prisma } = await import('./config/database');
+    await prisma.$queryRaw`SELECT 1`;
+    checks.database = 'ok';
+  } catch {
+    checks.database = 'error';
+  }
+
+  // Redis check
+  try {
+    const { getRedisClient } = await import('./config/redis');
+    const client = await getRedisClient();
+    if (client.isOpen) {
+      checks.redis = 'ok';
+    } else {
+      checks.redis = 'disconnected';
+    }
+  } catch {
+    checks.redis = 'unavailable';
+  }
+
+  const allHealthy = Object.values(checks).every(v => v === 'ok' || v === 'unavailable');
+  const status = allHealthy ? 'ok' : 'degraded';
+
+  res.status(allHealthy ? 200 : 503).json({
+    status,
     timestamp: new Date().toISOString(),
     environment: env.NODE_ENV,
     version: process.env.npm_package_version || '1.0.0',
+    checks,
   });
 });
 

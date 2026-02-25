@@ -445,16 +445,10 @@ export class OrdersService {
     });
 
     // Notify client
-    const emailContent = {
-      subject: `Reembolso processado - Pedido ${order.orderNumber}`,
-      html: `
-        <h2>Olá, ${order.client.fullName}!</h2>
-        <p>O reembolso do seu pedido <strong>${order.orderNumber}</strong> foi processado com sucesso.</p>
-        <p>O valor será creditado na sua conta em até 10 dias úteis.</p>
-        <br/>
-        <p>Atenciosamente,<br/>Izabela Tarot</p>
-      `,
-    };
+    const emailContent = emailTemplates.refundNotification(
+      order.client.fullName,
+      order.orderNumber
+    );
 
     sendEmail({
       to: order.client.email,

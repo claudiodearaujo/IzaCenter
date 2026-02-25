@@ -29,6 +29,10 @@ jest.mock('../../utils/email.util', () => ({
       subject: 'Pedido Confirmado',
       html: '<p>Pedido confirmado</p>',
     }),
+    refundNotification: jest.fn().mockReturnValue({
+      subject: 'Reembolso Processado',
+      html: '<p>Reembolso processado</p>',
+    }),
   },
 }));
 

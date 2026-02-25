@@ -167,34 +167,42 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 ### 🟡 Prioridade ALTA (Importante para qualidade de produção)
 
 #### 5.5 Menu Admin Incompleto (conforme MENU_AUDIT_TASKS.md)
-- [ ] Implementar página de gestão de Pedidos (admin)
-- [ ] Implementar página de gestão de Disponibilidade/Horários (admin)
-- [ ] Implementar página de Relatórios (admin)
-- [ ] Corrigir rota de Clientes no menu admin (apontar para /admin/usuarios)
+- [x] Implementar página de gestão de Pedidos (admin) — `admin/orders/order-list`
+- [x] Implementar página de gestão de Disponibilidade/Horários (admin) — `admin/availability`
+- [x] Implementar página de Relatórios (admin) — `admin/reports`
+- [x] Corrigir rota de Clientes no menu admin — agora aponta para `/admin/usuarios`
 
 #### 5.6 Testes
-- [ ] Aumentar cobertura de testes unitários do backend (services sem .spec: products, readings, appointments, users)
+- [x] Aumentar cobertura de testes unitários do backend — 225 testes (11 suites)
+  - [x] products.service.spec.ts (CRUD, slug, soft/hard delete, categories)
+  - [x] users.service.spec.ts (profile, admin update, delete, stats)
+  - [x] readings.service.spec.ts (CRUD, status, publish email, cards)
+  - [x] appointments.service.spec.ts (CRUD, conflicts, reschedule, available slots, emails)
 - [ ] Adicionar testes unitários para controllers do backend
 - [ ] Adicionar testes unitários para o frontend (services e components)
 - [ ] Adicionar testes E2E (Playwright já está como dependência)
 - [ ] Testar fluxos críticos: registro → compra → pagamento → leitura
 
 #### 5.7 Internacionalização (conforme ADMIN_I18N_IMPLEMENTATION.md)
-- [ ] Completar implementação i18n nos componentes admin
+- [x] Adicionar chaves i18n para admin.orders, admin.availability, admin.reports (4 idiomas)
+- [ ] Completar implementação i18n nos componentes admin existentes
 - [ ] Verificar cobertura de traduções em todas as páginas públicas
 - [ ] Testar troca de idioma em todas as páginas
 
 #### 5.8 E-mails
-- [ ] Criar templates de e-mail profissionais (atualmente HTML inline)
+- [x] Refatorar templates de e-mail com layout base reutilizável (`emailLayout`, `emailButton`, `emailSignature`)
+- [x] Adicionar template de confirmação de agendamento (`appointmentConfirmation`)
+- [x] Adicionar template de cancelamento de agendamento (`appointmentCancellation`)
+- [x] Adicionar template de notificação de reembolso (`refundNotification`)
 - [ ] Configurar domínio de e-mail verificado (SPF, DKIM, DMARC)
-- [ ] Testar todos os fluxos de e-mail (boas-vindas, reset senha, confirmação de pedido, publicação de leitura)
+- [ ] Testar todos os fluxos de e-mail
 
 #### 5.9 Monitoramento e Logging
-- [ ] Configurar logging em produção (ex: Morgan com formato combined + log rotation)
+- [x] Logging em produção — morgan `combined` format habilitado
+- [x] Health check detalhado — verifica DB e Redis, retorna status 503 se degraded
+- [x] Audit logging — middleware para operações sensíveis (auth, orders, admin, webhooks)
 - [ ] Implementar monitoramento de aplicação (ex: Sentry, LogRocket)
 - [ ] Configurar alertas para erros críticos
-- [ ] Implementar health check mais detalhado (checar DB, Redis, Stripe)
-- [ ] Audit logging para operações sensíveis (login, pagamentos, alterações de admin)
 
 ### 🟢 Prioridade MÉDIA (Melhorias para V1 robusta)
 
