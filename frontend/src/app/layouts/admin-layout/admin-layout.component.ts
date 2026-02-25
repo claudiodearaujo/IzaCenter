@@ -35,7 +35,7 @@ export class AdminLayoutComponent {
     { labelKey: 'admin.menu.appointments', icon: 'pi-calendar', route: '/admin/agendamentos' },
     { labelKey: 'admin.layout.orders', icon: 'pi-shopping-cart', route: '/admin/pedidos' },
     { labelKey: 'admin.menu.products', icon: 'pi-box', route: '/admin/produtos' },
-    { labelKey: 'admin.layout.clients', icon: 'pi-users', route: '/admin/clientes' },
+    { labelKey: 'admin.layout.clients', icon: 'pi-users', route: '/admin/usuarios' },
     { labelKey: 'admin.layout.availability', icon: 'pi-clock', route: '/admin/disponibilidade' },
     { labelKey: 'admin.layout.reports', icon: 'pi-chart-line', route: '/admin/relatorios' }
   ];

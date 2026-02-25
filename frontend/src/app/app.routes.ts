@@ -170,6 +170,18 @@ export const routes: Routes = [
       {
         path: 'configuracoes',
         loadComponent: () => import('./features/admin/settings/settings.component').then(m => m.SettingsComponent)
+      },
+      {
+        path: 'pedidos',
+        loadComponent: () => import('./features/admin/orders/order-list/order-list.component').then(m => m.AdminOrderListComponent)
+      },
+      {
+        path: 'disponibilidade',
+        loadComponent: () => import('./features/admin/availability/availability.component').then(m => m.AdminAvailabilityComponent)
+      },
+      {
+        path: 'relatorios',
+        loadComponent: () => import('./features/admin/reports/reports.component').then(m => m.AdminReportsComponent)
       }
     ]
   },
