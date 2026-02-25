@@ -82,11 +82,11 @@
 
             <!-- Logo & Favicon -->
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Logo e Favicon</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.logoFavicon' | translate }}</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Logo</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.logo' | translate }}</label>
                   <div class="flex items-center gap-4">
                     @if (logoPreview()) {
                       <img 
@@ -96,7 +96,7 @@
                       />
                     } @else {
                       <div class="h-16 w-32 bg-dark/30 rounded flex items-center justify-center">
-                        <span class="text-secondary/50">Sem logo</span>
+                        <span class="text-secondary/50">{{ 'admin.settings.noLogo' | translate }}</span>
                       </div>
                     }
                     <p-fileUpload 
@@ -104,17 +104,17 @@
                       name="logo"
                       accept="image/*"
                       [maxFileSize]="2000000"
-                      chooseLabel="Enviar"
+                      [chooseLabel]="'common.upload' | translate"
                       [customUpload]="true"
                       (uploadHandler)="onLogoUpload($event)"
                       [auto]="true"
                     />
                   </div>
-                  <p class="text-secondary/60 text-xs mt-2">Recomendado: PNG transparente, 200x60px</p>
+                  <p class="text-secondary/60 text-xs mt-2">{{ 'admin.settings.logoHint' | translate }}</p>
                 </div>
 
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Favicon</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.favicon' | translate }}</label>
                   <div class="flex items-center gap-4">
                     @if (faviconPreview()) {
                       <img 
@@ -132,67 +132,67 @@
                       name="favicon"
                       accept="image/png,image/ico"
                       [maxFileSize]="500000"
-                      chooseLabel="Enviar"
+                      [chooseLabel]="'common.upload' | translate"
                       [customUpload]="true"
                       (uploadHandler)="onFaviconUpload($event)"
                       [auto]="true"
                     />
                   </div>
-                  <p class="text-secondary/60 text-xs mt-2">PNG ou ICO, 32x32px</p>
+                  <p class="text-secondary/60 text-xs mt-2">{{ 'admin.settings.faviconHint' | translate }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Features -->
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Funcionalidades</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.features' | translate }}</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
                   <div>
-                    <p class="text-primary">Modo Manutenção</p>
-                    <p class="text-secondary/60 text-xs">Site offline para visitantes</p>
+                    <p class="text-primary">{{ 'admin.settings.maintenanceMode' | translate }}</p>
+                    <p class="text-secondary/60 text-xs">{{ 'admin.settings.maintenanceModeHint' | translate }}</p>
                   </div>
                   <p-toggleButton 
                     [(ngModel)]="settings.maintenanceMode"
-                    onLabel="Ativo"
-                    offLabel="Inativo"
+                    [onLabel]="'common.active' | translate"
+                    [offLabel]="'common.inactive' | translate"
                   />
                 </div>
 
                 <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
                   <div>
-                    <p class="text-primary">Permitir Cadastro</p>
-                    <p class="text-secondary/60 text-xs">Novos usuários podem se registrar</p>
+                    <p class="text-primary">{{ 'admin.settings.allowRegistration' | translate }}</p>
+                    <p class="text-secondary/60 text-xs">{{ 'admin.settings.allowRegistrationHint' | translate }}</p>
                   </div>
                   <p-toggleButton 
                     [(ngModel)]="settings.allowRegistration"
-                    onLabel="Sim"
-                    offLabel="Não"
+                    [onLabel]="'common.yes' | translate"
+                    [offLabel]="'common.no' | translate"
                   />
                 </div>
 
                 <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
                   <div>
-                    <p class="text-primary">Permitir Depoimentos</p>
-                    <p class="text-secondary/60 text-xs">Clientes podem enviar depoimentos</p>
+                    <p class="text-primary">{{ 'admin.settings.allowTestimonials' | translate }}</p>
+                    <p class="text-secondary/60 text-xs">{{ 'admin.settings.allowTestimonialsHint' | translate }}</p>
                   </div>
                   <p-toggleButton 
                     [(ngModel)]="settings.allowTestimonials"
-                    onLabel="Sim"
-                    offLabel="Não"
+                    [onLabel]="'common.yes' | translate"
+                    [offLabel]="'common.no' | translate"
                   />
                 </div>
 
                 <div class="flex items-center justify-between p-3 bg-dark/20 rounded-lg">
                   <div>
-                    <p class="text-primary">Pagamento Online</p>
-                    <p class="text-secondary/60 text-xs">Aceitar pagamentos via Stripe</p>
+                    <p class="text-primary">{{ 'admin.settings.allowOnlinePayment' | translate }}</p>
+                    <p class="text-secondary/60 text-xs">{{ 'admin.settings.allowOnlinePaymentHint' | translate }}</p>
                   </div>
                   <p-toggleButton 
                     [(ngModel)]="settings.allowOnlinePayment"
-                    onLabel="Sim"
-                    offLabel="Não"
+                    [onLabel]="'common.yes' | translate"
+                    [offLabel]="'common.no' | translate"
                   />
                 </div>
               </div>
@@ -204,11 +204,11 @@
         <p-tabpanel value="1">
           <div class="space-y-6 p-4">
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Informações de Contato</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.contactInfo' | translate }}</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Email *</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'common.email' | translate }} *</label>
                   <input 
                     pInputText 
                     [(ngModel)]="settings.email"
@@ -218,7 +218,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Telefone *</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'common.phone' | translate }} *</label>
                   <input 
                     pInputText 
                     [(ngModel)]="settings.phone"
@@ -227,7 +227,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-secondary text-sm mb-2">WhatsApp</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.whatsapp' | translate }}</label>
                   <input 
                     pInputText 
                     [(ngModel)]="settings.whatsapp"
@@ -236,7 +236,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Endereço</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'common.address' | translate }}</label>
                   <input 
                     pInputText 
                     [(ngModel)]="settings.address"
@@ -248,12 +248,12 @@
             </div>
 
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Redes Sociais</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.socialMedia' | translate }}</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-secondary text-sm mb-2">
-                    <i class="pi pi-instagram mr-1"></i> Instagram
+                    <i class="pi pi-instagram mr-1"></i> {{ 'admin.settings.instagram' | translate }}
                   </label>
                   <input 
                     pInputText 
@@ -264,7 +264,7 @@
                 </div>
                 <div>
                   <label class="block text-secondary text-sm mb-2">
-                    <i class="pi pi-facebook mr-1"></i> Facebook
+                    <i class="pi pi-facebook mr-1"></i> {{ 'admin.settings.facebook' | translate }}
                   </label>
                   <input 
                     pInputText 
@@ -304,11 +304,11 @@
         <p-tabpanel value="2">
           <div class="space-y-6 p-4">
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Horário de Funcionamento</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.businessHours' | translate }}</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Horário de Atendimento</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.serviceHours' | translate }}</label>
                   <input 
                     pInputText 
                     [(ngModel)]="settings.businessHours"
@@ -317,7 +317,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Dias de Funcionamento</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.workingDays' | translate }}</label>
                   <input 
                     pInputText 
                     [(ngModel)]="settings.workingDays"
@@ -326,7 +326,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Antecedência para Agendamento</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.appointmentNotice' | translate }}</label>
                   <input 
                     pInputText 
                     [(ngModel)]="settings.appointmentNotice"
@@ -343,11 +343,11 @@
         <p-tabpanel value="3">
           <div class="space-y-6 p-4">
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Página Inicial</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.homePage' | translate }}</h3>
               
               <div class="space-y-4">
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Título do Hero</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.heroTitle' | translate }}</label>
                   <input 
                     pInputText 
                     [(ngModel)]="settings.homeHeroTitle"
@@ -356,7 +356,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-secondary text-sm mb-2">Subtítulo do Hero</label>
+                  <label class="block text-secondary text-sm mb-2">{{ 'admin.settings.heroSubtitle' | translate }}</label>
                   <textarea 
                     pInputTextarea 
                     [(ngModel)]="settings.homeHeroSubtitle"
@@ -369,7 +369,7 @@
             </div>
 
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Texto Sobre</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.aboutText' | translate }}</h3>
               <p-editor 
                 [(ngModel)]="settings.aboutText"
                 [style]="{'height':'200px'}"
@@ -382,7 +382,7 @@
         <p-tabpanel value="4">
           <div class="space-y-6 p-4">
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Rastreamento</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.tracking' | translate }}</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -407,13 +407,13 @@
             </div>
 
             <div class="glass-card p-6">
-              <h3 class="heading-3 text-primary mb-4">Manutenção</h3>
+              <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.maintenance' | translate }}</h3>
               <p class="text-secondary mb-4">
-                Limpe o cache do sistema para aplicar alterações imediatamente.
+                {{ 'admin.settings.clearCacheHint' | translate }}
               </p>
               <button pButton class="btn-outline" (click)="clearCache()">
                 <i class="pi pi-refresh mr-2"></i>
-                Limpar Cache
+                {{ 'admin.settings.clearCache' | translate }}
               </button>
             </div>
           </div>
@@ -430,7 +430,7 @@
           (click)="saveSettings()"
         >
           <i class="pi pi-save mr-2"></i>
-          Salvar Todas as Alterações
+          {{ 'admin.settings.save' | translate }}
         </button>
       </div>
     }

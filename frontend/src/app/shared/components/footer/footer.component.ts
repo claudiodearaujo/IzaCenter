@@ -29,8 +29,8 @@ export class FooterComponent {
   ];
 
   legalLinks = [
-    { labelKey: 'footer.termsOfUse', route: '/termos' },
-    { labelKey: 'footer.privacyPolicy', route: '/privacidade' },
+    { labelKey: 'footer.termsOfUse', route: '/termos-de-uso' },
+    { labelKey: 'footer.privacyPolicy', route: '/politica-de-privacidade' },
     { labelKey: 'footer.faq', route: '/faq' }
   ];
 }

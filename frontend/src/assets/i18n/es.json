@@ -638,7 +638,36 @@
       "saveSuccess": "Configuraciones guardadas con éxito",
       "saveError": "Error al guardar configuraciones",
       "save": "Guardar Configuraciones",
-      "reset": "Restaurar Predeterminados"
+      "reset": "Restaurar Predeterminados",
+      "contact": "Contacto",
+      "logoFavicon": "Logo y Favicon",
+      "logo": "Logo",
+      "noLogo": "Sin logo",
+      "logoHint": "Recomendado: PNG transparente, 200x60px",
+      "favicon": "Favicon",
+      "faviconHint": "PNG o ICO, 32x32px",
+      "features": "Funcionalidades",
+      "maintenanceMode": "Modo Mantenimiento",
+      "maintenanceModeHint": "Sitio offline para visitantes",
+      "allowRegistration": "Permitir Registro",
+      "allowRegistrationHint": "Nuevos usuarios pueden registrarse",
+      "allowTestimonials": "Permitir Testimonios",
+      "allowTestimonialsHint": "Los clientes pueden enviar testimonios",
+      "allowOnlinePayment": "Pago en Línea",
+      "allowOnlinePaymentHint": "Aceptar pagos via Stripe",
+      "contactInfo": "Información de Contacto",
+      "businessHours": "Horario de Funcionamiento",
+      "serviceHours": "Horario de Atención",
+      "workingDays": "Días de Trabajo",
+      "appointmentNotice": "Anticipación para Citas",
+      "homePage": "Página de Inicio",
+      "heroTitle": "Título del Hero",
+      "heroSubtitle": "Subtítulo del Hero",
+      "aboutText": "Texto Sobre",
+      "tracking": "Seguimiento",
+      "maintenance": "Mantenimiento",
+      "clearCacheHint": "Limpie el caché del sistema para aplicar cambios de inmediato.",
+      "clearCache": "Limpiar Caché"
     },
     "menu": {
       "dashboard": "Panel",
@@ -772,7 +801,10 @@
     "completed": "Completado",
     "cancelled": "Cancelado",
     "approved": "Aprobado",
-    "rejected": "Rechazado"
+    "rejected": "Rechazado",
+    "backToHome": "Volver al Inicio",
+    "all": "Todos",
+    "upload": "Enviar"
   },
   "shop": {
     "productList": {
@@ -1107,5 +1139,127 @@
       "item5": "La sesión online fue increíble. Me sentí muy acogida y recibí orientaciones valiosas.",
       "item6": "La lectura mensual me ayuda a planificar mi mes con más conciencia. ¡Super recomiendo!"
     }
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "Las estrellas no pudieron encontrar lo que buscas. La página a la que intentaste acceder no existe o fue movida.",
+    "backHome": "Volver al Inicio",
+    "browseShop": "Explorar Tienda"
+  },
+  "terms": {
+    "title": "Términos de Uso",
+    "lastUpdated": "Última actualización",
+    "lastUpdatedDate": "Enero de 2026",
+    "sections": {
+      "introduction": {
+        "title": "1. Introducción",
+        "content": "Bienvenido a IzaCenter. Al usar nuestros servicios, aceptas estos Términos de Uso."
+      },
+      "services": {
+        "title": "2. Servicios",
+        "content": "IzaCenter ofrece los siguientes servicios:",
+        "item1": "Lecturas de tarot por preguntas (entrega digital)",
+        "item2": "Sesiones en vivo de tarot y baraja gitana",
+        "item3": "Lecturas mensuales con seguimiento",
+        "item4": "Programación de consultas personalizadas"
+      },
+      "userResponsibilities": {
+        "title": "3. Responsabilidades del Usuario",
+        "content": "Al usar nuestra plataforma, te comprometes a:",
+        "item1": "Proporcionar información veraz durante el registro",
+        "item2": "Mantener la confidencialidad de tus credenciales",
+        "item3": "No usar la plataforma con fines ilegales",
+        "item4": "Respetar los horarios o cancelar con 24 horas de anticipación"
+      },
+      "payments": {
+        "title": "4. Pagos y Reembolsos",
+        "content": "Los pagos son procesados de forma segura por Stripe.",
+        "refundPolicy": "Política de reembolso: se aceptan reembolsos dentro de los 7 días posteriores a la compra, siempre que el servicio no haya sido prestado."
+      },
+      "intellectualProperty": {
+        "title": "5. Propiedad Intelectual",
+        "content": "Todo el contenido de la plataforma es propiedad de IzaCenter y está protegido por derechos de autor."
+      },
+      "liability": {
+        "title": "6. Limitación de Responsabilidad",
+        "content": "Los servicios de tarot son orientativos y no reemplazan consultas profesionales de salud, legales o financieras."
+      },
+      "modifications": {
+        "title": "7. Modificaciones",
+        "content": "Nos reservamos el derecho de modificar estos Términos en cualquier momento."
+      },
+      "contact": {
+        "title": "8. Contacto",
+        "content": "Para preguntas sobre estos Términos, contáctanos:",
+        "link": "Contáctanos"
+      }
+    }
+  },
+  "privacy": {
+    "title": "Política de Privacidad",
+    "lastUpdated": "Última actualización",
+    "lastUpdatedDate": "Enero de 2026",
+    "sections": {
+      "introduction": {
+        "title": "1. Introducción",
+        "content": "Esta Política de Privacidad describe cómo IzaCenter recopila, usa y protege tu información personal conforme a la LGPD brasileña."
+      },
+      "dataCollected": {
+        "title": "2. Datos Recopilados",
+        "content": "Recopilamos los siguientes datos personales:",
+        "item1": "Datos de registro: nombre, email, teléfono",
+        "item2": "Datos de pago: procesados por Stripe",
+        "item3": "Datos de uso: historial de pedidos y citas",
+        "item4": "Datos técnicos: IP, tipo de dispositivo, cookies"
+      },
+      "dataUse": {
+        "title": "3. Uso de Datos",
+        "content": "Usamos tus datos para:",
+        "item1": "Prestar los servicios contratados",
+        "item2": "Enviarte comunicaciones sobre tus pedidos",
+        "item3": "Mejorar la experiencia en la plataforma",
+        "item4": "Cumplir obligaciones legales"
+      },
+      "dataSharing": {
+        "title": "4. Compartir Datos",
+        "content": "Compartimos tus datos solo con:",
+        "item1": "Stripe: procesamiento de pagos",
+        "item2": "Supabase: almacenamiento de datos",
+        "item3": "Autoridades: cuando lo exija la ley"
+      },
+      "userRights": {
+        "title": "5. Tus Derechos (LGPD)",
+        "content": "Tienes los siguientes derechos sobre tus datos:",
+        "item1": "Confirmación del tratamiento de datos",
+        "item2": "Acceso a tus datos",
+        "item3": "Corrección de datos inexactos",
+        "item4": "Eliminación de datos innecesarios",
+        "item5": "Portabilidad de datos",
+        "item6": "Revocación del consentimiento"
+      },
+      "cookies": {
+        "title": "6. Cookies",
+        "content": "Usamos cookies esenciales y analíticas para mejorar la plataforma."
+      },
+      "security": {
+        "title": "7. Seguridad de Datos",
+        "content": "Protegemos tus datos con cifrado HTTPS, control de acceso y autenticación segura."
+      },
+      "retention": {
+        "title": "8. Retención de Datos",
+        "content": "Conservamos tus datos el tiempo necesario para prestarte los servicios."
+      },
+      "dpo": {
+        "title": "9. Contacto",
+        "content": "Para ejercer tus derechos, contáctanos:",
+        "link": "Contactar al Encargado de Datos"
+      }
+    }
+  },
+  "cookies": {
+    "message": "Usamos cookies para mejorar tu experiencia. Al continuar navegando, aceptas nuestra",
+    "privacyLink": "Política de Privacidad",
+    "accept": "Aceptar",
+    "decline": "Rechazar"
   }
 }
