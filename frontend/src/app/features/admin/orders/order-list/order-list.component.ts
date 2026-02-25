@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
+import { SkeletonModule } from 'primeng/skeleton';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
@@ -29,6 +30,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
     InputTextModule,
     Select,
     TagModule,
+    SkeletonModule,
     DialogModule,
     ConfirmDialogModule,
     TooltipModule,

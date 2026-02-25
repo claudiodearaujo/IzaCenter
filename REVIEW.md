@@ -218,10 +218,10 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 
 #### 5.11 UX/UI
 - [ ] Implementar loading states em todas as páginas
-- [ ] Implementar feedback visual para ações do usuário (toast notifications)
+- [ ] Implementar feedback visual para ações do usuário (toast notifications) — já implementado via NotificationService + ToastModule em todos os layouts
 - [x] Implementar página 404 customizada — `NotFoundComponent` com botões de ação
 - [ ] Implementar tratamento de erros offline/network
-- [ ] Adicionar skeleton loading nos componentes
+- [x] Adicionar skeleton loading nos componentes — `loadingbody` template com `p-skeleton` adicionado nos 6 componentes de lista admin (produtos, leituras, pedidos, agendamentos, usuários, depoimentos)
 - [ ] Testar responsividade em dispositivos móveis
 
 #### 5.12 Funcionalidades Adicionais

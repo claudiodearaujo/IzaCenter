@@ -12,6 +12,7 @@ import { Select } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { SkeletonModule } from 'primeng/skeleton';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -34,6 +35,7 @@ import { CurrencyBrlPipe } from '../../../../shared/pipes/currency-brl.pipe';
     TagModule,
     Tooltip,
     ConfirmDialogModule,
+    SkeletonModule,
     CurrencyBrlPipe,
     TranslateModule,
   ],

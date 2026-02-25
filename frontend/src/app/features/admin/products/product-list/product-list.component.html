@@ -83,6 +83,20 @@
             <th>{{ 'admin.products.actions' | translate }}</th>
           </tr>
         </ng-template>
+        <ng-template pTemplate="loadingbody">
+          @for (_ of [1, 2, 3, 4, 5]; track $index) {
+            <tr>
+              <td><p-skeleton height="2rem" /></td>
+              <td><p-skeleton height="2rem" width="5rem" /></td>
+              <td><p-skeleton height="2rem" width="6rem" /></td>
+              <td><p-skeleton height="2rem" width="4rem" /></td>
+              <td><p-skeleton height="2rem" width="3rem" /></td>
+              <td><p-skeleton height="2rem" width="5rem" /></td>
+              <td><p-skeleton height="2rem" width="5rem" /></td>
+              <td><p-skeleton height="2rem" width="6rem" /></td>
+            </tr>
+          }
+        </ng-template>
         <ng-template pTemplate="body" let-product>
           <tr>
             <td>
