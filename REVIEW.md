@@ -135,30 +135,33 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 ### 🔴 Prioridade CRÍTICA (Bloqueia deploy em produção)
 
 #### 5.1 CI/CD Pipeline
-- [ ] Criar GitHub Actions workflow para CI (lint, build, testes)
-- [ ] Criar workflow de deploy automático (backend → Render/Railway)
-- [ ] Criar workflow de deploy automático (frontend → Render/Vercel)
-- [ ] Configurar variáveis de ambiente nos secrets do GitHub
+- [x] Criar GitHub Actions workflow para CI (lint, build, testes) — `.github/workflows/ci.yml`
+- [x] Criar workflow de deploy automático (backend → Render) — `.github/workflows/deploy-backend.yml`
+- [x] Criar workflow de deploy automático (frontend → Render) — `.github/workflows/deploy-frontend.yml`
+- [ ] Configurar variáveis de ambiente nos secrets do GitHub (requer acesso ao repositório)
 
 #### 5.2 Backend — Deploy em Produção
-- [ ] Criar configuração de deploy para o backend (render.yaml ou Dockerfile)
-- [ ] Configurar variáveis de produção (Stripe live keys, SMTP, etc.)
-- [ ] Configurar Redis em produção (obrigatório para token blacklist)
-- [ ] Configurar domínio e SSL/TLS
-- [ ] Garantir que `NODE_ENV=production` está setado
+- [x] Criar configuração de deploy para o backend — `backend/Dockerfile` + `backend/render.yaml`
+- [ ] Configurar variáveis de produção (Stripe live keys, SMTP, etc.) — render.yaml template pronto
+- [ ] Configurar Redis em produção (obrigatório para token blacklist e idempotência de webhooks)
+- [ ] Configurar domínio e SSL/TLS (configuração no Render)
+- [x] Garantir que `NODE_ENV=production` está setado — definido no render.yaml
+- [x] Habilitar logging em produção — morgan `combined` habilitado
 
 #### 5.3 Segurança
 - [ ] Rotacionar as credenciais do banco que foram expostas no .env.example
 - [ ] Configurar chaves Stripe de produção (live mode)
-- [ ] Definir JWT_SECRET forte e único para produção
-- [ ] Habilitar HTTPS em todas as comunicações
-- [ ] Revisar CORS para aceitar apenas domínio de produção
-- [ ] Configurar secure cookies (HttpOnly, Secure, SameSite)
+- [ ] Definir JWT_SECRET forte e único para produção — render.yaml usa `generateValue: true`
+- [ ] Habilitar HTTPS em todas as comunicações (configuração no Render)
+- [x] Revisar CORS para aceitar apenas domínio de produção — já configurado em `app.ts`
+- [x] Configurar cookie-parser — middleware adicionado em `app.ts`
 
 #### 5.4 Pagamentos
 - [ ] Testar fluxo completo de pagamento com Stripe em modo live
-- [ ] Implementar tratamento de reembolsos (webhook handler apenas loga atualmente)
-- [ ] Implementar idempotência em webhooks (evitar processamento duplicado)
+- [x] Implementar tratamento de reembolsos — `ordersService.handleRefund()` + webhook handler
+- [x] Implementar idempotência em webhooks — Redis-backed deduplication por `event.id`
+- [x] Implementar tratamento de falha de pagamento — `ordersService.handlePaymentFailure()`
+- [x] Idempotência em `handlePaymentSuccess` — guard contra processamento duplicado
 - [ ] Testar edge cases de pagamento (falha, timeout, pagamento assíncrono)
 
 ### 🟡 Prioridade ALTA (Importante para qualidade de produção)

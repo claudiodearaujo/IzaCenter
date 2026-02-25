@@ -34,6 +34,7 @@ yarn-error.log
 .sass-cache/
 /connect.lock
 /coverage
+backend/coverage
 /libpeerconnection.log
 testem.log
 /typings
@@ -48,3 +49,4 @@ dist
 build
 /build
 backend/.env
+backend/dist
