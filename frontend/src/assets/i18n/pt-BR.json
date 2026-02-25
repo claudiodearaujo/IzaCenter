@@ -772,7 +772,9 @@
     "completed": "Concluído",
     "cancelled": "Cancelado",
     "approved": "Aprovado",
-    "rejected": "Rejeitado"
+    "rejected": "Rejeitado",
+    "backToHome": "Voltar ao Início",
+    "all": "Todos"
   },
   "shop": {
     "productList": {
@@ -1107,5 +1109,127 @@
       "item5": "A sessão online foi incrível. Me senti muito acolhida e recebi orientações valiosas.",
       "item6": "O jogo mensal me ajuda a planejar meu mês com mais consciência. Super recomendo!"
     }
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "description": "As estrelas não conseguiram encontrar o que você procura. A página que você tentou acessar não existe ou foi movida.",
+    "backHome": "Voltar ao Início",
+    "browseShop": "Explorar Loja"
+  },
+  "terms": {
+    "title": "Termos de Uso",
+    "lastUpdated": "Última atualização",
+    "lastUpdatedDate": "Janeiro de 2026",
+    "sections": {
+      "introduction": {
+        "title": "1. Introdução",
+        "content": "Bem-vindo à plataforma IzaCenter. Ao utilizar nossos serviços, você concorda com estes Termos de Uso. Por favor, leia-os atentamente antes de utilizar a plataforma."
+      },
+      "services": {
+        "title": "2. Descrição dos Serviços",
+        "content": "A IzaCenter oferece os seguintes serviços de tarot e baralho cigano:",
+        "item1": "Leituras de tarot por perguntas (entrega digital)",
+        "item2": "Sessões ao vivo de tarot e baralho cigano",
+        "item3": "Leituras mensais com acompanhamento",
+        "item4": "Agendamento de consultas personalizadas"
+      },
+      "userResponsibilities": {
+        "title": "3. Responsabilidades do Usuário",
+        "content": "Ao utilizar nossa plataforma, você se compromete a:",
+        "item1": "Fornecer informações verdadeiras e atualizadas durante o cadastro",
+        "item2": "Manter a confidencialidade de suas credenciais de acesso",
+        "item3": "Não utilizar a plataforma para fins ilícitos ou contrários a estes termos",
+        "item4": "Respeitar os horários agendados ou cancelar com antecedência mínima de 24 horas"
+      },
+      "payments": {
+        "title": "4. Pagamentos e Reembolsos",
+        "content": "Os pagamentos são processados com segurança pela Stripe. Os preços são exibidos em Reais (BRL) e incluem todos os impostos aplicáveis.",
+        "refundPolicy": "Política de reembolso: reembolsos são aceitos em até 7 dias após a compra, desde que o serviço não tenha sido prestado. Para agendamentos cancelados com menos de 24 horas de antecedência, não há reembolso."
+      },
+      "intellectualProperty": {
+        "title": "5. Propriedade Intelectual",
+        "content": "Todo o conteúdo da plataforma, incluindo textos, imagens, logotipos e interpretações de tarot, é protegido por direitos autorais e pertence à IzaCenter. É proibida a reprodução sem autorização prévia."
+      },
+      "liability": {
+        "title": "6. Limitação de Responsabilidade",
+        "content": "Os serviços de tarot e baralho cigano têm caráter orientativo e não substituem consultas profissionais de saúde, jurídicas ou financeiras. A IzaCenter não se responsabiliza por decisões tomadas com base nas leituras."
+      },
+      "modifications": {
+        "title": "7. Modificações dos Termos",
+        "content": "Reservamo-nos o direito de modificar estes Termos de Uso a qualquer momento. As alterações entrarão em vigor após publicação na plataforma. O uso contínuo dos serviços após as alterações implica concordância com os novos termos."
+      },
+      "contact": {
+        "title": "8. Contato",
+        "content": "Para dúvidas sobre estes Termos de Uso, entre em contato através da nossa página de contato:",
+        "link": "Fale Conosco"
+      }
+    }
+  },
+  "privacy": {
+    "title": "Política de Privacidade",
+    "lastUpdated": "Última atualização",
+    "lastUpdatedDate": "Janeiro de 2026",
+    "sections": {
+      "introduction": {
+        "title": "1. Introdução",
+        "content": "Esta Política de Privacidade descreve como a IzaCenter coleta, usa e protege suas informações pessoais em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)."
+      },
+      "dataCollected": {
+        "title": "2. Dados Coletados",
+        "content": "Coletamos os seguintes dados pessoais:",
+        "item1": "Dados de cadastro: nome completo, e-mail, telefone",
+        "item2": "Dados de pagamento: processados pela Stripe (não armazenamos dados de cartão)",
+        "item3": "Dados de uso: histórico de pedidos, agendamentos e leituras",
+        "item4": "Dados técnicos: endereço IP, tipo de dispositivo, cookies de sessão"
+      },
+      "dataUse": {
+        "title": "3. Uso dos Dados",
+        "content": "Utilizamos seus dados para:",
+        "item1": "Prestação dos serviços contratados",
+        "item2": "Envio de comunicações relacionadas aos seus pedidos e agendamentos",
+        "item3": "Melhoria da experiência na plataforma",
+        "item4": "Cumprimento de obrigações legais e fiscais"
+      },
+      "dataSharing": {
+        "title": "4. Compartilhamento de Dados",
+        "content": "Compartilhamos seus dados somente com:",
+        "item1": "Stripe: processamento seguro de pagamentos",
+        "item2": "Supabase: armazenamento seguro de dados e arquivos",
+        "item3": "Autoridades: quando exigido por lei"
+      },
+      "userRights": {
+        "title": "5. Seus Direitos (LGPD)",
+        "content": "Conforme a LGPD, você tem os seguintes direitos sobre seus dados pessoais:",
+        "item1": "Confirmação da existência de tratamento de dados",
+        "item2": "Acesso aos dados que temos sobre você",
+        "item3": "Correção de dados incompletos, inexatos ou desatualizados",
+        "item4": "Anonimização, bloqueio ou eliminação de dados desnecessários",
+        "item5": "Portabilidade dos dados a outro fornecedor",
+        "item6": "Revogação do consentimento a qualquer momento"
+      },
+      "cookies": {
+        "title": "6. Cookies",
+        "content": "Utilizamos cookies essenciais para o funcionamento da plataforma (autenticação e sessão) e cookies analíticos para melhorar nossos serviços. Você pode gerenciar suas preferências de cookies nas configurações do navegador."
+      },
+      "security": {
+        "title": "7. Segurança dos Dados",
+        "content": "Adotamos medidas técnicas e organizacionais para proteger seus dados, incluindo criptografia em trânsito (HTTPS/TLS), controle de acesso e autenticação segura com JWT."
+      },
+      "retention": {
+        "title": "8. Retenção de Dados",
+        "content": "Mantemos seus dados pelo tempo necessário para a prestação dos serviços e cumprimento de obrigações legais. Você pode solicitar a exclusão de sua conta e dados a qualquer momento."
+      },
+      "dpo": {
+        "title": "9. Contato e Encarregado de Dados",
+        "content": "Para exercer seus direitos ou tirar dúvidas sobre o tratamento de seus dados pessoais, entre em contato:",
+        "link": "Fale com o Encarregado de Dados"
+      }
+    }
+  },
+  "cookies": {
+    "message": "Utilizamos cookies para melhorar sua experiência. Ao continuar navegando, você concorda com nossa",
+    "privacyLink": "Política de Privacidade",
+    "accept": "Aceitar",
+    "decline": "Recusar"
   }
 }

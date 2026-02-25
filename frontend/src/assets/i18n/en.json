@@ -772,7 +772,9 @@
     "completed": "Completed",
     "cancelled": "Cancelled",
     "approved": "Approved",
-    "rejected": "Rejected"
+    "rejected": "Rejected",
+    "backToHome": "Back to Home",
+    "all": "All"
   },
   "shop": {
     "productList": {
@@ -1107,5 +1109,127 @@
       "item5": "The online session was incredible. I felt very welcomed and received valuable guidance.",
       "item6": "The monthly reading helps me plan my month with more awareness. I highly recommend it!"
     }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The stars could not find what you are looking for. The page you tried to access does not exist or has been moved.",
+    "backHome": "Back to Home",
+    "browseShop": "Browse Shop"
+  },
+  "terms": {
+    "title": "Terms of Use",
+    "lastUpdated": "Last updated",
+    "lastUpdatedDate": "January 2026",
+    "sections": {
+      "introduction": {
+        "title": "1. Introduction",
+        "content": "Welcome to IzaCenter. By using our services, you agree to these Terms of Use. Please read them carefully before using the platform."
+      },
+      "services": {
+        "title": "2. Services",
+        "content": "IzaCenter offers the following tarot and gypsy card reading services:",
+        "item1": "Question-based tarot readings (digital delivery)",
+        "item2": "Live tarot and gypsy card sessions",
+        "item3": "Monthly readings with follow-up",
+        "item4": "Scheduling personalized consultations"
+      },
+      "userResponsibilities": {
+        "title": "3. User Responsibilities",
+        "content": "By using our platform, you agree to:",
+        "item1": "Provide accurate and up-to-date information during registration",
+        "item2": "Maintain the confidentiality of your login credentials",
+        "item3": "Not use the platform for illegal purposes",
+        "item4": "Respect scheduled times or cancel at least 24 hours in advance"
+      },
+      "payments": {
+        "title": "4. Payments and Refunds",
+        "content": "Payments are securely processed by Stripe. Prices are displayed in Brazilian Reais (BRL).",
+        "refundPolicy": "Refund policy: refunds are accepted within 7 days of purchase, as long as the service has not been rendered. Appointments cancelled with less than 24 hours notice are non-refundable."
+      },
+      "intellectualProperty": {
+        "title": "5. Intellectual Property",
+        "content": "All content on the platform, including texts, images, logos and tarot interpretations, is copyrighted and belongs to IzaCenter. Reproduction without prior authorization is prohibited."
+      },
+      "liability": {
+        "title": "6. Limitation of Liability",
+        "content": "Tarot and gypsy card services are for guidance purposes only and do not replace professional health, legal or financial advice. IzaCenter is not responsible for decisions made based on readings."
+      },
+      "modifications": {
+        "title": "7. Modifications",
+        "content": "We reserve the right to modify these Terms of Use at any time. Changes take effect upon publication on the platform. Continued use of the services after changes implies agreement with the new terms."
+      },
+      "contact": {
+        "title": "8. Contact",
+        "content": "For questions about these Terms of Use, please contact us through our contact page:",
+        "link": "Contact Us"
+      }
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated",
+    "lastUpdatedDate": "January 2026",
+    "sections": {
+      "introduction": {
+        "title": "1. Introduction",
+        "content": "This Privacy Policy describes how IzaCenter collects, uses and protects your personal information in compliance with Brazilian General Data Protection Law (LGPD)."
+      },
+      "dataCollected": {
+        "title": "2. Data Collected",
+        "content": "We collect the following personal data:",
+        "item1": "Registration data: full name, email, phone",
+        "item2": "Payment data: processed by Stripe (we do not store card data)",
+        "item3": "Usage data: order history, appointments and readings",
+        "item4": "Technical data: IP address, device type, session cookies"
+      },
+      "dataUse": {
+        "title": "3. Data Use",
+        "content": "We use your data to:",
+        "item1": "Provide the contracted services",
+        "item2": "Send communications related to your orders and appointments",
+        "item3": "Improve the platform experience",
+        "item4": "Comply with legal and tax obligations"
+      },
+      "dataSharing": {
+        "title": "4. Data Sharing",
+        "content": "We share your data only with:",
+        "item1": "Stripe: secure payment processing",
+        "item2": "Supabase: secure data and file storage",
+        "item3": "Authorities: when required by law"
+      },
+      "userRights": {
+        "title": "5. Your Rights (LGPD)",
+        "content": "Under LGPD, you have the following rights over your personal data:",
+        "item1": "Confirmation of data processing",
+        "item2": "Access to data we hold about you",
+        "item3": "Correction of incomplete, inaccurate or outdated data",
+        "item4": "Anonymization, blocking or deletion of unnecessary data",
+        "item5": "Portability of data to another provider",
+        "item6": "Revocation of consent at any time"
+      },
+      "cookies": {
+        "title": "6. Cookies",
+        "content": "We use essential cookies for platform functionality (authentication and session) and analytical cookies to improve our services. You can manage your cookie preferences in your browser settings."
+      },
+      "security": {
+        "title": "7. Data Security",
+        "content": "We adopt technical and organizational measures to protect your data, including encryption in transit (HTTPS/TLS), access control and secure JWT authentication."
+      },
+      "retention": {
+        "title": "8. Data Retention",
+        "content": "We retain your data for as long as necessary to provide services and comply with legal obligations. You can request account and data deletion at any time."
+      },
+      "dpo": {
+        "title": "9. Contact and Data Officer",
+        "content": "To exercise your rights or ask questions about the processing of your personal data, please contact us:",
+        "link": "Contact the Data Officer"
+      }
+    }
+  },
+  "cookies": {
+    "message": "We use cookies to improve your experience. By continuing to browse, you agree to our",
+    "privacyLink": "Privacy Policy",
+    "accept": "Accept",
+    "decline": "Decline"
   }
 }

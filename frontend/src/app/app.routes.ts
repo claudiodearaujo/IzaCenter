@@ -34,6 +34,14 @@ export const routes: Routes = [
         loadComponent: () => import('./features/public/faq/faq.component').then(m => m.FaqComponent)
       },
       {
+        path: 'termos-de-uso',
+        loadComponent: () => import('./features/public/terms/terms.component').then(m => m.TermsComponent)
+      },
+      {
+        path: 'politica-de-privacidade',
+        loadComponent: () => import('./features/public/privacy/privacy.component').then(m => m.PrivacyComponent)
+      },
+      {
         path: 'loja',
         loadComponent: () => import('./features/shop/product-list/product-list.component').then(m => m.ProductListComponent)
       },
@@ -186,9 +194,9 @@ export const routes: Routes = [
     ]
   },
 
-  // Fallback
+  // 404 Not Found
   {
     path: '**',
-    redirectTo: ''
+    loadComponent: () => import('./features/public/not-found/not-found.component').then(m => m.NotFoundComponent)
   }
 ];

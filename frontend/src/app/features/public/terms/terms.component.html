@@ -1,0 +1,122 @@
+<div class="py-16">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">
+        {{ 'terms.title' | translate }}
+      </h1>
+      <p class="text-neutral-500 text-sm">
+        {{ 'terms.lastUpdated' | translate }}: {{ 'terms.lastUpdatedDate' | translate }}
+      </p>
+    </div>
+
+    <!-- Content -->
+    <div class="prose prose-neutral max-w-none space-y-10">
+
+      <!-- Introduction -->
+      <section>
+        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
+          {{ 'terms.sections.introduction.title' | translate }}
+        </h2>
+        <p class="text-neutral-600 leading-relaxed">
+          {{ 'terms.sections.introduction.content' | translate }}
+        </p>
+      </section>
+
+      <!-- Services -->
+      <section>
+        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
+          {{ 'terms.sections.services.title' | translate }}
+        </h2>
+        <p class="text-neutral-600 leading-relaxed mb-4">
+          {{ 'terms.sections.services.content' | translate }}
+        </p>
+        <ul class="list-disc list-inside space-y-2 text-neutral-600">
+          <li>{{ 'terms.sections.services.item1' | translate }}</li>
+          <li>{{ 'terms.sections.services.item2' | translate }}</li>
+          <li>{{ 'terms.sections.services.item3' | translate }}</li>
+          <li>{{ 'terms.sections.services.item4' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- User Responsibilities -->
+      <section>
+        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
+          {{ 'terms.sections.userResponsibilities.title' | translate }}
+        </h2>
+        <p class="text-neutral-600 leading-relaxed mb-4">
+          {{ 'terms.sections.userResponsibilities.content' | translate }}
+        </p>
+        <ul class="list-disc list-inside space-y-2 text-neutral-600">
+          <li>{{ 'terms.sections.userResponsibilities.item1' | translate }}</li>
+          <li>{{ 'terms.sections.userResponsibilities.item2' | translate }}</li>
+          <li>{{ 'terms.sections.userResponsibilities.item3' | translate }}</li>
+          <li>{{ 'terms.sections.userResponsibilities.item4' | translate }}</li>
+        </ul>
+      </section>
+
+      <!-- Payments and Refunds -->
+      <section>
+        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
+          {{ 'terms.sections.payments.title' | translate }}
+        </h2>
+        <p class="text-neutral-600 leading-relaxed mb-4">
+          {{ 'terms.sections.payments.content' | translate }}
+        </p>
+        <p class="text-neutral-600 leading-relaxed">
+          {{ 'terms.sections.payments.refundPolicy' | translate }}
+        </p>
+      </section>
+
+      <!-- Intellectual Property -->
+      <section>
+        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
+          {{ 'terms.sections.intellectualProperty.title' | translate }}
+        </h2>
+        <p class="text-neutral-600 leading-relaxed">
+          {{ 'terms.sections.intellectualProperty.content' | translate }}
+        </p>
+      </section>
+
+      <!-- Limitation of Liability -->
+      <section>
+        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
+          {{ 'terms.sections.liability.title' | translate }}
+        </h2>
+        <p class="text-neutral-600 leading-relaxed">
+          {{ 'terms.sections.liability.content' | translate }}
+        </p>
+      </section>
+
+      <!-- Modifications -->
+      <section>
+        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
+          {{ 'terms.sections.modifications.title' | translate }}
+        </h2>
+        <p class="text-neutral-600 leading-relaxed">
+          {{ 'terms.sections.modifications.content' | translate }}
+        </p>
+      </section>
+
+      <!-- Contact -->
+      <section class="bg-primary-50 rounded-2xl p-6">
+        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
+          {{ 'terms.sections.contact.title' | translate }}
+        </h2>
+        <p class="text-neutral-600 leading-relaxed mb-4">
+          {{ 'terms.sections.contact.content' | translate }}
+        </p>
+        <a routerLink="/contato" class="text-primary-600 hover:text-primary-700 font-medium underline">
+          {{ 'terms.sections.contact.link' | translate }}
+        </a>
+      </section>
+    </div>
+
+    <!-- Back to Home -->
+    <div class="mt-12 text-center">
+      <a routerLink="/" class="text-primary-600 hover:text-primary-700 font-medium">
+        ← {{ 'common.backToHome' | translate }}
+      </a>
+    </div>
+  </div>
+</div>

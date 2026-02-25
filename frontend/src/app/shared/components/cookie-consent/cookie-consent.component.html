@@ -1,0 +1,28 @@
+@if (visible()) {
+  <div class="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie consent">
+    <div class="cookie-content">
+      <div class="cookie-text">
+        <span class="cookie-icon">🍪</span>
+        <p>
+          {{ 'cookies.message' | translate }}
+          <a routerLink="/politica-de-privacidade" class="cookie-link">
+            {{ 'cookies.privacyLink' | translate }}
+          </a>.
+        </p>
+      </div>
+      <div class="cookie-actions">
+        <p-button
+          [label]="'cookies.decline' | translate"
+          [outlined]="true"
+          size="small"
+          (onClick)="decline()"
+        />
+        <p-button
+          [label]="'cookies.accept' | translate"
+          size="small"
+          (onClick)="accept()"
+        />
+      </div>
+    </div>
+  </div>
+}

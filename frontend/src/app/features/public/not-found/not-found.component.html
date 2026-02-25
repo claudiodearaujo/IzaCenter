@@ -1,0 +1,36 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 px-4">
+  <div class="text-center max-w-lg">
+    <!-- 404 Illustration -->
+    <div class="mb-8">
+      <span class="text-8xl block mb-4">🔮</span>
+      <h1 class="text-9xl font-serif font-bold text-primary-600 leading-none">404</h1>
+    </div>
+
+    <!-- Message -->
+    <h2 class="text-3xl font-serif font-bold text-neutral-900 mb-4">
+      {{ 'notFound.title' | translate }}
+    </h2>
+    <p class="text-neutral-600 text-lg mb-8">
+      {{ 'notFound.description' | translate }}
+    </p>
+
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a routerLink="/">
+        <p-button
+          [label]="'notFound.backHome' | translate"
+          icon="pi pi-home"
+          size="large"
+        />
+      </a>
+      <a routerLink="/loja">
+        <p-button
+          [label]="'notFound.browseShop' | translate"
+          icon="pi pi-shopping-bag"
+          [outlined]="true"
+          size="large"
+        />
+      </a>
+    </div>
+  </div>
+</div>

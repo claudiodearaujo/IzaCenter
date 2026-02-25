@@ -178,7 +178,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
   - [x] users.service.spec.ts (profile, admin update, delete, stats)
   - [x] readings.service.spec.ts (CRUD, status, publish email, cards)
   - [x] appointments.service.spec.ts (CRUD, conflicts, reschedule, available slots, emails)
-- [ ] Adicionar testes unitários para controllers do backend
+- [x] Adicionar testes unitários para controllers do backend (auth.controller.spec.ts, products.controller.spec.ts)
 - [ ] Adicionar testes unitários para o frontend (services e components)
 - [ ] Adicionar testes E2E (Playwright já está como dependência)
 - [ ] Testar fluxos críticos: registro → compra → pagamento → leitura
@@ -216,7 +216,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 #### 5.11 UX/UI
 - [ ] Implementar loading states em todas as páginas
 - [ ] Implementar feedback visual para ações do usuário (toast notifications)
-- [ ] Implementar página 404 customizada
+- [x] Implementar página 404 customizada — `NotFoundComponent` com botões de ação
 - [ ] Implementar tratamento de erros offline/network
 - [ ] Adicionar skeleton loading nos componentes
 - [ ] Testar responsividade em dispositivos móveis
@@ -235,9 +235,9 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 - [ ] Criar README completo do projeto com instruções de setup
 
 #### 5.14 Legal & Compliance
-- [ ] Implementar página de Termos de Uso
-- [ ] Implementar página de Política de Privacidade (LGPD)
-- [ ] Implementar banner de consentimento de cookies
+- [x] Implementar página de Termos de Uso — `/termos-de-uso`
+- [x] Implementar página de Política de Privacidade (LGPD) — `/politica-de-privacidade`
+- [x] Implementar banner de consentimento de cookies — `CookieConsentComponent` no layout público
 - [ ] Implementar sistema de opt-out de comunicações
 - [ ] Verificar compliance com regulamentações de pagamento (PCI DSS via Stripe)
 

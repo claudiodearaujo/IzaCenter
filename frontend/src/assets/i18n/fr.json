@@ -772,7 +772,9 @@
     "completed": "Terminé",
     "cancelled": "Annulé",
     "approved": "Approuvé",
-    "rejected": "Rejeté"
+    "rejected": "Rejeté",
+    "backToHome": "Retour à l'Accueil",
+    "all": "Tous"
   },
   "shop": {
     "productList": {
@@ -1107,5 +1109,127 @@
       "item5": "La session en ligne était incroyable. Je me suis sentie très bien accueillie et j'ai reçu des conseils précieux.",
       "item6": "La lecture mensuelle m'aide à planifier mon mois avec plus de conscience. Je recommande fortement !"
     }
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "Les étoiles n'ont pas pu trouver ce que vous cherchez. La page à laquelle vous avez tenté d'accéder n'existe pas ou a été déplacée.",
+    "backHome": "Retour à l'Accueil",
+    "browseShop": "Explorer la Boutique"
+  },
+  "terms": {
+    "title": "Conditions d'Utilisation",
+    "lastUpdated": "Dernière mise à jour",
+    "lastUpdatedDate": "Janvier 2026",
+    "sections": {
+      "introduction": {
+        "title": "1. Introduction",
+        "content": "Bienvenue sur IzaCenter. En utilisant nos services, vous acceptez ces Conditions d'Utilisation."
+      },
+      "services": {
+        "title": "2. Services",
+        "content": "IzaCenter propose les services suivants:",
+        "item1": "Tirages de tarot par questions (livraison numérique)",
+        "item2": "Séances live de tarot et tarot gitan",
+        "item3": "Tirages mensuels avec suivi",
+        "item4": "Prise de rendez-vous personnalisés"
+      },
+      "userResponsibilities": {
+        "title": "3. Responsabilités de l'Utilisateur",
+        "content": "En utilisant notre plateforme, vous vous engagez à:",
+        "item1": "Fournir des informations exactes lors de l'inscription",
+        "item2": "Maintenir la confidentialité de vos identifiants",
+        "item3": "Ne pas utiliser la plateforme à des fins illégales",
+        "item4": "Respecter les horaires ou annuler au moins 24h à l'avance"
+      },
+      "payments": {
+        "title": "4. Paiements et Remboursements",
+        "content": "Les paiements sont traités de façon sécurisée par Stripe.",
+        "refundPolicy": "Politique de remboursement: les remboursements sont acceptés dans les 7 jours suivant l'achat, à condition que le service n'ait pas été rendu."
+      },
+      "intellectualProperty": {
+        "title": "5. Propriété Intellectuelle",
+        "content": "Tout le contenu de la plateforme est protégé par le droit d'auteur et appartient à IzaCenter."
+      },
+      "liability": {
+        "title": "6. Limitation de Responsabilité",
+        "content": "Les services de tarot sont à titre orientatif et ne remplacent pas les conseils professionnels."
+      },
+      "modifications": {
+        "title": "7. Modifications",
+        "content": "Nous nous réservons le droit de modifier ces Conditions à tout moment."
+      },
+      "contact": {
+        "title": "8. Contact",
+        "content": "Pour toute question, contactez-nous via notre page de contact:",
+        "link": "Nous Contacter"
+      }
+    }
+  },
+  "privacy": {
+    "title": "Politique de Confidentialité",
+    "lastUpdated": "Dernière mise à jour",
+    "lastUpdatedDate": "Janvier 2026",
+    "sections": {
+      "introduction": {
+        "title": "1. Introduction",
+        "content": "Cette Politique de Confidentialité décrit comment IzaCenter collecte, utilise et protège vos informations personnelles conformément à la LGPD brésilienne."
+      },
+      "dataCollected": {
+        "title": "2. Données Collectées",
+        "content": "Nous collectons les données personnelles suivantes:",
+        "item1": "Données d'inscription: nom, email, téléphone",
+        "item2": "Données de paiement: traitées par Stripe",
+        "item3": "Données d'utilisation: historique des commandes et rendez-vous",
+        "item4": "Données techniques: IP, type d'appareil, cookies"
+      },
+      "dataUse": {
+        "title": "3. Utilisation des Données",
+        "content": "Nous utilisons vos données pour:",
+        "item1": "Fournir les services contractés",
+        "item2": "Vous envoyer des communications concernant vos commandes",
+        "item3": "Améliorer l'expérience sur la plateforme",
+        "item4": "Respecter les obligations légales"
+      },
+      "dataSharing": {
+        "title": "4. Partage de Données",
+        "content": "Nous partageons vos données uniquement avec:",
+        "item1": "Stripe: traitement sécurisé des paiements",
+        "item2": "Supabase: stockage sécurisé des données",
+        "item3": "Autorités: lorsque requis par la loi"
+      },
+      "userRights": {
+        "title": "5. Vos Droits (LGPD)",
+        "content": "Vous avez les droits suivants sur vos données:",
+        "item1": "Confirmation du traitement des données",
+        "item2": "Accès à vos données",
+        "item3": "Correction des données inexactes",
+        "item4": "Suppression des données inutiles",
+        "item5": "Portabilité des données",
+        "item6": "Révocation du consentement"
+      },
+      "cookies": {
+        "title": "6. Cookies",
+        "content": "Nous utilisons des cookies essentiels et analytiques pour améliorer la plateforme."
+      },
+      "security": {
+        "title": "7. Sécurité des Données",
+        "content": "Nous protégeons vos données avec le chiffrement HTTPS, le contrôle d'accès et l'authentification sécurisée."
+      },
+      "retention": {
+        "title": "8. Conservation des Données",
+        "content": "Nous conservons vos données aussi longtemps que nécessaire pour vous fournir les services."
+      },
+      "dpo": {
+        "title": "9. Contact",
+        "content": "Pour exercer vos droits, contactez-nous:",
+        "link": "Contacter le Délégué à la Protection des Données"
+      }
+    }
+  },
+  "cookies": {
+    "message": "Nous utilisons des cookies pour améliorer votre expérience. En continuant à naviguer, vous acceptez notre",
+    "privacyLink": "Politique de Confidentialité",
+    "accept": "Accepter",
+    "decline": "Refuser"
   }
 }
