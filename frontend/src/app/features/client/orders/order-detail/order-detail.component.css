@@ -42,3 +42,32 @@ img {
 :host ::ng-deep .p-skeleton {
   background-color: rgba(217, 119, 6, 0.1);
 }
+
+/* Print styles */
+@media print {
+  :host {
+    color: #000;
+    background: #fff;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .glass-card {
+    border: 1px solid #ccc;
+    background: #fff;
+    box-shadow: none;
+    color: #000;
+  }
+
+  .text-primary,
+  .text-secondary,
+  .text-accent {
+    color: #000 !important;
+  }
+
+  a[routerLink] {
+    display: none;
+  }
+}

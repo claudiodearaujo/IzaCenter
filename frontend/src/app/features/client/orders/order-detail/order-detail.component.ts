@@ -91,6 +91,10 @@ export class OrderDetailComponent implements OnInit {
     });
   }
 
+  downloadPdf(): void {
+    window.print();
+  }
+
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
       PENDING: this.translate.instant('client.orders.statusPending'),

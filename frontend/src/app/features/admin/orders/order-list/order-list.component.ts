@@ -44,7 +44,7 @@ export class AdminOrderListComponent implements OnInit {
   private ordersService = inject(OrdersService);
   private notification = inject(NotificationService);
   private confirmationService = inject(ConfirmationService);
-  private translate = inject(TranslateService);
+  protected translate = inject(TranslateService);
 
   orders = signal<Order[]>([]);
   loading = signal(true);
