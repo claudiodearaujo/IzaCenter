@@ -229,7 +229,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 - [ ] Implementar busca global de produtos
 - [x] Implementar filtros avançados na loja (por categoria, preço, tipo) — filtro por tipo de produto e faixa de preço adicionados à loja
 - [ ] Implementar histórico de pedidos com download de PDF
-- [ ] Implementar sistema de agendamento configurável (ScheduleSettings existe mas horários são hardcoded no service)
+- [x] Implementar sistema de agendamento configurável — `getAvailableSlots` agora carrega horários do banco via `settingsService.getBusinessHours()`
 
 #### 5.13 API & Documentação
 - [ ] Adicionar versionamento de API (ex: /api/v1/)

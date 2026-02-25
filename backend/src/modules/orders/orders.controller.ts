@@ -202,6 +202,24 @@ export class OrdersController {
       next(error);
     }
   }
+
+  /**
+   * POST /orders/coupon/validate
+   * Validate a coupon code
+   */
+  async validateCoupon(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { code, orderTotal } = req.body as { code: string; orderTotal?: number };
+      const result = await ordersService.validateCoupon(code, orderTotal);
+
+      res.json({
+        success: true,
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const ordersController = new OrdersController();

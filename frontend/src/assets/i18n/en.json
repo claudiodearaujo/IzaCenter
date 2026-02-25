@@ -935,7 +935,8 @@
       "typeQuestion": "Questions",
       "typeSession": "Session",
       "typeMonthly": "Monthly",
-      "typeSpecial": "Special"
+      "typeSpecial": "Special",
+      "couponInvalid": "Invalid or inactive coupon"
     },
     "checkout": {
       "title": "Checkout",

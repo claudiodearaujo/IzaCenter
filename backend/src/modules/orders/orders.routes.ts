@@ -17,6 +17,56 @@ router.use(authenticate);
 
 /**
  * @openapi
+ * /orders/coupon/validate:
+ *   post:
+ *     tags: [Orders]
+ *     summary: Validate a coupon code before checkout
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [code]
+ *             properties:
+ *               code:
+ *                 type: string
+ *                 example: "PROMO10"
+ *               orderTotal:
+ *                 type: number
+ *                 description: Current cart total for minimum order validation
+ *     responses:
+ *       200:
+ *         description: Coupon is valid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     code:
+ *                       type: string
+ *                     discountType:
+ *                       type: string
+ *                       enum: [PERCENTAGE, FIXED]
+ *                     discountValue:
+ *                       type: number
+ *                     valid:
+ *                       type: boolean
+ *       400:
+ *         description: Invalid, expired, or limit-exceeded coupon
+ */
+router.post(
+  '/coupon/validate',
+  ordersController.validateCoupon.bind(ordersController)
+);
+
+/**
+ * @openapi
  * /orders:
  *   post:
  *     tags: [Orders]

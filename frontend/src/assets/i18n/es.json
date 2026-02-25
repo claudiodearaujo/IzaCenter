@@ -935,7 +935,8 @@
       "typeQuestion": "Preguntas",
       "typeSession": "Sesión",
       "typeMonthly": "Mensual",
-      "typeSpecial": "Especial"
+      "typeSpecial": "Especial",
+      "couponInvalid": "Cupón inválido o inactivo"
     },
     "checkout": {
       "title": "Finalizar Compra",
