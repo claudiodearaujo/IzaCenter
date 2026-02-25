@@ -42,7 +42,7 @@
           @for (day of scheduleSettings.weekdays; track day.day) {
             <div class="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 bg-dark/20 rounded-lg">
               <div class="w-full md:w-40 flex items-center justify-between md:justify-start">
-                <span class="text-primary font-medium">{{ day.dayName }}</span>
+                <span class="text-primary font-medium">{{ day.labelKey | translate }}</span>
               </div>
 
               <div class="w-full md:w-auto">
@@ -127,7 +127,6 @@
               [(ngModel)]="scheduleSettings.advanceBookingDays"
               [min]="1"
               [max]="365"
-              suffix=" dias"
               styleClass="w-full"
             />
           </div>

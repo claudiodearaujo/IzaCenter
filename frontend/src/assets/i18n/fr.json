@@ -61,13 +61,23 @@
       "password": "Nouveau mot de passe",
       "confirmPassword": "Confirmer le mot de passe",
       "resetButton": "Réinitialiser"
+    },
+    "messages": {
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "loginSuccess": "Connexion réussie !",
+      "loginError": "Erreur lors de la connexion",
+      "registerSuccess": "Inscription réussie !",
+      "registerError": "Erreur lors de l'inscription",
+      "invalidResetToken": "Jeton invalide ou expiré",
+      "resetSuccess": "Mot de passe réinitialisé avec succès !"
     }
   },
   "home": {
     "hero": {
       "title": "Découvrez votre chemin avec le Tarot",
       "subtitle": "Guidance, clarté et soutien à travers les cartes",
-      "cta": "Prendre rendez-vous"
+      "cta": "Prendre rendez-vous",
+      "meetAbout": "Découvrir Izabela"
     },
     "services": {
       "title": "Services",
@@ -727,7 +737,23 @@
       "startTime": "Début",
       "endTime": "Fin",
       "saved": "Paramètres enregistrés avec succès",
-      "errorSaving": "Erreur lors de l'enregistrement"
+      "errorSaving": "Erreur lors de l'enregistrement",
+      "save": "Enregistrer",
+      "saveAll": "Enregistrer les paramètres",
+      "open": "Ouvert",
+      "closed": "Fermé",
+      "from": "De",
+      "to": "À",
+      "dayOff": "Jour off",
+      "days": {
+        "monday": "Lundi",
+        "tuesday": "Mardi",
+        "wednesday": "Mercredi",
+        "thursday": "Jeudi",
+        "friday": "Vendredi",
+        "saturday": "Samedi",
+        "sunday": "Dimanche"
+      }
     },
     "reports": {
       "title": "Rapports",
@@ -747,7 +773,10 @@
       "sold": "Vendus",
       "productRevenue": "Chiffre d'Affaires",
       "errorLoading": "Erreur lors du chargement",
-      "growth": "croissance"
+      "growth": "croissance",
+      "active": "actifs",
+      "noChartData": "Aucune donnée disponible pour la période sélectionnée",
+      "noProducts": "Aucun produit trouvé"
     }
   },
   "common": {
@@ -804,7 +833,8 @@
     "rejected": "Rejeté",
     "backToHome": "Retour à l'Accueil",
     "all": "Tous",
-    "upload": "Envoyer"
+    "upload": "Envoyer",
+    "learnMore": "En savoir plus"
   },
   "shop": {
     "productList": {
@@ -825,7 +855,17 @@
       "fastDelivery": "Livraison Rapide",
       "fastDeliveryDescription": "Votre lecture est préparée avec soin et livrée sous 48 heures ouvrables après confirmation du paiement.",
       "confidential": "100% Confidentiel",
-      "confidentialDescription": "Vos questions et lectures sont complètement privées et traitées en toute confidentialité."
+      "confidentialDescription": "Vos questions et lectures sont complètement privées et traitées en toute confidentialité.",
+      "filterByType": "Filtrer par type",
+      "allTypes": "Tous les types",
+      "priceRange": "Fourchette de prix",
+      "minPrice": "Prix minimum",
+      "maxPrice": "Prix maximum",
+      "applyFilters": "Appliquer",
+      "typeQuestion": "Questions",
+      "typeSession": "Session",
+      "typeMonthly": "Mensuel",
+      "typeSpecial": "Spécial"
     },
     "productDetail": {
       "home": "Accueil",
@@ -895,7 +935,8 @@
       "typeQuestion": "Questions",
       "typeSession": "Session",
       "typeMonthly": "Mensuel",
-      "typeSpecial": "Spécial"
+      "typeSpecial": "Spécial",
+      "couponInvalid": "Coupon invalide ou inactif"
     },
     "checkout": {
       "title": "Finaliser la Commande",

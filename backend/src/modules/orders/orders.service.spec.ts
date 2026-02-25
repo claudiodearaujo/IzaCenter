@@ -832,4 +832,85 @@ describe('OrdersService', () => {
       expect(prismaMock.order.update).not.toHaveBeenCalled();
     });
   });
+
+  // =============================================
+  // VALIDATE COUPON
+  // =============================================
+  describe('validateCoupon', () => {
+    const mockCoupon = {
+      id: 'coupon-1',
+      code: 'SAVE10',
+      discountType: 'PERCENTAGE',
+      discountValue: new Prisma.Decimal(10),
+      isActive: true,
+      validFrom: null,
+      validUntil: null,
+      maxUses: null,
+      usesCount: 0,
+      minOrderValue: null,
+    };
+
+    it('should return valid coupon details', async () => {
+      prismaMock.coupon.findUnique.mockResolvedValue(mockCoupon as any);
+
+      const result = await ordersService.validateCoupon('SAVE10');
+
+      expect(result.code).toBe('SAVE10');
+      expect(result.discountType).toBe('PERCENTAGE');
+      expect(result.discountValue).toBe(10);
+      expect(result.valid).toBe(true);
+    });
+
+    it('should throw if coupon does not exist', async () => {
+      prismaMock.coupon.findUnique.mockResolvedValue(null);
+
+      await expect(ordersService.validateCoupon('INVALID')).rejects.toThrow();
+    });
+
+    it('should throw if coupon is inactive', async () => {
+      prismaMock.coupon.findUnique.mockResolvedValue({ ...mockCoupon, isActive: false } as any);
+
+      await expect(ordersService.validateCoupon('SAVE10')).rejects.toThrow();
+    });
+
+    it('should throw if coupon is expired', async () => {
+      const pastDate = new Date(Date.now() - 1000 * 60 * 60 * 24);
+      prismaMock.coupon.findUnique.mockResolvedValue({
+        ...mockCoupon,
+        validUntil: pastDate,
+      } as any);
+
+      await expect(ordersService.validateCoupon('SAVE10')).rejects.toThrow();
+    });
+
+    it('should throw if coupon has reached max uses', async () => {
+      prismaMock.coupon.findUnique.mockResolvedValue({
+        ...mockCoupon,
+        maxUses: 5,
+        usesCount: 5,
+      } as any);
+
+      await expect(ordersService.validateCoupon('SAVE10')).rejects.toThrow();
+    });
+
+    it('should throw if order total is below minimum', async () => {
+      prismaMock.coupon.findUnique.mockResolvedValue({
+        ...mockCoupon,
+        minOrderValue: new Prisma.Decimal(200),
+      } as any);
+
+      await expect(ordersService.validateCoupon('SAVE10', 100)).rejects.toThrow();
+    });
+
+    it('should pass validation when order total meets minimum', async () => {
+      prismaMock.coupon.findUnique.mockResolvedValue({
+        ...mockCoupon,
+        minOrderValue: new Prisma.Decimal(50),
+      } as any);
+
+      const result = await ordersService.validateCoupon('SAVE10', 100);
+
+      expect(result.valid).toBe(true);
+    });
+  });
 });

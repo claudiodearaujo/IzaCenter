@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { SkeletonModule } from 'primeng/skeleton';
 import { Select } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -26,6 +27,7 @@ import { UsersService, User } from '../../../../core/services/users.service';
     TableModule,
     Select,
     TagModule,
+    SkeletonModule,
     TranslateModule,
   ],
   templateUrl: './user-list.component.html',

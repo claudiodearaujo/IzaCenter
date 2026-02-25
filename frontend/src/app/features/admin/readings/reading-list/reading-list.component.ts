@@ -11,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
+import { SkeletonModule } from 'primeng/skeleton';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ReadingsService, Reading } from '../../../../core/services/readings.service';
@@ -28,6 +29,7 @@ import { ReadingsService, Reading } from '../../../../core/services/readings.ser
     Select,
     TagModule,
     Tooltip,
+    SkeletonModule,
     TranslateModule,
   ],
   templateUrl: './reading-list.component.html',

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -20,6 +20,7 @@ export class ResetPasswordComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private translate = inject(TranslateService);
 
   isLoading = signal(false);
   success = signal(false);
@@ -32,7 +33,7 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.password !== this.form.confirmPassword) {
-      this.notificationService.showError('As senhas não coincidem');
+      this.notificationService.showError(this.translate.instant('auth.messages.passwordMismatch'));
       return;
     }
 
@@ -43,7 +44,7 @@ export class ResetPasswordComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (error) => {
-        this.notificationService.showError(error.error?.message || 'Token inválido ou expirado');
+        this.notificationService.showError(error.error?.message || this.translate.instant('auth.messages.invalidResetToken'));
         this.isLoading.set(false);
       }
     });

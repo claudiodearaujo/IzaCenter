@@ -7,7 +7,7 @@ import { Select } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { ChartModule } from 'primeng/chart';
 import { SkeletonModule } from 'primeng/skeleton';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import {
   DashboardService,
@@ -36,6 +36,7 @@ import { NotificationService } from '../../../core/services/notification.service
 export class AdminReportsComponent implements OnInit {
   private dashboardService = inject(DashboardService);
   private notification = inject(NotificationService);
+  private translate = inject(TranslateService);
 
   loading = signal(true);
   stats = signal<DashboardStats | null>(null);
@@ -43,11 +44,13 @@ export class AdminReportsComponent implements OnInit {
   topProducts = signal<TopProduct[]>([]);
   period = signal<string>('month');
 
-  periodOptions = [
-    { label: 'Semana', value: 'week' },
-    { label: 'Mês', value: 'month' },
-    { label: 'Ano', value: 'year' },
-  ];
+  get periodOptions() {
+    return [
+      { label: this.translate.instant('admin.reports.week'), value: 'week' },
+      { label: this.translate.instant('admin.reports.month'), value: 'month' },
+      { label: this.translate.instant('admin.reports.year'), value: 'year' },
+    ];
+  }
 
   chartOptions: any = {
     maintainAspectRatio: false,
@@ -98,7 +101,7 @@ export class AdminReportsComponent implements OnInit {
           pendingTestimonials: 0,
         });
         this.loading.set(false);
-        this.notification.error('admin.reports.errorLoading');
+        this.notification.error(this.translate.instant('admin.reports.errorLoading'));
       },
     });
   }

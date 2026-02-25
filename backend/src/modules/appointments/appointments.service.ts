@@ -3,6 +3,7 @@
 import { prisma } from '../../config/database';
 import { sendEmail, emailTemplates } from '../../utils';
 import { NotFoundException, BadRequestException } from '../../utils/errors';
+import { settingsService } from '../settings';
 
 interface CreateAppointmentDTO {
   userId: string;
@@ -350,12 +351,33 @@ export class AppointmentsService {
   }
 
   async getAvailableSlots(date: Date) {
-    // Get business hours (simplified - in real app would come from settings)
-    const businessHours = {
-      start: '09:00',
-      end: '18:00',
-      slotDuration: 30, // minutes
-    };
+    // Load business hours from settings (falls back to defaults if not configured)
+    const defaultStart = '09:00';
+    const defaultEnd = '18:00';
+    const defaultSlotDuration = 30; // minutes
+
+    let businessStart = defaultStart;
+    let businessEnd = defaultEnd;
+    let slotDuration = defaultSlotDuration;
+
+    try {
+      const { data: businessHours } = await settingsService.getBusinessHours();
+      if (businessHours && businessHours.length > 0) {
+        // Get the day of week for the requested date
+        const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const dayName = days[date.getDay()];
+        const dayConfig = businessHours.find((h) => h.day === dayName);
+        if (dayConfig && dayConfig.isOpen && dayConfig.start && dayConfig.end) {
+          businessStart = dayConfig.start;
+          businessEnd = dayConfig.end;
+        } else if (dayConfig && !dayConfig.isOpen) {
+          // Day is closed — return empty slots
+          return { data: [] };
+        }
+      }
+    } catch {
+      // If settings can't be loaded, use defaults
+    }
 
     // Get existing appointments for the date
     const startOfDay = new Date(date);
@@ -379,12 +401,12 @@ export class AppointmentsService {
 
     // Generate all possible slots
     const slots: { startTime: string; endTime: string; available: boolean }[] = [];
-    let currentTime = this.parseTime(businessHours.start);
-    const endTime = this.parseTime(businessHours.end);
+    let currentTime = this.parseTime(businessStart);
+    const endTime = this.parseTime(businessEnd);
 
     while (currentTime < endTime) {
       const slotStart = this.formatTime(currentTime);
-      currentTime += businessHours.slotDuration;
+      currentTime += slotDuration;
       const slotEnd = this.formatTime(currentTime);
 
       // Check if slot is available

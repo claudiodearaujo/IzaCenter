@@ -149,25 +149,42 @@
 
             <!-- Coupon -->
             <div class="mb-6">
-              <label class="text-secondary text-sm block mb-2">{{ 'shop.cart.couponLabel' | translate }}</label>
-              <div class="flex gap-2">
-                <input
-                  type="text"
-                  pInputText
-                  [(ngModel)]="couponCode"
-                  [placeholder]="'shop.cart.couponPlaceholder' | translate"
-                  class="flex-1"
-                />
-                <button
-                  pButton
-                  class="btn-secondary"
-                  [loading]="applyingCoupon()"
-                  (click)="applyCoupon()"
-                  [disabled]="!couponCode()"
-                >
-                  {{ 'shop.cart.applyCoupon' | translate }}
-                </button>
-              </div>
+              @if (!appliedCoupon()) {
+                <label class="text-secondary text-sm block mb-2">{{ 'shop.cart.couponLabel' | translate }}</label>
+                <div class="flex gap-2">
+                  <input
+                    type="text"
+                    pInputText
+                    [(ngModel)]="couponCode"
+                    [placeholder]="'shop.cart.couponPlaceholder' | translate"
+                    class="flex-1"
+                  />
+                  <button
+                    pButton
+                    class="btn-secondary"
+                    [loading]="applyingCoupon()"
+                    (click)="applyCoupon()"
+                    [disabled]="!couponCode()"
+                  >
+                    {{ 'shop.cart.applyCoupon' | translate }}
+                  </button>
+                </div>
+              } @else {
+                <div class="flex items-center justify-between p-3 rounded-lg bg-accent/10 border border-accent/20">
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-tag text-accent"></i>
+                    <span class="text-accent font-medium">{{ appliedCoupon()!.code }}</span>
+                    @if (appliedCoupon()!.discountType === 'PERCENTAGE') {
+                      <span class="text-secondary text-sm">(-{{ appliedCoupon()!.discountValue }}%)</span>
+                    } @else {
+                      <span class="text-secondary text-sm">(-{{ appliedCoupon()!.discountValue | currencyBrl }})</span>
+                    }
+                  </div>
+                  <button pButton class="btn-text text-sm text-error" (click)="removeCoupon()">
+                    <i class="pi pi-times"></i>
+                  </button>
+                </div>
+              }
             </div>
 
             <!-- Totals -->
@@ -176,10 +193,12 @@
                 <span class="text-secondary">{{ 'shop.cart.subtotal' | translate }}</span>
                 <span class="text-primary">{{ subtotal() | currencyBrl }}</span>
               </div>
-              <div class="flex justify-between">
-                <span class="text-secondary">{{ 'shop.cart.discount' | translate }}</span>
-                <span class="text-accent">R$ 0,00</span>
-              </div>
+              @if (discountAmount() > 0) {
+                <div class="flex justify-between">
+                  <span class="text-secondary">{{ 'shop.cart.discount' | translate }}</span>
+                  <span class="text-accent">-{{ discountAmount() | currencyBrl }}</span>
+                </div>
+              }
             </div>
 
             <div class="flex justify-between py-6">

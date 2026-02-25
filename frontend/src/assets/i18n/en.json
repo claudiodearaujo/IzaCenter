@@ -61,13 +61,23 @@
       "password": "New Password",
       "confirmPassword": "Confirm Password",
       "resetButton": "Reset"
+    },
+    "messages": {
+      "passwordMismatch": "Passwords do not match",
+      "loginSuccess": "Login successful!",
+      "loginError": "Error logging in",
+      "registerSuccess": "Registration successful!",
+      "registerError": "Error registering",
+      "invalidResetToken": "Invalid or expired token",
+      "resetSuccess": "Password reset successfully!"
     }
   },
   "home": {
     "hero": {
       "title": "Discover your path with Tarot",
       "subtitle": "Guidance, clarity and support through the cards",
-      "cta": "Schedule Consultation"
+      "cta": "Schedule Consultation",
+      "meetAbout": "Meet Izabela"
     },
     "services": {
       "title": "Services",
@@ -727,7 +737,23 @@
       "startTime": "Start",
       "endTime": "End",
       "saved": "Settings saved successfully",
-      "errorSaving": "Error saving settings"
+      "errorSaving": "Error saving settings",
+      "save": "Save",
+      "saveAll": "Save Settings",
+      "open": "Open",
+      "closed": "Closed",
+      "from": "From",
+      "to": "To",
+      "dayOff": "Day Off",
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
     },
     "reports": {
       "title": "Reports",
@@ -747,7 +773,10 @@
       "sold": "Sold",
       "productRevenue": "Revenue",
       "errorLoading": "Error loading reports",
-      "growth": "growth"
+      "growth": "growth",
+      "active": "active",
+      "noChartData": "No data available for the selected period",
+      "noProducts": "No products found"
     }
   },
   "common": {
@@ -804,7 +833,8 @@
     "rejected": "Rejected",
     "backToHome": "Back to Home",
     "all": "All",
-    "upload": "Upload"
+    "upload": "Upload",
+    "learnMore": "Learn More"
   },
   "shop": {
     "productList": {
@@ -825,7 +855,17 @@
       "fastDelivery": "Fast Delivery",
       "fastDeliveryDescription": "Your reading is prepared with care and delivered within 48 business hours after payment confirmation.",
       "confidential": "100% Confidential",
-      "confidentialDescription": "Your questions and readings are completely private and treated with total secrecy."
+      "confidentialDescription": "Your questions and readings are completely private and treated with total secrecy.",
+      "filterByType": "Filter by type",
+      "allTypes": "All types",
+      "priceRange": "Price range",
+      "minPrice": "Min price",
+      "maxPrice": "Max price",
+      "applyFilters": "Apply",
+      "typeQuestion": "Questions",
+      "typeSession": "Session",
+      "typeMonthly": "Monthly",
+      "typeSpecial": "Special"
     },
     "productDetail": {
       "home": "Home",
@@ -895,7 +935,8 @@
       "typeQuestion": "Questions",
       "typeSession": "Session",
       "typeMonthly": "Monthly",
-      "typeSpecial": "Special"
+      "typeSpecial": "Special",
+      "couponInvalid": "Invalid or inactive coupon"
     },
     "checkout": {
       "title": "Checkout",

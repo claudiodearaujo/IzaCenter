@@ -179,14 +179,16 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
   - [x] readings.service.spec.ts (CRUD, status, publish email, cards)
   - [x] appointments.service.spec.ts (CRUD, conflicts, reschedule, available slots, emails)
 - [x] Adicionar testes unitários para controllers do backend (auth.controller.spec.ts, products.controller.spec.ts)
-- [ ] Adicionar testes unitários para o frontend (services e components)
+- [x] Adicionar testes unitários para o frontend (services e components) — service specs existentes + 4 novos component specs (dashboard, orders, availability, reports)
 - [ ] Adicionar testes E2E (Playwright já está como dependência)
 - [ ] Testar fluxos críticos: registro → compra → pagamento → leitura
 
 #### 5.7 Internacionalização (conforme ADMIN_I18N_IMPLEMENTATION.md)
 - [x] Adicionar chaves i18n para admin.orders, admin.availability, admin.reports (4 idiomas)
 - [x] Completar implementação i18n nos componentes admin existentes (settings.component.html)
-- [ ] Completar implementação i18n nos demais componentes admin (produto-form, leitura-form, etc.)
+- [x] Completar implementação i18n nos demais componentes admin (produto-form, leitura-form, etc.) — todos os componentes admin usam TranslateModule
+- [x] Corrigir labels hardcoded em reports.component.ts (periodOptions) e availability.component.ts (dayNames) — agora usam TranslateService
+- [x] Adicionar chaves i18n faltantes: admin.reports.{active,noChartData,noProducts}, admin.availability.{save,saveAll,open,closed,from,to,dayOff,days.*} em 4 idiomas
 - [ ] Verificar cobertura de traduções em todas as páginas públicas
 - [ ] Testar troca de idioma em todas as páginas
 
@@ -216,23 +218,23 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 
 #### 5.11 UX/UI
 - [ ] Implementar loading states em todas as páginas
-- [ ] Implementar feedback visual para ações do usuário (toast notifications)
+- [ ] Implementar feedback visual para ações do usuário (toast notifications) — já implementado via NotificationService + ToastModule em todos os layouts
 - [x] Implementar página 404 customizada — `NotFoundComponent` com botões de ação
 - [ ] Implementar tratamento de erros offline/network
-- [ ] Adicionar skeleton loading nos componentes
+- [x] Adicionar skeleton loading nos componentes — `loadingbody` template com `p-skeleton` adicionado nos 6 componentes de lista admin (produtos, leituras, pedidos, agendamentos, usuários, depoimentos)
 - [ ] Testar responsividade em dispositivos móveis
 
 #### 5.12 Funcionalidades Adicionais
 - [ ] Implementar notificações in-app (modelo existe no banco)
 - [ ] Implementar busca global de produtos
-- [ ] Implementar filtros avançados na loja (por categoria, preço, tipo)
+- [x] Implementar filtros avançados na loja (por categoria, preço, tipo) — filtro por tipo de produto e faixa de preço adicionados à loja
 - [ ] Implementar histórico de pedidos com download de PDF
-- [ ] Implementar sistema de agendamento configurável (ScheduleSettings existe mas horários são hardcoded no service)
+- [x] Implementar sistema de agendamento configurável — `getAvailableSlots` agora carrega horários do banco via `settingsService.getBusinessHours()`
 
 #### 5.13 API & Documentação
 - [ ] Adicionar versionamento de API (ex: /api/v1/)
-- [ ] Implementar documentação OpenAPI/Swagger
-- [ ] Documentar todos os endpoints com exemplos
+- [x] Implementar documentação OpenAPI/Swagger — swagger-ui-express instalado, spec gerado com swagger-jsdoc, disponível em `/api/docs`
+- [x] Documentar todos os endpoints com anotações OpenAPI (auth, products, orders, readings, appointments, users, testimonials, dashboard)
 - [ ] Criar README completo do projeto com instruções de setup
 
 #### 5.14 Legal & Compliance
@@ -260,12 +262,14 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 | Categoria | Total | Implementado | Pendente |
 |-----------|-------|-------------|----------|
 | Módulos Backend | 12 | 12 | 0 |
-| Páginas Frontend | ~30 | ~28 | ~2 (admin: pedidos, disponibilidade) |
+| Páginas Frontend | ~30 | ~30 | 0 |
 | Modelos de Banco | 16 | 16 | 0 |
-| Testes Unit Backend | 12+ | 7 | 5 |
+| Testes Unit Backend | 15+ | 15 (303+ testes) | 0 |
+| Testes Unit Frontend | 6 | 6 (components) + 15 (services) | — |
 | Testes E2E | — | 0 | Todos |
 | CI/CD | — | 0 | Tudo |
 | Deploy Config | 1 | 1 (frontend) | 1 (backend) |
+| Documentação API | — | 1 (Swagger/OpenAPI em /api/docs) | — |
 
 ### Estimativa para Production-Ready
 

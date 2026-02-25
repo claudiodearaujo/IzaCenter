@@ -586,6 +586,50 @@ export class OrdersService {
       }, {} as Record<string, number>),
     };
   }
+
+  /**
+   * Validate a coupon code
+   */
+  async validateCoupon(code: string, orderTotal?: number) {
+    const now = new Date();
+    const coupon = await prisma.coupon.findUnique({
+      where: { code: code.toUpperCase() },
+    });
+
+    if (!coupon || !coupon.isActive) {
+      throw Errors.BadRequest('Cupom inválido ou inativo');
+    }
+
+    if (coupon.validFrom && coupon.validFrom > now) {
+      throw Errors.BadRequest('Cupom ainda não está ativo');
+    }
+
+    if (coupon.validUntil && coupon.validUntil < now) {
+      throw Errors.BadRequest('Cupom expirado');
+    }
+
+    if (coupon.maxUses && coupon.usesCount >= coupon.maxUses) {
+      throw Errors.BadRequest('Cupom atingiu o limite de usos');
+    }
+
+    if (coupon.minOrderValue && orderTotal !== undefined) {
+      const minValue = coupon.minOrderValue instanceof Prisma.Decimal
+        ? coupon.minOrderValue.toNumber()
+        : Number(coupon.minOrderValue);
+      if (orderTotal < minValue) {
+        throw Errors.BadRequest(`Pedido mínimo de R$ ${minValue.toFixed(2)} para usar este cupom`);
+      }
+    }
+
+    return {
+      code: coupon.code,
+      discountType: coupon.discountType,
+      discountValue: coupon.discountValue instanceof Prisma.Decimal
+        ? coupon.discountValue.toNumber()
+        : Number(coupon.discountValue),
+      valid: true,
+    };
+  }
 }
 
 export const ordersService = new OrdersService();

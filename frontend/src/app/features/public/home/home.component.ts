@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { fadeInUp, listAnimation } from '../../../shared/animations/fade.animation';
 import { TestimonialCardComponent, Testimonial } from '../../../shared/components/testimonial-card/testimonial-card.component';
 import { Product } from '../../../core/models/product.model';
@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit {
   private cartService = inject(CartService);
   private notificationService = inject(NotificationService);
   private seoService = inject(SeoService);
+  private translate = inject(TranslateService);
 
   featuredProducts = signal<Product[]>([]);
   testimonials = signal<Testimonial[]>([]);
@@ -97,6 +98,6 @@ export class HomeComponent implements OnInit {
 
   addToCart(product: Product): void {
     this.cartService.addItem(product);
-    this.notificationService.showSuccess('Produto adicionado ao carrinho!');
+    this.notificationService.showSuccess(this.translate.instant('cart.productAdded'));
   }
 }

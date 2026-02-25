@@ -6,10 +6,12 @@ import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
 
 import { env } from './config/env';
 import { notFoundHandler, errorHandler, generalLimiter } from './middlewares';
 import { auditLogger } from './middlewares/audit.middleware';
+import { swaggerSpec } from './config/swagger';
 import {
   authRoutes,
   usersRoutes,
@@ -142,15 +144,32 @@ app.use(apiPrefix, settingsRoutes);
 app.use(apiPrefix, dashboardRoutes);
 
 // =============================================
-// API DOCUMENTATION (Development only)
+// API DOCUMENTATION
 // =============================================
+
+// Swagger UI — served in all environments for discoverability
+app.use(
+  `${apiPrefix}/docs`,
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customSiteTitle: 'IzaCenter API Docs',
+    swaggerOptions: { persistAuthorization: true },
+  })
+);
+
+// OpenAPI spec endpoint (JSON)
+app.get(`${apiPrefix}/docs.json`, (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 
 if (env.isDevelopment) {
   app.get(`${apiPrefix}`, (req: Request, res: Response) => {
     res.json({
       message: 'Izabela Tarot API',
       version: '1.0.0',
-      documentation: '/api/docs',
+      documentation: `${apiPrefix}/docs`,
+      openApiSpec: `${apiPrefix}/docs.json`,
       endpoints: {
         auth: `${apiPrefix}/auth`,
         users: `${apiPrefix}/users`,

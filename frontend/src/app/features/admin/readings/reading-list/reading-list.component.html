@@ -111,6 +111,19 @@
             <th>{{ 'admin.readings.actions' | translate }}</th>
           </tr>
         </ng-template>
+        <ng-template pTemplate="loadingbody">
+          @for (_ of [1, 2, 3, 4, 5]; track $index) {
+            <tr>
+              <td><p-skeleton height="2.5rem" /></td>
+              <td><p-skeleton height="1.5rem" width="7rem" /></td>
+              <td><p-skeleton height="1.5rem" /></td>
+              <td><p-skeleton height="1.5rem" width="6rem" /></td>
+              <td><p-skeleton height="1.5rem" width="4rem" /></td>
+              <td><p-skeleton height="1.5rem" width="5rem" /></td>
+              <td><p-skeleton height="1.5rem" width="6rem" /></td>
+            </tr>
+          }
+        </ng-template>
         <ng-template pTemplate="body" let-reading>
           <tr [class.bg-yellow-500/5]="reading.status === 'PENDING'">
             <td>

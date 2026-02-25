@@ -1,6 +1,6 @@
 // apps/frontend/src/app/features/shop/cart/cart.component.ts
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CartService, CartItem } from '../../../core/services/cart.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { ApiService } from '../../../core/services/api.service';
 import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
 
 @Component({
@@ -39,9 +40,25 @@ export class CartComponent {
   private router = inject(Router);
   private notification = inject(NotificationService);
   private translate = inject(TranslateService);
+  private api = inject(ApiService);
 
   couponCode = signal('');
   applyingCoupon = signal(false);
+  appliedCoupon = signal<{ code: string; discountType: string; discountValue: number } | null>(null);
+
+  readonly discountAmount = computed(() => {
+    const coupon = this.appliedCoupon();
+    if (!coupon) return 0;
+    const subtotalValue = this.cartService.subtotal();
+    if (coupon.discountType === 'PERCENTAGE') {
+      return (subtotalValue * coupon.discountValue) / 100;
+    }
+    return Math.min(coupon.discountValue, subtotalValue);
+  });
+
+  readonly total = computed(() =>
+    Math.max(0, this.cartService.subtotal() - this.discountAmount())
+  );
 
   get items() {
     return this.cartService.items;
@@ -49,10 +66,6 @@ export class CartComponent {
 
   get subtotal() {
     return this.cartService.subtotal;
-  }
-
-  get total() {
-    return this.cartService.total;
   }
 
   get isEmpty() {
@@ -80,14 +93,32 @@ export class CartComponent {
 
   applyCoupon() {
     if (!this.couponCode()) return;
+    if (!this.authService.isAuthenticated()) {
+      this.notification.info(this.translate.instant('shop.cart.loginToContinue'));
+      return;
+    }
 
     this.applyingCoupon.set(true);
 
-    // TODO: Validate coupon via API
-    setTimeout(() => {
-      this.applyingCoupon.set(false);
-      this.notification.info(this.translate.instant('shop.cart.couponApplied'));
-    }, 1000);
+    this.api.post<{ data: { code: string; discountType: string; discountValue: number; valid: boolean } }>(
+      '/orders/coupon/validate',
+      { code: this.couponCode(), orderTotal: this.cartService.subtotal() }
+    ).subscribe({
+      next: (response) => {
+        this.appliedCoupon.set(response.data);
+        this.applyingCoupon.set(false);
+        this.notification.success(this.translate.instant('shop.cart.couponApplied'));
+      },
+      error: (err) => {
+        this.applyingCoupon.set(false);
+        this.notification.error(err.error?.message || this.translate.instant('shop.cart.couponInvalid'));
+      },
+    });
+  }
+
+  removeCoupon() {
+    this.appliedCoupon.set(null);
+    this.couponCode.set('');
   }
 
   proceedToCheckout() {
