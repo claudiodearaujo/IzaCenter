@@ -4,7 +4,7 @@ import { Router } from 'express';
 import { productsController } from './products.controller';
 import { validate, idParamsSchema } from '../../middlewares/validate.middleware';
 import { authenticate, requireAdmin, optionalAuth } from '../../middlewares/auth.middleware';
-import { uploadImage } from '../../middlewares/upload.middleware';
+import { uploadImage, compressImageMiddleware } from '../../middlewares/upload.middleware';
 import {
   createProductSchema,
   updateProductSchema,
@@ -321,6 +321,7 @@ router.post(
   requireAdmin,
   validate(idParamsSchema, 'params'),
   uploadImage.single('cover'),
+  compressImageMiddleware({ maxWidthOrHeight: 1200, quality: 85, format: 'webp' }),
   productsController.updateCover.bind(productsController)
 );
 

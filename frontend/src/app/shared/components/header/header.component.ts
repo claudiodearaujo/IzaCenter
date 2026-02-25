@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
 import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
+import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +21,8 @@ import { LanguageSelectorComponent } from '../language-selector/language-selecto
     BadgeModule,
     MenubarModule,
     TranslateModule,
-    LanguageSelectorComponent
+    LanguageSelectorComponent,
+    NotificationBellComponent
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'

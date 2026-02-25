@@ -180,7 +180,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
   - [x] appointments.service.spec.ts (CRUD, conflicts, reschedule, available slots, emails)
 - [x] Adicionar testes unitários para controllers do backend (auth.controller.spec.ts, products.controller.spec.ts)
 - [x] Adicionar testes unitários para o frontend (services e components) — service specs existentes + 4 novos component specs (dashboard, orders, availability, reports)
-- [ ] Adicionar testes E2E (Playwright já está como dependência)
+- [x] Adicionar testes E2E (Playwright já está como dependência) — `e2e/` com playwright.config.ts + 4 test suites (public-pages, auth, shop, critical-flows)
 - [ ] Testar fluxos críticos: registro → compra → pagamento → leitura
 
 #### 5.7 Internacionalização (conforme ADMIN_I18N_IMPLEMENTATION.md)
@@ -210,11 +210,11 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 ### 🟢 Prioridade MÉDIA (Melhorias para V1 robusta)
 
 #### 5.10 Performance
-- [ ] Implementar cache com Redis para queries frequentes (produtos, categorias)
-- [ ] Adicionar compressão de imagens no upload
+- [x] Implementar cache com Redis para queries frequentes (produtos, categorias) — `getFeatured`, `listCategories` com TTL + invalidação em mutações
+- [x] Adicionar compressão de imagens no upload — `compressImageMiddleware` (sharp) em `upload.middleware.ts`, aplicado no upload de capa de produtos
 - [ ] Implementar paginação cursor-based para listagens grandes
 - [ ] Configurar CDN para assets estáticos
-- [ ] Budget de build do Angular: revisar limite de 1MB para initial bundle
+- [x] Budget de build do Angular: revisar limite de 1MB para initial bundle — warning 1MB / error 2MB em angular.json
 
 #### 5.11 UX/UI
 - [ ] Implementar loading states em todas as páginas
@@ -225,14 +225,14 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 - [ ] Testar responsividade em dispositivos móveis
 
 #### 5.12 Funcionalidades Adicionais
-- [ ] Implementar notificações in-app (modelo existe no banco)
+- [x] Implementar notificações in-app (modelo existe no banco) — backend: módulo `notifications` com GET/PATCH/DELETE endpoints; frontend: `InAppNotificationsService` + `NotificationBellComponent` no header
 - [ ] Implementar busca global de produtos
 - [x] Implementar filtros avançados na loja (por categoria, preço, tipo) — filtro por tipo de produto e faixa de preço adicionados à loja
 - [ ] Implementar histórico de pedidos com download de PDF
 - [x] Implementar sistema de agendamento configurável — `getAvailableSlots` agora carrega horários do banco via `settingsService.getBusinessHours()`
 
 #### 5.13 API & Documentação
-- [ ] Adicionar versionamento de API (ex: /api/v1/)
+- [x] Adicionar versionamento de API (ex: /api/v1/) — `/api/v1` montado em paralelo com `/api` via `mountRoutes()` em `app.ts`
 - [x] Implementar documentação OpenAPI/Swagger — swagger-ui-express instalado, spec gerado com swagger-jsdoc, disponível em `/api/docs`
 - [x] Documentar todos os endpoints com anotações OpenAPI (auth, products, orders, readings, appointments, users, testimonials, dashboard)
 - [ ] Criar README completo do projeto com instruções de setup

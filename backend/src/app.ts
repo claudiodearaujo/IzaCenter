@@ -25,6 +25,7 @@ import {
   testimonialsRoutes,
   settingsRoutes,
   dashboardRoutes,
+  notificationsRoutes,
 } from './modules';
 
 // Create Express app
@@ -130,18 +131,27 @@ app.get('/health', async (req: Request, res: Response) => {
 // =============================================
 
 const apiPrefix = env.API_PREFIX;
+// v1 prefix provides versioned access alongside the default prefix
+const apiV1Prefix = `${apiPrefix}/v1`;
 
-app.use(`${apiPrefix}/auth`, authRoutes);
-app.use(`${apiPrefix}/users`, usersRoutes);
-app.use(`${apiPrefix}/products`, productsRoutes);
-app.use(`${apiPrefix}/orders`, ordersRoutes);
-app.use(apiPrefix, readingsRoutes);
-app.use(apiPrefix, cardsRoutes);
-app.use(apiPrefix, appointmentsRoutes);
-app.use(apiPrefix, categoriesRoutes);
-app.use(apiPrefix, testimonialsRoutes);
-app.use(apiPrefix, settingsRoutes);
-app.use(apiPrefix, dashboardRoutes);
+function mountRoutes(prefix: string) {
+  app.use(`${prefix}/auth`, authRoutes);
+  app.use(`${prefix}/users`, usersRoutes);
+  app.use(`${prefix}/products`, productsRoutes);
+  app.use(`${prefix}/orders`, ordersRoutes);
+  app.use(`${prefix}/notifications`, notificationsRoutes);
+  app.use(prefix, readingsRoutes);
+  app.use(prefix, cardsRoutes);
+  app.use(prefix, appointmentsRoutes);
+  app.use(prefix, categoriesRoutes);
+  app.use(prefix, testimonialsRoutes);
+  app.use(prefix, settingsRoutes);
+  app.use(prefix, dashboardRoutes);
+}
+
+// Mount on both /api and /api/v1 for backward compatibility + versioning
+mountRoutes(apiPrefix);
+mountRoutes(apiV1Prefix);
 
 // =============================================
 // API DOCUMENTATION
@@ -170,11 +180,16 @@ if (env.isDevelopment) {
       version: '1.0.0',
       documentation: `${apiPrefix}/docs`,
       openApiSpec: `${apiPrefix}/docs.json`,
+      versioned: {
+        v1: `${apiV1Prefix}`,
+        latest: `${apiPrefix}`,
+      },
       endpoints: {
         auth: `${apiPrefix}/auth`,
         users: `${apiPrefix}/users`,
         products: `${apiPrefix}/products`,
         orders: `${apiPrefix}/orders`,
+        notifications: `${apiPrefix}/notifications`,
         readings: `${apiPrefix}/readings`,
         cards: `${apiPrefix}/cards`,
         appointments: `${apiPrefix}/appointments`,

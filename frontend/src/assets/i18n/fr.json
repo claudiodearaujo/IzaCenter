@@ -1302,5 +1302,10 @@
     "privacyLink": "Politique de Confidentialité",
     "accept": "Accepter",
     "decline": "Refuser"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "empty": "Aucune notification"
   }
 }

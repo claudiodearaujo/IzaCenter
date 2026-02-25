@@ -55,6 +55,8 @@
         @if (isAuthenticated()) {
         <!-- User Menu -->
         <div class="flex items-center gap-3">
+          <!-- In-App Notifications -->
+          <app-notification-bell />
           @if (isAdmin()) {
           <a routerLink="/admin" class="text-sm font-medium text-primary-700 hover:text-primary-800">
             {{ 'nav.adminPanel' | translate }}
