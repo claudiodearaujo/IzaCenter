@@ -350,6 +350,12 @@ export class OrdersService {
    * Handle successful payment (webhook)
    */
   async handlePaymentSuccess(orderId: string, paymentIntentId: string) {
+    // Idempotency: skip if already processed
+    const existing = await prisma.order.findUnique({ where: { id: orderId } });
+    if (existing?.paymentStatus === 'SUCCEEDED') {
+      return existing;
+    }
+
     const order = await prisma.order.update({
       where: { id: orderId },
       data: {
@@ -406,6 +412,73 @@ export class OrdersService {
     }).catch(console.error);
 
     return order;
+  }
+
+  /**
+   * Handle refund (webhook)
+   */
+  async handleRefund(paymentIntentId: string) {
+    const order = await prisma.order.findFirst({
+      where: { stripePaymentIntentId: paymentIntentId },
+      include: {
+        client: {
+          select: { id: true, email: true, fullName: true },
+        },
+      },
+    });
+
+    if (!order) {
+      console.warn(`⚠️ No order found for payment intent: ${paymentIntentId}`);
+      return null;
+    }
+
+    if (order.status === 'REFUNDED') {
+      return order;
+    }
+
+    const updated = await prisma.order.update({
+      where: { id: order.id },
+      data: {
+        status: 'REFUNDED',
+        paymentStatus: 'REFUNDED',
+      },
+    });
+
+    // Notify client
+    const emailContent = emailTemplates.refundNotification(
+      order.client.fullName,
+      order.orderNumber
+    );
+
+    sendEmail({
+      to: order.client.email,
+      subject: emailContent.subject,
+      html: emailContent.html,
+    }).catch(console.error);
+
+    return updated;
+  }
+
+  /**
+   * Handle payment failure (webhook)
+   */
+  async handlePaymentFailure(orderId: string) {
+    const order = await prisma.order.findUnique({ where: { id: orderId } });
+
+    if (!order || order.status === 'CANCELLED') {
+      return null;
+    }
+
+    const updated = await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        status: 'CANCELLED',
+        paymentStatus: 'FAILED',
+        cancelledAt: new Date(),
+      },
+    });
+
+    return updated;
   }
 
   /**

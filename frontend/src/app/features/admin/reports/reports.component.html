@@ -1,0 +1,185 @@
+<section class="py-8">
+  <div class="container-custom">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="heading-1 text-primary mb-2">{{ 'admin.reports.title' | translate }}</h1>
+        <p class="text-secondary">{{ 'admin.reports.subtitle' | translate }}</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <p-select
+          [options]="periodOptions"
+          [(ngModel)]="period"
+          optionLabel="label"
+          optionValue="value"
+          (onChange)="onPeriodChange()"
+          styleClass="w-40"
+        />
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Orders -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-gold rounded-lg flex items-center justify-center">
+            <i class="pi pi-shopping-bag text-xl text-white"></i>
+          </div>
+          @if (stats()?.ordersGrowth) {
+            <span class="text-green-400 text-sm">
+              <i class="pi pi-arrow-up mr-1"></i>{{ stats()!.ordersGrowth }}%
+            </span>
+          }
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
+          <p-skeleton height="1rem" width="40%" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalOrders || 0 }}</p>
+          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalOrders' | translate }}</p>
+        }
+      </div>
+
+      <!-- Total Revenue -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-mystical rounded-lg flex items-center justify-center">
+            <i class="pi pi-dollar text-xl text-white"></i>
+          </div>
+          @if (stats()?.revenueGrowth) {
+            <span class="text-green-400 text-sm">
+              <i class="pi pi-arrow-up mr-1"></i>{{ stats()!.revenueGrowth }}%
+            </span>
+          }
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
+          <p-skeleton height="1rem" width="40%" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">
+            {{ formatCurrency(stats()?.totalRevenue || 0) }}
+          </p>
+          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalRevenue' | translate }}</p>
+        }
+      </div>
+
+      <!-- Total Users -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-400 rounded-lg flex items-center justify-center">
+            <i class="pi pi-users text-xl text-white"></i>
+          </div>
+          @if (stats()?.usersGrowth) {
+            <span class="text-green-400 text-sm">
+              <i class="pi pi-arrow-up mr-1"></i>{{ stats()!.usersGrowth }}%
+            </span>
+          }
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
+          <p-skeleton height="1rem" width="40%" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalUsers || 0 }}</p>
+          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalClients' | translate }}</p>
+        }
+      </div>
+
+      <!-- Total Products -->
+      <div class="glass-card p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-orange-400 rounded-lg flex items-center justify-center">
+            <i class="pi pi-box text-xl text-white"></i>
+          </div>
+          @if (stats()?.activeProducts) {
+            <span class="text-accent text-sm">
+              {{ stats()!.activeProducts }} {{ 'admin.reports.active' | translate }}
+            </span>
+          }
+        </div>
+        @if (loading()) {
+          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
+          <p-skeleton height="1rem" width="40%" />
+        } @else {
+          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalProducts || 0 }}</p>
+          <p class="text-secondary text-sm">{{ 'admin.reports.totalProducts' | translate }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- Sales Chart -->
+    <div class="glass-card p-6 mb-8">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="heading-3 text-primary">{{ 'admin.reports.salesChart' | translate }}</h3>
+      </div>
+      @if (loading()) {
+        <p-skeleton height="16rem" />
+      } @else if (salesChartData()) {
+        <div class="h-64">
+          <p-chart type="bar" [data]="salesChartData()!" [options]="chartOptions" />
+        </div>
+      } @else {
+        <div class="text-center py-8">
+          <i class="pi pi-chart-bar text-3xl text-secondary mb-2"></i>
+          <p class="text-secondary">{{ 'admin.reports.noChartData' | translate }}</p>
+        </div>
+      }
+    </div>
+
+    <!-- Top Products -->
+    <div class="glass-card p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="heading-3 text-primary">{{ 'admin.reports.topProducts' | translate }}</h3>
+      </div>
+
+      @if (loading()) {
+        <div class="space-y-4">
+          @for (_ of [1, 2, 3, 4, 5]; track $index) {
+            <p-skeleton height="3rem" />
+          }
+        </div>
+      } @else if (topProducts().length === 0) {
+        <div class="text-center py-8">
+          <i class="pi pi-box text-3xl text-secondary mb-2"></i>
+          <p class="text-secondary">{{ 'admin.reports.noProducts' | translate }}</p>
+        </div>
+      } @else {
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-primary/10">
+                <th class="text-left text-secondary text-sm font-medium py-3 px-4">#</th>
+                <th class="text-left text-secondary text-sm font-medium py-3 px-4">{{ 'admin.reports.product' | translate }}</th>
+                <th class="text-right text-secondary text-sm font-medium py-3 px-4">{{ 'admin.reports.price' | translate }}</th>
+                <th class="text-right text-secondary text-sm font-medium py-3 px-4">{{ 'admin.reports.sold' | translate }}</th>
+                <th class="text-right text-secondary text-sm font-medium py-3 px-4">{{ 'admin.reports.revenue' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (product of topProducts(); track product.id; let i = $index) {
+                <tr class="border-b border-primary/5 hover:bg-dark/30 transition-colors">
+                  <td class="py-3 px-4 text-secondary">{{ i + 1 }}</td>
+                  <td class="py-3 px-4">
+                    <div class="flex items-center gap-3">
+                      @if (product.imageUrl) {
+                        <img [src]="product.imageUrl" [alt]="product.name" class="w-10 h-10 rounded-lg object-cover" />
+                      } @else {
+                        <div class="w-10 h-10 bg-gradient-gold rounded-lg flex items-center justify-center">
+                          <i class="pi pi-box text-white text-sm"></i>
+                        </div>
+                      }
+                      <span class="text-primary font-medium">{{ product.name }}</span>
+                    </div>
+                  </td>
+                  <td class="py-3 px-4 text-right text-secondary">{{ formatCurrency(product.price) }}</td>
+                  <td class="py-3 px-4 text-right text-primary font-medium">{{ product.totalSold }}</td>
+                  <td class="py-3 px-4 text-right text-accent font-bold">{{ formatCurrency(product.price * product.totalSold) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</section>

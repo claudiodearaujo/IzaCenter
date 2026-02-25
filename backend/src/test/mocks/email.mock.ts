@@ -21,13 +21,25 @@ export const emailTemplatesMock = {
     subject: 'Sua Leitura Está Pronta',
     html: '<p>Reading ready content</p>',
   }),
+  readingPublished: jest.fn().mockReturnValue({
+    subject: 'Sua Leitura está Pronta!',
+    html: '<p>Reading published content</p>',
+  }),
   appointmentConfirmation: jest.fn().mockReturnValue({
     subject: 'Agendamento Confirmado',
     html: '<p>Appointment confirmation content</p>',
   }),
+  appointmentCancellation: jest.fn().mockReturnValue({
+    subject: 'Agendamento Cancelado',
+    html: '<p>Appointment cancellation content</p>',
+  }),
   appointmentReminder: jest.fn().mockReturnValue({
     subject: 'Lembrete de Agendamento',
     html: '<p>Appointment reminder content</p>',
+  }),
+  refundNotification: jest.fn().mockReturnValue({
+    subject: 'Reembolso Processado',
+    html: '<p>Refund notification content</p>',
   }),
 };
 

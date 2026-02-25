@@ -93,6 +93,27 @@ export const ADMIN_ROUTES: Routes = [
       ),
   },
   {
+    path: 'disponibilidade',
+    loadComponent: () =>
+      import('./availability/availability.component').then(
+        (m) => m.AdminAvailabilityComponent
+      ),
+  },
+  {
+    path: 'pedidos',
+    loadComponent: () =>
+      import('./orders/order-list/order-list.component').then(
+        (m) => m.AdminOrderListComponent
+      ),
+  },
+  {
+    path: 'relatorios',
+    loadComponent: () =>
+      import('./reports/reports.component').then(
+        (m) => m.AdminReportsComponent
+      ),
+  },
+  {
     path: 'configuracoes',
     loadComponent: () =>
       import('./settings/settings.component').then((m) => m.SettingsComponent),
