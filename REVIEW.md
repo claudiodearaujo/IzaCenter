@@ -226,7 +226,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 
 #### 5.12 Funcionalidades Adicionais
 - [x] Implementar notificações in-app (modelo existe no banco) — backend: módulo `notifications` com GET/PATCH/DELETE endpoints; frontend: `InAppNotificationsService` + `NotificationBellComponent` no header
-- [ ] Implementar busca global de produtos
+- [x] Implementar busca global de produtos — barra de busca no header redireciona para `/loja?search=termo`; shop lê parâmetro `search` dos queryParams
 - [x] Implementar filtros avançados na loja (por categoria, preço, tipo) — filtro por tipo de produto e faixa de preço adicionados à loja
 - [ ] Implementar histórico de pedidos com download de PDF
 - [x] Implementar sistema de agendamento configurável — `getAvailableSlots` agora carrega horários do banco via `settingsService.getBusinessHours()`
@@ -241,7 +241,7 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 - [x] Implementar página de Termos de Uso — `/termos-de-uso`
 - [x] Implementar página de Política de Privacidade (LGPD) — `/politica-de-privacidade`
 - [x] Implementar banner de consentimento de cookies — `CookieConsentComponent` no layout público
-- [ ] Implementar sistema de opt-out de comunicações
+- [x] Implementar sistema de opt-out de comunicações — campos `notificationEmail` e `notificationWhatsapp` no modelo User; toggles na página de perfil do cliente (`/cliente/perfil`)
 - [ ] Verificar compliance com regulamentações de pagamento (PCI DSS via Stripe)
 
 ### 🔵 Prioridade BAIXA (Nice-to-have para versões futuras)

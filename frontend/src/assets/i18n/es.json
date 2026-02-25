@@ -11,7 +11,8 @@
     "register": "Registrarse",
     "logout": "Cerrar Sesión",
     "myArea": "Mi Área",
-    "adminPanel": "Panel de Administración"
+    "adminPanel": "Panel de Administración",
+    "search": "Buscar productos"
   },
   "footer": {
     "quickLinks": "Enlaces Rápidos",
@@ -303,7 +304,12 @@
       "passwordChanged": "¡Contraseña cambiada con éxito!",
       "passwordError": "Error al cambiar contraseña",
       "avatarUpdated": "¡Avatar actualizado!",
-      "avatarError": "Error al subir avatar"
+      "avatarError": "Error al subir avatar",
+      "communicationPreferences": "Preferencias de Comunicación",
+      "emailNotifications": "Notificaciones por Email",
+      "emailNotificationsDesc": "Reciba actualizaciones sobre lecturas, citas y pedidos por email",
+      "whatsappNotifications": "Notificaciones por WhatsApp",
+      "whatsappNotificationsDesc": "Reciba recordatorios y actualizaciones por WhatsApp"
     },
     "menu": {
       "dashboard": "Panel",

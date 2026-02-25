@@ -73,6 +73,9 @@ export class ProductListComponent implements OnInit {
       if (params['categoria']) {
         this.selectedCategory.set(params['categoria']);
       }
+      if (params['search']) {
+        this.searchTerm.set(params['search']);
+      }
       this.loadProducts();
     });
   }

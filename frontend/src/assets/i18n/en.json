@@ -11,7 +11,8 @@
     "register": "Sign Up",
     "logout": "Sign Out",
     "myArea": "My Area",
-    "adminPanel": "Admin Panel"
+    "adminPanel": "Admin Panel",
+    "search": "Search products"
   },
   "footer": {
     "quickLinks": "Quick Links",
@@ -303,7 +304,12 @@
       "passwordChanged": "Password changed successfully!",
       "passwordError": "Error changing password",
       "avatarUpdated": "Avatar updated!",
-      "avatarError": "Error uploading avatar"
+      "avatarError": "Error uploading avatar",
+      "communicationPreferences": "Communication Preferences",
+      "emailNotifications": "Email Notifications",
+      "emailNotificationsDesc": "Receive updates about readings, appointments and orders by email",
+      "whatsappNotifications": "WhatsApp Notifications",
+      "whatsappNotificationsDesc": "Receive reminders and updates via WhatsApp"
     },
     "menu": {
       "dashboard": "Dashboard",

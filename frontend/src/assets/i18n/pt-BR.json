@@ -11,7 +11,8 @@
     "register": "Cadastrar",
     "logout": "Sair",
     "myArea": "Minha Área",
-    "adminPanel": "Painel Admin"
+    "adminPanel": "Painel Admin",
+    "search": "Buscar produtos"
   },
   "footer": {
     "quickLinks": "Links Rápidos",
@@ -303,7 +304,12 @@
       "passwordChanged": "Senha alterada com sucesso!",
       "passwordError": "Erro ao alterar senha",
       "avatarUpdated": "Avatar atualizado!",
-      "avatarError": "Erro ao enviar avatar"
+      "avatarError": "Erro ao enviar avatar",
+      "communicationPreferences": "Preferências de Comunicação",
+      "emailNotifications": "Notificações por E-mail",
+      "emailNotificationsDesc": "Receba atualizações sobre leituras, agendamentos e pedidos por e-mail",
+      "whatsappNotifications": "Notificações por WhatsApp",
+      "whatsappNotificationsDesc": "Receba lembretes e atualizações via WhatsApp"
     },
     "menu": {
       "dashboard": "Dashboard",
