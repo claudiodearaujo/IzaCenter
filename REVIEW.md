@@ -262,12 +262,14 @@ O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, compo
 | Categoria | Total | Implementado | Pendente |
 |-----------|-------|-------------|----------|
 | Módulos Backend | 12 | 12 | 0 |
-| Páginas Frontend | ~30 | ~28 | ~2 (admin: pedidos, disponibilidade) |
+| Páginas Frontend | ~30 | ~30 | 0 |
 | Modelos de Banco | 16 | 16 | 0 |
-| Testes Unit Backend | 12+ | 7 | 5 |
+| Testes Unit Backend | 15+ | 15 (303+ testes) | 0 |
+| Testes Unit Frontend | 6 | 6 (components) + 15 (services) | — |
 | Testes E2E | — | 0 | Todos |
 | CI/CD | — | 0 | Tudo |
 | Deploy Config | 1 | 1 (frontend) | 1 (backend) |
+| Documentação API | — | 1 (Swagger/OpenAPI em /api/docs) | — |
 
 ### Estimativa para Production-Ready
 

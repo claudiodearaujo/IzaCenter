@@ -25,8 +25,35 @@ async function markEventProcessed(eventId: string): Promise<void> {
 }
 
 /**
- * POST /webhooks/stripe
- * Handle Stripe webhook events
+/**
+ * @openapi
+ * /webhooks/stripe:
+ *   post:
+ *     tags: [Webhooks]
+ *     summary: Handle Stripe webhook events
+ *     description: >
+ *       Receives Stripe events (payment_intent.succeeded, payment_intent.payment_failed, charge.refunded, etc.)
+ *       and processes them. Requires the Stripe-Signature header for verification.
+ *       Events are idempotent — duplicate events (same event ID) are skipped using Redis.
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     parameters:
+ *       - in: header
+ *         name: stripe-signature
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Stripe webhook signature for request verification
+ *     responses:
+ *       200:
+ *         description: Event received and processed
+ *       400:
+ *         description: Signature verification failed
  */
 router.post(
   '/',
