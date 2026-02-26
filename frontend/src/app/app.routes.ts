@@ -57,6 +57,15 @@ export const routes: Routes = [
         path: 'checkout',
         loadComponent: () => import('./features/shop/checkout/checkout.component').then(m => m.CheckoutComponent),
         canActivate: [authGuard]
+      },
+      {
+        path: 'checkout/sucesso',
+        loadComponent: () => import('./features/shop/checkout-success/checkout-success.component').then(m => m.CheckoutSuccessComponent),
+        canActivate: [authGuard]
+      },
+      {
+        path: 'checkout/cancelado',
+        loadComponent: () => import('./features/shop/checkout-cancelled/checkout-cancelled.component').then(m => m.CheckoutCancelledComponent)
       }
     ]
   },
@@ -105,6 +114,10 @@ export const routes: Routes = [
       {
         path: 'agendamentos',
         loadComponent: () => import('./features/client/appointments/appointment-list/appointment-list.component').then(m => m.AppointmentListComponent)
+      },
+      {
+        path: 'agendar',
+        loadComponent: () => import('./features/client/appointments/appointment-booking/appointment-booking.component').then(m => m.AppointmentBookingComponent)
       },
       {
         path: 'pedidos',

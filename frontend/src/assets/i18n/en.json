@@ -317,7 +317,30 @@
       "readings": "Readings",
       "appointments": "Appointments",
       "orders": "Orders",
-      "profile": "Profile"
+      "profile": "Profile",
+      "schedule": "Book Session"
+    },
+    "booking": {
+      "title": "Book a New Session",
+      "subtitle": "Choose the date and available time slot for your live consultation",
+      "backToList": "Back to appointments",
+      "step1Title": "Choose the Date",
+      "step1Subtitle": "Select the desired date for the appointment",
+      "step2Title": "Choose the Time",
+      "step3Title": "Confirm the Appointment",
+      "step3Subtitle": "Review the details and add notes if you wish",
+      "loadingSlots": "Loading available slots...",
+      "noSlots": "No slots available on this date",
+      "noSlotsHint": "Try selecting another day",
+      "summaryDate": "Date:",
+      "summaryTime": "Time:",
+      "notesLabel": "Notes (optional)",
+      "notesPlaceholder": "Describe what you would like to discuss in the session...",
+      "confirm": "Confirm Appointment",
+      "cancellationPolicy": "Cancellations must be made 24 hours in advance",
+      "success": "Appointment successfully booked!",
+      "error": "Unable to book the appointment. Please try again.",
+      "errorLoadingSlots": "Error loading available slots"
     }
   },
   "admin": {
@@ -980,7 +1003,28 @@
       "typeQuestion": "Questions",
       "typeSession": "Session",
       "typeMonthly": "Monthly",
-      "typeSpecial": "Special"
+      "typeSpecial": "Special",
+      "success": {
+        "title": "Payment Confirmed!",
+        "subtitle": "Your order has been received successfully. You will receive a confirmation email shortly.",
+        "orderNumber": "Order number:",
+        "total": "Amount paid:",
+        "items": "Items:",
+        "viewOrder": "View Order",
+        "goToDashboard": "Go to Dashboard",
+        "viewOrders": "My Orders",
+        "backToShop": "Back to Shop",
+        "emailInfo": "A confirmation email has been sent to your registered address."
+      },
+      "cancelled": {
+        "title": "Payment Cancelled",
+        "subtitle": "The payment was cancelled and you were not charged.",
+        "info": "Your items remain in the cart. You can try again whenever you are ready.",
+        "retry": "Try Again",
+        "backToShop": "Back to Shop",
+        "help": "Need help?",
+        "contactUs": "Contact Us"
+      }
     }
   },
   "cart": {
@@ -1124,7 +1168,8 @@
       "message": "Message",
       "messagePlaceholder": "Write your message...",
       "submitButton": "Send Message",
-      "successMessage": "Message sent successfully! I will get back to you soon."
+      "successMessage": "Message sent successfully! I will get back to you soon.",
+      "errorMessage": "Error sending message. Please try again."
     },
     "info": {
       "title": "Contact Information",
@@ -1186,7 +1231,10 @@
       "item4": "I did my first reading and was impressed with the accuracy. I will definitely be back!",
       "item5": "The online session was incredible. I felt very welcomed and received valuable guidance.",
       "item6": "The monthly reading helps me plan my month with more awareness. I highly recommend it!"
-    }
+    },
+    "empty": "No approved testimonials yet",
+    "emptySubtitle": "We will soon share stories from our clients",
+    "errorLoading": "Unable to load testimonials"
   },
   "notFound": {
     "title": "Page not found",

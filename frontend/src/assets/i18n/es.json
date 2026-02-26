@@ -317,7 +317,30 @@
       "readings": "Lecturas",
       "appointments": "Citas",
       "orders": "Pedidos",
-      "profile": "Perfil"
+      "profile": "Perfil",
+      "schedule": "Reservar Sesión"
+    },
+    "booking": {
+      "title": "Reservar Nueva Sesión",
+      "subtitle": "Elige la fecha y el horario disponible para tu consulta en vivo",
+      "backToList": "Volver a citas",
+      "step1Title": "Elige la Fecha",
+      "step1Subtitle": "Selecciona la fecha deseada para la cita",
+      "step2Title": "Elige el Horario",
+      "step3Title": "Confirma la Cita",
+      "step3Subtitle": "Revisa los detalles y añade observaciones si lo deseas",
+      "loadingSlots": "Cargando horarios disponibles...",
+      "noSlots": "No hay horarios disponibles en esta fecha",
+      "noSlotsHint": "Intenta seleccionar otro día",
+      "summaryDate": "Fecha:",
+      "summaryTime": "Horario:",
+      "notesLabel": "Observaciones (opcional)",
+      "notesPlaceholder": "Describe lo que deseas tratar en la sesión...",
+      "confirm": "Confirmar Cita",
+      "cancellationPolicy": "Las cancelaciones deben hacerse con 24 horas de antelación",
+      "success": "¡Cita realizada con éxito!",
+      "error": "No fue posible realizar la cita. Inténtalo de nuevo.",
+      "errorLoadingSlots": "Error al cargar los horarios disponibles"
     }
   },
   "admin": {
@@ -980,7 +1003,28 @@
       "typeQuestion": "Preguntas",
       "typeSession": "Sesión",
       "typeMonthly": "Mensual",
-      "typeSpecial": "Especial"
+      "typeSpecial": "Especial",
+      "success": {
+        "title": "¡Pago Confirmado!",
+        "subtitle": "Tu pedido fue recibido con éxito. Pronto recibirás un correo de confirmación.",
+        "orderNumber": "Número de pedido:",
+        "total": "Total pagado:",
+        "items": "Artículos:",
+        "viewOrder": "Ver Pedido",
+        "goToDashboard": "Ir al Dashboard",
+        "viewOrders": "Mis Pedidos",
+        "backToShop": "Volver a la Tienda",
+        "emailInfo": "Se ha enviado un correo de confirmación a tu dirección registrada."
+      },
+      "cancelled": {
+        "title": "Pago Cancelado",
+        "subtitle": "El pago fue cancelado y no se realizó ningún cargo.",
+        "info": "Tus artículos permanecen en el carrito. Puedes intentarlo de nuevo cuando quieras.",
+        "retry": "Intentar de Nuevo",
+        "backToShop": "Volver a la Tienda",
+        "help": "¿Necesitas ayuda?",
+        "contactUs": "Contáctanos"
+      }
     }
   },
   "cart": {
@@ -1124,7 +1168,8 @@
       "message": "Mensaje",
       "messagePlaceholder": "Escribe tu mensaje...",
       "submitButton": "Enviar Mensaje",
-      "successMessage": "¡Mensaje enviado con éxito! Te responderé pronto."
+      "successMessage": "¡Mensaje enviado con éxito! Te responderé pronto.",
+      "errorMessage": "Error al enviar el mensaje. Por favor, inténtalo de nuevo."
     },
     "info": {
       "title": "Información de Contacto",
@@ -1186,7 +1231,10 @@
       "item4": "Hice mi primera lectura y quedé impresionada con la precisión. ¡Volveré con seguridad!",
       "item5": "La sesión online fue increíble. Me sentí muy acogida y recibí orientaciones valiosas.",
       "item6": "La lectura mensual me ayuda a planificar mi mes con más conciencia. ¡Super recomiendo!"
-    }
+    },
+    "empty": "Aún no hay testimonios aprobados",
+    "emptySubtitle": "Pronto compartiremos historias de nuestras clientas",
+    "errorLoading": "No se pudieron cargar los testimonios"
   },
   "notFound": {
     "title": "Página no encontrada",

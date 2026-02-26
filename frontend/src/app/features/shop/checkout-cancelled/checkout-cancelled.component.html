@@ -1,0 +1,50 @@
+<!-- apps/frontend/src/app/features/shop/checkout-cancelled/checkout-cancelled.component.html -->
+
+<section class="py-12 md:py-24">
+  <div class="container-custom max-w-2xl text-center">
+
+    <div class="glass-card p-12">
+      <!-- Icon -->
+      <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-yellow-500/20 border-2 border-yellow-500/50 flex items-center justify-center">
+        <i class="pi pi-times text-5xl text-yellow-400"></i>
+      </div>
+
+      <!-- Title -->
+      <h1 class="heading-1 text-primary mb-3">
+        {{ 'shop.checkout.cancelled.title' | translate }}
+      </h1>
+      <p class="text-body text-secondary mb-8">
+        {{ 'shop.checkout.cancelled.subtitle' | translate }}
+      </p>
+
+      <!-- Info Box -->
+      <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-8 text-left">
+        <p class="text-yellow-400 text-sm flex items-start gap-2">
+          <i class="pi pi-info-circle mt-0.5 flex-shrink-0"></i>
+          {{ 'shop.checkout.cancelled.info' | translate }}
+        </p>
+      </div>
+
+      <!-- CTAs -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a routerLink="/carrinho" class="btn-primary flex items-center justify-center gap-2">
+          <i class="pi pi-refresh"></i>
+          {{ 'shop.checkout.cancelled.retry' | translate }}
+        </a>
+        <a routerLink="/loja" class="btn-outline flex items-center justify-center gap-2">
+          <i class="pi pi-arrow-left"></i>
+          {{ 'shop.checkout.cancelled.backToShop' | translate }}
+        </a>
+      </div>
+
+      <!-- Help -->
+      <p class="text-secondary text-sm mt-8">
+        {{ 'shop.checkout.cancelled.help' | translate }}
+        <a routerLink="/contato" class="text-accent hover:underline ml-1">
+          {{ 'shop.checkout.cancelled.contactUs' | translate }}
+        </a>
+      </p>
+    </div>
+
+  </div>
+</section>

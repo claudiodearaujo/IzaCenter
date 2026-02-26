@@ -1,0 +1,84 @@
+<!-- apps/frontend/src/app/features/shop/checkout-success/checkout-success.component.html -->
+
+<section class="py-12 md:py-24">
+  <div class="container-custom max-w-2xl text-center">
+
+    @if (loading()) {
+      <!-- Loading -->
+      <div class="glass-card p-12">
+        <p-skeleton shape="circle" size="5rem" styleClass="mx-auto mb-6" />
+        <p-skeleton height="2rem" width="60%" styleClass="mx-auto mb-4" />
+        <p-skeleton height="1rem" width="80%" styleClass="mx-auto mb-2" />
+        <p-skeleton height="1rem" width="50%" styleClass="mx-auto" />
+      </div>
+    } @else {
+      <!-- Success Card -->
+      <div class="glass-card p-12">
+        <!-- Icon -->
+        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-green-500/20 border-2 border-green-500/50 flex items-center justify-center">
+          <i class="pi pi-check text-5xl text-green-400"></i>
+        </div>
+
+        <!-- Title -->
+        <h1 class="heading-1 text-primary mb-3">
+          {{ 'shop.checkout.success.title' | translate }}
+        </h1>
+        <p class="text-body text-secondary mb-8">
+          {{ 'shop.checkout.success.subtitle' | translate }}
+        </p>
+
+        @if (order()) {
+          <!-- Order Info -->
+          <div class="bg-dark/40 rounded-xl p-6 mb-8 text-left space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-secondary">{{ 'shop.checkout.success.orderNumber' | translate }}</span>
+              <span class="text-primary font-bold">#{{ order()!.orderNumber }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-secondary">{{ 'shop.checkout.success.total' | translate }}</span>
+              <span class="text-accent font-bold text-xl">{{ order()!.total | currencyBrl }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-secondary">{{ 'shop.checkout.success.items' | translate }}</span>
+              <span class="text-primary">{{ order()!.items.length }}</span>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              [routerLink]="['/cliente/pedidos', order()!.id]"
+              class="btn-primary flex items-center justify-center gap-2"
+            >
+              <i class="pi pi-eye"></i>
+              {{ 'shop.checkout.success.viewOrder' | translate }}
+            </a>
+            <a routerLink="/cliente" class="btn-outline flex items-center justify-center gap-2">
+              <i class="pi pi-home"></i>
+              {{ 'shop.checkout.success.goToDashboard' | translate }}
+            </a>
+          </div>
+        } @else {
+          <!-- No order ID - generic success -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a routerLink="/cliente/pedidos" class="btn-primary flex items-center justify-center gap-2">
+              <i class="pi pi-list"></i>
+              {{ 'shop.checkout.success.viewOrders' | translate }}
+            </a>
+            <a routerLink="/loja" class="btn-outline flex items-center justify-center gap-2">
+              <i class="pi pi-arrow-left"></i>
+              {{ 'shop.checkout.success.backToShop' | translate }}
+            </a>
+          </div>
+        }
+
+        <!-- Info -->
+        <p class="text-secondary text-sm mt-8">
+          <i class="pi pi-envelope mr-2"></i>
+          {{ 'shop.checkout.success.emailInfo' | translate }}
+        </p>
+      </div>
+    }
+
+  </div>
+</section>

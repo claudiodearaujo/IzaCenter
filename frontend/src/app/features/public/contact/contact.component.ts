@@ -7,6 +7,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { NotificationService } from '../../../core/services/notification.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SeoService } from '../../../core/services/seo.service';
+import { ApiService } from '../../../core/services/api.service';
 
 @Component({
   selector: 'app-contact',
@@ -19,6 +20,7 @@ export class ContactComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private translate = inject(TranslateService);
   private seoService = inject(SeoService);
+  private api = inject(ApiService);
 
   isLoading = signal(false);
 
@@ -53,14 +55,21 @@ export class ContactComponent implements OnInit {
     ];
   }
 
-  async onSubmit(): Promise<void> {
+  onSubmit(): void {
     this.isLoading.set(true);
 
-    // TODO: Send to API
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    this.notificationService.showSuccess(this.translate.instant('contact.form.successMessage'));
-    this.form = { name: '', email: '', subject: '', message: '' };
-    this.isLoading.set(false);
+    this.api.post<{ message: string }>('/contact', this.form).subscribe({
+      next: () => {
+        this.notificationService.showSuccess(this.translate.instant('contact.form.successMessage'));
+        this.form = { name: '', email: '', subject: '', message: '' };
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        this.notificationService.showError(
+          err.error?.message || this.translate.instant('contact.form.errorMessage')
+        );
+        this.isLoading.set(false);
+      },
+    });
   }
 }
