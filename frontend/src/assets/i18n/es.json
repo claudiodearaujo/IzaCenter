@@ -980,7 +980,28 @@
       "typeQuestion": "Preguntas",
       "typeSession": "Sesión",
       "typeMonthly": "Mensual",
-      "typeSpecial": "Especial"
+      "typeSpecial": "Especial",
+      "success": {
+        "title": "¡Pago Confirmado!",
+        "subtitle": "Tu pedido fue recibido con éxito. Pronto recibirás un correo de confirmación.",
+        "orderNumber": "Número de pedido:",
+        "total": "Total pagado:",
+        "items": "Artículos:",
+        "viewOrder": "Ver Pedido",
+        "goToDashboard": "Ir al Dashboard",
+        "viewOrders": "Mis Pedidos",
+        "backToShop": "Volver a la Tienda",
+        "emailInfo": "Se ha enviado un correo de confirmación a tu dirección registrada."
+      },
+      "cancelled": {
+        "title": "Pago Cancelado",
+        "subtitle": "El pago fue cancelado y no se realizó ningún cargo.",
+        "info": "Tus artículos permanecen en el carrito. Puedes intentarlo de nuevo cuando quieras.",
+        "retry": "Intentar de Nuevo",
+        "backToShop": "Volver a la Tienda",
+        "help": "¿Necesitas ayuda?",
+        "contactUs": "Contáctanos"
+      }
     }
   },
   "cart": {

@@ -980,7 +980,28 @@
       "typeQuestion": "Questions",
       "typeSession": "Session",
       "typeMonthly": "Monthly",
-      "typeSpecial": "Special"
+      "typeSpecial": "Special",
+      "success": {
+        "title": "Payment Confirmed!",
+        "subtitle": "Your order has been received successfully. You will receive a confirmation email shortly.",
+        "orderNumber": "Order number:",
+        "total": "Amount paid:",
+        "items": "Items:",
+        "viewOrder": "View Order",
+        "goToDashboard": "Go to Dashboard",
+        "viewOrders": "My Orders",
+        "backToShop": "Back to Shop",
+        "emailInfo": "A confirmation email has been sent to your registered address."
+      },
+      "cancelled": {
+        "title": "Payment Cancelled",
+        "subtitle": "The payment was cancelled and you were not charged.",
+        "info": "Your items remain in the cart. You can try again whenever you are ready.",
+        "retry": "Try Again",
+        "backToShop": "Back to Shop",
+        "help": "Need help?",
+        "contactUs": "Contact Us"
+      }
     }
   },
   "cart": {

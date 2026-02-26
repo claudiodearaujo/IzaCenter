@@ -152,8 +152,8 @@ export class OrdersService {
       customerId: stripeCustomerId,
       lineItems,
       orderId: order.id,
-      successUrl: `${env.FRONTEND_URL}/cliente/pedidos/${order.id}?success=true`,
-      cancelUrl: `${env.FRONTEND_URL}/loja/checkout?cancelled=true`,
+      successUrl: `${env.FRONTEND_URL}/checkout/sucesso?orderId=${order.id}`,
+      cancelUrl: `${env.FRONTEND_URL}/checkout/cancelado`,
     });
 
     // Update order with Stripe session ID
