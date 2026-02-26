@@ -317,7 +317,30 @@
       "readings": "Lectures",
       "appointments": "Rendez-vous",
       "orders": "Commandes",
-      "profile": "Profil"
+      "profile": "Profil",
+      "schedule": "Réserver Séance"
+    },
+    "booking": {
+      "title": "Réserver une Nouvelle Séance",
+      "subtitle": "Choisissez la date et le créneau disponible pour votre consultation en direct",
+      "backToList": "Retour aux rendez-vous",
+      "step1Title": "Choisir la Date",
+      "step1Subtitle": "Sélectionnez la date souhaitée pour le rendez-vous",
+      "step2Title": "Choisir l'Heure",
+      "step3Title": "Confirmer le Rendez-vous",
+      "step3Subtitle": "Vérifiez les détails et ajoutez des notes si vous le souhaitez",
+      "loadingSlots": "Chargement des créneaux disponibles...",
+      "noSlots": "Aucun créneau disponible à cette date",
+      "noSlotsHint": "Essayez de sélectionner un autre jour",
+      "summaryDate": "Date :",
+      "summaryTime": "Horaire :",
+      "notesLabel": "Remarques (facultatif)",
+      "notesPlaceholder": "Décrivez ce que vous souhaitez aborder lors de la séance...",
+      "confirm": "Confirmer le Rendez-vous",
+      "cancellationPolicy": "Les annulations doivent être effectuées 24 heures à l'avance",
+      "success": "Rendez-vous pris avec succès !",
+      "error": "Impossible de prendre le rendez-vous. Veuillez réessayer.",
+      "errorLoadingSlots": "Erreur lors du chargement des créneaux disponibles"
     }
   },
   "admin": {

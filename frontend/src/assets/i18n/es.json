@@ -317,7 +317,30 @@
       "readings": "Lecturas",
       "appointments": "Citas",
       "orders": "Pedidos",
-      "profile": "Perfil"
+      "profile": "Perfil",
+      "schedule": "Reservar Sesión"
+    },
+    "booking": {
+      "title": "Reservar Nueva Sesión",
+      "subtitle": "Elige la fecha y el horario disponible para tu consulta en vivo",
+      "backToList": "Volver a citas",
+      "step1Title": "Elige la Fecha",
+      "step1Subtitle": "Selecciona la fecha deseada para la cita",
+      "step2Title": "Elige el Horario",
+      "step3Title": "Confirma la Cita",
+      "step3Subtitle": "Revisa los detalles y añade observaciones si lo deseas",
+      "loadingSlots": "Cargando horarios disponibles...",
+      "noSlots": "No hay horarios disponibles en esta fecha",
+      "noSlotsHint": "Intenta seleccionar otro día",
+      "summaryDate": "Fecha:",
+      "summaryTime": "Horario:",
+      "notesLabel": "Observaciones (opcional)",
+      "notesPlaceholder": "Describe lo que deseas tratar en la sesión...",
+      "confirm": "Confirmar Cita",
+      "cancellationPolicy": "Las cancelaciones deben hacerse con 24 horas de antelación",
+      "success": "¡Cita realizada con éxito!",
+      "error": "No fue posible realizar la cita. Inténtalo de nuevo.",
+      "errorLoadingSlots": "Error al cargar los horarios disponibles"
     }
   },
   "admin": {

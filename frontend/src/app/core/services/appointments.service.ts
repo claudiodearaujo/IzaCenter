@@ -60,6 +60,15 @@ export class AppointmentsService {
     return this.api.get<ApiResponse<Appointment[]>>('/appointments');
   }
 
+  create(data: {
+    date: string;
+    startTime: string;
+    endTime: string;
+    clientNotes?: string;
+  }): Observable<ApiResponse<Appointment>> {
+    return this.api.post<ApiResponse<Appointment>>('/appointments', data);
+  }
+
   cancel(id: string, reason?: string): Observable<ApiResponse<Appointment>> {
     return this.api.post<ApiResponse<Appointment>>(`/appointments/${id}/cancel`, { reason });
   }

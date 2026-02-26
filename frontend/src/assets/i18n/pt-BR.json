@@ -317,7 +317,30 @@
       "readings": "Leituras",
       "appointments": "Agendamentos",
       "orders": "Pedidos",
-      "profile": "Perfil"
+      "profile": "Perfil",
+      "schedule": "Agendar Sessão"
+    },
+    "booking": {
+      "title": "Agendar Nova Sessão",
+      "subtitle": "Escolha a data e o horário disponível para sua consulta ao vivo",
+      "backToList": "Voltar para agendamentos",
+      "step1Title": "Escolha a Data",
+      "step1Subtitle": "Selecione a data desejada para o agendamento",
+      "step2Title": "Escolha o Horário",
+      "step3Title": "Confirme o Agendamento",
+      "step3Subtitle": "Revise os detalhes e adicione observações se desejar",
+      "loadingSlots": "Carregando horários disponíveis...",
+      "noSlots": "Nenhum horário disponível nesta data",
+      "noSlotsHint": "Tente selecionar outro dia",
+      "summaryDate": "Data:",
+      "summaryTime": "Horário:",
+      "notesLabel": "Observações (opcional)",
+      "notesPlaceholder": "Descreva o que deseja abordar na sessão...",
+      "confirm": "Confirmar Agendamento",
+      "cancellationPolicy": "Cancelamentos devem ser feitos com 24h de antecedência",
+      "success": "Agendamento realizado com sucesso!",
+      "error": "Não foi possível realizar o agendamento. Tente novamente.",
+      "errorLoadingSlots": "Erro ao carregar horários disponíveis"
     }
   },
   "admin": {

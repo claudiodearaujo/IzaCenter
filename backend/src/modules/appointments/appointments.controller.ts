@@ -71,6 +71,40 @@ export class AppointmentsController {
   }
 
   // Client endpoints
+  async createForClient(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.id;
+      const { date, startTime, endTime, clientNotes } = req.body;
+
+      if (!date || !startTime || !endTime) {
+        return res.status(400).json({ message: 'date, startTime e endTime são obrigatórios' });
+      }
+
+      const parseTime = (t: string) => {
+        const [h, m] = t.split(':').map(Number);
+        return h * 60 + m;
+      };
+      const durationMinutes = parseTime(endTime) - parseTime(startTime);
+
+      if (durationMinutes <= 0) {
+        return res.status(400).json({ message: 'Horário inválido' });
+      }
+
+      const result = await appointmentsService.create({
+        userId,
+        scheduledDate: new Date(date),
+        startTime,
+        endTime,
+        durationMinutes,
+        clientNotes,
+      });
+
+      res.status(201).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async findByUser(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id;

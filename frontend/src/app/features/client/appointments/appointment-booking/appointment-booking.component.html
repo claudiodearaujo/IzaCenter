@@ -1,0 +1,139 @@
+<!-- appointment-booking.component.html -->
+
+<section class="py-8">
+  <div class="container-custom max-w-3xl">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <a routerLink="/cliente/agendamentos" class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-4">
+        <i class="pi pi-arrow-left mr-2"></i>
+        {{ 'client.booking.backToList' | translate }}
+      </a>
+      <h1 class="heading-1 text-primary mb-2">
+        <i class="pi pi-calendar-plus mr-3"></i>
+        {{ 'client.booking.title' | translate }}
+      </h1>
+      <p class="text-secondary">{{ 'client.booking.subtitle' | translate }}</p>
+    </div>
+
+    <!-- Step 1 — Date -->
+    <div class="glass-card p-6 mb-6">
+      <h2 class="heading-3 text-primary mb-2 flex items-center gap-2">
+        <span class="w-7 h-7 rounded-full bg-primary/20 text-primary text-sm flex items-center justify-center font-bold">1</span>
+        {{ 'client.booking.step1Title' | translate }}
+      </h2>
+      <p class="text-secondary text-sm mb-4">{{ 'client.booking.step1Subtitle' | translate }}</p>
+
+      <p-datepicker
+        [ngModel]="selectedDate()"
+        (ngModelChange)="onDateChange($event)"
+        dateFormat="dd/mm/yy"
+        [minDate]="minDate"
+        [inline]="true"
+        [showWeek]="false"
+        styleClass="w-full"
+      />
+    </div>
+
+    <!-- Step 2 — Time Slot -->
+    @if (selectedDate()) {
+      <div class="glass-card p-6 mb-6">
+        <h2 class="heading-3 text-primary mb-2 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-primary/20 text-primary text-sm flex items-center justify-center font-bold">2</span>
+          {{ 'client.booking.step2Title' | translate }}
+        </h2>
+        <p class="text-secondary text-sm mb-4">
+          {{ formatDate(selectedDate()!) }}
+        </p>
+
+        @if (loadingSlots()) {
+          <div class="flex items-center justify-center py-12">
+            <p-progressSpinner strokeWidth="3" [style]="{'width': '40px', 'height': '40px'}" />
+            <span class="ml-3 text-secondary">{{ 'client.booking.loadingSlots' | translate }}</span>
+          </div>
+        } @else if (availableSlots.length === 0) {
+          <div class="text-center py-10">
+            <i class="pi pi-calendar-times text-4xl text-secondary/30 mb-3"></i>
+            <p class="text-secondary">{{ 'client.booking.noSlots' | translate }}</p>
+            <p class="text-secondary text-sm mt-1">{{ 'client.booking.noSlotsHint' | translate }}</p>
+          </div>
+        } @else {
+          <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+            @for (slot of slots(); track slot.startTime) {
+              <button
+                class="py-3 px-2 rounded-lg text-sm font-medium border-2 transition-all"
+                [class]="slot.available
+                  ? (selectedSlot()?.startTime === slot.startTime
+                      ? 'border-accent bg-accent/20 text-accent'
+                      : 'border-primary/20 bg-dark/30 text-primary hover:border-accent/50 hover:bg-accent/10')
+                  : 'border-primary/10 bg-dark/10 text-secondary/30 cursor-not-allowed line-through'"
+                [disabled]="!slot.available"
+                (click)="selectSlot(slot)"
+              >
+                {{ formatTime(slot.startTime) }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Step 3 — Notes & Confirm -->
+    @if (selectedSlot()) {
+      <div class="glass-card p-6 mb-6">
+        <h2 class="heading-3 text-primary mb-2 flex items-center gap-2">
+          <span class="w-7 h-7 rounded-full bg-primary/20 text-primary text-sm flex items-center justify-center font-bold">3</span>
+          {{ 'client.booking.step3Title' | translate }}
+        </h2>
+        <p class="text-secondary text-sm mb-4">{{ 'client.booking.step3Subtitle' | translate }}</p>
+
+        <!-- Summary -->
+        <div class="bg-dark/40 rounded-xl p-4 mb-6 space-y-2">
+          <div class="flex justify-between">
+            <span class="text-secondary">{{ 'client.booking.summaryDate' | translate }}</span>
+            <span class="text-primary font-medium">{{ formatDate(selectedDate()!) }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-secondary">{{ 'client.booking.summaryTime' | translate }}</span>
+            <span class="text-accent font-bold">
+              {{ formatTime(selectedSlot()!.startTime) }} – {{ formatTime(selectedSlot()!.endTime) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="mb-6">
+          <label class="block text-secondary text-sm mb-2">
+            {{ 'client.booking.notesLabel' | translate }}
+          </label>
+          <textarea
+            pTextarea
+            [ngModel]="clientNotes()"
+            (ngModelChange)="clientNotes.set($event)"
+            [placeholder]="'client.booking.notesPlaceholder' | translate"
+            rows="3"
+            class="w-full"
+          ></textarea>
+        </div>
+
+        <!-- Submit -->
+        <button
+          pButton
+          class="btn-primary w-full"
+          [loading]="submitting()"
+          [disabled]="submitting()"
+          (click)="confirm()"
+        >
+          <i class="pi pi-check mr-2"></i>
+          {{ 'client.booking.confirm' | translate }}
+        </button>
+
+        <p class="text-secondary text-xs text-center mt-4">
+          <i class="pi pi-info-circle mr-1"></i>
+          {{ 'client.booking.cancellationPolicy' | translate }}
+        </p>
+      </div>
+    }
+
+  </div>
+</section>

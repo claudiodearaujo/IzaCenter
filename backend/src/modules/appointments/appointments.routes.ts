@@ -66,6 +66,46 @@ router.get(
 
 /**
  * @openapi
+ * /appointments:
+ *   post:
+ *     tags: [Appointments]
+ *     summary: Create a new appointment (client)
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [date, startTime, endTime]
+ *             properties:
+ *               date:
+ *                 type: string
+ *                 format: date
+ *                 example: "2026-03-15"
+ *               startTime:
+ *                 type: string
+ *                 example: "09:00"
+ *               endTime:
+ *                 type: string
+ *                 example: "09:30"
+ *               clientNotes:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Appointment created
+ *       400:
+ *         description: Slot already taken or invalid data
+ */
+router.post(
+  '/appointments',
+  authenticate,
+  appointmentsController.createForClient.bind(appointmentsController)
+);
+
+/**
+ * @openapi
  * /appointments/{id}/cancel:
  *   post:
  *     tags: [Appointments]

@@ -317,7 +317,30 @@
       "readings": "Readings",
       "appointments": "Appointments",
       "orders": "Orders",
-      "profile": "Profile"
+      "profile": "Profile",
+      "schedule": "Book Session"
+    },
+    "booking": {
+      "title": "Book a New Session",
+      "subtitle": "Choose the date and available time slot for your live consultation",
+      "backToList": "Back to appointments",
+      "step1Title": "Choose the Date",
+      "step1Subtitle": "Select the desired date for the appointment",
+      "step2Title": "Choose the Time",
+      "step3Title": "Confirm the Appointment",
+      "step3Subtitle": "Review the details and add notes if you wish",
+      "loadingSlots": "Loading available slots...",
+      "noSlots": "No slots available on this date",
+      "noSlotsHint": "Try selecting another day",
+      "summaryDate": "Date:",
+      "summaryTime": "Time:",
+      "notesLabel": "Notes (optional)",
+      "notesPlaceholder": "Describe what you would like to discuss in the session...",
+      "confirm": "Confirm Appointment",
+      "cancellationPolicy": "Cancellations must be made 24 hours in advance",
+      "success": "Appointment successfully booked!",
+      "error": "Unable to book the appointment. Please try again.",
+      "errorLoadingSlots": "Error loading available slots"
     }
   },
   "admin": {
