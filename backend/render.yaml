@@ -14,10 +14,12 @@ services:
         value: /api
       - key: DATABASE_URL
         sync: false
+      # IMPORTANT: Set these manually in the Render dashboard.
+      # generateValue would rotate secrets on each deploy, invalidating all sessions.
       - key: JWT_SECRET
-        generateValue: true
+        sync: false
       - key: JWT_REFRESH_SECRET
-        generateValue: true
+        sync: false
       - key: JWT_EXPIRES_IN
         value: 15m
       - key: JWT_REFRESH_EXPIRES_IN
@@ -54,4 +56,7 @@ services:
         sync: false
       - key: SENTRY_DSN
         sync: false
+      # Email address that receives contact form submissions
+      - key: CONTACT_EMAIL
+        value: izabela.ayurvida@gmail.com
     healthCheckPath: /health

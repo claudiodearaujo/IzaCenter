@@ -104,19 +104,23 @@ app.get('/health', async (req: Request, res: Response) => {
   }
 
   // Redis check
-  try {
-    const { getRedisClient } = await import('./config/redis');
-    const client = await getRedisClient();
-    if (client.isOpen) {
-      checks.redis = 'ok';
-    } else {
-      checks.redis = 'disconnected';
+  if (!env.REDIS_URL) {
+    checks.redis = 'mock';
+  } else {
+    try {
+      const { getRedisClient } = await import('./config/redis');
+      const client = await getRedisClient();
+      if (client.isOpen) {
+        checks.redis = 'ok';
+      } else {
+        checks.redis = 'disconnected';
+      }
+    } catch {
+      checks.redis = 'unavailable';
     }
-  } catch {
-    checks.redis = 'unavailable';
   }
 
-  const allHealthy = Object.values(checks).every(v => v === 'ok' || v === 'unavailable');
+  const allHealthy = Object.values(checks).every(v => v === 'ok' || v === 'mock');
   const status = allHealthy ? 'ok' : 'degraded';
 
   res.status(allHealthy ? 200 : 503).json({

@@ -44,7 +44,7 @@ router.post('/contact', async (req: Request, res: Response, next: NextFunction) 
       return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
     }
 
-    const adminEmail = env.EMAIL_FROM_ADDRESS;
+    const adminEmail = env.CONTACT_EMAIL;
 
     await sendEmail({
       to: adminEmail,

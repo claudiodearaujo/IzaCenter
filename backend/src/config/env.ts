@@ -38,6 +38,7 @@ export const env = {
   SMTP_PASS: process.env.SMTP_PASS || '',
   EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || 'Izabela Tarot',
   EMAIL_FROM_ADDRESS: process.env.EMAIL_FROM_ADDRESS || 'contato@izabelatarot.com.br',
+  CONTACT_EMAIL: process.env.CONTACT_EMAIL || 'izabela.ayurvida@gmail.com',
   
   // URLs
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:4200',
@@ -48,7 +49,7 @@ export const env = {
   WHATSAPP_API_KEY: process.env.WHATSAPP_API_KEY || '',
   WHATSAPP_INSTANCE: process.env.WHATSAPP_INSTANCE || '',
   
-  // Redis (optional)
+  // Redis
   REDIS_URL: process.env.REDIS_URL || '',
 
   // Sentry (optional — error monitoring)
@@ -81,6 +82,11 @@ if (env.isProduction) {
     'STRIPE_WEBHOOK_SECRET',
     'SUPABASE_URL',
     'SUPABASE_SERVICE_ROLE_KEY',
+    'REDIS_URL',
+    'SMTP_HOST',
+    'SMTP_USER',
+    'SMTP_PASS',
+    'FRONTEND_URL',
   ];
 
   const missing = required.filter((key) => !process.env[key]);

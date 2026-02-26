@@ -13,7 +13,31 @@ jobs:
     steps:
       - name: Trigger Render deploy
         run: |
-          curl -s -o /dev/null -w "%{http_code}" \
-            "${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}"
-        env:
-          RENDER_FRONTEND_DEPLOY_HOOK: ${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}")
+          echo "Render deploy hook responded with HTTP $STATUS"
+          if [ "$STATUS" -lt 200 ] || [ "$STATUS" -ge 300 ]; then
+            echo "Deploy hook failed with status $STATUS"
+            exit 1
+          fi
+
+      - name: Wait for deployment
+        run: sleep 90
+
+      - name: Smoke test
+        run: |
+          MAX_ATTEMPTS=10
+          ATTEMPT=0
+          URL="${{ secrets.FRONTEND_URL }}"
+          until [ $ATTEMPT -ge $MAX_ATTEMPTS ]; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+            if [ "$STATUS" -eq 200 ]; then
+              echo "✅ Frontend is up (HTTP $STATUS)"
+              exit 0
+            fi
+            ATTEMPT=$((ATTEMPT + 1))
+            echo "Attempt $ATTEMPT/$MAX_ATTEMPTS — HTTP $STATUS, retrying in 15s..."
+            sleep 15
+          done
+          echo "❌ Frontend smoke test failed after $MAX_ATTEMPTS attempts"
+          exit 1
