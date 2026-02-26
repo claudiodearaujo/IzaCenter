@@ -71,6 +71,7 @@ export class ReadingDetailComponent implements OnInit {
   loading = signal(true);
   error = signal<string | null>(null);
   audioPlaying = signal(false);
+  downloadingPdf = signal(false);
 
   ngOnInit() {
     const readingId = this.route.snapshot.paramMap.get('id');
@@ -99,15 +100,36 @@ export class ReadingDetailComponent implements OnInit {
     });
   }
 
+  // Sprint 3.3b — Download PDF via blob (substituiu window.print())
+  downloadPdf(): void {
+    const readingId = this.reading()?.id;
+    if (!readingId) return;
+
+    this.downloadingPdf.set(true);
+
+    this.api.getBlob(`/readings/${readingId}/pdf`).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        const title = this.reading()?.title || 'leitura';
+        anchor.download = `${title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.pdf`;
+        anchor.click();
+        URL.revokeObjectURL(url);
+        this.downloadingPdf.set(false);
+      },
+      error: () => {
+        this.downloadingPdf.set(false);
+        window.print();
+      },
+    });
+  }
+
   formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
     });
-  }
-
-  printReading() {
-    window.print();
   }
 }

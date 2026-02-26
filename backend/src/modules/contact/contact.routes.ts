@@ -1,10 +1,20 @@
 // apps/backend/src/modules/contact/contact.routes.ts
 
 import { Router, Request, Response, NextFunction } from 'express';
+import rateLimit from 'express-rate-limit';
 import { sendEmail } from '../../utils/email.util';
 import { env } from '../../config/env';
 
 const router = Router();
+
+// Sprint 2.1 — Rate limit: máx 5 mensagens por IP a cada 15 minutos
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { message: 'Muitas mensagens enviadas. Tente novamente em 15 minutos.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 /**
  * @openapi
@@ -36,7 +46,7 @@ const router = Router();
  *       400:
  *         description: Missing required fields
  */
-router.post('/contact', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/contact', contactLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, email, subject, message } = req.body;
 

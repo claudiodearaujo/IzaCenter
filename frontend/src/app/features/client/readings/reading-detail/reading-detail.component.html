@@ -61,9 +61,13 @@
           {{ audioPlaying() ? 'Pausar' : 'Ouvir' }} Áudio
         </button>
         }
-        <button class="btn-outline" (click)="printReading()">
-          <i class="pi pi-print mr-2"></i>
-          Imprimir
+        <button class="btn-outline" (click)="downloadPdf()" [disabled]="downloadingPdf()">
+          @if (downloadingPdf()) {
+            <i class="pi pi-spin pi-spinner mr-2"></i>
+          } @else {
+            <i class="pi pi-download mr-2"></i>
+          }
+          Baixar PDF
         </button>
       </div>
 

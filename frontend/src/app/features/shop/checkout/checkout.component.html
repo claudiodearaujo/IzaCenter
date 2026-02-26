@@ -13,6 +13,17 @@
       </p>
     </div>
 
+    <!-- Sprint 1.1 — Banner de pagamento cancelado -->
+    @if (showCancelledBanner()) {
+      <div class="flex items-center gap-4 p-5 mb-8 rounded-xl border border-yellow-500/40 bg-yellow-500/10 text-yellow-300">
+        <i class="pi pi-exclamation-triangle text-3xl flex-shrink-0"></i>
+        <div>
+          <p class="font-bold text-lg">Pagamento não concluído</p>
+          <p class="text-sm opacity-80">Você cancelou o pagamento no Stripe. Seus itens ainda estão no carrinho — pode tentar novamente quando quiser.</p>
+        </div>
+      </div>
+    }
+
     <!-- Processing Overlay -->
     @if (processing()) {
       <div class="fixed inset-0 bg-dark/80 z-50 flex items-center justify-center">

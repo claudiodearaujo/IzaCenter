@@ -8,6 +8,17 @@
       Voltar para pedidos
     </a>
 
+    <!-- Sprint 1.1 — Banner de sucesso pós-pagamento -->
+    @if (showSuccessBanner()) {
+      <div class="flex items-center gap-4 p-5 mb-6 rounded-xl border border-green-500/40 bg-green-500/10 text-green-300">
+        <i class="pi pi-check-circle text-3xl flex-shrink-0"></i>
+        <div>
+          <p class="font-bold text-lg">Pagamento confirmado!</p>
+          <p class="text-sm opacity-80">Seu pedido foi recebido com sucesso. Em breve você receberá a confirmação por e-mail.</p>
+        </div>
+      </div>
+    }
+
     @if (loading()) {
       <!-- Loading State -->
       <div class="glass-card p-8">
@@ -48,9 +59,14 @@
             <button
               (click)="downloadPdf()"
               class="btn-outline text-sm flex items-center gap-2 print:hidden"
+              [disabled]="downloadingPdf()"
               [title]="'client.orders.detail.downloadPdf' | translate"
             >
-              <i class="pi pi-download"></i>
+              @if (downloadingPdf()) {
+                <i class="pi pi-spin pi-spinner"></i>
+              } @else {
+                <i class="pi pi-download"></i>
+              }
               {{ 'client.orders.detail.downloadPdf' | translate }}
             </button>
           </div>

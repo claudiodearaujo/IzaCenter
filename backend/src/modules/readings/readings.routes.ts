@@ -65,6 +65,40 @@ router.get(
 
 /**
  * @openapi
+ * /readings/{id}/pdf:
+ *   get:
+ *     tags: [Readings]
+ *     summary: Download reading PDF (client)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: PDF file
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       403:
+ *         description: Reading not yet published
+ *       404:
+ *         description: Reading not found
+ */
+router.get(
+  '/readings/:id/pdf',
+  authenticate,
+  readingsController.downloadPdf.bind(readingsController)
+);
+
+/**
+ * @openapi
  * /admin/readings:
  *   get:
  *     tags: [Readings]

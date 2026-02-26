@@ -2,6 +2,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { appointmentsService } from './appointments.service';
+import { prisma } from '../../config/database';
 
 export class AppointmentsController {
   // Admin endpoints
@@ -74,10 +75,26 @@ export class AppointmentsController {
   async createForClient(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id;
-      const { date, startTime, endTime, clientNotes } = req.body;
+      const { date, startTime, endTime, clientNotes, orderItemId } = req.body;
 
       if (!date || !startTime || !endTime) {
         return res.status(400).json({ message: 'date, startTime e endTime são obrigatórios' });
+      }
+
+      // Sprint 1.2 — Segurança IDOR: validar que o orderItemId pertence ao usuário autenticado
+      if (orderItemId) {
+        const orderItem = await prisma.orderItem.findUnique({
+          where: { id: orderItemId },
+          include: { order: { select: { userId: true } } },
+        });
+
+        if (!orderItem) {
+          return res.status(404).json({ message: 'Item do pedido não encontrado' });
+        }
+
+        if (orderItem.order.userId !== userId) {
+          return res.status(403).json({ message: 'Acesso negado: este item não pertence ao seu pedido' });
+        }
       }
 
       const parseTime = (t: string) => {
@@ -92,6 +109,7 @@ export class AppointmentsController {
 
       const result = await appointmentsService.create({
         userId,
+        orderItemId,
         scheduledDate: new Date(date),
         startTime,
         endTime,

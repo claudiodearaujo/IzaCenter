@@ -173,6 +173,38 @@ router.get(
 
 /**
  * @openapi
+ * /orders/my/{id}/pdf:
+ *   get:
+ *     tags: [Orders]
+ *     summary: Download order PDF receipt (client)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: PDF file
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Order not found
+ */
+router.get(
+  '/my/:id/pdf',
+  validate(idParamsSchema, 'params'),
+  ordersController.downloadMyPdf.bind(ordersController)
+);
+
+/**
+ * @openapi
  * /orders/my/{id}/cancel:
  *   post:
  *     tags: [Orders]
