@@ -49,9 +49,6 @@ export const env = {
   WHATSAPP_API_KEY: process.env.WHATSAPP_API_KEY || '',
   WHATSAPP_INSTANCE: process.env.WHATSAPP_INSTANCE || '',
   
-  // Redis
-  REDIS_URL: process.env.REDIS_URL || '',
-
   // Sentry (optional — error monitoring)
   SENTRY_DSN: process.env.SENTRY_DSN || '',
 
@@ -82,7 +79,6 @@ if (env.isProduction) {
     'STRIPE_WEBHOOK_SECRET',
     'SUPABASE_URL',
     'SUPABASE_SERVICE_ROLE_KEY',
-    'REDIS_URL',
     'SMTP_HOST',
     'SMTP_USER',
     'SMTP_PASS',

@@ -2,7 +2,6 @@
 
 import { prisma } from '../../config/database';
 import { env } from '../../config/env';
-import { tokenBlacklist } from '../../config/redis';
 import { AppError, Errors } from '../../middlewares/error.middleware';
 import {
   hashPassword,
@@ -284,26 +283,9 @@ export class AuthService {
   }
 
   /**
-   * Logout user by blacklisting the token
+   * Logout user (client should discard the token)
    */
-  async logout(token: string) {
-    // Extract token expiration time
-    const expiresIn = env.JWT_EXPIRES_IN;
-
-    // Convert expiration string to seconds
-    let expiresInSeconds = 900; // Default 15 minutes
-
-    if (expiresIn.endsWith('m')) {
-      expiresInSeconds = parseInt(expiresIn) * 60;
-    } else if (expiresIn.endsWith('h')) {
-      expiresInSeconds = parseInt(expiresIn) * 3600;
-    } else if (expiresIn.endsWith('d')) {
-      expiresInSeconds = parseInt(expiresIn) * 86400;
-    }
-
-    // Add token to blacklist with its remaining TTL
-    await tokenBlacklist.add(token, expiresInSeconds);
-
+  async logout(_token: string) {
     return { message: 'Logout realizado com sucesso' };
   }
 

@@ -2,7 +2,6 @@
 
 import { prisma } from '../../config/database';
 import { storage } from '../../config/supabase';
-import { cache } from '../../config/redis';
 import { Errors } from '../../middlewares/error.middleware';
 import { generateSlug, generateFileName, buildPaginationMeta, buildCursorMeta } from '../../utils';
 import {
@@ -12,14 +11,6 @@ import {
   CreateCategoryDto,
   UpdateCategoryDto,
 } from './products.schema';
-
-// Cache TTLs (seconds)
-const CACHE_FEATURED_TTL = 300;    // 5 minutes
-const CACHE_CATEGORIES_TTL = 600;  // 10 minutes
-const CACHE_KEYS = {
-  featured: (limit: number) => `products:featured:${limit}`,
-  categories: (activeOnly: boolean) => `categories:list:${activeOnly}`,
-};
 
 export class ProductsService {
   // =============================================
@@ -189,11 +180,7 @@ export class ProductsService {
    * Get featured products
    */
   async getFeatured(limit: number = 6) {
-    const cacheKey = CACHE_KEYS.featured(limit);
-    const cached = await cache.get<any[]>(cacheKey);
-    if (cached) return cached;
-
-    const products = await prisma.product.findMany({
+    return prisma.product.findMany({
       where: {
         isActive: true,
         isFeatured: true,
@@ -206,9 +193,6 @@ export class ProductsService {
         },
       },
     });
-
-    await cache.set(cacheKey, products, CACHE_FEATURED_TTL);
-    return products;
   }
 
   /**
@@ -280,8 +264,6 @@ export class ProductsService {
       },
     });
 
-    // Invalidate featured cache since product data changed
-    await cache.del([CACHE_KEYS.featured(6), CACHE_KEYS.featured(3), CACHE_KEYS.featured(12)]);
     return product;
   }
 
@@ -344,7 +326,6 @@ export class ProductsService {
 
     // Hard delete
     await prisma.product.delete({ where: { id } });
-    await cache.del([CACHE_KEYS.featured(6), CACHE_KEYS.featured(3), CACHE_KEYS.featured(12)]);
     return { message: 'Produto excluído com sucesso' };
   }
 
@@ -366,12 +347,9 @@ export class ProductsService {
       throw Errors.Conflict('Já existe uma categoria com este slug');
     }
 
-    const category = await prisma.productCategory.create({
+    return prisma.productCategory.create({
       data: { ...data, slug },
     });
-
-    await cache.del([CACHE_KEYS.categories(true), CACHE_KEYS.categories(false)]);
-    return category;
   }
 
   /**
@@ -396,22 +374,14 @@ export class ProductsService {
    * List categories
    */
   async listCategories(activeOnly: boolean = false) {
-    const cacheKey = CACHE_KEYS.categories(activeOnly);
-    const cached = await cache.get<any[]>(cacheKey);
-    if (cached) return cached;
-
     const where = activeOnly ? { isActive: true } : {};
-
-    const categories = await prisma.productCategory.findMany({
+    return prisma.productCategory.findMany({
       where,
       orderBy: { displayOrder: 'asc' },
       include: {
         _count: { select: { products: true } },
       },
     });
-
-    await cache.set(cacheKey, categories, CACHE_CATEGORIES_TTL);
-    return categories;
   }
 
   /**
@@ -432,13 +402,10 @@ export class ProductsService {
       }
     }
 
-    const category = await prisma.productCategory.update({
+    return prisma.productCategory.update({
       where: { id },
       data,
     });
-
-    await cache.del([CACHE_KEYS.categories(true), CACHE_KEYS.categories(false)]);
-    return category;
   }
 
   /**
@@ -454,7 +421,6 @@ export class ProductsService {
     }
 
     await prisma.productCategory.delete({ where: { id } });
-    await cache.del([CACHE_KEYS.categories(true), CACHE_KEYS.categories(false)]);
     return { message: 'Categoria excluída com sucesso' };
   }
 }
