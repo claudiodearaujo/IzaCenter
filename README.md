@@ -9,17 +9,53 @@ Plataforma web completa para serviços de Tarot Cigano com e-commerce, área do 
 - **Pagamentos:** Stripe (checkout sessions + webhooks)
 - **Storage:** Supabase Storage (imagens e mídia)
 - **E-mail:** Nodemailer (SMTP)
-- **Cache:** Redis (opcional)
+- **Cache:** Redis (opcional em dev, obrigatório em produção)
 
 ## Funcionalidades
 
 - **Site público** — Home, Sobre, Serviços, Loja, Contato, FAQ, Depoimentos, Termos, Privacidade
-- **Loja/E-commerce** — Catálogo de produtos, carrinho, checkout com Stripe
+- **Loja/E-commerce** — Catálogo de produtos, carrinho com cupons, checkout com Stripe
 - **Área do Cliente** — Dashboard, leituras, agendamentos, pedidos com download de PDF, perfil
 - **Painel Admin** — Dashboard, leituras, agendamentos, pedidos, produtos, categorias, cartas, usuários, depoimentos, disponibilidade, relatórios, configurações
 - **Backend API** — REST API com autenticação JWT, integração Stripe, Supabase Storage, e-mail SMTP
 - **PWA** — Service worker com cache de assets e APIs
 - **i18n** — 4 idiomas: PT-BR, EN, ES, FR
+
+## Status do Projeto (Auditoria 26/02/2026)
+
+> Verificação completa dos arquivos reais. Análise detalhada em [REVIEW.md](REVIEW.md).
+
+### ✅ Implementado e Verificado
+
+| Módulo | Status |
+|--------|--------|
+| Backend API — 13 módulos | ✅ Completo |
+| Banco de Dados — 16 modelos Prisma | ✅ Completo |
+| Admin — Dashboard, Leituras, Agendamentos, Pedidos | ✅ Completo |
+| Admin — Produtos, Categorias, Cartas, Usuários | ✅ Completo |
+| Admin — Depoimentos, Disponibilidade, Relatórios, Configurações | ✅ Completo |
+| Cliente — Dashboard, Leituras, Agendamentos, Pedidos, Perfil | ✅ Completo |
+| Loja — Catálogo, Produto, Carrinho (com cupons), Checkout Stripe | ✅ Completo |
+| Páginas Públicas — Home, Sobre, Serviços, FAQ, Termos, Privacidade | ✅ Completo |
+| Autenticação — Login, Cadastro, Esqueci/Redefinir Senha | ✅ Completo |
+| i18n — PT-BR, EN, ES, FR (1.400+ chaves, cobertura 100%) | ✅ Completo |
+| Email Templates — 7 templates com layout reutilizável | ✅ Completo |
+| Stripe Webhooks — 6 handlers com idempotência Redis | ✅ Completo |
+| PWA — Service worker + ngsw-config.json | ✅ Completo |
+| CI/CD — 3 GitHub Actions workflows | ✅ Completo |
+| Testes — 303+ unitários backend + 28 E2E Playwright | ✅ Completo |
+| Monitoramento — Sentry backend + frontend | ✅ Integrado (requer SENTRY_DSN) |
+
+### ❌ Pendente — Gaps Encontrados na Auditoria
+
+| Item | Módulo | Prioridade |
+|------|--------|-----------|
+| Páginas pós-pagamento (`/checkout/sucesso` e `/checkout/cancelado`) | Loja | 🔴 Crítico |
+| Formulário de agendamento pelo cliente (`/cliente/agendar`) | Cliente | 🔴 Crítico |
+| Formulário de contato com backend real (atualmente é mock) | Público | 🟡 Alta |
+| Depoimentos dinâmicos na página pública (atualmente hardcoded) | Público | 🟡 Alta |
+| Geração de PDF server-side para pedidos e leituras | Backend | 🟡 Alta |
+| Configuração de produção (secrets, Redis, SMTP, domínio) | Infra | 🔴 Crítico |
 
 ## Setup
 
@@ -173,21 +209,31 @@ docker run -p 3000:3000 --env-file .env izacenter-backend
 IzaCenter/
 ├── backend/                # API Express 5 + TypeScript
 │   ├── src/
-│   │   ├── modules/        # auth, users, products, orders, readings, ...
+│   │   ├── modules/        # auth, users, products, orders, readings,
+│   │   │                   # appointments, cards, categories, testimonials,
+│   │   │                   # settings, dashboard, notifications, webhooks
 │   │   ├── middlewares/    # auth, error, rate-limit, audit, upload
-│   │   ├── config/         # database, redis, email, stripe, supabase
-│   │   └── utils/          # helpers, email templates
+│   │   ├── config/         # database, redis, email, stripe, supabase, sentry
+│   │   └── utils/          # helpers, email templates (7), jwt, password
 │   ├── prisma/
 │   │   ├── schema.prisma   # 16 modelos
 │   │   └── seed.ts         # dados de exemplo
 │   └── Dockerfile
 ├── frontend/               # Angular 20 + PrimeNG + Tailwind
 │   └── src/app/
-│       ├── features/       # public, auth, shop, client, admin
+│       ├── features/
+│       │   ├── public/     # home, about, services, contact, faq,
+│       │   │               # testimonials, terms, privacy, not-found
+│       │   ├── auth/       # login, register, forgot-password, reset-password
+│       │   ├── shop/       # product-list, product-detail, cart, checkout
+│       │   ├── client/     # dashboard, readings, appointments, orders, profile
+│       │   └── admin/      # dashboard, readings, appointments, orders, products,
+│       │                   # categories, cards, users, testimonials,
+│       │                   # availability, reports, settings
 │       ├── layouts/        # public-layout, client-layout, admin-layout
-│       ├── core/           # services, guards, interceptors
-│       └── shared/         # components, pipes
-├── e2e/                    # Testes E2E Playwright
+│       ├── core/           # services, guards, interceptors, models
+│       └── shared/         # components, pipes, animations
+├── e2e/                    # Testes E2E Playwright (4 suites, 28+ testes)
 └── docs/                   # Documentação adicional
 ```
 
@@ -206,6 +252,6 @@ Após executar `npm run seed` no backend:
 
 ## Documentação
 
-- [Review Completo & Plano de Produção](REVIEW.md)
+- [Review Completo & Auditoria de Produção](REVIEW.md)
 - [Implementação i18n Admin](ADMIN_I18N_IMPLEMENTATION.md)
 - [Auditoria do Menu Admin](MENU_AUDIT_TASKS.md)
