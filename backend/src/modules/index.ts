@@ -13,3 +13,4 @@ export { testimonialsRoutes } from './testimonials';
 export { settingsRoutes } from './settings';
 export { dashboardRoutes } from './dashboard';
 export { notificationsRoutes } from './notifications';
+export { contactRoutes } from './contact';

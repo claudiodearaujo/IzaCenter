@@ -1,56 +1,34 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TestimonialCardComponent, Testimonial } from '../../../shared/components/testimonial-card/testimonial-card.component';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TestimonialCardComponent } from '../../../shared/components/testimonial-card/testimonial-card.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TestimonialsService, Testimonial } from '../../../core/services/testimonials.service';
 
 @Component({
   selector: 'app-testimonials',
   standalone: true,
-  imports: [CommonModule, TestimonialCardComponent, TranslateModule],
+  imports: [CommonModule, TestimonialCardComponent, TranslateModule, SkeletonModule],
   templateUrl: './testimonials.component.html',
   styleUrl: './testimonials.component.css'
 })
-export class TestimonialsComponent {
-  private translate = inject(TranslateService);
+export class TestimonialsComponent implements OnInit {
+  private testimonialsService = inject(TestimonialsService);
 
-  get testimonials(): Testimonial[] {
-    return [
-      {
-        id: '1',
-        clientName: 'Maria Silva',
-        content: this.translate.instant('testimonials.items.item1'),
-        rating: 5
+  testimonials = signal<Testimonial[]>([]);
+  loading = signal(true);
+  error = signal(false);
+
+  ngOnInit(): void {
+    this.testimonialsService.findPublic().subscribe({
+      next: (response) => {
+        this.testimonials.set(response.data);
+        this.loading.set(false);
       },
-      {
-        id: '2',
-        clientName: 'Ana Paula',
-        content: this.translate.instant('testimonials.items.item2'),
-        rating: 5
+      error: () => {
+        this.error.set(true);
+        this.loading.set(false);
       },
-      {
-        id: '3',
-        clientName: 'Juliana Costa',
-        content: this.translate.instant('testimonials.items.item3'),
-        rating: 5
-      },
-      {
-        id: '4',
-        clientName: 'Fernanda Lima',
-        content: this.translate.instant('testimonials.items.item4'),
-        rating: 5
-      },
-      {
-        id: '5',
-        clientName: 'Carla Mendes',
-        content: this.translate.instant('testimonials.items.item5'),
-        rating: 5
-      },
-      {
-        id: '6',
-        clientName: 'Patricia Santos',
-        content: this.translate.instant('testimonials.items.item6'),
-        rating: 5
-      }
-    ];
+    });
   }
 }

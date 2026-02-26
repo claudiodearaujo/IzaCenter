@@ -27,6 +27,7 @@ import {
   settingsRoutes,
   dashboardRoutes,
   notificationsRoutes,
+  contactRoutes,
 } from './modules';
 
 // Create Express app
@@ -148,6 +149,7 @@ function mountRoutes(prefix: string) {
   app.use(prefix, testimonialsRoutes);
   app.use(prefix, settingsRoutes);
   app.use(prefix, dashboardRoutes);
+  app.use(prefix, contactRoutes);
 }
 
 // Mount on both /api and /api/v1 for backward compatibility + versioning

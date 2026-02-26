@@ -1168,7 +1168,8 @@
       "message": "Mensagem",
       "messagePlaceholder": "Escreva sua mensagem...",
       "submitButton": "Enviar Mensagem",
-      "successMessage": "Mensagem enviada com sucesso! Retornarei em breve."
+      "successMessage": "Mensagem enviada com sucesso! Retornarei em breve.",
+      "errorMessage": "Erro ao enviar mensagem. Por favor, tente novamente."
     },
     "info": {
       "title": "Informações de Contato",
@@ -1230,7 +1231,10 @@
       "item4": "Fiz minha primeira leitura e fiquei impressionada com a precisão. Voltarei com certeza!",
       "item5": "A sessão online foi incrível. Me senti muito acolhida e recebi orientações valiosas.",
       "item6": "O jogo mensal me ajuda a planejar meu mês com mais consciência. Super recomendo!"
-    }
+    },
+    "empty": "Ainda não temos depoimentos aprovados",
+    "emptySubtitle": "Em breve compartilharemos histórias de nossas clientes",
+    "errorLoading": "Não foi possível carregar os depoimentos"
   },
   "notFound": {
     "title": "Página não encontrada",

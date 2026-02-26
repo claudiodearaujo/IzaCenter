@@ -1168,7 +1168,8 @@
       "message": "Mensaje",
       "messagePlaceholder": "Escribe tu mensaje...",
       "submitButton": "Enviar Mensaje",
-      "successMessage": "¡Mensaje enviado con éxito! Te responderé pronto."
+      "successMessage": "¡Mensaje enviado con éxito! Te responderé pronto.",
+      "errorMessage": "Error al enviar el mensaje. Por favor, inténtalo de nuevo."
     },
     "info": {
       "title": "Información de Contacto",
@@ -1230,7 +1231,10 @@
       "item4": "Hice mi primera lectura y quedé impresionada con la precisión. ¡Volveré con seguridad!",
       "item5": "La sesión online fue increíble. Me sentí muy acogida y recibí orientaciones valiosas.",
       "item6": "La lectura mensual me ayuda a planificar mi mes con más conciencia. ¡Super recomiendo!"
-    }
+    },
+    "empty": "Aún no hay testimonios aprobados",
+    "emptySubtitle": "Pronto compartiremos historias de nuestras clientas",
+    "errorLoading": "No se pudieron cargar los testimonios"
   },
   "notFound": {
     "title": "Página no encontrada",
