@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CarouselModule } from 'primeng/carousel';
+import { SkeletonModule } from 'primeng/skeleton';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { fadeInUp, listAnimation } from '../../../shared/animations/fade.animation';
 import { TestimonialCardComponent, Testimonial } from '../../../shared/components/testimonial-card/testimonial-card.component';
@@ -10,6 +11,7 @@ import { Product } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { TestimonialsService } from '../../../core/services/testimonials.service';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +21,7 @@ import { SeoService } from '../../../core/services/seo.service';
     RouterLink,
     ButtonModule,
     CarouselModule,
+    SkeletonModule,
     TranslateModule,
     TestimonialCardComponent
   ],
@@ -31,9 +34,11 @@ export class HomeComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private seoService = inject(SeoService);
   private translate = inject(TranslateService);
+  private testimonialsService = inject(TestimonialsService);
 
   featuredProducts = signal<Product[]>([]);
   testimonials = signal<Testimonial[]>([]);
+  loadingTestimonials = signal(true);
 
   services = [
     {
@@ -69,31 +74,32 @@ export class HomeComponent implements OnInit {
       this.seoService.getWebSiteSchema()
     ]);
 
-    // Load data
-    this.loadMockData();
+    // Sprint 2.3 — Depoimentos dinâmicos via API
+    this.loadTestimonials();
   }
 
-  private loadMockData(): void {
-    this.testimonials.set([
-      {
-        id: '1',
-        clientName: 'Maria Silva',
-        content: 'A leitura da Izabela foi transformadora. Me ajudou a entender melhor meu momento profissional.',
-        rating: 5
+  private loadTestimonials(): void {
+    this.loadingTestimonials.set(true);
+
+    this.testimonialsService.findFeatured(3).subscribe({
+      next: (response) => {
+        this.testimonials.set(
+          response.data.map(t => ({
+            id: t.id,
+            clientName: t.clientName,
+            clientAvatarUrl: t.clientAvatarUrl,
+            content: t.content,
+            rating: t.rating,
+          }))
+        );
+        this.loadingTestimonials.set(false);
       },
-      {
-        id: '2',
-        clientName: 'Ana Paula',
-        content: 'Clareza e acolhimento em cada palavra. Recomendo demais!',
-        rating: 5
+      error: () => {
+        // Falha silenciosa — seção simplesmente não exibe depoimentos
+        this.testimonials.set([]);
+        this.loadingTestimonials.set(false);
       },
-      {
-        id: '3',
-        clientName: 'Juliana Costa',
-        content: 'Encontrei orientação e paz. A Izabela tem um dom especial.',
-        rating: 5
-      }
-    ]);
+    });
   }
 
   addToCart(product: Product): void {

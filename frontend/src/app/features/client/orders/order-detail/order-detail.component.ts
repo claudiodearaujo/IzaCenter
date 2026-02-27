@@ -1,7 +1,7 @@
 // apps/frontend/src/app/features/client/orders/order-detail/order-detail.component.ts
 
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -64,13 +64,25 @@ export class OrderDetailComponent implements OnInit {
   private api = inject(ApiService);
   private route = inject(ActivatedRoute);
   private translate = inject(TranslateService);
+  private location = inject(Location);
 
   order = signal<Order | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showSuccessBanner = signal(false);
+  downloadingPdf = signal(false);
 
   ngOnInit() {
     const orderId = this.route.snapshot.paramMap.get('id');
+
+    // Sprint 1.1 — Feedback pós-pagamento
+    const success = this.route.snapshot.queryParamMap.get('success');
+    if (success === 'true') {
+      this.showSuccessBanner.set(true);
+      // Limpa o query param da URL sem recarregar a página
+      this.location.replaceState(`/cliente/pedidos/${orderId}`);
+    }
+
     if (orderId) {
       this.loadOrder(orderId);
     }
@@ -92,7 +104,26 @@ export class OrderDetailComponent implements OnInit {
   }
 
   downloadPdf(): void {
-    window.print();
+    const orderId = this.order()?.id;
+    if (!orderId) return;
+
+    this.downloadingPdf.set(true);
+
+    this.api.getBlob(`/orders/my/${orderId}/pdf`).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = `pedido-${this.order()?.orderNumber ?? orderId}.pdf`;
+        anchor.click();
+        URL.revokeObjectURL(url);
+        this.downloadingPdf.set(false);
+      },
+      error: () => {
+        this.downloadingPdf.set(false);
+        window.print();
+      },
+    });
   }
 
   getStatusLabel(status: string): string {

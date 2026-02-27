@@ -51,6 +51,13 @@ export const CLIENT_ROUTES: Routes = [
       ),
   },
   {
+    path: 'agendamentos/novo',
+    loadComponent: () =>
+      import('./appointments/appointment-booking/appointment-booking.component').then(
+        (m) => m.AppointmentBookingComponent
+      ),
+  },
+  {
     path: 'perfil',
     loadComponent: () =>
       import('./profile/profile.component').then((m) => m.ProfileComponent),

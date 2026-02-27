@@ -3,6 +3,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ordersService } from './orders.service';
 import { CreateOrderDto, UpdateOrderDto, QueryOrdersDto, AddQuestionsDto } from './orders.schema';
+import { generateOrderPdf } from '../../utils/pdf.util';
 
 export class OrdersController {
   /**
@@ -59,6 +60,42 @@ export class OrdersController {
         success: true,
         data: order,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /orders/my/:id/pdf
+   * Download order PDF (client)
+   */
+  async downloadMyPdf(req: Request, res: Response, next: NextFunction) {
+    try {
+      const clientId = req.user!.id;
+      const { id } = req.params;
+      const order = await ordersService.getById(id as string, clientId);
+
+      generateOrderPdf(
+        {
+          orderNumber: order.orderNumber,
+          status: order.status,
+          createdAt: order.createdAt,
+          paidAt: (order as any).paidAt ?? null,
+          total: order.total,
+          subtotal: order.subtotal,
+          discount: (order as any).discount ?? 0,
+          paymentMethod: (order as any).paymentMethod ?? null,
+          client: { fullName: order.client.fullName, email: order.client.email },
+          items: order.items.map((item: any) => ({
+            productName: item.productName,
+            productType: item.productType,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            totalPrice: item.totalPrice,
+          })),
+        },
+        res
+      );
     } catch (error) {
       next(error);
     }

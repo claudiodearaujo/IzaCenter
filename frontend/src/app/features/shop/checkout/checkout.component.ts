@@ -2,7 +2,7 @@
 
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -37,12 +37,14 @@ export class CheckoutComponent implements OnInit {
   authService = inject(AuthService);
   private api = inject(ApiService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private notification = inject(NotificationService);
   private translate = inject(TranslateService);
 
   user = this.authService.user;
   processing = signal(false);
   acceptTerms = signal(false);
+  showCancelledBanner = signal(false);
 
   get items() {
     return this.cartService.items;
@@ -61,6 +63,12 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Sprint 1.1 — Feedback pós-pagamento cancelado
+    const cancelled = this.route.snapshot.queryParamMap.get('cancelled');
+    if (cancelled === 'true') {
+      this.showCancelledBanner.set(true);
+    }
+
     // Redirect if cart is empty
     if (this.isEmpty) {
       this.router.navigate(['/loja']);

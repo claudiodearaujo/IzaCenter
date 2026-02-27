@@ -5,23 +5,27 @@ import express from 'express';
 import { stripe, stripeHelpers } from '../../config/stripe';
 import { ordersService } from '../orders/orders.service';
 import { env } from '../../config/env';
-import { cache } from '../../config/redis';
 
 const router = Router();
 
-/**
- * Check if a webhook event has already been processed (idempotency)
- */
-async function isEventProcessed(eventId: string): Promise<boolean> {
-  return cache.exists(`webhook:${eventId}`);
+// In-memory idempotency store — prevents double-processing on Stripe retries.
+// Entries expire after 24 h. Resets on server restart (acceptable: Stripe
+// retries use unique event IDs, so the window is short).
+const processedEvents = new Map<string, number>();
+const PROCESSED_EVENT_TTL_MS = 24 * 60 * 60 * 1000;
+
+function isEventProcessed(eventId: string): boolean {
+  const ts = processedEvents.get(eventId);
+  if (!ts) return false;
+  if (Date.now() - ts > PROCESSED_EVENT_TTL_MS) {
+    processedEvents.delete(eventId);
+    return false;
+  }
+  return true;
 }
 
-/**
- * Mark a webhook event as processed
- */
-async function markEventProcessed(eventId: string): Promise<void> {
-  // Keep for 24 hours to prevent reprocessing
-  await cache.set(`webhook:${eventId}`, 'processed', 86400);
+function markEventProcessed(eventId: string): void {
+  processedEvents.set(eventId, Date.now());
 }
 
 /**
@@ -74,14 +78,10 @@ router.post(
     console.log(`📥 Stripe webhook received: ${event.type} (${event.id})`);
 
     // Idempotency check
-    try {
-      if (await isEventProcessed(event.id)) {
-        console.log(`⏭️ Event ${event.id} already processed, skipping`);
-        res.json({ received: true, deduplicated: true });
-        return;
-      }
-    } catch {
-      // If Redis is unavailable, proceed without idempotency
+    if (isEventProcessed(event.id)) {
+      console.log(`⏭️ Event ${event.id} already processed, skipping`);
+      res.json({ received: true, deduplicated: true });
+      return;
     }
 
     try {
@@ -152,12 +152,7 @@ router.post(
           console.log(`ℹ️ Unhandled event type: ${event.type}`);
       }
 
-      // Mark event as processed for idempotency
-      try {
-        await markEventProcessed(event.id);
-      } catch {
-        // Non-critical: continue even if Redis fails
-      }
+      markEventProcessed(event.id);
 
       res.json({ received: true });
     } catch (error) {
