@@ -50,6 +50,7 @@ describe('CookieConsentComponent', () => {
   });
 
   it('should become visible after 800ms if no consent stored', fakeAsync(() => {
+    component.ngOnInit(); // re-trigger inside fakeAsync zone
     tick(800);
     expect(component.visible()).toBeTrue();
   }));

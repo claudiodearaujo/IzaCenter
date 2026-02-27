@@ -1,9 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 import { HeaderComponent } from './header.component';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
+import { InAppNotificationsService } from '../../../core/services/inapp-notifications.service';
 import { signal } from '@angular/core';
+
+class FakeTranslateLoader implements TranslateLoader {
+  getTranslation() {
+    return of({});
+  }
+}
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -28,11 +39,26 @@ describe('HeaderComponent', () => {
       itemCount: cartItemCountSignal,
     });
 
+    const notificationsSpy = jasmine.createSpyObj('InAppNotificationsService', ['list', 'markRead', 'markAllRead', 'delete'], {
+      notifications: signal([]),
+      unreadCount: signal(0),
+    });
+    notificationsSpy.list.and.returnValue(of({ success: true, notifications: [], unreadCount: 0 }));
+
     await TestBed.configureTestingModule({
-      imports: [HeaderComponent, RouterTestingModule],
+      imports: [
+        HeaderComponent,
+        RouterTestingModule,
+        TranslateModule.forRoot({
+          loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
+        }),
+      ],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
         { provide: CartService, useValue: cartServiceSpy },
+        { provide: InAppNotificationsService, useValue: notificationsSpy },
+        provideHttpClient(),
+        provideHttpClientTesting(),
       ],
     }).compileComponents();
 

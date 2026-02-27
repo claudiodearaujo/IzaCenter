@@ -85,14 +85,14 @@ export class AppointmentsController {
       if (orderItemId) {
         const orderItem = await prisma.orderItem.findUnique({
           where: { id: orderItemId },
-          include: { order: { select: { userId: true } } },
+          include: { order: { select: { clientId: true } } },
         });
 
         if (!orderItem) {
           return res.status(404).json({ message: 'Item do pedido não encontrado' });
         }
 
-        if (orderItem.order.userId !== userId) {
+        if (orderItem.order.clientId !== userId) {
           return res.status(403).json({ message: 'Acesso negado: este item não pertence ao seu pedido' });
         }
       }

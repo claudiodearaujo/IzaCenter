@@ -39,6 +39,11 @@ export class StorageService {
     }
   }
 
+  has(key: string): boolean {
+    if (!this.isBrowser) return false;
+    return localStorage.getItem(key) !== null;
+  }
+
   clear(): void {
     if (this.isBrowser) {
       localStorage.clear();

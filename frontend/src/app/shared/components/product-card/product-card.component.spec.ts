@@ -11,15 +11,19 @@ describe('ProductCardComponent', () => {
   const mockProduct: Product = {
     id: '1',
     name: 'Produto Teste',
-    description: 'Descrição do produto',
+    shortDescription: 'Descrição do produto',
     price: 99.90,
     slug: 'produto-teste',
-    imageUrl: 'https://example.com/image.jpg',
+    coverImageUrl: 'https://example.com/image.jpg',
+    productType: 'QUESTION',
     isActive: true,
     isFeatured: false,
+    requiresScheduling: false,
+    validityDays: 30,
+    galleryUrls: [],
     categoryId: 'cat-1',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
   beforeEach(async () => {
@@ -68,7 +72,7 @@ describe('ProductCardComponent', () => {
     it('should round discount percentage', () => {
       component.product = { ...mockProduct, price: 75, originalPrice: 99.90 };
       const percentage = component.discountPercentage;
-      expect(Math.floor(percentage)).toBe(Math.floor((1 - 75 / 99.90) * 100));
+      expect(Math.round(percentage)).toBe(Math.round((1 - 75 / 99.90) * 100));
     });
   });
 

@@ -54,8 +54,8 @@ const mockProduct: Product = {
   requiresScheduling: false,
   validityDays: 30,
   galleryUrls: [],
-  createdAt: '2026-01-01T00:00:00Z',
-  updatedAt: '2026-01-01T00:00:00Z',
+  createdAt: new Date('2026-01-01T00:00:00Z'),
+  updatedAt: new Date('2026-01-01T00:00:00Z'),
 };
 
 const mockCategory: ProductCategory = {
@@ -64,6 +64,7 @@ const mockCategory: ProductCategory = {
   slug: 'amor',
   displayOrder: 1,
   isActive: true,
+  createdAt: new Date('2026-01-01T00:00:00Z'),
 };
 
 describe('AdminProductListComponent', () => {

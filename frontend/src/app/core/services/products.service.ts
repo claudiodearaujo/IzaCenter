@@ -115,6 +115,14 @@ export class ProductsService {
     return this.api.delete<{ message: string }>(`/admin/products/${id}`);
   }
 
+  toggleActive(id: string): Observable<ApiResponse<Product>> {
+    return this.api.patch<ApiResponse<Product>>(`/admin/products/${id}/toggle-active`, {});
+  }
+
+  toggleFeatured(id: string): Observable<ApiResponse<Product>> {
+    return this.api.patch<ApiResponse<Product>>(`/admin/products/${id}/toggle-featured`, {});
+  }
+
   uploadImage(file: File): Observable<{ url: string }> {
     return this.api.upload<{ url: string }>('/upload/image', file);
   }
