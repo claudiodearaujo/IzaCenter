@@ -17,8 +17,8 @@ export class TermsComponent implements OnInit {
   ngOnInit(): void {
     this.seoService.setMeta({
       title: 'Termos de Uso',
-      description: 'Termos de Uso da plataforma IzaCenter — leia os termos e condições para utilização dos nossos serviços.',
-      url: 'https://www.izabelatarot.com.br/termos-de-uso'
+      description: 'Termos de Uso da plataforma Therapist Platform — leia os termos e condições para utilização dos nossos serviços.',
+      url: 'https://www.example.com/termos-de-uso'
     });
   }
 }

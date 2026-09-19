@@ -1,4 +1,4 @@
-# IzaCenter — Izabela Tarot
+# Therapist Platform — Therapist Platform
 
 Plataforma web completa para serviços de Tarot Cigano com e-commerce, área do cliente e painel administrativo.
 
@@ -199,14 +199,14 @@ Para CI/CD automático, configure os seguintes secrets no GitHub:
 ```bash
 # Backend
 cd backend
-docker build -t izacenter-backend .
-docker run -p 3000:3000 --env-file .env izacenter-backend
+docker build -t therapist-platform-backend .
+docker run -p 3000:3000 --env-file .env therapist-platform-backend
 ```
 
 ## Estrutura do Projeto
 
 ```
-IzaCenter/
+Therapist Platform/
 ├── backend/                # API Express 5 + TypeScript
 │   ├── src/
 │   │   ├── modules/        # auth, users, products, orders, readings,
@@ -247,7 +247,7 @@ Após executar `npm run seed` no backend:
 
 | Papel | E-mail | Senha |
 |-------|--------|-------|
-| Admin | admin@izabelatarot.com.br | Admin@123 |
+| Admin | admin@example.com | Admin@123 |
 | Cliente | cliente@example.com | Cliente@123 |
 
 ## Documentação

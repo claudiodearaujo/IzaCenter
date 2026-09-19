@@ -8,7 +8,7 @@ describe('SettingsService', () => {
   let httpMock: HttpTestingController;
 
   const mockGeneralSettings: GeneralSettings = {
-    siteName: 'Izabela Tarot',
+    siteName: 'Therapist Platform',
     siteDescription: 'Tarô e Ayurveda',
     enableShop: true,
     enableAppointments: true,
@@ -17,10 +17,10 @@ describe('SettingsService', () => {
   };
 
   const mockContactSettings: ContactSettings = {
-    email: 'contato@izabela.com',
+    email: 'contato@profissional.com',
     phone: '31999999999',
     whatsapp: '31999999999',
-    instagram: 'izabela.tarot',
+    instagram: 'profissional.tarot',
   };
 
   const mockContentSettings: ContentSettings = {
@@ -55,7 +55,7 @@ describe('SettingsService', () => {
     it('should return public settings', () => {
       const mockResponse = {
         data: {
-          siteName: 'Izabela Tarot',
+          siteName: 'Therapist Platform',
           siteDescription: 'Tarô e Ayurveda',
           enableShop: true,
           enableAppointments: true,
@@ -68,7 +68,7 @@ describe('SettingsService', () => {
       };
 
       service.getPublicSettings().subscribe(response => {
-        expect(response.data.siteName).toBe('Izabela Tarot');
+        expect(response.data.siteName).toBe('Therapist Platform');
       });
 
       const req = httpMock.expectOne('/api/settings/public');

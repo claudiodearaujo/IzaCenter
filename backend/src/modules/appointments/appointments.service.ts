@@ -192,7 +192,7 @@ export class AppointmentsService {
       const formattedDate = new Date(appointment.scheduledDate).toLocaleDateString('pt-BR');
       await sendEmail({
         to: appointment.client.email,
-        subject: 'Agendamento Confirmado - Izabela Tarot',
+        subject: 'Agendamento Confirmado - Therapist Platform',
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px;">
             <h2>Olá, ${appointment.client.fullName}!</h2>
@@ -200,7 +200,7 @@ export class AppointmentsService {
             <p><strong>Data:</strong> ${formattedDate}</p>
             <p><strong>Horário:</strong> ${appointment.startTime} - ${appointment.endTime}</p>
             <p>Aguardamos você!</p>
-            <p>Com carinho,<br>Izabela Tarot</p>
+            <p>Com carinho,<br>Therapist Platform</p>
           </div>
         `,
       });
@@ -237,7 +237,7 @@ export class AppointmentsService {
         const formattedDate = new Date(appointment.scheduledDate).toLocaleDateString('pt-BR');
         await sendEmail({
           to: appointment.client.email,
-          subject: `Atualização de Agendamento - Izabela Tarot`,
+          subject: `Atualização de Agendamento - Therapist Platform`,
           html: `
             <div style="font-family: Arial, sans-serif; padding: 20px;">
               <h2>Olá, ${appointment.client.fullName}!</h2>
@@ -245,7 +245,7 @@ export class AppointmentsService {
               <p><strong>Data:</strong> ${formattedDate}</p>
               <p><strong>Horário:</strong> ${appointment.startTime}</p>
               <p><strong>Status:</strong> ${data.status}</p>
-              <p>Com carinho,<br>Izabela Tarot</p>
+              <p>Com carinho,<br>Therapist Platform</p>
             </div>
           `,
         });
@@ -294,14 +294,14 @@ export class AppointmentsService {
       const newFormattedDate = newDate.toLocaleDateString('pt-BR');
       await sendEmail({
         to: appointment.client.email,
-        subject: 'Agendamento Reagendado - Izabela Tarot',
+        subject: 'Agendamento Reagendado - Therapist Platform',
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px;">
             <h2>Olá, ${appointment.client.fullName}!</h2>
             <p>Seu agendamento foi reagendado.</p>
             <p><strong>Data anterior:</strong> ${oldFormattedDate} às ${appointment.startTime}</p>
             <p><strong>Nova data:</strong> ${newFormattedDate} às ${newStartTime}</p>
-            <p>Com carinho,<br>Izabela Tarot</p>
+            <p>Com carinho,<br>Therapist Platform</p>
           </div>
         `,
       });
@@ -334,14 +334,14 @@ export class AppointmentsService {
       const formattedDate = new Date(appointment.scheduledDate).toLocaleDateString('pt-BR');
       await sendEmail({
         to: appointment.client.email,
-        subject: 'Agendamento Cancelado - Izabela Tarot',
+        subject: 'Agendamento Cancelado - Therapist Platform',
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px;">
             <h2>Olá, ${appointment.client.fullName}!</h2>
             <p>Seu agendamento foi cancelado.</p>
             <p><strong>Data:</strong> ${formattedDate} às ${appointment.startTime}</p>
             ${reason ? `<p><strong>Motivo:</strong> ${reason}</p>` : ''}
-            <p>Com carinho,<br>Izabela Tarot</p>
+            <p>Com carinho,<br>Therapist Platform</p>
           </div>
         `,
       });

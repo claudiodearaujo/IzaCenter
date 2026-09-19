@@ -33,12 +33,12 @@ async function main() {
   const adminPassword = await bcrypt.hash('Admin@123', 12);
   
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@izabelatarot.com.br' },
+    where: { email: 'admin@example.com' },
     update: {},
     create: {
-      email: 'admin@izabelatarot.com.br',
+      email: 'admin@example.com',
       passwordHash: adminPassword,
-      fullName: 'Izabela Admin',
+      fullName: 'Profissional Admin',
       role: 'ADMIN',
       phone: '(11) 99999-9999',
     },
@@ -52,10 +52,10 @@ async function main() {
   const clientPassword = await bcrypt.hash('Client@123', 12);
 
   const client = await prisma.user.upsert({
-    where: { email: 'client@izabelatarot.com.br' },
+    where: { email: 'client@example.com' },
     update: {},
     create: {
-      email: 'client@izabelatarot.com.br',
+      email: 'client@example.com',
       passwordHash: clientPassword,
       fullName: 'Maria Silva Santos',
       role: 'CLIENT',
@@ -808,9 +808,9 @@ async function main() {
     {
       key: 'general',
       value: {
-        siteName: 'Izabela Tarot',
-        siteDescription: 'Leituras de Tarot Cigano com Izabela',
-        email: 'contato@izabelatarot.com.br',
+        siteName: 'Therapist Platform',
+        siteDescription: 'Leituras de Tarot Cigano com o profissional',
+        email: 'contato@example.com',
         phone: '(11) 99999-9999',
         whatsapp: '5511999999999',
         address: 'São Paulo, SP - Brasil',
@@ -819,18 +819,18 @@ async function main() {
     {
       key: 'social',
       value: {
-        instagram: 'https://instagram.com/izabelatarot',
-        facebook: 'https://facebook.com/izabelatarot',
-        youtube: 'https://youtube.com/@izabelatarot',
+        instagram: 'https://instagram.com/profissionaltarot',
+        facebook: 'https://facebook.com/profissionaltarot',
+        youtube: 'https://youtube.com/@profissionaltarot',
         tiktok: '',
       },
     },
     {
       key: 'seo',
       value: {
-        metaTitle: 'Izabela Tarot - Leituras de Tarot Cigano Online',
-        metaDescription: 'Consultas e leituras de Tarot Cigano online com Izabela. Orientação espiritual para amor, carreira e vida.',
-        keywords: ['tarot cigano', 'leitura de tarot', 'consulta online', 'tarot online', 'izabela tarot'],
+        metaTitle: 'Therapist Platform - Leituras de Tarot Cigano Online',
+        metaDescription: 'Consultas e leituras de Tarot Cigano online com o profissional. Orientação espiritual para amor, carreira e vida.',
+        keywords: ['tarot cigano', 'leitura de tarot', 'consulta online', 'tarot online', 'profissional tarot'],
       },
     },
   ];
@@ -852,7 +852,7 @@ async function main() {
   const testimonials = [
     {
       clientName: 'Maria S.',
-      content: 'A leitura da Izabela foi incrível! Ela descreveu minha situação com detalhes que eu não tinha contado. As orientações me ajudaram muito a tomar uma decisão importante.',
+      content: 'A leitura do profissional foi incrível! Ela descreveu minha situação com detalhes que eu não tinha contado. As orientações me ajudaram muito a tomar uma decisão importante.',
       rating: 5,
       isApproved: true,
       isFeatured: true,
@@ -860,7 +860,7 @@ async function main() {
     },
     {
       clientName: 'Ana Paula R.',
-      content: 'Fiz a consulta online e foi uma experiência transformadora. A Izabela é muito atenciosa e as cartas trouxeram clareza para questões que me angustiavam há meses.',
+      content: 'Fiz a consulta online e foi uma experiência transformadora. A Profissional é muito atenciosa e as cartas trouxeram clareza para questões que me angustiavam há meses.',
       rating: 5,
       isApproved: true,
       isFeatured: true,
@@ -868,7 +868,7 @@ async function main() {
     },
     {
       clientName: 'Juliana M.',
-      content: 'Já fiz várias leituras e sempre saio impressionada. O Tarot Cigano nas mãos da Izabela é uma ferramenta poderosa de autoconhecimento.',
+      content: 'Já fiz várias leituras e sempre saio impressionada. O Tarot Cigano nas mãos do profissional é uma ferramenta poderosa de autoconhecimento.',
       rating: 5,
       isApproved: true,
       isFeatured: true,
@@ -1549,7 +1549,7 @@ async function main() {
       durationMinutes: 30,
       status: 'SCHEDULED',
       clientNotes: 'Prefiro falar sobre questões de carreira',
-      meetingUrl: 'https://meet.izabelatarot.com.br/maria-20260108',
+      meetingUrl: 'https://meet.example.com/maria-20260108',
       meetingPassword: 'tarot2026',
       createdAt: daysAgo(7),
     },
@@ -1566,7 +1566,7 @@ async function main() {
       status: 'CONFIRMED',
       confirmedAt: daysAgo(2),
       reminderSentAt: daysAgo(1),
-      meetingUrl: 'https://meet.izabelatarot.com.br/maria-20260112',
+      meetingUrl: 'https://meet.example.com/maria-20260112',
       meetingPassword: 'tarot2026',
       createdAt: daysAgo(10),
     },
@@ -1584,7 +1584,7 @@ async function main() {
       adminNotes: 'Ótima sessão, cliente muito satisfeita. Focamos em questões de relacionamento.',
       confirmedAt: daysAgo(22),
       reminderSentAt: daysAgo(21),
-      meetingUrl: 'https://meet.izabelatarot.com.br/maria-20251216',
+      meetingUrl: 'https://meet.example.com/maria-20251216',
       createdAt: daysAgo(25),
     },
   });
@@ -1617,7 +1617,7 @@ async function main() {
         clientId: client.id,
         clientName: 'Maria S.',
         clientAvatarUrl: '/avatars/client-maria.jpg',
-        content: 'A leitura da Izabela me ajudou muito em um momento de decisão importante na carreira. As cartas trouxeram clareza e eu consegui tomar a melhor decisão para minha vida profissional. Recomendo muito!',
+        content: 'A leitura do profissional me ajudou muito em um momento de decisão importante na carreira. As cartas trouxeram clareza e eu consegui tomar a melhor decisão para minha vida profissional. Recomendo muito!',
         rating: 5,
         isApproved: true,
         isFeatured: true,
@@ -1628,7 +1628,7 @@ async function main() {
         clientId: client.id,
         clientName: 'Maria S.',
         clientAvatarUrl: '/avatars/client-maria.jpg',
-        content: 'Segunda consulta e continuo impressionada com a precisão das leituras. A Izabela tem um dom especial para interpretar as cartas do Tarot Cigano. Sempre saio das sessões mais leve e confiante.',
+        content: 'Segunda consulta e continuo impressionada com a precisão das leituras. A Profissional tem um dom especial para interpretar as cartas do Tarot Cigano. Sempre saio das sessões mais leve e confiante.',
         rating: 5,
         isApproved: true,
         isFeatured: false,
@@ -1736,8 +1736,8 @@ async function main() {
   console.log('   - Notifications: 8 (4 unread)\n');
 
   console.log('📋 Summary:');
-  console.log('   - 1 Admin user (admin@izabelatarot.com.br / Admin@123)');
-  console.log('   - 1 Client user (client@izabelatarot.com.br / Client@123)');
+  console.log('   - 1 Admin user (admin@example.com / Admin@123)');
+  console.log('   - 1 Client user (client@example.com / Client@123)');
   console.log('   - 36 Cigano Tarot cards');
   console.log('   - 4 Product categories');
   console.log('   - 6 Products');

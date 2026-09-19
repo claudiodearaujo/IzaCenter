@@ -87,8 +87,8 @@ export class SettingsComponent implements OnInit {
     facebookPixelId: string;
     hotjarId: string;
   } = {
-    siteName: 'Izabela Tarot',
-    siteDescription: 'Leituras de Tarot Cigano com Izabela',
+    siteName: 'Therapist Platform',
+    siteDescription: 'Leituras de Tarot Cigano com o profissional',
     siteKeywords: '',
     logoUrl: '',
     faviconUrl: '',
@@ -96,7 +96,7 @@ export class SettingsComponent implements OnInit {
     allowRegistration: true,
     allowTestimonials: true,
     allowOnlinePayment: true,
-    email: 'contato@izabelatarot.com.br',
+    email: 'contato@example.com',
     phone: '',
     whatsapp: '',
     address: '',
@@ -107,7 +107,7 @@ export class SettingsComponent implements OnInit {
     businessHours: '09:00 - 18:00',
     workingDays: 'Segunda a Sexta',
     appointmentNotice: 24,
-    homeHeroTitle: 'Izabela Tarot',
+    homeHeroTitle: 'Therapist Platform',
     homeHeroSubtitle: 'Orientação espiritual através do Tarot Cigano',
     aboutText: '',
     privacyPolicy: '',
@@ -118,15 +118,15 @@ export class SettingsComponent implements OnInit {
   };
 
   generalSettings: GeneralSettings = {
-    siteName: 'Izabela Tarot',
-    siteDescription: 'Leituras de Tarot Cigano com Izabela',
+    siteName: 'Therapist Platform',
+    siteDescription: 'Leituras de Tarot Cigano com o profissional',
     logoUrl: '',
     faviconUrl: '',
     maintenanceMode: false,
   };
 
   contactSettings: ContactSettings = {
-    email: 'contato@izabelatarot.com.br',
+    email: 'contato@example.com',
     phone: '(11) 99999-9999',
     whatsapp: '',
     address: '',
@@ -138,7 +138,7 @@ export class SettingsComponent implements OnInit {
   businessHours: BusinessHour[] = [];
 
   contentSettings: ContentSettings = {
-    homeTitle: 'Izabela Tarot',
+    homeTitle: 'Therapist Platform',
     homeSubtitle: 'Orientação espiritual através do Tarot Cigano',
     aboutText: '',
     privacyPolicy: '',

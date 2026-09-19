@@ -12,7 +12,7 @@ const TEXT_GRAY = '#666666';
 
 function addHeader(doc: InstanceType<typeof PDFDocument>, title: string) {
   doc.rect(0, 0, doc.page.width, 80).fill(DARK);
-  doc.fillColor(PURPLE).fontSize(22).font('Helvetica-Bold').text('Izabela Tarot', 40, 22);
+  doc.fillColor(PURPLE).fontSize(22).font('Helvetica-Bold').text('Therapist Platform', 40, 22);
   doc.fillColor('#f8f5f0').fontSize(11).font('Helvetica').text(title, 40, 52);
   doc.moveDown(3);
 }
@@ -33,7 +33,7 @@ function addDivider(doc: InstanceType<typeof PDFDocument>) {
 function addFooter(doc: InstanceType<typeof PDFDocument>) {
   const y = doc.page.height - 40;
   doc.fillColor(TEXT_GRAY).fontSize(8).font('Helvetica').text(
-    `Izabela Tarot \u00A9 ${new Date().getFullYear()} \u2014 Gerado em ${new Date().toLocaleDateString('pt-BR')}`,
+    `Therapist Platform \u00A9 ${new Date().getFullYear()} \u2014 Gerado em ${new Date().toLocaleDateString('pt-BR')}`,
     40, y, { align: 'center', width: doc.page.width - 80 }
   );
 }

@@ -17,8 +17,8 @@ export class PrivacyComponent implements OnInit {
   ngOnInit(): void {
     this.seoService.setMeta({
       title: 'Política de Privacidade',
-      description: 'Política de Privacidade da plataforma IzaCenter — saiba como coletamos, usamos e protegemos seus dados pessoais conforme a LGPD.',
-      url: 'https://www.izabelatarot.com.br/politica-de-privacidade'
+      description: 'Política de Privacidade da plataforma Therapist Platform — saiba como coletamos, usamos e protegemos seus dados pessoais conforme a LGPD.',
+      url: 'https://www.example.com/politica-de-privacidade'
     });
   }
 }

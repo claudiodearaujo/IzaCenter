@@ -17,9 +17,9 @@ export class AboutComponent implements OnInit {
 
   ngOnInit(): void {
     this.seoService.setMeta({
-      title: 'Sobre Izabela Santos',
-      description: 'Conheça Izabela Santos, taróloga e estudante de Psicologia Analítica Junguiana, com formação em Administração de Empresas e Terapias Integrativas Naturais.',
-      url: 'https://www.izabelatarot.com.br/sobre'
+      title: 'Sobre Profissional',
+      description: 'Conheça Profissional, taróloga e estudante de Psicologia Analítica Junguiana, com formação em Administração de Empresas e Terapias Integrativas Naturais.',
+      url: 'https://www.example.com/sobre'
     });
 
     this.seoService.setSchema([

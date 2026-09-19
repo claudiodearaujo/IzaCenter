@@ -1,4 +1,4 @@
-# Auditoria de Menus - IzaCenter
+# Auditoria de Menus - Therapist Platform
 
 **Data:** 30/01/2026
 **Status:** Análise Completa

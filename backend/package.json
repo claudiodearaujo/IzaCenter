@@ -1,5 +1,5 @@
 {
-  "name": "izabela-tarot-backend",
+  "name": "therapist-platform-backend",
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
@@ -22,7 +22,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Backend API for Izabela Tarot",
+  "description": "Backend API for Therapist Platform",
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://izacenter-backend.onrender.com/api',
+  apiUrl: 'https://api.example.com/api',
   stripePublishableKey: 'pk_live_...',
   sentryDsn: ''
 };

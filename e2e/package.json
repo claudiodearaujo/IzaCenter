@@ -1,5 +1,5 @@
 {
-  "name": "@izacenter/e2e",
+  "name": "@therapist-platform/e2e",
   "version": "1.0.0",
   "private": true,
   "scripts": {

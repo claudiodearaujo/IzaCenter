@@ -78,7 +78,7 @@
       "title": "Descubra seu caminho com o Tarot",
       "subtitle": "Orientação, clareza e acolhimento através das cartas",
       "cta": "Agendar Consulta",
-      "meetAbout": "Conheça a Izabela"
+      "meetAbout": "Conheça a Profissional"
     },
     "services": {
       "title": "Serviços",
@@ -1062,7 +1062,7 @@
     "passwordMismatch": "As senhas não coincidem"
   },
   "about": {
-    "title": "Sobre Izabela Santos",
+    "title": "Sobre Profissional",
     "subtitle": "Taróloga, terapeuta integrativa e estudante de psicologia analítica junguiana.",
     "journey": {
       "title": "Minha Jornada",
@@ -1225,9 +1225,9 @@
     "title": "Depoimentos",
     "subtitle": "Veja o que minhas clientes dizem sobre as leituras.",
     "items": {
-      "item1": "A leitura da Izabela foi transformadora. Me ajudou a entender melhor meu momento profissional e tomar decisões importantes.",
+      "item1": "A leitura do profissional foi transformadora. Me ajudou a entender melhor meu momento profissional e tomar decisões importantes.",
       "item2": "Clareza e acolhimento em cada palavra. Recomendo demais para quem busca orientação verdadeira.",
-      "item3": "Encontrei orientação e paz. A Izabela tem um dom especial para interpretar as cartas.",
+      "item3": "Encontrei orientação e paz. A Profissional tem um dom especial para interpretar as cartas.",
       "item4": "Fiz minha primeira leitura e fiquei impressionada com a precisão. Voltarei com certeza!",
       "item5": "A sessão online foi incrível. Me senti muito acolhida e recebi orientações valiosas.",
       "item6": "O jogo mensal me ajuda a planejar meu mês com mais consciência. Super recomendo!"
@@ -1249,11 +1249,11 @@
     "sections": {
       "introduction": {
         "title": "1. Introdução",
-        "content": "Bem-vindo à plataforma IzaCenter. Ao utilizar nossos serviços, você concorda com estes Termos de Uso. Por favor, leia-os atentamente antes de utilizar a plataforma."
+        "content": "Bem-vindo à plataforma Therapist Platform. Ao utilizar nossos serviços, você concorda com estes Termos de Uso. Por favor, leia-os atentamente antes de utilizar a plataforma."
       },
       "services": {
         "title": "2. Descrição dos Serviços",
-        "content": "A IzaCenter oferece os seguintes serviços de tarot e baralho cigano:",
+        "content": "A Therapist Platform oferece os seguintes serviços de tarot e baralho cigano:",
         "item1": "Leituras de tarot por perguntas (entrega digital)",
         "item2": "Sessões ao vivo de tarot e baralho cigano",
         "item3": "Leituras mensais com acompanhamento",
@@ -1274,11 +1274,11 @@
       },
       "intellectualProperty": {
         "title": "5. Propriedade Intelectual",
-        "content": "Todo o conteúdo da plataforma, incluindo textos, imagens, logotipos e interpretações de tarot, é protegido por direitos autorais e pertence à IzaCenter. É proibida a reprodução sem autorização prévia."
+        "content": "Todo o conteúdo da plataforma, incluindo textos, imagens, logotipos e interpretações de tarot, é protegido por direitos autorais e pertence à Therapist Platform. É proibida a reprodução sem autorização prévia."
       },
       "liability": {
         "title": "6. Limitação de Responsabilidade",
-        "content": "Os serviços de tarot e baralho cigano têm caráter orientativo e não substituem consultas profissionais de saúde, jurídicas ou financeiras. A IzaCenter não se responsabiliza por decisões tomadas com base nas leituras."
+        "content": "Os serviços de tarot e baralho cigano têm caráter orientativo e não substituem consultas profissionais de saúde, jurídicas ou financeiras. A Therapist Platform não se responsabiliza por decisões tomadas com base nas leituras."
       },
       "modifications": {
         "title": "7. Modificações dos Termos",
@@ -1298,7 +1298,7 @@
     "sections": {
       "introduction": {
         "title": "1. Introdução",
-        "content": "Esta Política de Privacidade descreve como a IzaCenter coleta, usa e protege suas informações pessoais em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)."
+        "content": "Esta Política de Privacidade descreve como a Therapist Platform coleta, usa e protege suas informações pessoais em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)."
       },
       "dataCollected": {
         "title": "2. Dados Coletados",

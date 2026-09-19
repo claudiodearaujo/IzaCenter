@@ -1,14 +1,14 @@
-# 🔮 PROMPT CURSOR.AI - IZABELA TAROT
+# 🔮 PROMPT CURSOR.AI - THERAPIST PLATFORM
 ## Sistema Completo: Site Institucional + E-commerce + Área do Cliente + Painel Administrativo
 
 ---
 
 ## 📋 CONTEXTO DO PROJETO
 
-Você é um desenvolvedor sênior especializado em Angular e Node.js. Deve criar um sistema completo para **Izabela Tarot**, uma plataforma de serviços de leituras de tarot terapêutico. O sistema deve ser elegante, místico, acolhedor e otimizado para um público 95% feminino que busca orientação em áreas como profissional, saúde e relacionamentos.
+Você é um desenvolvedor sênior especializado em Angular e Node.js. Deve criar um sistema completo para **Therapist Platform**, uma plataforma de serviços de leituras de tarot terapêutico. O sistema deve ser elegante, místico, acolhedor e otimizado para um público 95% feminino que busca orientação em áreas como profissional, saúde e relacionamentos.
 
 ### Sobre a Profissional
-- **Nome:** Izabela Santos
+- **Nome:** Profissional
 - **Profissão:** Taróloga e Estudante de Psicologia Analítica Junguiana
 - **Formação:** Administração de Empresas + Terapias Integrativas Naturais
 - **Localização:** Belo Horizonte, MG
@@ -155,7 +155,7 @@ font-family: 'Dancing Script', cursive;
 ## 📁 ESTRUTURA DE PASTAS - MONOREPO
 
 ```
-izabela-tarot/
+therapist-platform/
 ├── apps/
 │   ├── frontend/                    # Angular 20
 │   │   ├── src/
@@ -2300,11 +2300,11 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 # Email (Nodemailer)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
-SMTP_USER=izabela.ayurvida@gmail.com
+SMTP_USER=contato@example.com
 SMTP_PASS=your-app-password
 
 # Frontend URL
-FRONTEND_URL=https://izabelatarot.com.br
+FRONTEND_URL=https://example.com
 ```
 
 ### Frontend (environment.ts)
@@ -2323,7 +2323,7 @@ export const environment = {
 
 ```json
 {
-  "name": "izabela-tarot-backend",
+  "name": "therapist-platform-backend",
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
@@ -2471,13 +2471,13 @@ CMD ["npm", "start"]
 
 ## 📞 CONTATOS DA CLIENTE
 
-- **Instagram:** @izabela.tarot
-- **E-mail:** izabela.ayurvida@gmail.com
-- **Pix:** izabela.ayurvida@gmail.com
+- **Instagram:** @profissional.tarot
+- **E-mail:** contato@example.com
+- **Pix:** contato@example.com
 - **Linktree:** linktr.ee/iza1543
 
 ---
 
 **FIM DO PROMPT**
 
-Este prompt contém todas as especificações para desenvolver o sistema Izabela Tarot com **backend Node.js** e **Supabase apenas para persistência**.
+Este prompt contém todas as especificações para desenvolver o sistema Therapist Platform com **backend Node.js** e **Supabase apenas para persistência**.

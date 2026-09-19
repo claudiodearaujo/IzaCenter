@@ -1,6 +1,6 @@
 services:
   - type: static
-    name: Izabela-frontend
+    name: Profissional-frontend
     buildCommand: npm install && npm run build
     publishPath: ./dist/frontend/browser
 

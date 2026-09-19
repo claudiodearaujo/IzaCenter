@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: izacenter-backend
+    name: therapist-platform-backend
     runtime: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
@@ -35,7 +35,7 @@ services:
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
       - key: SUPABASE_STORAGE_BUCKET
-        value: izabela-tarot
+        value: therapist-platform
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
@@ -45,9 +45,9 @@ services:
       - key: SMTP_PASS
         sync: false
       - key: EMAIL_FROM_NAME
-        value: Izabela Tarot
+        value: Therapist Platform
       - key: EMAIL_FROM_ADDRESS
-        value: contato@izabelatarot.com.br
+        value: contato@example.com
       - key: FRONTEND_URL
         sync: false
       - key: BACKEND_URL
@@ -56,5 +56,5 @@ services:
         sync: false
       # Email address that receives contact form submissions
       - key: CONTACT_EMAIL
-        value: izabela.ayurvida@gmail.com
+        value: contato@example.com
     healthCheckPath: /health

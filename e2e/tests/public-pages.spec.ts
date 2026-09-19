@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Public Pages', () => {
   test('home page loads and displays hero section', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle(/Izabela Tarot|IzaCenter/i);
+    await expect(page).toHaveTitle(/Therapist Platform|Therapist Platform/i);
     // Check hero section is visible
     await expect(page.locator('app-home')).toBeVisible();
   });

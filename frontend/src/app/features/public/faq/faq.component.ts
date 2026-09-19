@@ -18,8 +18,8 @@ export class FaqComponent implements OnInit {
   ngOnInit(): void {
     this.seoService.setMeta({
       title: 'Perguntas Frequentes',
-      description: 'Encontre respostas para as dúvidas mais comuns sobre leituras de tarot e baralho cigano com Izabela Santos.',
-      url: 'https://www.izabelatarot.com.br/faq'
+      description: 'Encontre respostas para as dúvidas mais comuns sobre leituras de tarot e baralho cigano com Profissional.',
+      url: 'https://www.example.com/faq'
     });
 
     // Set FAQ schema after translations are loaded
