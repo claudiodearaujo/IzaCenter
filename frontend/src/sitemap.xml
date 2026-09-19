@@ -2,49 +2,49 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Página Principal -->
   <url>
-    <loc>https://www.izabelatarot.com.br/</loc>
+    <loc>https://www.example.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <!-- Sobre -->
   <url>
-    <loc>https://www.izabelatarot.com.br/sobre</loc>
+    <loc>https://www.example.com/sobre</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Serviços -->
   <url>
-    <loc>https://www.izabelatarot.com.br/servicos</loc>
+    <loc>https://www.example.com/servicos</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Loja -->
   <url>
-    <loc>https://www.izabelatarot.com.br/loja</loc>
+    <loc>https://www.example.com/loja</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Contato -->
   <url>
-    <loc>https://www.izabelatarot.com.br/contato</loc>
+    <loc>https://www.example.com/contato</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Depoimentos -->
   <url>
-    <loc>https://www.izabelatarot.com.br/depoimentos</loc>
+    <loc>https://www.example.com/depoimentos</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <!-- FAQ -->
   <url>
-    <loc>https://www.izabelatarot.com.br/faq</loc>
+    <loc>https://www.example.com/faq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

@@ -18,7 +18,7 @@ describe('SettingsService', () => {
       const mockSetting = {
         id: 'setting-1',
         key: 'general',
-        value: { siteName: 'Izabela Tarot', enableShop: true },
+        value: { siteName: 'Therapist Platform', enableShop: true },
       };
       prismaMock.siteSetting.findUnique.mockResolvedValue(mockSetting as any);
 
@@ -26,7 +26,7 @@ describe('SettingsService', () => {
       const result = await settingsService.getGeneral();
 
       // Assert
-      expect(result.data.siteName).toBe('Izabela Tarot');
+      expect(result.data.siteName).toBe('Therapist Platform');
     });
 
     it('should return defaults if no settings exist', async () => {
@@ -37,7 +37,7 @@ describe('SettingsService', () => {
       const result = await settingsService.getGeneral();
 
       // Assert
-      expect(result.data.siteName).toBe('Izabela Tarot');
+      expect(result.data.siteName).toBe('Therapist Platform');
       expect(result.data.enableShop).toBe(true);
     });
   });
@@ -71,7 +71,7 @@ describe('SettingsService', () => {
       // Arrange
       const mockSetting = {
         key: 'contact',
-        value: { email: 'contato@izabela.com', phone: '11999999999' },
+        value: { email: 'contato@profissional.com', phone: '11999999999' },
       };
       prismaMock.siteSetting.findUnique.mockResolvedValue(mockSetting as any);
 
@@ -79,7 +79,7 @@ describe('SettingsService', () => {
       const result = await settingsService.getContact();
 
       // Assert
-      expect(result.data.email).toBe('contato@izabela.com');
+      expect(result.data.email).toBe('contato@profissional.com');
     });
 
     it('should return defaults if no settings exist', async () => {
@@ -215,7 +215,7 @@ describe('SettingsService', () => {
     it('should return all settings combined', async () => {
       // Arrange - Mock each getSetting call
       prismaMock.siteSetting.findUnique
-        .mockResolvedValueOnce({ key: 'general', value: { siteName: 'Izabela' } } as any)
+        .mockResolvedValueOnce({ key: 'general', value: { siteName: 'Profissional' } } as any)
         .mockResolvedValueOnce({ key: 'contact', value: { email: 'test@test.com' } } as any)
         .mockResolvedValueOnce({ key: 'businessHours', value: [] } as any)
         .mockResolvedValueOnce({ key: 'content', value: { heroTitle: 'Hello' } } as any)
@@ -225,7 +225,7 @@ describe('SettingsService', () => {
       const result = await settingsService.getAll();
 
       // Assert
-      expect(result.data.general.siteName).toBe('Izabela');
+      expect(result.data.general.siteName).toBe('Profissional');
       expect(result.data.contact.email).toBe('test@test.com');
       expect(result.data.content.heroTitle).toBe('Hello');
     });
@@ -238,17 +238,17 @@ describe('SettingsService', () => {
     it('should return public settings for frontend', async () => {
       // Arrange
       prismaMock.siteSetting.findUnique
-        .mockResolvedValueOnce({ key: 'general', value: { siteName: 'Izabela Tarot', enableShop: true } } as any)
-        .mockResolvedValueOnce({ key: 'contact', value: { email: 'contato@izabela.com', instagram: '@izabela' } } as any)
+        .mockResolvedValueOnce({ key: 'general', value: { siteName: 'Therapist Platform', enableShop: true } } as any)
+        .mockResolvedValueOnce({ key: 'contact', value: { email: 'contato@profissional.com', instagram: '@profissional' } } as any)
         .mockResolvedValueOnce({ key: 'content', value: { heroTitle: 'Bem-vindo' } } as any);
 
       // Act
       const result = await settingsService.getPublic();
 
       // Assert
-      expect(result.data.siteName).toBe('Izabela Tarot');
+      expect(result.data.siteName).toBe('Therapist Platform');
       expect(result.data.enableShop).toBe(true);
-      expect(result.data.contact.email).toBe('contato@izabela.com');
+      expect(result.data.contact.email).toBe('contato@profissional.com');
       expect(result.data.heroTitle).toBe('Bem-vindo');
     });
   });

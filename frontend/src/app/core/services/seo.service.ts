@@ -25,8 +25,8 @@ export class SeoService {
   private readonly titleService = inject(Title);
   private readonly document = inject(DOCUMENT);
 
-  private readonly baseUrl = 'https://www.izabelatarot.com.br';
-  private readonly siteName = 'Izabela Tarot';
+  private readonly baseUrl = 'https://www.example.com';
+  private readonly siteName = 'Therapist Platform';
   private readonly defaultImage = `${this.baseUrl}/assets/images/og-image.jpg`;
 
   /**
@@ -119,10 +119,10 @@ export class SeoService {
       'name': this.siteName,
       'url': this.baseUrl,
       'logo': `${this.baseUrl}/assets/images/logo.jpeg`,
-      'description': 'Leituras de tarot e baralho cigano Lenormand com Izabela Santos.',
+      'description': 'Leituras de tarot e baralho cigano Lenormand com Profissional.',
       'sameAs': [
-        'https://www.instagram.com/izabelatarot',
-        'https://www.facebook.com/izabelatarot'
+        'https://www.instagram.com/profissionaltarot',
+        'https://www.facebook.com/profissionaltarot'
       ],
       'contactPoint': {
         '@type': 'ContactPoint',
@@ -138,7 +138,7 @@ export class SeoService {
   getPersonSchema(): SchemaMarkup {
     return {
       '@type': 'Person',
-      'name': 'Izabela Santos',
+      'name': 'Profissional',
       'jobTitle': 'Taróloga e Terapeuta Integrativa',
       'description': 'Taróloga e estudante de Psicologia Analítica Junguiana, com formação em Administração de Empresas e Terapias Integrativas Naturais.',
       'url': `${this.baseUrl}/sobre`,
@@ -155,7 +155,7 @@ export class SeoService {
       '@type': 'WebSite',
       'name': this.siteName,
       'url': this.baseUrl,
-      'description': 'Leituras de tarot e baralho cigano Lenormand com Izabela Santos.',
+      'description': 'Leituras de tarot e baralho cigano Lenormand com Profissional.',
       'inLanguage': ['pt-BR', 'en', 'fr', 'es']
     };
   }
@@ -226,7 +226,7 @@ export class SeoService {
       '@type': 'Service',
       'provider': {
         '@type': 'Person',
-        'name': 'Izabela Santos'
+        'name': 'Profissional'
       },
       'serviceType': 'Leitura de Tarot',
       'areaServed': 'Worldwide',

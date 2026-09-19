@@ -68,7 +68,7 @@ export class SettingsService {
     
     return {
       data: settings || {
-        siteName: 'Izabela Tarot',
+        siteName: 'Therapist Platform',
         siteDescription: 'Leituras de Tarot e Baralho Cigano',
         enableShop: true,
         enableAppointments: true,

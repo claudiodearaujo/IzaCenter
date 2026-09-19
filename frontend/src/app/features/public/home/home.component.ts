@@ -65,8 +65,8 @@ export class HomeComponent implements OnInit {
     // SEO Configuration
     this.seoService.setMeta({
       title: 'Leituras de Tarot e Baralho Cigano',
-      description: 'Leituras de tarot e baralho cigano Lenormand com Izabela Santos. Orientação para vida profissional, saúde e relacionamentos.',
-      url: 'https://www.izabelatarot.com.br/'
+      description: 'Leituras de tarot e baralho cigano Lenormand com Profissional. Orientação para vida profissional, saúde e relacionamentos.',
+      url: 'https://www.example.com/'
     });
 
     this.seoService.setSchema([

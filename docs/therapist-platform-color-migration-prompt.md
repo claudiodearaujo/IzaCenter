@@ -1,11 +1,11 @@
 # 🎨 PROMPT CURSOR.AI - MIGRAÇÃO DE PALETA DE CORES
-## De Lilás/Roxo para Gold Cromático - Izabela Tarot
+## De Lilás/Roxo para Gold Cromático - Therapist Platform
 
 ---
 
 ## 📋 CONTEXTO
 
-O site **izabelatarot.com.br** está atualmente usando uma paleta de cores roxa/lilás como cor primária. O objetivo é migrar para uma paleta **Gold Cromática** (dourado) mantendo a harmonia visual, elegância mística e respeitando todas as regras de UX, usabilidade e acessibilidade WCAG 2.1.
+O site **example.com** está atualmente usando uma paleta de cores roxa/lilás como cor primária. O objetivo é migrar para uma paleta **Gold Cromática** (dourado) mantendo a harmonia visual, elegância mística e respeitando todas as regras de UX, usabilidade e acessibilidade WCAG 2.1.
 
 ---
 

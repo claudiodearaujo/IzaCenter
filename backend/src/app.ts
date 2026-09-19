@@ -152,7 +152,7 @@ app.use(
   `${apiPrefix}/docs`,
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, {
-    customSiteTitle: 'IzaCenter API Docs',
+    customSiteTitle: 'Therapist Platform API Docs',
     swaggerOptions: { persistAuthorization: true },
   })
 );
@@ -166,7 +166,7 @@ app.get(`${apiPrefix}/docs.json`, (req: Request, res: Response) => {
 if (env.isDevelopment) {
   app.get(`${apiPrefix}`, (req: Request, res: Response) => {
     res.json({
-      message: 'Izabela Tarot API',
+      message: 'Therapist Platform API',
       version: '1.0.0',
       documentation: `${apiPrefix}/docs`,
       openApiSpec: `${apiPrefix}/docs.json`,

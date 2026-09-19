@@ -20,7 +20,7 @@ async function bootstrap() {
     const server = app.listen(env.PORT, () => {
       console.log('');
       console.log('✨ ============================================ ✨');
-      console.log('   🔮 IZABELA TAROT API SERVER');
+      console.log('   🔮 THERAPIST PLATFORM API SERVER');
       console.log('✨ ============================================ ✨');
       console.log('');
       console.log(`   🌍 Environment: ${env.NODE_ENV}`);

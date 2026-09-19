@@ -1,5 +1,5 @@
-# robots.txt para Izabela Tarot
-# https://www.izabelatarot.com.br
+# robots.txt para Therapist Platform
+# https://www.example.com
 
 User-agent: *
 Allow: /
@@ -8,4 +8,4 @@ Disallow: /cliente/
 Disallow: /auth/
 
 # Sitemap
-Sitemap: https://www.izabelatarot.com.br/sitemap.xml
+Sitemap: https://www.example.com/sitemap.xml

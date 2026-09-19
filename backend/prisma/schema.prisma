@@ -1,4 +1,4 @@
-// Prisma Schema for Izabela Tarot
+// Prisma Schema for Therapist Platform
 // apps/backend/prisma/schema.prisma
 
 generator client {

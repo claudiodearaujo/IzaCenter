@@ -362,7 +362,7 @@ describe('AppointmentsService', () => {
       expect(sendEmail).toHaveBeenCalledWith(
         expect.objectContaining({
           to: 'client@test.com',
-          subject: 'Agendamento Confirmado - Izabela Tarot',
+          subject: 'Agendamento Confirmado - Therapist Platform',
         })
       );
     });
@@ -474,7 +474,7 @@ describe('AppointmentsService', () => {
       expect(sendEmail).toHaveBeenCalledWith(
         expect.objectContaining({
           to: 'client@test.com',
-          subject: 'Atualização de Agendamento - Izabela Tarot',
+          subject: 'Atualização de Agendamento - Therapist Platform',
         })
       );
     });
@@ -584,7 +584,7 @@ describe('AppointmentsService', () => {
       expect(sendEmail).toHaveBeenCalledWith(
         expect.objectContaining({
           to: 'client@test.com',
-          subject: 'Agendamento Reagendado - Izabela Tarot',
+          subject: 'Agendamento Reagendado - Therapist Platform',
         })
       );
     });
@@ -668,7 +668,7 @@ describe('AppointmentsService', () => {
       expect(sendEmail).toHaveBeenCalledWith(
         expect.objectContaining({
           to: 'client@test.com',
-          subject: 'Agendamento Cancelado - Izabela Tarot',
+          subject: 'Agendamento Cancelado - Therapist Platform',
         })
       );
     });

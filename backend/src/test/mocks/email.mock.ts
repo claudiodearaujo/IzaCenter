@@ -2,7 +2,7 @@ export const sendEmailMock = jest.fn().mockResolvedValue(undefined);
 
 export const emailTemplatesMock = {
   welcome: jest.fn().mockReturnValue({
-    subject: 'Bem-vinda ao Izabela Tarot!',
+    subject: 'Bem-vinda ao Therapist Platform!',
     html: '<p>Welcome email content</p>',
   }),
   passwordReset: jest.fn().mockReturnValue({

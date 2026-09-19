@@ -25,7 +25,7 @@ export const env = {
   SUPABASE_URL: process.env.SUPABASE_URL || '',
   SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || '',
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
-  SUPABASE_STORAGE_BUCKET: process.env.SUPABASE_STORAGE_BUCKET || 'izabela-tarot',
+  SUPABASE_STORAGE_BUCKET: process.env.SUPABASE_STORAGE_BUCKET || 'therapist-platform',
   
   // Stripe
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || '',
@@ -36,9 +36,9 @@ export const env = {
   SMTP_PORT: parseInt(process.env.SMTP_PORT || '587', 10),
   SMTP_USER: process.env.SMTP_USER || '',
   SMTP_PASS: process.env.SMTP_PASS || '',
-  EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || 'Izabela Tarot',
-  EMAIL_FROM_ADDRESS: process.env.EMAIL_FROM_ADDRESS || 'contato@izabelatarot.com.br',
-  CONTACT_EMAIL: process.env.CONTACT_EMAIL || 'izabela.ayurvida@gmail.com',
+  EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || 'Therapist Platform',
+  EMAIL_FROM_ADDRESS: process.env.EMAIL_FROM_ADDRESS || 'contato@example.com',
+  CONTACT_EMAIL: process.env.CONTACT_EMAIL || 'contato@example.com',
   
   // URLs
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:4200',

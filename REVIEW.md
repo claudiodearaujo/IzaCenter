@@ -1,7 +1,7 @@
-# IzaCenter — Review Completo & Plano de Produção
+# Therapist Platform — Review Completo & Plano de Produção
 
 > **Data:** Fevereiro 2026
-> **Projeto:** IzaCenter (Izabela Tarot) — Plataforma de Tarot Cigano com e-commerce
+> **Projeto:** Therapist Platform (Therapist Platform) — Plataforma de Tarot Cigano com e-commerce
 > **Stack:** Angular 20 + PrimeNG + Tailwind (Frontend) | Express 5 + Prisma + PostgreSQL (Backend)
 > **Revisado em:** 26/02/2026 — Auditoria completa dos arquivos reais vs. status declarado
 
@@ -9,7 +9,7 @@
 
 ## 1. Visão Geral do Projeto
 
-O IzaCenter é uma plataforma web completa para serviços de Tarot Cigano, composta por:
+O Therapist Platform é uma plataforma web completa para serviços de Tarot Cigano, composta por:
 
 - **Site público** — Home, Sobre, Serviços, Loja, Contato, FAQ, Depoimentos
 - **Loja/E-commerce** — Catálogo de produtos, carrinho, checkout com Stripe
@@ -363,7 +363,7 @@ Itens que requerem ação manual (acesso a serviços externos):
 
 ## 7. Conclusão
 
-O projeto IzaCenter tem uma **base sólida e bem estruturada** com **~85% do código implementado e verificado**. A arquitetura é moderna (Angular 20 standalone, Express 5, Prisma 7) e segue boas práticas (MVC, validação com Zod, security headers, i18n completo).
+O projeto Therapist Platform tem uma **base sólida e bem estruturada** com **~85% do código implementado e verificado**. A arquitetura é moderna (Angular 20 standalone, Express 5, Prisma 7) e segue boas práticas (MVC, validação com Zod, security headers, i18n completo).
 
 **Os maiores gaps reais encontrados na auditoria são:**
 1. **Fluxo pós-pagamento** — Páginas de sucesso/cancelamento do Stripe ausentes

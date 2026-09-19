@@ -34,8 +34,8 @@ export class ContactComponent implements OnInit {
   ngOnInit(): void {
     this.seoService.setMeta({
       title: 'Contato',
-      description: 'Entre em contato com Izabela Santos para agendar sua leitura de tarot ou tirar dúvidas sobre os serviços.',
-      url: 'https://www.izabelatarot.com.br/contato'
+      description: 'Entre em contato com Profissional para agendar sua leitura de tarot ou tirar dúvidas sobre os serviços.',
+      url: 'https://www.example.com/contato'
     });
 
     this.seoService.setSchema(
@@ -48,8 +48,8 @@ export class ContactComponent implements OnInit {
 
   get contactInfo() {
     return [
-      { icon: 'pi-envelope', label: this.translate.instant('contact.info.email.label'), value: 'izabela.ayurvida@gmail.com' },
-      { icon: 'pi-instagram', label: this.translate.instant('contact.info.instagram.label'), value: '@izabela.tarot' },
+      { icon: 'pi-envelope', label: this.translate.instant('contact.info.email.label'), value: 'contato@example.com' },
+      { icon: 'pi-instagram', label: this.translate.instant('contact.info.instagram.label'), value: '@profissional.tarot' },
       { icon: 'pi-clock', label: this.translate.instant('contact.info.schedule.label'), value: this.translate.instant('contact.info.schedule.value') },
       { icon: 'pi-map-marker', label: this.translate.instant('contact.info.location.label'), value: 'Belo Horizonte, MG' }
     ];

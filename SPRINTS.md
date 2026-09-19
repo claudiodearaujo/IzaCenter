@@ -1,4 +1,4 @@
-# Sprints — IzaCenter (Itens Faltantes)
+# Sprints — Therapist Platform (Itens Faltantes)
 
 > Data de referência: 26/02/2026
 > Baseado na auditoria do código-fonte real. Cada item foi verificado diretamente nos arquivos do projeto.
@@ -75,7 +75,7 @@
 
 - [ ] Criar `POST /contact` público (sem autenticação)
 - [ ] Body: `{ name, email, subject, message }` — validar com express-validator ou schema Zod
-- [ ] Usar `sendEmail()` (já existente no projeto) para encaminhar a mensagem para o e-mail da Izabela
+- [ ] Usar `sendEmail()` (já existente no projeto) para encaminhar a mensagem para o e-mail do profissional
 - [ ] Responder com rate limiting básico (evitar spam) — usar o middleware de rate limit já presente no projeto
 - [ ] Registrar a rota em `backend/src/modules/index.ts`
 
@@ -179,7 +179,7 @@
   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
   - `REDIS_URL` (URL do Redis em produção)
   - `JWT_SECRET` (secret forte, gerado aleatoriamente)
-  - `FRONTEND_URL` (domínio de produção: `https://www.izabelatarot.com.br`)
+  - `FRONTEND_URL` (domínio de produção: `https://www.example.com`)
 - [ ] Verificar que o pipeline de CI/CD usa os secrets corretamente (sem fallback para valores de dev)
 
 **Critério de aceite:** Deploy via `git push main` completa sem erros e a aplicação sobe com variáveis de produção.
@@ -202,20 +202,20 @@
 - [ ] Configurar conta SendGrid (ou outro provedor SMTP transacional)
 - [ ] Verificar domínio remetente (SPF, DKIM, DMARC) para evitar spam
 - [ ] Testar envio de e-mails de confirmação de pedido, agendamento e contato em produção
-- [ ] Configurar endereço `izabela.ayurvida@gmail.com` como destinatário dos e-mails de contato
+- [ ] Configurar endereço `contato@example.com` como destinatário dos e-mails de contato
 
 **Critério de aceite:** E-mails transacionais chegam na caixa de entrada (não spam) com remetente verificado.
 
 ---
 
 #### 4.4 — Domínio e SSL
-- [ ] Apontar DNS de `izabelatarot.com.br` para o serviço frontend no Render
-- [ ] Configurar `www.izabelatarot.com.br` com redirecionamento de `izabelatarot.com.br` → `www`
+- [ ] Apontar DNS de `example.com` para o serviço frontend no Render
+- [ ] Configurar `www.example.com` com redirecionamento de `example.com` → `www`
 - [ ] Validar certificado SSL automático do Render
 - [ ] Atualizar `FRONTEND_URL` no backend para o domínio de produção
-- [ ] Configurar webhook do Stripe para o domínio de produção (`https://api.izabelatarot.com.br/webhooks/stripe`)
+- [ ] Configurar webhook do Stripe para o domínio de produção (`https://api.example.com/webhooks/stripe`)
 
-**Critério de aceite:** `https://www.izabelatarot.com.br` carrega com cadeado verde. Pagamentos Stripe disparam webhook corretamente em produção.
+**Critério de aceite:** `https://www.example.com` carrega com cadeado verde. Pagamentos Stripe disparam webhook corretamente em produção.
 
 ---
 

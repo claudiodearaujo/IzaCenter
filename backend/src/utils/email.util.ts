@@ -49,7 +49,7 @@ function emailLayout(content: string): string {
   return `
     <div style="font-family: 'Cormorant Garamond', Georgia, serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #f8f5f0;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #c9a7eb; font-size: 32px; margin-bottom: 10px;">✨ Izabela Tarot ✨</h1>
+        <h1 style="color: #c9a7eb; font-size: 32px; margin-bottom: 10px;">✨ Therapist Platform ✨</h1>
       </div>
       
       <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 30px; border: 1px solid rgba(201, 167, 235, 0.2);">
@@ -57,7 +57,7 @@ function emailLayout(content: string): string {
       </div>
       
       <div style="text-align: center; margin-top: 30px; font-size: 12px; color: #888;">
-        <p>Izabela Tarot - Tarot Cigano Online</p>
+        <p>Therapist Platform - Tarot Cigano Online</p>
         <p>© ${new Date().getFullYear()} Todos os direitos reservados</p>
       </div>
     </div>
@@ -79,7 +79,7 @@ function emailSignature(): string {
   return `
     <p style="line-height: 1.8; color: #f8f5f0;">
       Com carinho e luz,<br>
-      <strong style="color: #c9a7eb;">Izabela Santos</strong>
+      <strong style="color: #c9a7eb;">Profissional</strong>
     </p>
   `;
 }
@@ -93,7 +93,7 @@ export const emailTemplates = {
    */
   welcome(name: string): { subject: string; html: string } {
     return {
-      subject: 'Bem-vinda ao Izabela Tarot! ✨',
+      subject: 'Bem-vinda ao Therapist Platform! ✨',
       html: emailLayout(`
         <h2 style="color: #c9a7eb; margin-bottom: 20px;">Olá, ${name}!</h2>
         
@@ -117,7 +117,7 @@ export const emailTemplates = {
    */
   passwordReset(name: string, resetUrl: string): { subject: string; html: string } {
     return {
-      subject: 'Redefinição de Senha - Izabela Tarot',
+      subject: 'Redefinição de Senha - Therapist Platform',
       html: emailLayout(`
         <h2 style="color: #c9a7eb; margin-bottom: 20px;">Olá, ${name}!</h2>
         
@@ -161,7 +161,7 @@ export const emailTemplates = {
       .join('');
 
     return {
-      subject: `Pedido Confirmado #${orderNumber} - Izabela Tarot`,
+      subject: `Pedido Confirmado #${orderNumber} - Therapist Platform`,
       html: emailLayout(`
         <h2 style="color: #c9a7eb; margin-bottom: 20px;">Pedido Confirmado! 🎉</h2>
         
@@ -203,7 +203,7 @@ export const emailTemplates = {
    */
   readingPublished(name: string, readingTitle: string): { subject: string; html: string } {
     return {
-      subject: `Sua Leitura está Pronta! ✨ - Izabela Tarot`,
+      subject: `Sua Leitura está Pronta! ✨ - Therapist Platform`,
       html: emailLayout(`
         <h2 style="color: #c9a7eb; margin-bottom: 20px;">Sua Leitura está Pronta! 🌙</h2>
         
@@ -237,7 +237,7 @@ export const emailTemplates = {
     endTime: string
   ): { subject: string; html: string } {
     return {
-      subject: 'Agendamento Confirmado - Izabela Tarot',
+      subject: 'Agendamento Confirmado - Therapist Platform',
       html: emailLayout(`
         <h2 style="color: #c9a7eb; margin-bottom: 20px;">Agendamento Confirmado! 📅</h2>
         
@@ -270,7 +270,7 @@ export const emailTemplates = {
     reason?: string
   ): { subject: string; html: string } {
     return {
-      subject: 'Agendamento Cancelado - Izabela Tarot',
+      subject: 'Agendamento Cancelado - Therapist Platform',
       html: emailLayout(`
         <h2 style="color: #c9a7eb; margin-bottom: 20px;">Agendamento Cancelado</h2>
         
@@ -302,7 +302,7 @@ export const emailTemplates = {
     orderNumber: string
   ): { subject: string; html: string } {
     return {
-      subject: `Reembolso Processado - Pedido #${orderNumber} - Izabela Tarot`,
+      subject: `Reembolso Processado - Pedido #${orderNumber} - Therapist Platform`,
       html: emailLayout(`
         <h2 style="color: #c9a7eb; margin-bottom: 20px;">Reembolso Processado ↩️</h2>
         

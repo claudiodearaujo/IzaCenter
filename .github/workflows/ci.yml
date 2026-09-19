@@ -13,6 +13,10 @@ jobs:
   backend:
     name: Backend CI
     runs-on: ubuntu-latest
+    env:
+      # Prisma validates DATABASE_URL while loading prisma.config.ts, even for client generation.
+      # This is a CI-only placeholder; unit tests must not depend on a real database.
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/therapist_platform_test
     defaults:
       run:
         working-directory: backend

@@ -14,9 +14,9 @@ export class FooterComponent {
   currentYear = new Date().getFullYear();
 
   socialLinks = [
-    { icon: 'pi-instagram', url: 'https://instagram.com/izabela.tarot', label: 'Instagram' },
+    { icon: 'pi-instagram', url: 'https://instagram.com/profissional.tarot', label: 'Instagram' },
     { icon: 'pi-whatsapp', url: 'https://wa.me/5531999999999', label: 'WhatsApp' },
-    { icon: 'pi-envelope', url: 'mailto:izabela.ayurvida@gmail.com', label: 'Email' }
+    { icon: 'pi-envelope', url: 'mailto:contato@example.com', label: 'Email' }
   ];
 
   quickLinks = [

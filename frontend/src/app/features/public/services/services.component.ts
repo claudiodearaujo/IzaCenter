@@ -19,8 +19,8 @@ export class ServicesComponent implements OnInit {
   ngOnInit(): void {
     this.seoService.setMeta({
       title: 'Serviços de Tarot',
-      description: 'Conheça os serviços de leitura de tarot e baralho cigano oferecidos por Izabela Santos: leitura por perguntas, sessões ao vivo, leitura mensal e especial.',
-      url: 'https://www.izabelatarot.com.br/servicos'
+      description: 'Conheça os serviços de leitura de tarot e baralho cigano oferecidos por Profissional: leitura por perguntas, sessões ao vivo, leitura mensal e especial.',
+      url: 'https://www.example.com/servicos'
     });
 
     this.seoService.setSchema([

@@ -78,7 +78,7 @@
       "title": "Descubre tu camino con el Tarot",
       "subtitle": "Orientación, claridad y acogida a través de las cartas",
       "cta": "Agendar Consulta",
-      "meetAbout": "Conoce a Izabela"
+      "meetAbout": "Conoce a Profissional"
     },
     "services": {
       "title": "Servicios",
@@ -1062,7 +1062,7 @@
     "passwordMismatch": "Las contraseñas no coinciden"
   },
   "about": {
-    "title": "Acerca de Izabela Santos",
+    "title": "Acerca de Profissional",
     "subtitle": "Tarotista, terapeuta integrativa y estudiante de psicología analítica junguiana.",
     "journey": {
       "title": "Mi Camino",
@@ -1225,9 +1225,9 @@
     "title": "Testimonios",
     "subtitle": "Mira lo que mis clientes dicen sobre las lecturas.",
     "items": {
-      "item1": "La lectura de Izabela fue transformadora. Me ayudó a entender mejor mi momento profesional y tomar decisiones importantes.",
+      "item1": "La lectura do profissional fue transformadora. Me ayudó a entender mejor mi momento profesional y tomar decisiones importantes.",
       "item2": "Claridad y acogida en cada palabra. Lo recomiendo mucho para quien busca orientación verdadera.",
-      "item3": "Encontré orientación y paz. Izabela tiene un don especial para interpretar las cartas.",
+      "item3": "Encontré orientación y paz. Profissional tiene un don especial para interpretar las cartas.",
       "item4": "Hice mi primera lectura y quedé impresionada con la precisión. ¡Volveré con seguridad!",
       "item5": "La sesión online fue increíble. Me sentí muy acogida y recibí orientaciones valiosas.",
       "item6": "La lectura mensual me ayuda a planificar mi mes con más conciencia. ¡Super recomiendo!"
@@ -1249,11 +1249,11 @@
     "sections": {
       "introduction": {
         "title": "1. Introducción",
-        "content": "Bienvenido a IzaCenter. Al usar nuestros servicios, aceptas estos Términos de Uso."
+        "content": "Bienvenido a Therapist Platform. Al usar nuestros servicios, aceptas estos Términos de Uso."
       },
       "services": {
         "title": "2. Servicios",
-        "content": "IzaCenter ofrece los siguientes servicios:",
+        "content": "Therapist Platform ofrece los siguientes servicios:",
         "item1": "Lecturas de tarot por preguntas (entrega digital)",
         "item2": "Sesiones en vivo de tarot y baraja gitana",
         "item3": "Lecturas mensuales con seguimiento",
@@ -1274,7 +1274,7 @@
       },
       "intellectualProperty": {
         "title": "5. Propiedad Intelectual",
-        "content": "Todo el contenido de la plataforma es propiedad de IzaCenter y está protegido por derechos de autor."
+        "content": "Todo el contenido de la plataforma es propiedad de Therapist Platform y está protegido por derechos de autor."
       },
       "liability": {
         "title": "6. Limitación de Responsabilidad",
@@ -1298,7 +1298,7 @@
     "sections": {
       "introduction": {
         "title": "1. Introducción",
-        "content": "Esta Política de Privacidad describe cómo IzaCenter recopila, usa y protege tu información personal conforme a la LGPD brasileña."
+        "content": "Esta Política de Privacidad describe cómo Therapist Platform recopila, usa y protege tu información personal conforme a la LGPD brasileña."
       },
       "dataCollected": {
         "title": "2. Datos Recopilados",

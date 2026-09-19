@@ -7,10 +7,10 @@
   - banner [ref=e6]:
     - navigation [ref=e7]:
       - generic [ref=e8]:
-        - link "✨ Izabela Tarot" [ref=e9] [cursor=pointer]:
+        - link "✨ Therapist Platform" [ref=e9] [cursor=pointer]:
           - /url: /
           - generic [ref=e10]: ✨
-          - generic [ref=e11]: Izabela Tarot
+          - generic [ref=e11]: Therapist Platform
         - generic [ref=e12]:
           - link "Início" [ref=e13] [cursor=pointer]:
             - /url: /
@@ -46,16 +46,16 @@
               - button " Ver Serviços" [ref=e37]:
                 - generic [ref=e38]: 
                 - generic [ref=e39]: Ver Serviços
-            - link "Conheça a Izabela" [ref=e40] [cursor=pointer]:
+            - link "Conheça a Profissional" [ref=e40] [cursor=pointer]:
               - /url: /sobre
-              - button "Conheça a Izabela" [ref=e42]:
-                - generic [ref=e43]: Conheça a Izabela
+              - button "Conheça a Profissional" [ref=e42]:
+                - generic [ref=e43]: Conheça a Profissional
         - generic [ref=e45]: 
       - generic [ref=e48]:
-        - img "Izabela Santos" [ref=e51]
+        - img "Profissional" [ref=e51]
         - generic [ref=e53]:
           - text: Sobre Mim
-          - heading "Olá, eu sou a Izabela Santos" [level=2] [ref=e54]
+          - heading "Olá, eu sou a Profissional" [level=2] [ref=e54]
           - paragraph [ref=e55]: Taróloga e estudante de Psicologia Analítica Junguiana, com formação em Administração de Empresas e Terapias Integrativas Naturais.
           - paragraph [ref=e56]: Utilizo o baralho cigano Lenormand (36 cartas) para oferecer orientação em áreas como profissional, saúde e relacionamentos.
           - generic [ref=e57]:
@@ -104,7 +104,7 @@
         - generic [ref=e94]:
           - generic [ref=e96]:
             - img [ref=e98]
-            - paragraph [ref=e100]: "\"A leitura da Izabela foi transformadora. Me ajudou a entender melhor meu momento profissional.\""
+            - paragraph [ref=e100]: "\"A leitura do profissional foi transformadora. Me ajudou a entender melhor meu momento profissional.\""
             - generic [ref=e101]:
               - generic [ref=e102]: 
               - generic [ref=e103]: 
@@ -132,7 +132,7 @@
                 - paragraph [ref=e128]: Cliente
           - generic [ref=e130]:
             - img [ref=e132]
-            - paragraph [ref=e134]: "\"Encontrei orientação e paz. A Izabela tem um dom especial.\""
+            - paragraph [ref=e134]: "\"Encontrei orientação e paz. A Profissional tem um dom especial.\""
             - generic [ref=e135]:
               - generic [ref=e136]: 
               - generic [ref=e137]: 
@@ -162,17 +162,17 @@
         - generic [ref=e164]:
           - generic [ref=e165]:
             - generic [ref=e166]: ✨
-            - generic [ref=e167]: Izabela Tarot
+            - generic [ref=e167]: Therapist Platform
           - paragraph [ref=e168]: Leituras de tarot terapêutico para orientação em sua jornada de autoconhecimento e crescimento pessoal.
           - generic [ref=e169]:
             - link "Instagram" [ref=e170] [cursor=pointer]:
-              - /url: https://instagram.com/izabela.tarot
+              - /url: https://instagram.com/profissional.tarot
               - generic [ref=e171]: 
             - link "WhatsApp" [ref=e172] [cursor=pointer]:
               - /url: https://wa.me/5531999999999
               - generic [ref=e173]: 
             - link "Email" [ref=e174] [cursor=pointer]:
-              - /url: mailto:izabela.ayurvida@gmail.com
+              - /url: mailto:contato@example.com
               - generic [ref=e175]: 
         - generic [ref=e176]:
           - heading "Links Rápidos" [level=3] [ref=e177]
@@ -212,11 +212,11 @@
               - text: Belo Horizonte, MG
             - paragraph [ref=e203]:
               - generic [ref=e204]: 
-              - text: izabela.ayurvida@gmail.com
+              - text: contato@example.com
             - paragraph [ref=e205]:
               - generic [ref=e206]: 
               - text: "Seg - Sex: 9h às 18h"
       - generic [ref=e207]:
-        - paragraph [ref=e208]: © 2026 Izabela Tarot. Todos os direitos reservados.
+        - paragraph [ref=e208]: © 2026 Therapist Platform. Todos os direitos reservados.
         - paragraph [ref=e209]: Tarot é uma ferramenta de autoconhecimento e não substitui orientação médica ou psicológica profissional.
 ```

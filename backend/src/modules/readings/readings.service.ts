@@ -222,13 +222,13 @@ export class ReadingsService {
       if (reading.client.email) {
         await sendEmail({
           to: reading.client.email,
-          subject: 'Sua Leitura está Pronta! - Izabela Tarot',
+          subject: 'Sua Leitura está Pronta! - Therapist Platform',
           html: `
             <div style="font-family: Arial, sans-serif; padding: 20px;">
               <h2>Olá, ${reading.client.fullName}!</h2>
               <p>Sua leitura "${reading.title || 'Leitura de Tarot'}" está pronta!</p>
               <p>Acesse sua área de cliente para visualizar todos os detalhes.</p>
-              <p>Com carinho,<br>Izabela Tarot</p>
+              <p>Com carinho,<br>Therapist Platform</p>
             </div>
           `,
         });

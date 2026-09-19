@@ -1,4 +1,4 @@
-# Angular Component Guidelines - IzaCenter
+# Angular Component Guidelines - Therapist Platform
 
 ## Regra: Componentes NÃO Devem Usar Templates ou Estilos Inline
 

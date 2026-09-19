@@ -6,12 +6,12 @@ const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'IzaCenter — Izabela Tarot API',
+      title: 'Therapist Platform — Therapist Platform API',
       version: '1.0.0',
       description:
-        'REST API for the IzaCenter platform — Tarot readings, appointments, e-commerce and admin management.',
+        'REST API for the Therapist Platform platform — Tarot readings, appointments, e-commerce and admin management.',
       contact: {
-        name: 'Izabela Tarot',
+        name: 'Therapist Platform',
       },
     },
     servers: [
