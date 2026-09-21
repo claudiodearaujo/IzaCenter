@@ -1,6 +1,6 @@
-# Therapist Platform — Therapist Platform
+# Therapist Platform
 
-Plataforma web completa para serviços de Tarot Cigano com e-commerce, área do cliente e painel administrativo.
+Plataforma web para profissionais de atendimento gerenciarem presença digital, serviços, clientes, agenda, pedidos e conteúdo. O projeto está em migração incremental de um domínio originalmente especializado em Tarot para um core genérico e configurável.
 
 ## Stack
 
@@ -10,6 +10,14 @@ Plataforma web completa para serviços de Tarot Cigano com e-commerce, área do 
 - **Storage:** Supabase Storage (imagens e mídia)
 - **E-mail:** Nodemailer (SMTP)
 - **Cache:** Redis (opcional em dev, obrigatório em produção)
+
+## Productização
+
+A direção arquitetural atual é: `Professional → Specialty → Service → Client → Appointment/Delivery → Order/Payment → Content`.
+
+- [Productization roadmap](docs/PRODUCTIZATION.md)
+- [PRD — Generic Domain v1](docs/PRD-GENERIC-DOMAIN.md)
+- `Reading` e `CiganoCard` permanecem temporariamente como módulos legados até a migração estrutural.
 
 ## Funcionalidades
 

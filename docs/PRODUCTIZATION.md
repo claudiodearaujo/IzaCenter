@@ -4,7 +4,7 @@
 
 Transformar a implementação originalmente criada para uma profissional específica em uma plataforma reutilizável para terapeutas e profissionais de atendimento.
 
-## Fase 1 — Despersonalização
+## Fase 1 — Despersonalização ✅ concluída
 
 - remover nomes, e-mails, domínios e assets pessoais;
 - substituir a identidade antiga por defaults técnicos neutros;
@@ -12,7 +12,9 @@ Transformar a implementação originalmente criada para uma profissional especí
 - retirar arquivos de ambiente com segredos do versionamento;
 - preservar apenas exemplos seguros de configuração.
 
-## Fase 2 — Generalização de domínio
+## Fase 2 — Generalização de domínio 🟡 em andamento
+
+PRD ativo: [PRD-GENERIC-DOMAIN.md](PRD-GENERIC-DOMAIN.md).
 
 O sistema ainda possui conceitos específicos de Tarot/Baralho Cigano. Eles deverão se tornar configuração de especialidade, serviço e conteúdo, e não regras fixas do core.
 

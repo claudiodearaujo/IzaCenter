@@ -80,6 +80,72 @@
               </div>
             </div>
 
+            <!-- Generic professional domain -->
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Perfil profissional</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Nome público</label>
+                  <input pInputText [(ngModel)]="professionalSettings.displayName" class="w-full" placeholder="Nome do profissional" />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Título profissional</label>
+                  <input pInputText [(ngModel)]="professionalSettings.professionalTitle" class="w-full" placeholder="Terapeuta, facilitador, consultor..." />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Modalidade</label>
+                  <select [(ngModel)]="professionalSettings.serviceMode" class="w-full p-3 rounded border border-white/10 bg-dark/20 text-primary">
+                    <option value="ONLINE">Online</option>
+                    <option value="IN_PERSON">Presencial</option>
+                    <option value="HYBRID">Híbrido</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Localização</label>
+                  <input pInputText [(ngModel)]="professionalSettings.location" class="w-full" placeholder="Cidade / região" />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Idiomas</label>
+                  <input pInputText [(ngModel)]="languagesText" class="w-full" placeholder="pt-BR, en" />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Credenciais</label>
+                  <textarea pInputTextarea [(ngModel)]="credentialsText" [rows]="2" class="w-full" placeholder="Uma credencial por linha"></textarea>
+                </div>
+              </div>
+              <div class="mt-4">
+                <label class="block text-secondary text-sm mb-2">Biografia</label>
+                <textarea pInputTextarea [(ngModel)]="professionalSettings.bio" [rows]="4" class="w-full" placeholder="Apresentação profissional"></textarea>
+              </div>
+            </div>
+
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Especialidades e SEO</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Especialidades</label>
+                  <textarea pInputTextarea [(ngModel)]="specialtiesText" [rows]="4" class="w-full" placeholder="Uma especialidade por linha"></textarea>
+                  <p class="text-secondary/60 text-xs mt-1">Tarot pode existir aqui como especialidade opcional, sem fazer parte do core.</p>
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Título SEO</label>
+                  <input pInputText [(ngModel)]="seoSettings.metaTitle" class="w-full" />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Descrição SEO</label>
+                  <textarea pInputTextarea [(ngModel)]="seoSettings.metaDescription" [rows]="2" class="w-full"></textarea>
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Palavras-chave SEO</label>
+                  <input pInputText [(ngModel)]="seoKeywordsText" class="w-full" placeholder="atendimento, serviços, profissional" />
+                </div>
+                <button pButton class="btn-primary" [loading]="saving()" (click)="saveDomainSettings()">
+                  <i class="pi pi-save mr-2"></i>
+                  Salvar perfil e domínio
+                </button>
+              </div>
+            </div>
+
             <!-- Logo & Favicon -->
             <div class="glass-card p-6">
               <h3 class="heading-3 text-primary mb-4">{{ 'admin.settings.logoFavicon' | translate }}</h3>

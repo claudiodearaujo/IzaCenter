@@ -189,6 +189,42 @@ describe('SettingsService', () => {
   });
 
   // =============================================
+  // GENERIC PROFESSIONAL DOMAIN
+  // =============================================
+  describe('generic professional domain', () => {
+    it('should return neutral professional defaults', async () => {
+      prismaMock.siteSetting.findUnique.mockResolvedValue(null);
+
+      const result = await settingsService.getProfessional();
+
+      expect(result.data.displayName).toBe('Profissional');
+      expect(result.data.serviceMode).toBe('ONLINE');
+      expect(result.data.languages).toContain('pt-BR');
+    });
+
+    it('should persist specialties', async () => {
+      prismaMock.siteSetting.upsert.mockResolvedValue({} as any);
+      const specialties = [{ slug: 'reiki', name: 'Reiki', isActive: true, usesCardModule: false }];
+
+      const result = await settingsService.updateSpecialties(specialties);
+
+      expect(result.data).toEqual(specialties);
+      expect(prismaMock.siteSetting.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { key: 'specialties' } })
+      );
+    });
+
+    it('should return neutral SEO defaults', async () => {
+      prismaMock.siteSetting.findUnique.mockResolvedValue(null);
+
+      const result = await settingsService.getSeo();
+
+      expect(result.data.metaTitle).toBe('Therapist Platform');
+      expect(result.data.metaDescription).not.toMatch(/tarot/i);
+    });
+  });
+
+  // =============================================
   // GET ANALYTICS
   // =============================================
   describe('getAnalytics', () => {
@@ -219,6 +255,9 @@ describe('SettingsService', () => {
         .mockResolvedValueOnce({ key: 'contact', value: { email: 'test@test.com' } } as any)
         .mockResolvedValueOnce({ key: 'businessHours', value: [] } as any)
         .mockResolvedValueOnce({ key: 'content', value: { heroTitle: 'Hello' } } as any)
+        .mockResolvedValueOnce({ key: 'professional', value: { displayName: 'Profissional' } } as any)
+        .mockResolvedValueOnce({ key: 'specialties', value: [] } as any)
+        .mockResolvedValueOnce({ key: 'seo', value: { metaTitle: 'Profissional' } } as any)
         .mockResolvedValueOnce({ key: 'analytics', value: { enableAnalytics: false } } as any);
 
       // Act
@@ -240,7 +279,10 @@ describe('SettingsService', () => {
       prismaMock.siteSetting.findUnique
         .mockResolvedValueOnce({ key: 'general', value: { siteName: 'Therapist Platform', enableShop: true } } as any)
         .mockResolvedValueOnce({ key: 'contact', value: { email: 'contato@profissional.com', instagram: '@profissional' } } as any)
-        .mockResolvedValueOnce({ key: 'content', value: { heroTitle: 'Bem-vindo' } } as any);
+        .mockResolvedValueOnce({ key: 'content', value: { heroTitle: 'Bem-vindo' } } as any)
+        .mockResolvedValueOnce({ key: 'professional', value: { displayName: 'Profissional', serviceMode: 'ONLINE' } } as any)
+        .mockResolvedValueOnce({ key: 'specialties', value: [{ slug: 'reiki', name: 'Reiki', isActive: true, usesCardModule: false }] } as any)
+        .mockResolvedValueOnce({ key: 'seo', value: { metaTitle: 'Profissional', metaDescription: 'Atendimentos', keywords: [] } } as any);
 
       // Act
       const result = await settingsService.getPublic();
