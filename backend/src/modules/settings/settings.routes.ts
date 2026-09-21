@@ -213,6 +213,51 @@ router.put(
 );
 
 /**
+ * Generic professional domain settings.
+ */
+router.get(
+  '/admin/settings/professional',
+  authenticate,
+  requireAdmin,
+  settingsController.getProfessional.bind(settingsController)
+);
+
+router.put(
+  '/admin/settings/professional',
+  authenticate,
+  requireAdmin,
+  settingsController.updateProfessional.bind(settingsController)
+);
+
+router.get(
+  '/admin/settings/specialties',
+  authenticate,
+  requireAdmin,
+  settingsController.getSpecialties.bind(settingsController)
+);
+
+router.put(
+  '/admin/settings/specialties',
+  authenticate,
+  requireAdmin,
+  settingsController.updateSpecialties.bind(settingsController)
+);
+
+router.get(
+  '/admin/settings/seo',
+  authenticate,
+  requireAdmin,
+  settingsController.getSeo.bind(settingsController)
+);
+
+router.put(
+  '/admin/settings/seo',
+  authenticate,
+  requireAdmin,
+  settingsController.updateSeo.bind(settingsController)
+);
+
+/**
  * @openapi
  * /admin/settings/analytics:
  *   get:

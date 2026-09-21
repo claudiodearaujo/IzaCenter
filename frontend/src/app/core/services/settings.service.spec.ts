@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { SettingsService, GeneralSettings, ContactSettings, ContentSettings } from './settings.service';
+import { SettingsService, GeneralSettings, ContactSettings, ContentSettings, ProfessionalSettings, SpecialtySettings } from './settings.service';
 
 describe('SettingsService', () => {
   let service: SettingsService;
@@ -20,7 +20,7 @@ describe('SettingsService', () => {
     email: 'contato@profissional.com',
     phone: '31999999999',
     whatsapp: '31999999999',
-    instagram: 'profissional.tarot',
+    instagram: 'profissional',
   };
 
   const mockContentSettings: ContentSettings = {
@@ -56,7 +56,7 @@ describe('SettingsService', () => {
       const mockResponse = {
         data: {
           siteName: 'Therapist Platform',
-          siteDescription: 'Tarô e Ayurveda',
+          siteDescription: 'Serviços e atendimentos profissionais',
           enableShop: true,
           enableAppointments: true,
           enableTestimonials: true,
@@ -97,6 +97,40 @@ describe('SettingsService', () => {
       const req = httpMock.expectOne('/api/admin/settings');
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
+    });
+  });
+
+  describe('generic domain settings', () => {
+    it('should update professional settings', () => {
+      const data: ProfessionalSettings = {
+        displayName: 'Profissional',
+        professionalTitle: 'Terapeuta integrativo',
+        languages: ['pt-BR'],
+        serviceMode: 'ONLINE',
+        credentials: [],
+      };
+
+      service.updateProfessional(data).subscribe(response => {
+        expect(response.data.professionalTitle).toBe('Terapeuta integrativo');
+      });
+
+      const req = httpMock.expectOne('/api/admin/settings/professional');
+      expect(req.request.method).toBe('PUT');
+      req.flush({ data, success: true });
+    });
+
+    it('should update specialties', () => {
+      const data: SpecialtySettings[] = [
+        { slug: 'reiki', name: 'Reiki', isActive: true, usesCardModule: false },
+      ];
+
+      service.updateSpecialties(data).subscribe(response => {
+        expect(response.data[0].slug).toBe('reiki');
+      });
+
+      const req = httpMock.expectOne('/api/admin/settings/specialties');
+      expect(req.request.method).toBe('PUT');
+      req.flush({ data, success: true });
     });
   });
 

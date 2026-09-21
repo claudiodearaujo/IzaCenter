@@ -52,6 +52,32 @@ export interface ContentSettings {
   termsOfService?: string;
 }
 
+export interface ProfessionalSettings {
+  displayName: string;
+  professionalTitle: string;
+  bio?: string;
+  photoUrl?: string;
+  languages: string[];
+  serviceMode: 'ONLINE' | 'IN_PERSON' | 'HYBRID';
+  location?: string;
+  credentials: string[];
+}
+
+export interface SpecialtySettings {
+  slug: string;
+  name: string;
+  description?: string;
+  isActive: boolean;
+  usesCardModule: boolean;
+  disclaimer?: string;
+}
+
+export interface SeoSettings {
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string[];
+}
+
 export interface AnalyticsSettings {
   googleAnalyticsId?: string;
   facebookPixelId?: string;
@@ -64,6 +90,9 @@ export interface AllSettings {
   contact: ContactSettings;
   businessHours: BusinessHour[];
   content: ContentSettings;
+  professional: ProfessionalSettings;
+  specialties: SpecialtySettings[];
+  seo: SeoSettings;
   analytics: AnalyticsSettings;
 }
 
@@ -85,6 +114,9 @@ export interface PublicSettings {
   heroTitle: string;
   heroSubtitle: string;
   footerText?: string;
+  professional: ProfessionalSettings;
+  specialties: SpecialtySettings[];
+  seo: SeoSettings;
 }
 
 @Injectable({
@@ -133,6 +165,30 @@ export class SettingsService {
 
   updateContent(data: Partial<ContentSettings>): Observable<ApiResponse<ContentSettings>> {
     return this.api.put<ApiResponse<ContentSettings>>('/admin/settings/content', data);
+  }
+
+  getProfessional(): Observable<ApiResponse<ProfessionalSettings>> {
+    return this.api.get<ApiResponse<ProfessionalSettings>>('/admin/settings/professional');
+  }
+
+  updateProfessional(data: Partial<ProfessionalSettings>): Observable<ApiResponse<ProfessionalSettings>> {
+    return this.api.put<ApiResponse<ProfessionalSettings>>('/admin/settings/professional', data);
+  }
+
+  getSpecialties(): Observable<ApiResponse<SpecialtySettings[]>> {
+    return this.api.get<ApiResponse<SpecialtySettings[]>>('/admin/settings/specialties');
+  }
+
+  updateSpecialties(data: SpecialtySettings[]): Observable<ApiResponse<SpecialtySettings[]>> {
+    return this.api.put<ApiResponse<SpecialtySettings[]>>('/admin/settings/specialties', data);
+  }
+
+  getSeo(): Observable<ApiResponse<SeoSettings>> {
+    return this.api.get<ApiResponse<SeoSettings>>('/admin/settings/seo');
+  }
+
+  updateSeo(data: Partial<SeoSettings>): Observable<ApiResponse<SeoSettings>> {
+    return this.api.put<ApiResponse<SeoSettings>>('/admin/settings/seo', data);
   }
 
   getAnalytics(): Observable<ApiResponse<AnalyticsSettings>> {

@@ -96,6 +96,60 @@ export class SettingsController {
     }
   }
 
+  async getProfessional(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await settingsService.getProfessional();
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateProfessional(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await settingsService.updateProfessional(req.body);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getSpecialties(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await settingsService.getSpecialties();
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateSpecialties(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await settingsService.updateSpecialties(req.body);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getSeo(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await settingsService.getSeo();
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateSeo(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await settingsService.updateSeo(req.body);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getAnalytics(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await settingsService.getAnalytics();

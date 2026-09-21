@@ -39,6 +39,32 @@ interface ContentSettings {
   footerText?: string;
 }
 
+interface ProfessionalSettings {
+  displayName: string;
+  professionalTitle: string;
+  bio?: string;
+  photoUrl?: string;
+  languages: string[];
+  serviceMode: 'ONLINE' | 'IN_PERSON' | 'HYBRID';
+  location?: string;
+  credentials: string[];
+}
+
+interface SpecialtySettings {
+  slug: string;
+  name: string;
+  description?: string;
+  isActive: boolean;
+  usesCardModule: boolean;
+  disclaimer?: string;
+}
+
+interface SeoSettings {
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string[];
+}
+
 interface AnalyticsSettings {
   googleAnalyticsId?: string;
   facebookPixelId?: string;
@@ -69,7 +95,7 @@ export class SettingsService {
     return {
       data: settings || {
         siteName: 'Therapist Platform',
-        siteDescription: 'Leituras de Tarot e Baralho Cigano',
+        siteDescription: 'Plataforma de serviços e atendimentos profissionais',
         enableShop: true,
         enableAppointments: true,
         enableTestimonials: true,
@@ -132,8 +158,8 @@ export class SettingsService {
 
     return {
       data: settings || {
-        heroTitle: 'Descubra seu caminho através das cartas',
-        heroSubtitle: 'Leituras personalizadas de Tarot e Baralho Cigano',
+        heroTitle: 'Atendimento profissional de forma simples e personalizada',
+        heroSubtitle: 'Conheça os serviços disponíveis e escolha a melhor forma de atendimento para você.',
       },
     };
   }
@@ -142,6 +168,62 @@ export class SettingsService {
     const current = (await this.getContent()).data;
     const updated = { ...current, ...data };
     await this.setSetting('content', updated);
+    return { data: updated };
+  }
+
+  // Professional Settings
+  async getProfessional(): Promise<{ data: ProfessionalSettings }> {
+    const settings = await this.getSetting('professional');
+
+    return {
+      data: settings || {
+        displayName: 'Profissional',
+        professionalTitle: 'Profissional de atendimento',
+        bio: '',
+        photoUrl: '',
+        languages: ['pt-BR'],
+        serviceMode: 'ONLINE',
+        location: '',
+        credentials: [],
+      },
+    };
+  }
+
+  async updateProfessional(data: Partial<ProfessionalSettings>): Promise<{ data: ProfessionalSettings }> {
+    const current = (await this.getProfessional()).data;
+    const updated = { ...current, ...data };
+    await this.setSetting('professional', updated);
+    return { data: updated };
+  }
+
+  // Specialty Settings
+  async getSpecialties(): Promise<{ data: SpecialtySettings[] }> {
+    const settings = await this.getSetting('specialties');
+    return { data: settings || [] };
+  }
+
+  async updateSpecialties(data: SpecialtySettings[]): Promise<{ data: SpecialtySettings[] }> {
+    await this.setSetting('specialties', data);
+    return { data };
+  }
+
+  // SEO Settings
+  async getSeo(): Promise<{ data: SeoSettings }> {
+    const settings = await this.getSetting('seo');
+
+    return {
+      data: settings || {
+        metaTitle: 'Therapist Platform',
+        metaDescription: 'Serviços e atendimentos profissionais em uma plataforma simples e segura.',
+        keywords: ['atendimento', 'serviços', 'profissional'],
+      },
+    };
+  }
+
+  async updateSeo(data: Partial<SeoSettings>): Promise<{ data: SeoSettings }> {
+    const current = (await this.getSeo()).data;
+    const updated = { ...current, ...data };
+    await this.setSetting('seo', updated);
     return { data: updated };
   }
 
@@ -165,11 +247,14 @@ export class SettingsService {
 
   // Get all settings at once
   async getAll() {
-    const [general, contact, businessHours, content, analytics] = await Promise.all([
+    const [general, contact, businessHours, content, professional, specialties, seo, analytics] = await Promise.all([
       this.getGeneral(),
       this.getContact(),
       this.getBusinessHours(),
       this.getContent(),
+      this.getProfessional(),
+      this.getSpecialties(),
+      this.getSeo(),
       this.getAnalytics(),
     ]);
 
@@ -179,6 +264,9 @@ export class SettingsService {
         contact: contact.data,
         businessHours: businessHours.data,
         content: content.data,
+        professional: professional.data,
+        specialties: specialties.data,
+        seo: seo.data,
         analytics: analytics.data,
       },
     };
@@ -186,10 +274,13 @@ export class SettingsService {
 
   // Get public settings (for frontend)
   async getPublic() {
-    const [general, contact, content] = await Promise.all([
+    const [general, contact, content, professional, specialties, seo] = await Promise.all([
       this.getGeneral(),
       this.getContact(),
       this.getContent(),
+      this.getProfessional(),
+      this.getSpecialties(),
+      this.getSeo(),
     ]);
 
     return {
@@ -211,6 +302,9 @@ export class SettingsService {
         heroTitle: content.data.heroTitle,
         heroSubtitle: content.data.heroSubtitle,
         footerText: content.data.footerText,
+        professional: professional.data,
+        specialties: specialties.data.filter((specialty) => specialty.isActive),
+        seo: seo.data,
       },
     };
   }

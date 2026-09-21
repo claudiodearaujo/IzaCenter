@@ -3,6 +3,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,6 +22,9 @@ import {
   BusinessHour,
   ContentSettings,
   AnalyticsSettings,
+  ProfessionalSettings,
+  SpecialtySettings,
+  SeoSettings,
 } from '../../../core/services/settings.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -108,7 +112,7 @@ export class SettingsComponent implements OnInit {
     workingDays: 'Segunda a Sexta',
     appointmentNotice: 24,
     homeHeroTitle: 'Therapist Platform',
-    homeHeroSubtitle: 'Orientação espiritual através do Tarot Cigano',
+    homeHeroSubtitle: 'Serviços e atendimentos personalizados em um só lugar',
     aboutText: '',
     privacyPolicy: '',
     termsOfService: '',
@@ -139,7 +143,7 @@ export class SettingsComponent implements OnInit {
 
   contentSettings: ContentSettings = {
     homeTitle: 'Therapist Platform',
-    homeSubtitle: 'Orientação espiritual através do Tarot Cigano',
+    homeSubtitle: 'Serviços e atendimentos personalizados em um só lugar',
     aboutText: '',
     privacyPolicy: '',
     termsOfService: '',
@@ -150,6 +154,29 @@ export class SettingsComponent implements OnInit {
     facebookPixelId: '',
     hotjarId: '',
   };
+
+  professionalSettings: ProfessionalSettings = {
+    displayName: 'Profissional',
+    professionalTitle: 'Profissional de atendimento',
+    bio: '',
+    photoUrl: '',
+    languages: ['pt-BR'],
+    serviceMode: 'ONLINE',
+    location: '',
+    credentials: [],
+  };
+
+  specialties: SpecialtySettings[] = [];
+  seoSettings: SeoSettings = {
+    metaTitle: 'Therapist Platform',
+    metaDescription: 'Serviços e atendimentos profissionais em uma plataforma simples e segura.',
+    keywords: ['atendimento', 'serviços', 'profissional'],
+  };
+
+  languagesText = 'pt-BR';
+  credentialsText = '';
+  specialtiesText = '';
+  seoKeywordsText = 'atendimento, serviços, profissional';
 
   logoPreview = signal<string | null>(null);
   faviconPreview = signal<string | null>(null);
@@ -168,7 +195,14 @@ export class SettingsComponent implements OnInit {
         this.contactSettings = data.contact || this.contactSettings;
         this.businessHours = data.businessHours || [];
         this.contentSettings = data.content || this.contentSettings;
+        this.professionalSettings = data.professional || this.professionalSettings;
+        this.specialties = data.specialties || [];
+        this.seoSettings = data.seo || this.seoSettings;
         this.analyticsSettings = data.analytics || this.analyticsSettings;
+        this.languagesText = this.professionalSettings.languages.join(', ');
+        this.credentialsText = this.professionalSettings.credentials.join('\n');
+        this.specialtiesText = this.specialties.map((specialty) => specialty.name).join('\n');
+        this.seoKeywordsText = this.seoSettings.keywords.join(', ');
         
         // Populate unified settings object
         this.settings = {
@@ -280,6 +314,65 @@ export class SettingsComponent implements OnInit {
         this.saving.set(false);
       },
     });
+  }
+
+  saveDomainSettings() {
+    this.saving.set(true);
+
+    this.professionalSettings = {
+      ...this.professionalSettings,
+      languages: this.parseList(this.languagesText),
+      credentials: this.parseList(this.credentialsText),
+    };
+
+    const existingByName = new Map(
+      this.specialties.map((specialty) => [specialty.name.toLowerCase(), specialty])
+    );
+    this.specialties = this.parseList(this.specialtiesText).map((name) => {
+      const existing = existingByName.get(name.toLowerCase());
+      return existing || {
+        slug: this.slugify(name),
+        name,
+        isActive: true,
+        usesCardModule: false,
+      };
+    });
+
+    this.seoSettings = {
+      ...this.seoSettings,
+      keywords: this.parseList(this.seoKeywordsText),
+    };
+
+    forkJoin([
+      this.settingsService.updateProfessional(this.professionalSettings),
+      this.settingsService.updateSpecialties(this.specialties),
+      this.settingsService.updateSeo(this.seoSettings),
+    ]).subscribe({
+      next: () => {
+        this.notification.success('Configuração profissional salva com sucesso.');
+        this.saving.set(false);
+      },
+      error: () => {
+        this.notification.error(this.translate.instant('admin.settings.errorSaving'));
+        this.saving.set(false);
+      },
+    });
+  }
+
+  private parseList(value: string): string[] {
+    return value
+      .split(/[\n,]/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  private slugify(value: string): string {
+    return value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
   }
 
   onLogoUpload(event: FileUploadHandlerEvent) {
