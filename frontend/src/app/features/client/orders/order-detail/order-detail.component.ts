@@ -19,7 +19,8 @@ interface OrderItem {
   product: {
     id: string;
     name: string;
-    type: string;
+    productType: string;
+    serviceKind?: string;
     coverImageUrl?: string;
   };
   reading?: {
@@ -165,14 +166,25 @@ export class OrderDetailComponent implements OnInit {
     return method ? labels[method] || method : this.translate.instant('client.orders.detail.paymentNotInformed');
   }
 
-  getProductTypeLabel(type: string): string {
+  getServiceKindLabel(kind?: string, legacyType?: string): string {
+    const resolvedKind = kind || this.serviceKindFromLegacy(legacyType);
     const labels: Record<string, string> = {
-      QUESTION: this.translate.instant('client.orders.detail.productTypeQuestion'),
-      SESSION: this.translate.instant('client.orders.detail.productTypeSession'),
-      MONTHLY: this.translate.instant('client.orders.detail.productTypeMonthly'),
-      SPECIAL: this.translate.instant('client.orders.detail.productTypeSpecial'),
+      SERVICE: 'Serviço',
+      SESSION: 'Sessão',
+      PACKAGE: 'Pacote',
+      ASYNC_SERVICE: 'Serviço assíncrono',
+      DIGITAL_PRODUCT: 'Produto digital',
     };
-    return labels[type] || type;
+    return labels[resolvedKind] || resolvedKind;
+  }
+
+  private serviceKindFromLegacy(type?: string): string {
+    switch (type) {
+      case 'SESSION': return 'SESSION';
+      case 'MONTHLY': return 'PACKAGE';
+      case 'QUESTION': return 'ASYNC_SERVICE';
+      default: return 'SERVICE';
+    }
   }
 
   formatDate(dateString: string): string {

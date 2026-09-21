@@ -1,5 +1,6 @@
 // apps/backend/src/modules/products/products.service.ts
 
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../config/database';
 import { storage } from '../../config/supabase';
 import { Errors } from '../../middlewares/error.middleware';
@@ -10,9 +11,96 @@ import {
   QueryProductsDto,
   CreateCategoryDto,
   UpdateCategoryDto,
+  ServiceCapabilities,
 } from './products.schema';
 
 export class ProductsService {
+  private legacyTypeFromServiceKind(serviceKind: string): 'QUESTION' | 'SESSION' | 'MONTHLY' | 'SPECIAL' {
+    switch (serviceKind) {
+      case 'SESSION':
+        return 'SESSION';
+      case 'PACKAGE':
+        return 'MONTHLY';
+      case 'ASYNC_SERVICE':
+        return 'QUESTION';
+      default:
+        return 'SPECIAL';
+    }
+  }
+
+  private serviceKindFromLegacy(productType?: string): string {
+    switch (productType) {
+      case 'SESSION':
+        return 'SESSION';
+      case 'MONTHLY':
+        return 'PACKAGE';
+      case 'QUESTION':
+        return 'ASYNC_SERVICE';
+      default:
+        return 'SERVICE';
+    }
+  }
+
+  private normalizeCapabilities(product: any): ServiceCapabilities {
+    const stored = (product.capabilities || {}) as ServiceCapabilities;
+    const durationMinutes = product.sessionDurationMinutes ?? stored.scheduling?.durationMinutes;
+    const maxQuestions = product.numQuestions ?? stored.intake?.maxQuestions;
+    const specialtyConfig = (stored.specialtyModule?.config || {}) as Record<string, unknown>;
+
+    const capabilities: ServiceCapabilities = {
+      ...stored,
+      scheduling: {
+        ...stored.scheduling,
+        enabled: product.requiresScheduling ?? stored.scheduling?.enabled ?? false,
+        ...(durationMinutes != null ? { durationMinutes } : {}),
+      },
+      intake: {
+        ...stored.intake,
+        enabled: product.numQuestions != null || stored.intake?.enabled === true,
+        ...(maxQuestions != null ? { maxQuestions } : {}),
+      },
+    };
+
+    if (product.numCards != null) {
+      capabilities.specialtyModule = {
+        key: stored.specialtyModule?.key || 'tarot-cards',
+        config: { ...specialtyConfig, numCards: product.numCards },
+      };
+    }
+
+    return capabilities;
+  }
+
+  private toServiceProduct(product: any) {
+    return {
+      ...product,
+      serviceKind: product.serviceKind || this.serviceKindFromLegacy(product.productType),
+      capabilities: this.normalizeCapabilities(product),
+    };
+  }
+
+  private buildPersistenceData(data: CreateProductDto | UpdateProductDto, existing?: any) {
+    const serviceKind = data.serviceKind || existing?.serviceKind || this.serviceKindFromLegacy(data.productType || existing?.productType);
+    const capabilities = data.capabilities || existing?.capabilities || {};
+    const scheduling = capabilities.scheduling;
+    const intake = capabilities.intake;
+    const specialtyModule = capabilities.specialtyModule;
+    const specialtyConfig = (specialtyModule?.config || {}) as Record<string, unknown>;
+
+    return {
+      ...data,
+      serviceKind,
+      productType: data.productType || existing?.productType || this.legacyTypeFromServiceKind(serviceKind),
+      capabilities,
+      requiresScheduling: scheduling?.enabled ?? data.requiresScheduling ?? existing?.requiresScheduling ?? false,
+      sessionDurationMinutes: scheduling?.durationMinutes ?? data.sessionDurationMinutes ?? existing?.sessionDurationMinutes,
+      numQuestions: intake?.maxQuestions ?? data.numQuestions ?? existing?.numQuestions,
+      numCards: typeof specialtyConfig['numCards'] === 'number'
+        ? specialtyConfig['numCards']
+        : data.numCards ?? existing?.numCards,
+    };
+  }
+
   // =============================================
   // PRODUCTS
   // =============================================
@@ -32,18 +120,20 @@ export class ProductsService {
       throw Errors.Conflict('Já existe um produto com este slug');
     }
 
+    const persistenceData = this.buildPersistenceData(data);
+
     const product = await prisma.product.create({
       data: {
-        ...data,
+        ...persistenceData,
         slug,
-      },
+      } as Prisma.ProductUncheckedCreateInput,
       include: {
         category: true,
         attachments: true,
       },
     });
 
-    return product;
+    return this.toServiceProduct(product);
   }
 
   /**
@@ -64,7 +154,7 @@ export class ProductsService {
       throw Errors.NotFound('Produto');
     }
 
-    return product;
+    return this.toServiceProduct(product);
   }
 
   /**
@@ -85,7 +175,7 @@ export class ProductsService {
       throw Errors.NotFound('Produto');
     }
 
-    return product;
+    return this.toServiceProduct(product);
   }
 
   /**
@@ -98,6 +188,7 @@ export class ProductsService {
       search,
       categoryId,
       productType,
+      serviceKind,
       isActive,
       isFeatured,
       minPrice,
@@ -141,6 +232,10 @@ export class ProductsService {
       where.productType = productType;
     }
 
+    if (serviceKind) {
+      where.serviceKind = serviceKind;
+    }
+
     if (typeof isActive === 'boolean') {
       where.isActive = isActive;
     }
@@ -171,7 +266,7 @@ export class ProductsService {
     ]);
 
     return {
-      data: products,
+      data: products.map((product) => this.toServiceProduct(product)),
       meta: buildPaginationMeta(page, limit, total),
     };
   }
@@ -180,7 +275,7 @@ export class ProductsService {
    * Get featured products
    */
   async getFeatured(limit: number = 6) {
-    return prisma.product.findMany({
+    const products = await prisma.product.findMany({
       where: {
         isActive: true,
         isFeatured: true,
@@ -193,6 +288,8 @@ export class ProductsService {
         },
       },
     });
+
+    return products.map((product) => this.toServiceProduct(product));
   }
 
   /**
@@ -232,7 +329,10 @@ export class ProductsService {
     const data = hasNextPage ? products.slice(0, limit) : products;
     const { nextCursor } = buildCursorMeta(data, limit);
 
-    return { data, meta: { hasNextPage, nextCursor } };
+    return {
+      data: data.map((product) => this.toServiceProduct(product)),
+      meta: { hasNextPage, nextCursor },
+    };
   }
 
   /**
@@ -255,16 +355,18 @@ export class ProductsService {
       }
     }
 
+    const persistenceData = this.buildPersistenceData(data, existing);
+
     const product = await prisma.product.update({
       where: { id },
-      data,
+      data: persistenceData as Prisma.ProductUncheckedUpdateInput,
       include: {
         category: true,
         attachments: true,
       },
     });
 
-    return product;
+    return this.toServiceProduct(product);
   }
 
   /**

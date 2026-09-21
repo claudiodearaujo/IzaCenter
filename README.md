@@ -17,6 +17,8 @@ A direção arquitetural atual é: `Professional → Specialty → Service → C
 
 - [Productization roadmap](docs/PRODUCTIZATION.md)
 - [PRD — Generic Domain v1](docs/PRD-GENERIC-DOMAIN.md)
+- [PRD — Service Domain v2](docs/PRD-SERVICE-DOMAIN-V2.md)
+- O catálogo usa `serviceKind` + `capabilities`; `ProductType` permanece apenas como compatibilidade transitória.
 - `Reading` e `CiganoCard` permanecem temporariamente como módulos legados até a migração estrutural.
 
 ## Funcionalidades

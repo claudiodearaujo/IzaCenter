@@ -57,14 +57,16 @@ export class AdminProductListComponent implements OnInit {
 
   searchTerm = '';
   selectedCategory: string | null = null;
+  selectedKind: string | null = null;
 
-  get typeOptions() {
+  get serviceKindOptions() {
     return [
-      { label: this.translate.instant('admin.products.allStatus'), value: null },
-      { label: this.translate.instant('admin.products.typeQuestion'), value: 'QUESTION' },
-      { label: this.translate.instant('admin.products.typeSession'), value: 'SESSION' },
-      { label: this.translate.instant('admin.products.typeMonthly'), value: 'MONTHLY' },
-      { label: this.translate.instant('admin.products.typeSpecial'), value: 'SPECIAL' },
+      { label: 'Todos os tipos', value: null },
+      { label: 'Serviço', value: 'SERVICE' },
+      { label: 'Sessão', value: 'SESSION' },
+      { label: 'Pacote / acompanhamento', value: 'PACKAGE' },
+      { label: 'Serviço assíncrono', value: 'ASYNC_SERVICE' },
+      { label: 'Produto digital', value: 'DIGITAL_PRODUCT' },
     ];
   }
 
@@ -97,7 +99,11 @@ export class AdminProductListComponent implements OnInit {
     }
 
     if (this.selectedCategory) {
-      params.category = this.selectedCategory;
+      params.categoryId = this.selectedCategory;
+    }
+
+    if (this.selectedKind) {
+      params.serviceKind = this.selectedKind;
     }
 
     this.productsService.findAllAdmin(params).subscribe({
@@ -172,23 +178,25 @@ export class AdminProductListComponent implements OnInit {
     });
   }
 
-  getTypeLabel(type: string): string {
+  getServiceKindLabel(kind: string): string {
     const labels: Record<string, string> = {
-      QUESTION: this.translate.instant('admin.products.typeQuestion'),
-      SESSION: this.translate.instant('admin.products.typeSession'),
-      MONTHLY: this.translate.instant('admin.products.typeMonthly'),
-      SPECIAL: this.translate.instant('admin.products.typeSpecial'),
+      SERVICE: 'Serviço',
+      SESSION: 'Sessão',
+      PACKAGE: 'Pacote',
+      ASYNC_SERVICE: 'Serviço assíncrono',
+      DIGITAL_PRODUCT: 'Produto digital',
     };
-    return labels[type] || type;
+    return labels[kind] || kind;
   }
 
-  getTypeSeverity(type: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-    const severities: Record<string, 'success' | 'info' | 'warn' | 'danger'> = {
-      QUESTION: 'info',
+  getServiceKindSeverity(kind: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
+    const severities: Record<string, 'success' | 'info' | 'warn' | 'danger' | 'secondary'> = {
+      SERVICE: 'info',
       SESSION: 'success',
-      MONTHLY: 'warn',
-      SPECIAL: 'danger',
+      PACKAGE: 'warn',
+      ASYNC_SERVICE: 'secondary',
+      DIGITAL_PRODUCT: 'danger',
     };
-    return severities[type] || 'info';
+    return severities[kind] || 'info';
   }
 }

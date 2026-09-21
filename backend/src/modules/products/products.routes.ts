@@ -38,10 +38,17 @@ const router = Router();
  *           type: string
  *         description: Filter by category ID
  *       - in: query
+ *         name: serviceKind
+ *         schema:
+ *           type: string
+ *         description: Preferred generic service filter, e.g. SERVICE, SESSION, PACKAGE
+ *       - in: query
  *         name: productType
+ *         deprecated: true
  *         schema:
  *           type: string
  *           enum: [QUESTION, SESSION, MONTHLY, SPECIAL]
+ *         description: Legacy compatibility filter
  *       - in: query
  *         name: minPrice
  *         schema:

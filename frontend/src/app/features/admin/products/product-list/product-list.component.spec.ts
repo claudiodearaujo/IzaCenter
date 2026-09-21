@@ -48,6 +48,8 @@ const mockProduct: Product = {
   name: 'Test Product',
   slug: 'test-product',
   productType: 'QUESTION',
+  serviceKind: 'ASYNC_SERVICE',
+  capabilities: { intake: { enabled: true, maxQuestions: 1 } },
   price: 150,
   isActive: true,
   isFeatured: false,
@@ -129,11 +131,11 @@ describe('AdminProductListComponent', () => {
     expect(component.loading()).toBeFalse();
   });
 
-  it('should return type options', () => {
-    const options = component.typeOptions;
-    expect(options.length).toBe(5);
+  it('should return service kind options', () => {
+    const options = component.serviceKindOptions;
+    expect(options.length).toBe(6);
     expect(options[0].value).toBeNull();
-    expect(options[1].value).toBe('QUESTION');
+    expect(options[1].value).toBe('SERVICE');
   });
 
   it('should handle error when loading products', fakeAsync(() => {

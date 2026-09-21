@@ -116,13 +116,14 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  getProductTypeLabel(type: string): string {
+  getServiceKindLabel(kind: string): string {
     const labels: Record<string, string> = {
-      'QUESTION': this.translate.instant('shop.checkout.typeQuestion'),
-      'SESSION': this.translate.instant('shop.checkout.typeSession'),
-      'MONTHLY': this.translate.instant('shop.checkout.typeMonthly'),
-      'SPECIAL': this.translate.instant('shop.checkout.typeSpecial'),
+      SERVICE: 'Serviço',
+      SESSION: 'Sessão',
+      PACKAGE: 'Pacote',
+      ASYNC_SERVICE: 'Serviço assíncrono',
+      DIGITAL_PRODUCT: 'Produto digital',
     };
-    return labels[type] || type;
+    return labels[kind] || kind;
   }
 }

@@ -92,7 +92,22 @@ const options: swaggerJsdoc.Options = {
             slug: { type: 'string' },
             shortDescription: { type: 'string', nullable: true },
             fullDescription: { type: 'string', nullable: true },
-            productType: { type: 'string', enum: ['QUESTION', 'SESSION', 'MONTHLY', 'SPECIAL'] },
+            productType: {
+              type: 'string',
+              enum: ['QUESTION', 'SESSION', 'MONTHLY', 'SPECIAL'],
+              deprecated: true,
+              description: 'Legacy compatibility field. Prefer serviceKind + capabilities.',
+            },
+            serviceKind: {
+              type: 'string',
+              example: 'SESSION',
+              description: 'Open service classification. Not a database enum.',
+            },
+            capabilities: {
+              type: 'object',
+              additionalProperties: true,
+              description: 'Composable service capabilities such as scheduling, intake, digitalDelivery and recurring.',
+            },
             price: { type: 'number', format: 'float' },
             originalPrice: { type: 'number', format: 'float', nullable: true },
             isActive: { type: 'boolean' },

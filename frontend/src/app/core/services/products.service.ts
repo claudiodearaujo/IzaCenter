@@ -3,6 +3,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService, PaginatedResponse, ApiResponse } from './api.service';
+import { ServiceCapabilities, ServiceKind } from '../models/product.model';
 
 export interface Product {
   id: string;
@@ -12,6 +13,8 @@ export interface Product {
   shortDescription?: string;
   fullDescription?: string;
   productType: 'QUESTION' | 'SESSION' | 'MONTHLY' | 'SPECIAL';
+  serviceKind: ServiceKind;
+  capabilities: ServiceCapabilities;
   price: number;
   originalPrice?: number;
   numQuestions?: number;
@@ -42,7 +45,9 @@ export interface CreateProductDTO {
   categoryId?: string;
   shortDescription?: string;
   fullDescription?: string;
-  productType: string;
+  productType?: 'QUESTION' | 'SESSION' | 'MONTHLY' | 'SPECIAL';
+  serviceKind?: ServiceKind;
+  capabilities?: ServiceCapabilities;
   price: number;
   originalPrice?: number;
   numQuestions?: number;
@@ -90,7 +95,8 @@ export class ProductsService {
 
   // Admin methods
   findAllAdmin(params?: {
-    category?: string;
+    categoryId?: string;
+    serviceKind?: ServiceKind;
     search?: string;
     isActive?: boolean;
     page?: number;

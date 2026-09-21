@@ -14,7 +14,9 @@ Transformar a implementação originalmente criada para uma profissional especí
 
 ## Fase 2 — Generalização de domínio 🟡 em andamento
 
-PRD ativo: [PRD-GENERIC-DOMAIN.md](PRD-GENERIC-DOMAIN.md).
+PRDs:
+- [PRD-GENERIC-DOMAIN.md](PRD-GENERIC-DOMAIN.md) — Generic Domain v1 ✅
+- [PRD-SERVICE-DOMAIN-V2.md](PRD-SERVICE-DOMAIN-V2.md) — Service Domain v2 ✅
 
 O sistema ainda possui conceitos específicos de Tarot/Baralho Cigano. Eles deverão se tornar configuração de especialidade, serviço e conteúdo, e não regras fixas do core.
 

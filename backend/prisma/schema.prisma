@@ -114,6 +114,8 @@ model Product {
   shortDescription       String?         @map("short_description")
   fullDescription        String?         @map("full_description")
   productType            ProductType     @map("product_type")
+  serviceKind            String          @default("SERVICE") @map("service_kind")
+  capabilities           Json?
   
   price                  Decimal         @db.Decimal(10, 2)
   originalPrice          Decimal?        @db.Decimal(10, 2) @map("original_price")
@@ -148,6 +150,7 @@ model Product {
   @@index([isActive])
   @@index([isFeatured])
   @@index([productType])
+  @@index([serviceKind])
   @@index([isActive, isFeatured])
   @@map("products")
 }
