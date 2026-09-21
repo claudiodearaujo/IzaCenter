@@ -30,18 +30,27 @@ export const CLIENT_ROUTES: Routes = [
       ),
   },
   {
-    path: 'leituras',
+    path: 'entregas',
     loadComponent: () =>
       import('./readings/reading-list/reading-list.component').then(
         (m) => m.ReadingListComponent
       ),
   },
   {
-    path: 'leituras/:id',
+    path: 'entregas/:id',
     loadComponent: () =>
       import('./readings/reading-detail/reading-detail.component').then(
         (m) => m.ReadingDetailComponent
       ),
+  },
+  {
+    path: 'leituras',
+    redirectTo: 'entregas',
+    pathMatch: 'full',
+  },
+  {
+    path: 'leituras/:id',
+    redirectTo: 'entregas/:id',
   },
   {
     path: 'agendamentos',

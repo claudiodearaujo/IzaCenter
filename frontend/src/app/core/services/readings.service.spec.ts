@@ -1,17 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ReadingsService, Reading, UpdateReadingDTO } from './readings.service';
+import { ReadingsService, Reading } from './readings.service';
+import { environment } from '../../../environments/environment';
 
-describe('ReadingsService', () => {
+describe('ReadingsService / Delivery compatibility', () => {
   let service: ReadingsService;
   let httpMock: HttpTestingController;
 
-  const mockReading: Reading = {
+  const mockDelivery: Reading = {
     id: '1',
-    title: 'Leitura de Tarô',
+    orderItemId: 'order-item-1',
+    clientId: 'client-1',
+    title: 'Relatório integrativo',
     status: 'PENDING',
-    clientQuestion: 'Qual meu futuro profissional?',
+    deliveryType: 'PDF',
+    content: {},
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -37,32 +41,50 @@ describe('ReadingsService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('findAll', () => {
-    it('should return all readings', () => {
-      const mockResponse = { data: [mockReading], total: 1, page: 1, limit: 10 };
+  it('should list admin deliveries through the canonical route', () => {
+    const mockResponse = {
+      data: [mockDelivery],
+      meta: { total: 1, page: 1, limit: 10, totalPages: 1 },
+    };
 
-      service.findAll().subscribe(response => {
-        expect(response.data).toEqual([mockReading]);
-      });
-
-      const req = httpMock.expectOne('/api/admin/readings');
-      expect(req.request.method).toBe('GET');
-      req.flush(mockResponse);
+    service.findAll().subscribe(response => {
+      expect(response.data).toEqual([mockDelivery]);
     });
 
-    it('should return readings with filters', () => {
-      const mockResponse = { data: [mockReading], total: 1, page: 1, limit: 10 };
+    const req = httpMock.expectOne(`${environment.apiUrl}/admin/deliveries`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
 
-      service.findAll({ status: 'PENDING', page: 1 }).subscribe(response => {
-        expect(response.data).toEqual([mockReading]);
-      });
+  it('should pass admin delivery filters', () => {
+    service.findAll({ status: 'PENDING', page: 1 }).subscribe();
 
-      const req = httpMock.expectOne(req =>
-        req.url === '/api/admin/readings' &&
-        req.params.get('status') === 'PENDING'
-      );
-      expect(req.request.method).toBe('GET');
-      req.flush(mockResponse);
+    const req = httpMock.expectOne(request =>
+      request.url === `${environment.apiUrl}/admin/deliveries` &&
+      request.params.get('status') === 'PENDING' &&
+      request.params.get('page') === '1'
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush({ data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 0 } });
+  });
+
+  it('should list client deliveries through the canonical route', () => {
+    service.getMyReadings().subscribe(response => {
+      expect(response.data[0].deliveryType).toBe('PDF');
     });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/deliveries`);
+    expect(req.request.method).toBe('GET');
+    req.flush({ data: [mockDelivery] });
+  });
+
+  it('should fetch a client delivery by id', () => {
+    service.getMyReadingById('1').subscribe(response => {
+      expect(response.data.id).toBe('1');
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/deliveries/1`);
+    expect(req.request.method).toBe('GET');
+    req.flush({ data: mockDelivery });
   });
 });

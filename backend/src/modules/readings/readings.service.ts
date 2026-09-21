@@ -1,26 +1,152 @@
 // apps/backend/src/modules/readings/readings.service.ts
 
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../config/database';
+import { storage } from '../../config/supabase';
 import { NotFoundException, BadRequestException } from '../../utils/errors';
-import { sendEmail, emailTemplates } from '../../utils/email.util';
+import { generateFileName } from '../../utils';
+import { sendEmail } from '../../utils/email.util';
+
+interface DeliveryContent {
+  introduction?: string;
+  body?: string;
+  recommendations?: string;
+  goals?: string;
+  closing?: string;
+  [key: string]: unknown;
+}
+
+interface DeliverySpecialtyModule {
+  key: string;
+  version?: number;
+  config?: Record<string, unknown>;
+}
 
 interface UpdateReadingDTO {
   title?: string;
+  deliveryType?: string;
+  content?: DeliveryContent;
+  specialtyModule?: DeliverySpecialtyModule | null;
+  metadata?: Record<string, unknown>;
+  // Legacy aliases kept during the migration window.
   introduction?: string;
   generalGuidance?: string;
   recommendations?: string;
   goals?: string;
   closingMessage?: string;
+  interpretation?: string;
+  advice?: string;
+  conclusion?: string;
   cards?: {
     cardId: string;
     position: number;
-    positionName: string;
-    interpretation: string;
+    positionName?: string;
+    interpretation?: string;
     isReversed?: boolean;
   }[];
 }
 
 export class ReadingsService {
+  private normalizeContent(reading: any): DeliveryContent {
+    const stored = (reading.content || {}) as DeliveryContent;
+
+    return {
+      ...stored,
+      ...(reading.introduction != null ? { introduction: reading.introduction } : {}),
+      ...(reading.generalGuidance != null ? { body: reading.generalGuidance } : {}),
+      ...(reading.recommendations != null ? { recommendations: reading.recommendations } : {}),
+      ...(reading.goals != null ? { goals: reading.goals } : {}),
+      ...(reading.closingMessage != null ? { closing: reading.closingMessage } : {}),
+    };
+  }
+
+  private inferDeliveryType(reading: any): string {
+    if (reading.deliveryType) return reading.deliveryType;
+    if (reading.videoUrl) return 'VIDEO';
+    if (reading.audioUrl) return 'AUDIO';
+    if (reading.pdfUrl) return 'DOCUMENT';
+    return 'CONTENT';
+  }
+
+  private toDelivery(reading: any) {
+    const content = this.normalizeContent(reading);
+    const orderItem = reading.orderItem
+      ? {
+          ...reading.orderItem,
+          questions: reading.orderItem.questions ?? reading.orderItem.clientQuestions ?? [],
+        }
+      : reading.orderItem;
+
+    return {
+      ...reading,
+      deliveryType: this.inferDeliveryType(reading),
+      content,
+      specialtyModule: reading.specialtyModule || null,
+      metadata: reading.metadata || {},
+      introduction: content.introduction,
+      generalGuidance: content.body,
+      recommendations: content.recommendations,
+      goals: content.goals,
+      closingMessage: content.closing,
+      // Legacy frontend aliases.
+      interpretation: content.body,
+      advice: content.recommendations,
+      conclusion: content.closing,
+      product: orderItem?.product,
+      orderItem,
+    };
+  }
+
+  private buildDeliveryUpdate(reading: any, data: UpdateReadingDTO) {
+    const current = this.normalizeContent(reading);
+    const incoming = data.content || {};
+
+    const content: DeliveryContent = {
+      ...current,
+      ...incoming,
+      introduction:
+        incoming.introduction ??
+        data.introduction ??
+        current.introduction,
+      body:
+        incoming.body ??
+        data.generalGuidance ??
+        data.interpretation ??
+        current.body,
+      recommendations:
+        incoming.recommendations ??
+        data.recommendations ??
+        data.advice ??
+        current.recommendations,
+      goals:
+        incoming.goals ??
+        data.goals ??
+        current.goals,
+      closing:
+        incoming.closing ??
+        data.closingMessage ??
+        data.conclusion ??
+        current.closing,
+    };
+
+    return {
+      title: data.title,
+      deliveryType: data.deliveryType ?? reading.deliveryType ?? this.inferDeliveryType(reading),
+      content: content as Prisma.InputJsonValue,
+      specialtyModule:
+        data.specialtyModule === null
+          ? Prisma.JsonNull
+          : ((data.specialtyModule ?? reading.specialtyModule ?? Prisma.JsonNull) as Prisma.InputJsonValue | typeof Prisma.JsonNull),
+      metadata: (data.metadata ?? reading.metadata ?? {}) as Prisma.InputJsonValue,
+      introduction: content.introduction,
+      generalGuidance: content.body,
+      recommendations: content.recommendations,
+      goals: content.goals,
+      closingMessage: content.closing,
+      status: 'IN_PROGRESS' as const,
+    };
+  }
+
   async findAll(filters: {
     status?: string;
     search?: string;
@@ -76,7 +202,7 @@ export class ReadingsService {
     ]);
 
     return {
-      data: readings,
+      data: readings.map((reading) => this.toDelivery(reading)),
       meta: {
         total,
         page,
@@ -97,6 +223,9 @@ export class ReadingsService {
                 id: true,
                 name: true,
                 coverImageUrl: true,
+                productType: true,
+                serviceKind: true,
+                capabilities: true,
               },
             },
           },
@@ -111,7 +240,7 @@ export class ReadingsService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return { data: readings };
+    return { data: readings.map((reading) => this.toDelivery(reading)) };
   }
 
   async findById(id: string, userId?: string) {
@@ -140,66 +269,55 @@ export class ReadingsService {
     });
 
     if (!reading) {
-      throw new NotFoundException('Leitura não encontrada');
+      throw new NotFoundException('Entrega não encontrada');
     }
 
     // If userId is provided, check ownership
     if (userId && reading.clientId !== userId) {
-      throw new NotFoundException('Leitura não encontrada');
+      throw new NotFoundException('Entrega não encontrada');
     }
 
-    return { data: reading };
+    return { data: this.toDelivery(reading) };
   }
 
   async update(id: string, data: UpdateReadingDTO) {
     const reading = await prisma.reading.findUnique({ where: { id } });
 
     if (!reading) {
-      throw new NotFoundException('Leitura não encontrada');
+      throw new NotFoundException('Entrega não encontrada');
     }
 
     if (reading.status === 'PUBLISHED') {
-      throw new BadRequestException('Leituras publicadas não podem ser editadas');
+      throw new BadRequestException('Entregas publicadas não podem ser editadas');
     }
 
-    // Update reading
     const updated = await prisma.$transaction(async (tx) => {
-      // Update main reading data
       const updatedReading = await tx.reading.update({
         where: { id },
-        data: {
-          title: data.title,
-          introduction: data.introduction,
-          generalGuidance: data.generalGuidance,
-          recommendations: data.recommendations,
-          goals: data.goals,
-          closingMessage: data.closingMessage,
-          status: 'IN_PROGRESS',
-        },
+        data: this.buildDeliveryUpdate(reading, data),
       });
 
-      // Update cards if provided
-      if (data.cards && data.cards.length > 0) {
-        // Remove existing cards
+      if (data.cards !== undefined) {
         await tx.readingCard.deleteMany({ where: { readingId: id } });
 
-        // Add new cards
-        await tx.readingCard.createMany({
-          data: data.cards.map((card) => ({
-            readingId: id,
-            cardId: card.cardId,
-            position: card.position,
-            positionName: card.positionName,
-            interpretation: card.interpretation,
-            isReversed: card.isReversed || false,
-          })),
-        });
+        if (data.cards.length > 0) {
+          await tx.readingCard.createMany({
+            data: data.cards.map((card) => ({
+              readingId: id,
+              cardId: card.cardId,
+              position: card.position,
+              positionName: card.positionName,
+              interpretation: card.interpretation,
+              isReversed: card.isReversed || false,
+            })),
+          });
+        }
       }
 
       return updatedReading;
     });
 
-    return { data: updated };
+    return { data: this.toDelivery(updated) };
   }
 
   async updateStatus(id: string, status: string) {
@@ -209,7 +327,7 @@ export class ReadingsService {
     });
 
     if (!reading) {
-      throw new NotFoundException('Leitura não encontrada');
+      throw new NotFoundException('Entrega não encontrada');
     }
 
     const updateData: any = { status };
@@ -222,11 +340,11 @@ export class ReadingsService {
       if (reading.client.email) {
         await sendEmail({
           to: reading.client.email,
-          subject: 'Sua Leitura está Pronta! - Therapist Platform',
+          subject: 'Sua entrega está pronta! - Therapist Platform',
           html: `
             <div style="font-family: Arial, sans-serif; padding: 20px;">
               <h2>Olá, ${reading.client.fullName}!</h2>
-              <p>Sua leitura "${reading.title || 'Leitura de Tarot'}" está pronta!</p>
+              <p>Sua entrega "${reading.title || 'Entrega do seu serviço'}" está pronta!</p>
               <p>Acesse sua área de cliente para visualizar todos os detalhes.</p>
               <p>Com carinho,<br>Therapist Platform</p>
             </div>
@@ -240,14 +358,42 @@ export class ReadingsService {
       data: updateData,
     });
 
-    return { data: updated };
+    return { data: this.toDelivery(updated) };
+  }
+
+  async uploadAudio(id: string, file: Express.Multer.File) {
+    const reading = await prisma.reading.findUnique({
+      where: { id },
+      select: { id: true, audioUrl: true },
+    });
+
+    if (!reading) {
+      throw new NotFoundException('Entrega não encontrada');
+    }
+
+    const fileName = generateFileName(file.originalname);
+    const filePath = `deliveries/${id}/audio/${fileName}`;
+
+    await storage.upload(filePath, file.buffer, {
+      contentType: file.mimetype,
+      upsert: true,
+    });
+
+    const audioUrl = storage.getPublicUrl(filePath);
+
+    const updated = await prisma.reading.update({
+      where: { id },
+      data: { audioUrl },
+    });
+
+    return { data: this.toDelivery(updated) };
   }
 
   async updateAudio(id: string, audioUrl: string) {
     const reading = await prisma.reading.findUnique({ where: { id } });
 
     if (!reading) {
-      throw new NotFoundException('Leitura não encontrada');
+      throw new NotFoundException('Entrega não encontrada');
     }
 
     const updated = await prisma.reading.update({
@@ -255,23 +401,23 @@ export class ReadingsService {
       data: { audioUrl },
     });
 
-    return { data: updated };
+    return { data: this.toDelivery(updated) };
   }
 
   async delete(id: string) {
     const reading = await prisma.reading.findUnique({ where: { id } });
 
     if (!reading) {
-      throw new NotFoundException('Leitura não encontrada');
+      throw new NotFoundException('Entrega não encontrada');
     }
 
     if (reading.status === 'PUBLISHED') {
-      throw new BadRequestException('Leituras publicadas não podem ser excluídas');
+      throw new BadRequestException('Entregas publicadas não podem ser excluídas');
     }
 
     await prisma.reading.delete({ where: { id } });
 
-    return { message: 'Leitura excluída com sucesso' };
+    return { message: 'Entrega excluída com sucesso' };
   }
 
   async getStats() {

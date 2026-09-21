@@ -1,33 +1,23 @@
-<!-- apps/frontend/src/app/features/admin/readings/reading-list/reading-list.component.html -->
-
 <section class="py-8">
   <div class="container-custom">
-    <!-- Header -->
     <div class="flex items-center justify-between mb-8">
       <div>
         <h1 class="heading-1 text-primary mb-2">
-          <i class="pi pi-book mr-3"></i>
-          {{ 'admin.readings.title' | translate }}
+          <i class="pi pi-file mr-3"></i>
+          Entregas
         </h1>
-        <p class="text-secondary">{{ 'admin.readings.subtitle' | translate }}</p>
+        <p class="text-secondary">Gerencie conteúdos, relatórios e materiais digitais dos serviços contratados.</p>
       </div>
-      <a routerLink="/admin/cartas" class="btn-outline">
-        <i class="pi pi-th-large mr-2"></i>
-        {{ 'admin.readings.manageCards' | translate }}
-      </a>
     </div>
 
-    <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
       <div class="glass-card p-4 flex items-center gap-4">
         <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
           <i class="pi pi-clock text-xl text-yellow-400"></i>
         </div>
         <div>
-          <p class="text-2xl font-bold text-primary">
-            {{ pendingCount() }}
-          </p>
-          <p class="text-secondary text-sm">{{ 'admin.readings.waiting' | translate }}</p>
+          <p class="text-2xl font-bold text-primary">{{ pendingCount() }}</p>
+          <p class="text-secondary text-sm">Pendentes</p>
         </div>
       </div>
       <div class="glass-card p-4 flex items-center gap-4">
@@ -35,10 +25,8 @@
           <i class="pi pi-spin pi-spinner text-xl text-blue-400"></i>
         </div>
         <div>
-          <p class="text-2xl font-bold text-primary">
-            {{ inProgressCount() }}
-          </p>
-          <p class="text-secondary text-sm">{{ 'admin.readings.inProgress' | translate }}</p>
+          <p class="text-2xl font-bold text-primary">{{ inProgressCount() }}</p>
+          <p class="text-secondary text-sm">Em andamento</p>
         </div>
       </div>
       <div class="glass-card p-4 flex items-center gap-4">
@@ -46,15 +34,12 @@
           <i class="pi pi-check-circle text-xl text-green-400"></i>
         </div>
         <div>
-          <p class="text-2xl font-bold text-primary">
-            {{ publishedCount() }}
-          </p>
-          <p class="text-secondary text-sm">{{ 'admin.readings.published' | translate }}</p>
+          <p class="text-2xl font-bold text-primary">{{ publishedCount() }}</p>
+          <p class="text-secondary text-sm">Publicadas</p>
         </div>
       </div>
     </div>
 
-    <!-- Filters -->
     <div class="glass-card p-4 mb-6">
       <div class="flex flex-col md:flex-row gap-4">
         <div class="flex-1">
@@ -63,7 +48,7 @@
             <input
               pInputText
               [(ngModel)]="searchTerm"
-              [placeholder]="'admin.readings.searchPlaceholder' | translate"
+              placeholder="Buscar por cliente, e-mail ou título"
               class="w-full"
               (keyup.enter)="onSearch()"
             />
@@ -75,22 +60,21 @@
             [(ngModel)]="selectedStatus"
             optionLabel="label"
             optionValue="value"
-            [placeholder]="'admin.readings.status' | translate"
+            placeholder="Status"
             (onChange)="onSearch()"
             styleClass="w-full"
           />
         </div>
         <button pButton class="btn-primary" (click)="onSearch()">
           <i class="pi pi-search mr-2"></i>
-          {{ 'common.search' | translate }}
+          Buscar
         </button>
       </div>
     </div>
 
-    <!-- Table -->
     <div class="glass-card overflow-hidden">
-      <p-table 
-        [value]="readings()" 
+      <p-table
+        [value]="readings()"
         [loading]="loading()"
         [paginator]="true"
         [rows]="10"
@@ -102,45 +86,51 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th>{{ 'admin.readings.client' | translate }}</th>
-            <th>{{ 'admin.readings.product' | translate }}</th>
-            <th>{{ 'admin.readings.questions' | translate }}</th>
-            <th>{{ 'admin.readings.status' | translate }}</th>
-            <th>{{ 'admin.readings.waiting' | translate }}</th>
-            <th>{{ 'admin.readings.createdAt' | translate }}</th>
-            <th>{{ 'admin.readings.actions' | translate }}</th>
+            <th>Cliente</th>
+            <th>Serviço</th>
+            <th>Tipo</th>
+            <th>Intake</th>
+            <th>Status</th>
+            <th>Criada em</th>
+            <th>Ações</th>
           </tr>
         </ng-template>
+
         <ng-template pTemplate="loadingbody">
           @for (_ of [1, 2, 3, 4, 5]; track $index) {
             <tr>
               <td><p-skeleton height="2.5rem" /></td>
               <td><p-skeleton height="1.5rem" width="7rem" /></td>
-              <td><p-skeleton height="1.5rem" /></td>
               <td><p-skeleton height="1.5rem" width="6rem" /></td>
               <td><p-skeleton height="1.5rem" width="4rem" /></td>
+              <td><p-skeleton height="1.5rem" width="6rem" /></td>
               <td><p-skeleton height="1.5rem" width="5rem" /></td>
               <td><p-skeleton height="1.5rem" width="6rem" /></td>
             </tr>
           }
         </ng-template>
+
         <ng-template pTemplate="body" let-reading>
           <tr [class.bg-yellow-500/5]="reading.status === 'PENDING'">
             <td>
-              <div>
-                <p class="text-primary font-medium">{{ reading.client?.fullName }}</p>
-                <p class="text-secondary text-xs">{{ reading.client?.email }}</p>
-              </div>
+              <p class="text-primary font-medium">{{ reading.client?.fullName }}</p>
+              <p class="text-secondary text-xs">{{ reading.client?.email }}</p>
             </td>
             <td class="text-primary">{{ reading.orderItem?.product?.name }}</td>
             <td>
-              @if (reading.orderItem?.clientQuestions && reading.orderItem.clientQuestions.length > 0) {
-                <span 
+              <span class="text-secondary text-sm">{{ reading.deliveryType || 'CONTENT' }}</span>
+              @if (reading.specialtyModule?.key) {
+                <p class="text-secondary/60 text-xs mt-1">{{ reading.specialtyModule.key }}</p>
+              }
+            </td>
+            <td>
+              @if (reading.orderItem?.clientQuestions?.length) {
+                <span
                   class="text-secondary text-sm cursor-help"
                   [pTooltip]="reading.orderItem.clientQuestions.join(' | ')"
                   tooltipPosition="top"
                 >
-                  {{ reading.orderItem.clientQuestions.length }} {{ 'admin.readings.questionCount' | translate }}
+                  {{ reading.orderItem.clientQuestions.length }} item(ns)
                 </span>
               } @else {
                 <span class="text-secondary/50 text-sm">-</span>
@@ -152,43 +142,29 @@
                 [severity]="getStatusSeverity(reading.status)"
               />
             </td>
-            <td>
+            <td class="text-secondary text-sm">
+              {{ formatDate(reading.createdAt) }}
               @if (reading.status !== 'PUBLISHED') {
-                <span
-                  class="text-sm"
-                  [class]="reading.status === 'PENDING' ? 'text-yellow-400' : 'text-blue-400'"
-                >
-                  {{ getTimeSinceCreation(reading.createdAt) }}
-                </span>
-              } @else {
-                <span class="text-green-400 text-sm">
-                  <i class="pi pi-check mr-1"></i>
-                  {{ 'admin.readings.completed' | translate }}
-                </span>
+                <p class="text-secondary/60 text-xs mt-1">{{ getTimeSinceCreation(reading.createdAt) }}</p>
               }
             </td>
-            <td class="text-secondary text-sm">{{ formatDate(reading.createdAt) }}</td>
             <td>
-              <a 
-                [routerLink]="['/admin/leituras', reading.id]"
+              <a
+                [routerLink]="['/admin/entregas', reading.id]"
                 class="btn-primary text-sm py-2 px-4"
               >
-                @if (reading.status === 'PUBLISHED') {
-                  <i class="pi pi-eye mr-1"></i>
-                  {{ 'admin.readings.view' | translate }}
-                } @else {
-                  <i class="pi pi-pencil mr-1"></i>
-                  {{ reading.status === 'PENDING' ? ('admin.readings.start' | translate) : ('admin.readings.continue' | translate) }}
-                }
+                <i class="pi" [class]="reading.status === 'PUBLISHED' ? 'pi-eye' : 'pi-pencil'" class="mr-1"></i>
+                {{ reading.status === 'PUBLISHED' ? 'Visualizar' : 'Editar' }}
               </a>
             </td>
           </tr>
         </ng-template>
+
         <ng-template pTemplate="emptymessage">
           <tr>
             <td colspan="7" class="text-center py-8">
-              <i class="pi pi-book text-4xl text-secondary/30 mb-4"></i>
-              <p class="text-secondary">{{ 'admin.readings.noReadings' | translate }}</p>
+              <i class="pi pi-file text-4xl text-secondary/30 mb-4"></i>
+              <p class="text-secondary">Nenhuma entrega encontrada.</p>
             </td>
           </tr>
         </ng-template>

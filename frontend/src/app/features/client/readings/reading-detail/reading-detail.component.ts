@@ -1,51 +1,13 @@
-// apps/frontend/src/app/features/client/readings/reading-detail/reading-detail.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DividerModule } from 'primeng/divider';
 
+import { Delivery } from '../../../../core/models/delivery.model';
+import { ReadingsService } from '../../../../core/services/readings.service';
 import { ApiService } from '../../../../core/services/api.service';
-
-interface ReadingCard {
-  id: string;
-  position: number;
-  positionName?: string;
-  interpretation: string;
-  card: {
-    id: string;
-    name: string;
-    imageUrl?: string;
-    keywords?: string[];
-  };
-}
-
-interface Reading {
-  id: string;
-  title?: string;
-  introduction?: string;
-  generalInterpretation: string;
-  advice?: string;
-  conclusion?: string;
-  audioUrl?: string;
-  status: string;
-  publishedAt?: string;
-  createdAt: string;
-  product: {
-    id: string;
-    name: string;
-    type: string;
-    coverImageUrl?: string;
-  };
-  orderItem: {
-    questions: string[];
-  };
-  cards: ReadingCard[];
-}
 
 @Component({
   selector: 'app-reading-detail',
@@ -53,7 +15,6 @@ interface Reading {
   imports: [
     CommonModule,
     RouterLink,
-    TranslateModule,
     ButtonModule,
     SkeletonModule,
     DividerModule,
@@ -62,57 +23,59 @@ interface Reading {
   styleUrl: './reading-detail.component.css',
 })
 export class ReadingDetailComponent implements OnInit {
+  private deliveriesService = inject(ReadingsService);
   private api = inject(ApiService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private translate = inject(TranslateService);
 
-  reading = signal<Reading | null>(null);
+  reading = signal<Delivery | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
   audioPlaying = signal(false);
   downloadingPdf = signal(false);
 
   ngOnInit() {
-    const readingId = this.route.snapshot.paramMap.get('id');
-    if (readingId) {
-      this.loadReading(readingId);
+    const deliveryId = this.route.snapshot.paramMap.get('id');
+    if (deliveryId) {
+      this.loadDelivery(deliveryId);
     }
   }
 
-  loadReading(id: string) {
+  loadDelivery(id: string) {
     this.loading.set(true);
 
-    this.api.get<{ data: Reading }>(`/users/me/readings/${id}`).subscribe({
+    this.deliveriesService.getMyReadingById(id).subscribe({
       next: (response) => {
-        // Redirect if not published
         if (response.data.status !== 'PUBLISHED') {
-          this.router.navigate(['/cliente/leituras']);
+          this.router.navigate(['/cliente/entregas']);
           return;
         }
         this.reading.set(response.data);
         this.loading.set(false);
       },
       error: (err) => {
-        this.error.set(err.error?.message || 'Erro ao carregar leitura');
+        this.error.set(err.error?.message || 'Erro ao carregar entrega');
         this.loading.set(false);
       },
     });
   }
 
-  // Sprint 3.3b — Download PDF via blob (substituiu window.print())
+  hasCardModule(): boolean {
+    return this.reading()?.specialtyModule?.key === 'tarot-cards';
+  }
+
   downloadPdf(): void {
-    const readingId = this.reading()?.id;
-    if (!readingId) return;
+    const deliveryId = this.reading()?.id;
+    if (!deliveryId) return;
 
     this.downloadingPdf.set(true);
 
-    this.api.getBlob(`/readings/${readingId}/pdf`).subscribe({
+    this.api.getBlob(`/deliveries/${deliveryId}/pdf`).subscribe({
       next: (blob) => {
         const url = URL.createObjectURL(blob);
         const anchor = document.createElement('a');
         anchor.href = url;
-        const title = this.reading()?.title || 'leitura';
+        const title = this.reading()?.title || 'entrega';
         anchor.download = `${title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.pdf`;
         anchor.click();
         URL.revokeObjectURL(url);
@@ -125,8 +88,8 @@ export class ReadingDetailComponent implements OnInit {
     });
   }
 
-  formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
+  formatDate(date: string | Date): string {
+    return new Date(date).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: 'long',
       year: 'numeric',

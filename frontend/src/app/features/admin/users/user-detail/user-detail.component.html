@@ -168,7 +168,7 @@
               <div class="space-y-3 py-4">
                 @for (reading of user()?.readings ?? []; track reading.id) {
                   <a 
-                    [routerLink]="['/admin/leituras', reading.id]"
+                    [routerLink]="['/admin/entregas', reading.id]"
                     class="flex items-center justify-between p-4 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
                   >
                     <div>

@@ -258,6 +258,10 @@ model Reading {
   
   title           String
   status          ReadingStatus @default(PENDING)
+  deliveryType    String        @default("CONTENT") @map("delivery_type")
+  content         Json?
+  specialtyModule Json?         @map("specialty_module")
+  metadata        Json?
   
   clientQuestion  String?       @map("client_question")
   focusArea       String?       @map("focus_area")

@@ -17,6 +17,16 @@ import { DividerModule } from 'primeng/divider';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ReadingsService, Reading, ReadingCard, UpdateReadingDTO } from '../../../../core/services/readings.service';
+
+type DeliveryFormModel = UpdateReadingDTO & {
+  content: {
+    introduction?: string;
+    body?: string;
+    recommendations?: string;
+    goals?: string;
+    closing?: string;
+  };
+};
 import { CardsService, CiganoCard } from '../../../../core/services/cards.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 
@@ -62,12 +72,15 @@ export class ReadingFormComponent implements OnInit {
   editingCardIndex = signal<number | null>(null);
 
   // Form fields
-  form: UpdateReadingDTO = {
+  form: DeliveryFormModel = {
     title: '',
-    introduction: '',
-    interpretation: '',
-    advice: '',
-    conclusion: '',
+    content: {
+      introduction: '',
+      body: '',
+      recommendations: '',
+      goals: '',
+      closing: '',
+    },
   };
 
   ngOnInit() {
@@ -75,7 +88,6 @@ export class ReadingFormComponent implements OnInit {
     if (id) {
       this.readingId.set(id);
       this.loadReading(id);
-      this.loadCards();
     }
   }
 
@@ -89,15 +101,25 @@ export class ReadingFormComponent implements OnInit {
 
         this.form = {
           title: reading.title || '',
-          introduction: reading.introduction || '',
-          interpretation: reading.interpretation || '',
-          advice: reading.advice || '',
-          conclusion: reading.conclusion || '',
+          deliveryType: reading.deliveryType,
+          specialtyModule: reading.specialtyModule,
+          metadata: reading.metadata,
+          content: {
+            introduction: reading.content?.introduction || reading.introduction || '',
+            body: reading.content?.body || reading.interpretation || reading.generalGuidance || '',
+            recommendations: reading.content?.recommendations || reading.advice || reading.recommendations || '',
+            goals: reading.content?.goals || reading.goals || '',
+            closing: reading.content?.closing || reading.conclusion || reading.closingMessage || '',
+          },
         };
 
         this.selectedCards.set(reading.cards || []);
 
-        // If first time opening, start the reading
+        if (this.hasCardModule()) {
+          this.loadCards();
+        }
+
+        // If first time opening, start the delivery
         if (reading.status === 'PENDING') {
           this.startReading();
         }
@@ -106,7 +128,7 @@ export class ReadingFormComponent implements OnInit {
       },
       error: () => {
         this.notification.error(this.translate.instant('admin.readings.errorLoading'));
-        this.router.navigate(['/admin/leituras']);
+        this.router.navigate(['/admin/entregas']);
       },
     });
   }
@@ -132,12 +154,14 @@ export class ReadingFormComponent implements OnInit {
 
     const data: UpdateReadingDTO = {
       ...this.form,
-      cards: this.selectedCards().map((c) => ({
-        cardId: c.cardId,
-        position: c.position,
-        positionName: c.positionName,
-        interpretation: c.interpretation,
-      })),
+      cards: this.hasCardModule()
+        ? this.selectedCards().map((c) => ({
+            cardId: c.cardId,
+            position: c.position,
+            positionName: c.positionName,
+            interpretation: c.interpretation,
+          }))
+        : undefined,
     };
 
     this.readingsService.update(this.readingId()!, data).subscribe({
@@ -153,7 +177,7 @@ export class ReadingFormComponent implements OnInit {
   }
 
   publishReading() {
-    if (!this.form.interpretation) {
+    if (!this.form.content.body) {
       this.notification.warning(this.translate.instant('admin.readings.interpretationRequired'));
       return;
     }
@@ -163,12 +187,14 @@ export class ReadingFormComponent implements OnInit {
     // First save
     const data: UpdateReadingDTO = {
       ...this.form,
-      cards: this.selectedCards().map((c) => ({
-        cardId: c.cardId,
-        position: c.position,
-        positionName: c.positionName,
-        interpretation: c.interpretation,
-      })),
+      cards: this.hasCardModule()
+        ? this.selectedCards().map((c) => ({
+            cardId: c.cardId,
+            position: c.position,
+            positionName: c.positionName,
+            interpretation: c.interpretation,
+          }))
+        : undefined,
     };
 
     this.readingsService.update(this.readingId()!, data).subscribe({
@@ -177,7 +203,7 @@ export class ReadingFormComponent implements OnInit {
         this.readingsService.updateStatus(this.readingId()!, 'PUBLISHED').subscribe({
           next: () => {
             this.notification.success(this.translate.instant('admin.readings.publishedSuccess'));
-            this.router.navigate(['/admin/leituras']);
+            this.router.navigate(['/admin/entregas']);
           },
           error: () => {
             this.notification.error(this.translate.instant('admin.readings.errorPublishing'));
@@ -192,7 +218,11 @@ export class ReadingFormComponent implements OnInit {
     });
   }
 
-  // Card Management
+  hasCardModule(): boolean {
+    return this.reading()?.specialtyModule?.key === 'tarot-cards';
+  }
+
+  // Specialty card module management
   openCardDialog(index?: number) {
     if (index !== undefined) {
       this.editingCardIndex.set(index);

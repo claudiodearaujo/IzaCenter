@@ -18,15 +18,17 @@ A direção arquitetural atual é: `Professional → Specialty → Service → C
 - [Productization roadmap](docs/PRODUCTIZATION.md)
 - [PRD — Generic Domain v1](docs/PRD-GENERIC-DOMAIN.md)
 - [PRD — Service Domain v2](docs/PRD-SERVICE-DOMAIN-V2.md)
+- [PRD — Delivery Domain v3](docs/PRD-DELIVERY-DOMAIN-V3.md)
 - O catálogo usa `serviceKind` + `capabilities`; `ProductType` permanece apenas como compatibilidade transitória.
-- `Reading` e `CiganoCard` permanecem temporariamente como módulos legados até a migração estrutural.
+- Entregas digitais usam o contrato `Delivery`; a tabela física `readings` e as rotas `/readings` permanecem somente como compatibilidade transitória.
+- `CiganoCard`/`ReadingCard` passam a pertencer ao módulo opcional de especialidade `tarot-cards`, e não ao core de entregas.
 
 ## Funcionalidades
 
 - **Site público** — Home, Sobre, Serviços, Loja, Contato, FAQ, Depoimentos, Termos, Privacidade
 - **Loja/E-commerce** — Catálogo de produtos, carrinho com cupons, checkout com Stripe
-- **Área do Cliente** — Dashboard, leituras, agendamentos, pedidos com download de PDF, perfil
-- **Painel Admin** — Dashboard, leituras, agendamentos, pedidos, produtos, categorias, cartas, usuários, depoimentos, disponibilidade, relatórios, configurações
+- **Área do Cliente** — Dashboard, entregas, agendamentos, pedidos com download de PDF, perfil
+- **Painel Admin** — Dashboard, entregas, agendamentos, pedidos, produtos, categorias, módulos de especialidade, usuários, depoimentos, disponibilidade, relatórios, configurações
 - **Backend API** — REST API com autenticação JWT, integração Stripe, Supabase Storage, e-mail SMTP
 - **PWA** — Service worker com cache de assets e APIs
 - **i18n** — 4 idiomas: PT-BR, EN, ES, FR

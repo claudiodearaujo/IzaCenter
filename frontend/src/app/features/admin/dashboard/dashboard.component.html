@@ -9,7 +9,7 @@
         <p class="text-secondary">{{ 'admin.dashboard.subtitle' | translate }}</p>
       </div>
       <div class="flex gap-4">
-        <a routerLink="/admin/leituras" class="btn-outline">
+        <a routerLink="/admin/entregas" class="btn-outline">
           <i class="pi pi-book mr-2"></i>
           {{ 'admin.layout.pendingReadings' | translate }}
         </a>
@@ -177,7 +177,7 @@
       <div class="glass-card p-6">
         <div class="flex items-center justify-between mb-6">
           <h3 class="heading-3 text-primary">{{ 'admin.dashboard.pendingReadings' | translate }}</h3>
-          <a routerLink="/admin/leituras" class="text-accent hover:text-accent-light transition-colors text-sm">
+          <a routerLink="/admin/entregas" class="text-accent hover:text-accent-light transition-colors text-sm">
             {{ 'admin.dashboard.viewAll' | translate }} <i class="pi pi-arrow-right ml-1"></i>
           </a>
         </div>
@@ -197,7 +197,7 @@
           <div class="space-y-3">
             @for (reading of pendingReadings(); track reading.id) {
               <a 
-                [routerLink]="['/admin/leituras', reading.id]"
+                [routerLink]="['/admin/entregas', reading.id]"
                 class="flex items-center justify-between p-3 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
               >
                 <div>
@@ -228,7 +228,7 @@
           <i class="pi pi-plus-circle text-2xl mb-2"></i>
           <span class="text-sm">{{ 'admin.dashboard.newProduct' | translate }}</span>
         </a>
-        <a routerLink="/admin/leituras" class="quick-action-btn">
+        <a routerLink="/admin/entregas" class="quick-action-btn">
           <i class="pi pi-book text-2xl mb-2"></i>
           <span class="text-sm">{{ 'admin.menu.readings' | translate }}</span>
         </a>

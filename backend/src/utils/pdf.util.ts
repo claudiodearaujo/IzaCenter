@@ -158,7 +158,7 @@ interface ReadingCardForPdf {
   card: { name: string; keywords: string[]; advice?: string | null };
 }
 
-interface ReadingForPdf {
+interface DeliveryForPdf {
   title: string;
   introduction?: string | null;
   generalGuidance?: string | null;
@@ -179,18 +179,18 @@ function addTextBlock(doc: InstanceType<typeof PDFDocument>, heading: string, co
   doc.moveDown();
 }
 
-export function generateReadingPdf(reading: ReadingForPdf, res: Response): void {
+export function generateDeliveryPdf(reading: DeliveryForPdf, res: Response): void {
   const doc = new PDFDocument({ margin: 40, size: 'A4' });
   const docTitle = reading.title ?? reading.orderItem.product.name;
 
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader(
     'Content-Disposition',
-    `attachment; filename="leitura-${docTitle.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.pdf"`
+    `attachment; filename="entrega-${docTitle.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.pdf"`
   );
   doc.pipe(res);
 
-  addHeader(doc, `Leitura de Tarot \u2014 ${docTitle}`);
+  addHeader(doc, `Entrega \u2014 ${docTitle}`);
 
   doc.fillColor(TEXT_DARK).fontSize(14).font('Helvetica-Bold').text('Informa\u00E7\u00F5es', 40);
   addDivider(doc);
@@ -200,7 +200,7 @@ export function generateReadingPdf(reading: ReadingForPdf, res: Response): void 
 
   if (reading.orderItem.clientQuestions?.length > 0) {
     doc.moveDown(0.5);
-    doc.fillColor(PURPLE).fontSize(11).font('Helvetica-Bold').text('Suas Perguntas', 40);
+    doc.fillColor(PURPLE).fontSize(11).font('Helvetica-Bold').text('Informações fornecidas', 40);
     addDivider(doc);
     reading.orderItem.clientQuestions.forEach((q, i) => {
       doc.fillColor(TEXT_DARK).fontSize(10).font('Helvetica').text(`${i + 1}. ${q}`, 50);
@@ -250,3 +250,6 @@ export function generateReadingPdf(reading: ReadingForPdf, res: Response): void 
   addFooter(doc);
   doc.end();
 }
+
+// Legacy compatibility export.
+export const generateReadingPdf = generateDeliveryPdf;

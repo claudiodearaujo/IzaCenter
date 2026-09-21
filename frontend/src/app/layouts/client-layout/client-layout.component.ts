@@ -29,7 +29,7 @@ export class ClientLayoutComponent {
 
   menuItems = [
     { labelKey: 'client.menu.dashboard', icon: 'pi-home', route: '/cliente' },
-    { labelKey: 'client.menu.readings', icon: 'pi-book', route: '/cliente/leituras' },
+    { labelKey: 'client.menu.readings', icon: 'pi-book', route: '/cliente/entregas' },
     { labelKey: 'client.menu.schedule', icon: 'pi-calendar-plus', route: '/cliente/agendar' },
     { labelKey: 'client.menu.appointments', icon: 'pi-calendar', route: '/cliente/agendamentos' },
     { labelKey: 'client.menu.orders', icon: 'pi-shopping-bag', route: '/cliente/pedidos' },

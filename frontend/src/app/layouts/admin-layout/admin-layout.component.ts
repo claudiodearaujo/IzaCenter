@@ -31,7 +31,7 @@ export class AdminLayoutComponent {
 
   menuItems = [
     { labelKey: 'admin.menu.dashboard', icon: 'pi-chart-bar', route: '/admin' },
-    { labelKey: 'admin.layout.pendingReadings', icon: 'pi-book', route: '/admin/leituras', badge: true },
+    { labelKey: 'admin.layout.pendingReadings', icon: 'pi-book', route: '/admin/entregas', badge: true },
     { labelKey: 'admin.menu.appointments', icon: 'pi-calendar', route: '/admin/agendamentos' },
     { labelKey: 'admin.layout.orders', icon: 'pi-shopping-cart', route: '/admin/pedidos' },
     { labelKey: 'admin.menu.products', icon: 'pi-box', route: '/admin/produtos' },

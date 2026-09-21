@@ -3,6 +3,7 @@
 import { Router } from 'express';
 import { readingsController } from './readings.controller';
 import { authenticate, requireAdmin } from '../../middlewares/auth.middleware';
+import { uploadAudio as uploadAudioFile } from '../../middlewares/upload.middleware';
 
 const router = Router();
 
@@ -16,7 +17,7 @@ const router = Router();
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Client's tarot readings
+ *         description: Legacy alias for the client's digital deliveries
  *         content:
  *           application/json:
  *             schema:
@@ -290,6 +291,14 @@ router.patch(
   readingsController.updateAudio.bind(readingsController)
 );
 
+router.post(
+  '/admin/readings/:id/upload-audio',
+  authenticate,
+  requireAdmin,
+  uploadAudioFile.single('file'),
+  readingsController.uploadAudio.bind(readingsController)
+);
+
 /**
  * @openapi
  * /admin/readings/{id}:
@@ -313,6 +322,160 @@ router.patch(
  */
 router.delete(
   '/admin/readings/:id',
+  authenticate,
+  requireAdmin,
+  readingsController.delete.bind(readingsController)
+);
+
+
+/**
+ * @openapi
+ * /deliveries:
+ *   get:
+ *     tags: [Deliveries]
+ *     summary: List current client's digital deliveries
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Client deliveries
+ * /deliveries/{id}:
+ *   get:
+ *     tags: [Deliveries]
+ *     summary: Get a delivery for the current client
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Delivery details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Delivery'
+ * /admin/deliveries:
+ *   get:
+ *     tags: [Deliveries]
+ *     summary: List deliveries for administration
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Paginated deliveries
+ * /admin/deliveries/{id}:
+ *   put:
+ *     tags: [Deliveries]
+ *     summary: Update generic delivery content
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               deliveryType:
+ *                 type: string
+ *               content:
+ *                 type: object
+ *                 additionalProperties: true
+ *               specialtyModule:
+ *                 type: object
+ *                 nullable: true
+ *                 additionalProperties: true
+ *     responses:
+ *       200:
+ *         description: Delivery updated
+ */
+
+// Delivery Domain v3 — canonical generic routes.
+// Legacy /readings routes above remain available during the migration window.
+router.get(
+  '/deliveries',
+  authenticate,
+  readingsController.findByUser.bind(readingsController)
+);
+
+router.get(
+  '/deliveries/:id/pdf',
+  authenticate,
+  readingsController.downloadPdf.bind(readingsController)
+);
+
+router.get(
+  '/deliveries/:id',
+  authenticate,
+  readingsController.findByIdForUser.bind(readingsController)
+);
+
+router.get(
+  '/admin/deliveries',
+  authenticate,
+  requireAdmin,
+  readingsController.findAll.bind(readingsController)
+);
+
+router.get(
+  '/admin/deliveries/stats',
+  authenticate,
+  requireAdmin,
+  readingsController.getStats.bind(readingsController)
+);
+
+router.get(
+  '/admin/deliveries/:id',
+  authenticate,
+  requireAdmin,
+  readingsController.findById.bind(readingsController)
+);
+
+router.put(
+  '/admin/deliveries/:id',
+  authenticate,
+  requireAdmin,
+  readingsController.update.bind(readingsController)
+);
+
+router.patch(
+  '/admin/deliveries/:id/status',
+  authenticate,
+  requireAdmin,
+  readingsController.updateStatus.bind(readingsController)
+);
+
+router.patch(
+  '/admin/deliveries/:id/audio',
+  authenticate,
+  requireAdmin,
+  readingsController.updateAudio.bind(readingsController)
+);
+
+router.post(
+  '/admin/deliveries/:id/upload-audio',
+  authenticate,
+  requireAdmin,
+  uploadAudioFile.single('file'),
+  readingsController.uploadAudio.bind(readingsController)
+);
+
+router.delete(
+  '/admin/deliveries/:id',
   authenticate,
   requireAdmin,
   readingsController.delete.bind(readingsController)

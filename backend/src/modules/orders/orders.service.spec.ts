@@ -312,21 +312,18 @@ describe('OrdersService', () => {
       },
     };
 
-    it('should handle payment success and create readings', async () => {
-      // Arrange
+    it('should preserve legacy delivery creation for a non-scheduled product without capabilities', async () => {
       prismaMock.order.update.mockResolvedValue(mockOrder as any);
       prismaMock.reading.create.mockResolvedValue({
         id: 'reading-123',
         orderItemId: 'item-123',
         clientId: 'client-123',
-        title: 'Leitura - Leitura Completa',
+        title: 'Entrega - Leitura Completa',
         status: 'PENDING',
       } as any);
 
-      // Act
       const result = await ordersService.handlePaymentSuccess(orderId, paymentIntentId);
 
-      // Assert
       expect(result.status).toBe('PAID');
       expect(result.paymentStatus).toBe('SUCCEEDED');
       expect(prismaMock.order.update).toHaveBeenCalledWith({
@@ -339,11 +336,74 @@ describe('OrdersService', () => {
         },
         include: expect.any(Object),
       });
-      expect(prismaMock.reading.create).toHaveBeenCalled();
+      expect(prismaMock.reading.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          orderItemId: 'item-123',
+          title: 'Entrega - Leitura Completa',
+          deliveryType: 'CONTENT',
+        }),
+      });
     });
 
-    it('should not create reading for products requiring scheduling', async () => {
-      // Arrange
+    it('should create a delivery when digitalDelivery is enabled even if scheduling is required', async () => {
+      const orderWithDigitalDelivery = {
+        ...mockOrder,
+        items: [
+          {
+            ...mockOrder.items[0],
+            product: {
+              requiresScheduling: true,
+              validityDays: 365,
+              serviceKind: 'SESSION',
+              capabilities: {
+                scheduling: { enabled: true, durationMinutes: 60 },
+                digitalDelivery: { enabled: true, format: 'PDF' },
+              },
+            },
+          },
+        ],
+      };
+      prismaMock.order.update.mockResolvedValue(orderWithDigitalDelivery as any);
+      prismaMock.reading.create.mockResolvedValue({ id: 'delivery-123' } as any);
+
+      await ordersService.handlePaymentSuccess(orderId, paymentIntentId);
+
+      expect(prismaMock.reading.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          deliveryType: 'PDF',
+          metadata: expect.objectContaining({
+            schemaVersion: 1,
+            serviceKind: 'SESSION',
+          }),
+        }),
+      });
+    });
+
+    it('should not create a delivery when digitalDelivery is explicitly disabled', async () => {
+      const orderWithoutDigitalDelivery = {
+        ...mockOrder,
+        items: [
+          {
+            ...mockOrder.items[0],
+            product: {
+              requiresScheduling: false,
+              validityDays: 365,
+              serviceKind: 'SERVICE',
+              capabilities: {
+                digitalDelivery: { enabled: false },
+              },
+            },
+          },
+        ],
+      };
+      prismaMock.order.update.mockResolvedValue(orderWithoutDigitalDelivery as any);
+
+      await ordersService.handlePaymentSuccess(orderId, paymentIntentId);
+
+      expect(prismaMock.reading.create).not.toHaveBeenCalled();
+    });
+
+    it('should not create a legacy delivery for scheduled products without capabilities', async () => {
       const orderWithScheduling = {
         ...mockOrder,
         items: [
@@ -358,10 +418,8 @@ describe('OrdersService', () => {
       };
       prismaMock.order.update.mockResolvedValue(orderWithScheduling as any);
 
-      // Act
       await ordersService.handlePaymentSuccess(orderId, paymentIntentId);
 
-      // Assert
       expect(prismaMock.reading.create).not.toHaveBeenCalled();
     });
   });

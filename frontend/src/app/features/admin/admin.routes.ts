@@ -58,18 +58,27 @@ export const ADMIN_ROUTES: Routes = [
       ),
   },
   {
-    path: 'leituras',
+    path: 'entregas',
     loadComponent: () =>
       import('./readings/reading-list/reading-list.component').then(
         (m) => m.AdminReadingListComponent
       ),
   },
   {
-    path: 'leituras/:id',
+    path: 'entregas/:id',
     loadComponent: () =>
       import('./readings/reading-form/reading-form.component').then(
         (m) => m.ReadingFormComponent
       ),
+  },
+  {
+    path: 'leituras',
+    redirectTo: 'entregas',
+    pathMatch: 'full',
+  },
+  {
+    path: 'leituras/:id',
+    redirectTo: 'entregas/:id',
   },
   {
     path: 'cartas',
