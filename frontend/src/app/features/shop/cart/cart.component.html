@@ -64,7 +64,7 @@
                         {{ item.product.name }}
                       </a>
                       <span class="ml-2 text-sm text-secondary">
-                        ({{ getProductTypeLabel(item.product.productType) }})
+                        ({{ getServiceKindLabel(item.product.serviceKind) }})
                       </span>
                     </div>
                     <button
@@ -111,20 +111,22 @@
                     </div>
                   </div>
 
-                  <!-- Question Input -->
-                  <div>
-                    <label class="text-secondary text-sm block mb-2">
-                      {{ 'shop.cart.yourQuestion' | translate }}
-                    </label>
-                    <textarea
-                      pInputTextarea
-                      [rows]="2"
-                      [ngModel]="item.questions?.[0] || ''"
-                      (ngModelChange)="updateQuestions(item, $event)"
-                      [placeholder]="'shop.cart.questionPlaceholder' | translate"
-                      class="w-full text-sm"
-                    ></textarea>
-                  </div>
+                  <!-- Intake Input -->
+                  @if (item.product.capabilities.intake?.enabled) {
+                    <div>
+                      <label class="text-secondary text-sm block mb-2">
+                        Informações para o atendimento
+                      </label>
+                      <textarea
+                        pInputTextarea
+                        [rows]="2"
+                        [ngModel]="item.questions?.[0] || ''"
+                        (ngModelChange)="updateQuestions(item, $event)"
+                        placeholder="Informe o que o profissional precisa saber antes do atendimento."
+                        class="w-full text-sm"
+                      ></textarea>
+                    </div>
+                  }
                 </div>
               </div>
             </div>

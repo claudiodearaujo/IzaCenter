@@ -1,4 +1,4 @@
-import { ProductType } from './product.model';
+import { ProductType, ServiceKind } from './product.model';
 
 export type OrderStatus = 'PENDING' | 'PAID' | 'PROCESSING' | 'COMPLETED' | 'CANCELLED' | 'REFUNDED';
 export type PaymentStatus = 'PENDING' | 'SUCCEEDED' | 'FAILED' | 'REFUNDED';
@@ -9,6 +9,7 @@ export interface OrderItem {
   productId: string;
   productName: string;
   productType: ProductType;
+  serviceKind?: ServiceKind;
   unitPrice: number;
   quantity: number;
   totalPrice: number;

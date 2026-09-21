@@ -97,7 +97,7 @@
                 <div class="flex-1">
                   <h4 class="text-primary font-medium">{{ item.product.name }}</h4>
                   <p class="text-secondary text-sm">
-                    {{ getProductTypeLabel(item.product.productType) }} • {{ 'shop.checkout.qty' | translate }} {{ item.quantity }}
+                    {{ getServiceKindLabel(item.product.serviceKind) }} • {{ 'shop.checkout.qty' | translate }} {{ item.quantity }}
                   </p>
                   @if (item.questions && item.questions[0]) {
                     <p class="text-secondary text-xs mt-1 italic truncate">

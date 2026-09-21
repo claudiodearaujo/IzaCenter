@@ -120,13 +120,25 @@ export class ProductDetailComponent implements OnInit {
     return Math.round(((prod.originalPrice - prod.price) / prod.originalPrice) * 100);
   }
 
-  getProductTypeLabel(type: string): string {
+  getServiceKindLabel(kind: string): string {
     const labels: Record<string, string> = {
-      'QUESTION': this.translate.instant('shop.productDetail.typeQuestion'),
-      'SESSION': this.translate.instant('shop.productDetail.typeSession'),
-      'MONTHLY': this.translate.instant('shop.productDetail.typeMonthly'),
-      'SPECIAL': this.translate.instant('shop.productDetail.typeSpecial'),
+      SERVICE: 'Serviço',
+      SESSION: 'Sessão',
+      PACKAGE: 'Pacote / acompanhamento',
+      ASYNC_SERVICE: 'Serviço assíncrono',
+      DIGITAL_PRODUCT: 'Produto digital',
     };
-    return labels[type] || type;
+    return labels[kind] || kind;
+  }
+
+  getDeliveryFormatLabel(format?: string): string {
+    const labels: Record<string, string> = {
+      TEXT: 'Texto',
+      PDF: 'PDF',
+      AUDIO: 'Áudio',
+      VIDEO: 'Vídeo',
+      MIXED: 'Formato misto',
+    };
+    return format ? (labels[format] || format) : 'Digital';
   }
 }

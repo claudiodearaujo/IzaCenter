@@ -189,6 +189,7 @@ export class OrdersService {
                 slug: true,
                 coverImageUrl: true,
                 productType: true,
+                serviceKind: true,
               },
             },
             reading: {

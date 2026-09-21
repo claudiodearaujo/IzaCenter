@@ -58,7 +58,7 @@
 
           <!-- Product Type Badge -->
           <div class="absolute top-4 left-4 badge-featured">
-            {{ getProductTypeLabel(product()?.productType || '') }}
+            {{ getServiceKindLabel(product()?.serviceKind || 'SERVICE') }}
           </div>
         </div>
 
@@ -86,57 +86,75 @@
           <div class="glass-card p-6 mb-8">
             <h3 class="heading-4 text-primary mb-4">{{ 'shop.productDetail.included' | translate }}</h3>
             <ul class="space-y-3">
-              @if (product()?.numQuestions) {
+              @if (product()?.capabilities?.scheduling?.enabled) {
                 <li class="flex items-center gap-3">
-                  <i class="pi pi-check-circle text-accent"></i>
+                  <i class="pi pi-calendar text-accent"></i>
                   <span class="text-secondary">
-                    {{ product()?.numQuestions }} {{ 'shop.productDetail.questionsAnswered' | translate }}
+                    Atendimento com agendamento
+                    @if (product()?.capabilities?.scheduling?.durationMinutes) {
+                      · {{ product()?.capabilities?.scheduling?.durationMinutes }} min
+                    }
                   </span>
                 </li>
               }
-              @if (product()?.numCards) {
+              @if (product()?.capabilities?.intake?.enabled) {
                 <li class="flex items-center gap-3">
-                  <i class="pi pi-check-circle text-accent"></i>
+                  <i class="pi pi-list text-accent"></i>
                   <span class="text-secondary">
-                    {{ 'shop.productDetail.spreadWith' | translate }} {{ product()?.numCards }} {{ 'shop.productDetail.cards' | translate }}
+                    Coleta de informações antes do atendimento
+                    @if (product()?.capabilities?.intake?.maxQuestions) {
+                      · até {{ product()?.capabilities?.intake?.maxQuestions }} campos/perguntas
+                    }
                   </span>
                 </li>
               }
-              @if (product()?.sessionDurationMinutes) {
+              @if (product()?.capabilities?.digitalDelivery?.enabled) {
                 <li class="flex items-center gap-3">
-                  <i class="pi pi-check-circle text-accent"></i>
+                  <i class="pi pi-download text-accent"></i>
                   <span class="text-secondary">
-                    {{ 'shop.productDetail.sessionOf' | translate }} {{ product()?.sessionDurationMinutes }} {{ 'shop.productDetail.minutes' | translate }}
+                    Entrega digital · {{ getDeliveryFormatLabel(product()?.capabilities?.digitalDelivery?.format) }}
+                  </span>
+                </li>
+              }
+              @if (product()?.capabilities?.recurring?.enabled) {
+                <li class="flex items-center gap-3">
+                  <i class="pi pi-sync text-accent"></i>
+                  <span class="text-secondary">
+                    Acompanhamento recorrente
+                    @if (product()?.capabilities?.recurring?.sessions) {
+                      · {{ product()?.capabilities?.recurring?.sessions }} sessões
+                    }
+                    @if (product()?.capabilities?.recurring?.cadence) {
+                      · {{ product()?.capabilities?.recurring?.cadence }}
+                    }
                   </span>
                 </li>
               }
               <li class="flex items-center gap-3">
                 <i class="pi pi-check-circle text-accent"></i>
-                <span class="text-secondary">{{ 'shop.productDetail.detailedInterpretation' | translate }}</span>
-              </li>
-              <li class="flex items-center gap-3">
-                <i class="pi pi-check-circle text-accent"></i>
-                <span class="text-secondary">{{ 'shop.productDetail.accessFor' | translate }} {{ product()?.validityDays }} {{ 'shop.productDetail.days' | translate }}</span>
+                <span class="text-secondary">Acesso por {{ product()?.validityDays }} dias</span>
               </li>
             </ul>
           </div>
 
-          <!-- Question Input -->
-          <div class="mb-8">
-            <label class="block text-primary font-medium mb-2">
-              {{ 'shop.productDetail.yourQuestion' | translate }}
-            </label>
-            <textarea
-              pInputTextarea
-              [(ngModel)]="question"
-              [rows]="3"
-              [placeholder]="'shop.productDetail.questionPlaceholder' | translate"
-              class="w-full"
-            ></textarea>
-            <p class="text-sm text-secondary mt-2">
-              {{ 'shop.productDetail.questionNote' | translate }}
-            </p>
-          </div>
+          <!-- Intake Input -->
+          @if (product()?.capabilities?.intake?.enabled) {
+            <div class="mb-8">
+              <label class="block text-primary font-medium mb-2">
+                Informações para o atendimento
+              </label>
+              <textarea
+                pInputTextarea
+                [(ngModel)]="question"
+                [rows]="3"
+                placeholder="Informe o que o profissional precisa saber antes do atendimento."
+                class="w-full"
+              ></textarea>
+              <p class="text-sm text-secondary mt-2">
+                Essas informações serão vinculadas ao pedido para preparação do serviço.
+              </p>
+            </div>
+          }
 
           <!-- Action Buttons -->
           <div class="flex flex-wrap gap-4">

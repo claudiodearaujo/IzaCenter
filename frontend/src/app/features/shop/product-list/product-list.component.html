@@ -48,9 +48,9 @@
         <!-- Type Filter -->
         <div class="min-w-[180px]">
           <p-select
-            [options]="typeOptions"
-            [(ngModel)]="selectedType"
-            (onChange)="onTypeChange($event.value)"
+            [options]="serviceKindOptions"
+            [(ngModel)]="selectedKind"
+            (onChange)="onKindChange($event.value)"
             optionLabel="label"
             optionValue="value"
             [placeholder]="'shop.productList.filterByType' | translate"
@@ -136,7 +136,7 @@
         </p>
         <button
           class="btn-secondary"
-          (click)="selectedCategory.set(null); selectedType.set(null); minPrice.set(null); maxPrice.set(null); searchTerm.set(''); loadProducts()"
+          (click)="selectedCategory.set(null); selectedKind.set(null); minPrice.set(null); maxPrice.set(null); searchTerm.set(''); loadProducts()"
         >
           {{ 'shop.productList.clearFilters' | translate }}
         </button>

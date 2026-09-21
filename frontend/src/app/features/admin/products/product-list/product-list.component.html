@@ -51,6 +51,18 @@
             styleClass="w-full"
           />
         </div>
+        <div class="w-full md:w-56">
+          <p-select
+            [options]="serviceKindOptions"
+            [(ngModel)]="selectedKind"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Tipo de serviço"
+            [showClear]="true"
+            (onChange)="onSearch()"
+            styleClass="w-full"
+          />
+        </div>
         <button pButton class="btn-primary" (click)="onSearch()">
           <i class="pi pi-search mr-2"></i>
           {{ 'common.search' | translate }}
@@ -117,8 +129,8 @@
             </td>
             <td>
               <p-tag 
-                [value]="getTypeLabel(product.type)" 
-                [severity]="getTypeSeverity(product.type)"
+                [value]="getServiceKindLabel(product.serviceKind)"
+                [severity]="getServiceKindSeverity(product.serviceKind)"
               />
             </td>
             <td class="text-secondary">{{ product.category?.name || '-' }}</td>

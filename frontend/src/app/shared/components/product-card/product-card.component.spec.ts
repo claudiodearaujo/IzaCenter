@@ -16,6 +16,8 @@ describe('ProductCardComponent', () => {
     slug: 'produto-teste',
     coverImageUrl: 'https://example.com/image.jpg',
     productType: 'QUESTION',
+    serviceKind: 'ASYNC_SERVICE',
+    capabilities: { intake: { enabled: true, maxQuestions: 1 } },
     isActive: true,
     isFeatured: false,
     requiresScheduling: false,

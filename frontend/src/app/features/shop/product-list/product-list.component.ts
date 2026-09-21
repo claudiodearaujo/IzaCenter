@@ -13,7 +13,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card.component';
 import { ApiService } from '../../../core/services/api.service';
-import { Product, ProductCategory, ProductType } from '../../../core/models/product.model';
+import { Product, ProductCategory, ServiceKind } from '../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-list',
@@ -41,7 +41,7 @@ export class ProductListComponent implements OnInit {
   loading = signal(true);
 
   selectedCategory = signal<string | null>(null);
-  selectedType = signal<ProductType | null>(null);
+  selectedKind = signal<ServiceKind | null>(null);
   minPrice = signal<number | null>(null);
   maxPrice = signal<number | null>(null);
   searchTerm = signal('');
@@ -56,13 +56,14 @@ export class ProductListComponent implements OnInit {
     ];
   }
 
-  get typeOptions() {
+  get serviceKindOptions() {
     return [
       { label: this.translate.instant('shop.productList.allTypes'), value: null },
-      { label: this.translate.instant('shop.productList.typeQuestion'), value: 'QUESTION' },
-      { label: this.translate.instant('shop.productList.typeSession'), value: 'SESSION' },
-      { label: this.translate.instant('shop.productList.typeMonthly'), value: 'MONTHLY' },
-      { label: this.translate.instant('shop.productList.typeSpecial'), value: 'SPECIAL' },
+      { label: 'Serviços', value: 'SERVICE' },
+      { label: 'Sessões', value: 'SESSION' },
+      { label: 'Pacotes', value: 'PACKAGE' },
+      { label: 'Serviços assíncronos', value: 'ASYNC_SERVICE' },
+      { label: 'Produtos digitais', value: 'DIGITAL_PRODUCT' },
     ];
   }
 
@@ -100,8 +101,8 @@ export class ProductListComponent implements OnInit {
       params.categoryId = this.selectedCategory();
     }
 
-    if (this.selectedType()) {
-      params.productType = this.selectedType();
+    if (this.selectedKind()) {
+      params.serviceKind = this.selectedKind();
     }
 
     if (this.minPrice() !== null && this.minPrice()! >= 0) {
@@ -132,8 +133,8 @@ export class ProductListComponent implements OnInit {
     this.loadProducts();
   }
 
-  onTypeChange(productType: ProductType | null) {
-    this.selectedType.set(productType);
+  onKindChange(serviceKind: ServiceKind | null) {
+    this.selectedKind.set(serviceKind);
     this.loadProducts();
   }
 

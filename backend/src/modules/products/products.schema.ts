@@ -8,6 +8,38 @@ import { commonSchemas } from '../../middlewares/validate.middleware';
  */
 const productTypeEnum = z.enum(['QUESTION', 'SESSION', 'MONTHLY', 'SPECIAL']);
 
+const serviceKindSchema = z
+  .string()
+  .min(2)
+  .max(50)
+  .regex(/^[A-Z][A-Z0-9_]*$/, 'serviceKind deve usar letras maiúsculas, números e underscore');
+
+export const serviceCapabilitiesSchema = z.object({
+  scheduling: z.object({
+    enabled: z.boolean().default(false),
+    durationMinutes: z.coerce.number().int().positive().optional(),
+  }).optional(),
+  intake: z.object({
+    enabled: z.boolean().default(false),
+    maxQuestions: z.coerce.number().int().positive().optional(),
+  }).optional(),
+  digitalDelivery: z.object({
+    enabled: z.boolean().default(false),
+    format: z.enum(['TEXT', 'PDF', 'AUDIO', 'VIDEO', 'MIXED']).optional(),
+  }).optional(),
+  recurring: z.object({
+    enabled: z.boolean().default(false),
+    sessions: z.coerce.number().int().positive().optional(),
+    cadence: z.string().max(50).optional(),
+  }).optional(),
+  specialtyModule: z.object({
+    key: z.string().min(2).max(50),
+    config: z.record(z.string(), z.unknown()).optional(),
+  }).optional(),
+}).passthrough();
+
+export type ServiceCapabilities = z.infer<typeof serviceCapabilitiesSchema>;
+
 /**
  * Create product schema
  */
@@ -17,7 +49,9 @@ export const createProductSchema = z.object({
   slug: commonSchemas.slug.optional(),
   shortDescription: z.string().max(300).optional(),
   fullDescription: z.string().optional(),
-  productType: productTypeEnum,
+  productType: productTypeEnum.optional(),
+  serviceKind: serviceKindSchema.default('SERVICE'),
+  capabilities: serviceCapabilitiesSchema.optional(),
   price: z.coerce.number().positive('Preço deve ser positivo'),
   originalPrice: z.coerce.number().positive().optional(),
   numQuestions: z.coerce.number().int().positive().optional(),
@@ -52,6 +86,7 @@ export const queryProductsSchema = z.object({
   search: z.string().optional(),
   categoryId: z.string().uuid().optional(),
   productType: productTypeEnum.optional(),
+  serviceKind: serviceKindSchema.optional(),
   isActive: z.coerce.boolean().optional(),
   isFeatured: z.coerce.boolean().optional(),
   minPrice: z.coerce.number().optional(),

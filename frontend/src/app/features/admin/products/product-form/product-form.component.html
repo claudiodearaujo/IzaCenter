@@ -79,13 +79,13 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label for="type" class="block text-secondary text-sm mb-2">
-                  {{ 'admin.products.type' | translate }} *
+                <label for="serviceKind" class="block text-secondary text-sm mb-2">
+                  Tipo de serviço *
                 </label>
                 <p-select
-                  id="type"
-                  [options]="typeOptions"
-                  [(ngModel)]="form.productType"
+                  id="serviceKind"
+                  [options]="serviceKindOptions"
+                  [(ngModel)]="form.serviceKind"
                   optionLabel="label"
                   optionValue="value"
                   styleClass="w-full"
@@ -108,36 +108,99 @@
                 />
               </div>
 
-              @if (form.productType === 'QUESTION') {
-                <div>
-                  <label for="questionCount" class="block text-secondary text-sm mb-2">
-                    {{ 'admin.products.questions' | translate }}
-                  </label>
-                  <p-inputNumber
-                    id="questionCount"
-                    [(ngModel)]="form.numQuestions"
-                    [min]="1"
-                    [max]="10"
-                    styleClass="w-full"
-                  />
-                </div>
-              }
+              <div class="md:col-span-2 rounded-lg border border-white/10 p-4 space-y-4">
+                <h4 class="text-primary font-medium">Capacidades do serviço</h4>
 
-              @if (form.productType === 'SESSION') {
-                <div>
-                  <label for="duration" class="block text-secondary text-sm mb-2">
-                    {{ 'admin.products.duration' | translate }}
-                  </label>
-                  <p-inputNumber
-                    id="duration"
-                    [(ngModel)]="form.sessionDurationMinutes"
-                    [min]="15"
-                    [step]="15"
-                    suffix=" min"
+                <div class="flex items-center gap-3">
+                  <p-checkbox
+                    [(ngModel)]="form.capabilities.scheduling.enabled"
+                    [binary]="true"
+                    inputId="capScheduling"
+                  />
+                  <label for="capScheduling" class="text-primary">Requer agendamento</label>
+                </div>
+
+                @if (form.capabilities.scheduling.enabled) {
+                  <div>
+                    <label for="duration" class="block text-secondary text-sm mb-2">Duração da sessão</label>
+                    <p-inputNumber
+                      id="duration"
+                      [(ngModel)]="form.capabilities.scheduling.durationMinutes"
+                      [min]="15"
+                      [step]="15"
+                      suffix=" min"
+                      styleClass="w-full"
+                    />
+                  </div>
+                }
+
+                <div class="flex items-center gap-3">
+                  <p-checkbox
+                    [(ngModel)]="form.capabilities.intake.enabled"
+                    [binary]="true"
+                    inputId="capIntake"
+                  />
+                  <label for="capIntake" class="text-primary">Coleta informações/perguntas antes do atendimento</label>
+                </div>
+
+                @if (form.capabilities.intake.enabled) {
+                  <div>
+                    <label for="maxQuestions" class="block text-secondary text-sm mb-2">Limite de perguntas/campos</label>
+                    <p-inputNumber
+                      id="maxQuestions"
+                      [(ngModel)]="form.capabilities.intake.maxQuestions"
+                      [min]="1"
+                      styleClass="w-full"
+                    />
+                  </div>
+                }
+
+                <div class="flex items-center gap-3">
+                  <p-checkbox
+                    [(ngModel)]="form.capabilities.digitalDelivery.enabled"
+                    [binary]="true"
+                    inputId="capDigital"
+                  />
+                  <label for="capDigital" class="text-primary">Possui entrega digital</label>
+                </div>
+
+                @if (form.capabilities.digitalDelivery.enabled) {
+                  <p-select
+                    [options]="deliveryFormatOptions"
+                    [(ngModel)]="form.capabilities.digitalDelivery.format"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Formato de entrega"
                     styleClass="w-full"
                   />
+                }
+
+                <div class="flex items-center gap-3">
+                  <p-checkbox
+                    [(ngModel)]="form.capabilities.recurring.enabled"
+                    [binary]="true"
+                    inputId="capRecurring"
+                  />
+                  <label for="capRecurring" class="text-primary">Serviço recorrente / pacote</label>
                 </div>
-              }
+
+                @if (form.capabilities.recurring.enabled) {
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <p-inputNumber
+                      [(ngModel)]="form.capabilities.recurring.sessions"
+                      [min]="1"
+                      placeholder="Quantidade de sessões"
+                      styleClass="w-full"
+                    />
+                    <input
+                      pInputText
+                      [(ngModel)]="form.capabilities.recurring.cadence"
+                      class="w-full"
+                      placeholder="Cadência, ex.: semanal"
+                    />
+                  </div>
+                }
+              </div>
 
               <div>
                 <label for="deliveryTime" class="block text-secondary text-sm mb-2">

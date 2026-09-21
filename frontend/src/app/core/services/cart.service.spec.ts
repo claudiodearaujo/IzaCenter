@@ -13,6 +13,8 @@ describe('CartService', () => {
     slug: 'leitura-cigana',
     price: 150,
     productType: 'QUESTION',
+    serviceKind: 'ASYNC_SERVICE',
+    capabilities: { intake: { enabled: true, maxQuestions: 1 } },
     isActive: true,
     isFeatured: false,
     requiresScheduling: false,
@@ -29,6 +31,8 @@ describe('CartService', () => {
     slug: 'consulta-espiritual',
     price: 200,
     productType: 'QUESTION',
+    serviceKind: 'ASYNC_SERVICE',
+    capabilities: { intake: { enabled: true, maxQuestions: 1 } },
     isActive: true,
     isFeatured: false,
     requiresScheduling: false,
@@ -154,16 +158,24 @@ describe('CartService', () => {
   });
 
   describe('loadCart', () => {
-    it('should load cart from storage on init', () => {
-      const savedCart: CartItem[] = [
-        { product: mockProduct, quantity: 2 },
-      ];
-      storageServiceSpy.get.and.returnValue(savedCart);
+    it('should normalize a legacy stored product into service domain fields', () => {
+      const legacyProduct = {
+        ...mockProduct,
+        serviceKind: undefined,
+        capabilities: undefined,
+        productType: 'QUESTION' as const,
+        numQuestions: 2,
+      } as unknown as Product;
 
-      // Create new instance with saved cart
-      const newService = TestBed.inject(CartService);
-      // Note: This won't work as service is already instantiated
-      // In real testing, we'd need to reset TestBed
+      storageServiceSpy.get.and.returnValue([
+        { product: legacyProduct, quantity: 2 },
+      ]);
+
+      (service as any).loadCart();
+
+      expect(service.items()[0].product.serviceKind).toBe('ASYNC_SERVICE');
+      expect(service.items()[0].product.capabilities.intake?.enabled).toBeTrue();
+      expect(service.items()[0].product.capabilities.intake?.maxQuestions).toBe(2);
     });
   });
 });

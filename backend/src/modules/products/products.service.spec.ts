@@ -76,10 +76,13 @@ describe('ProductsService', () => {
         where: { slug: 'leitura-de-tarot' },
       });
       expect(prismaMock.product.create).toHaveBeenCalledWith({
-        data: {
+        data: expect.objectContaining({
           ...createData,
           slug: 'leitura-de-tarot',
-        },
+          serviceKind: 'SERVICE',
+          capabilities: {},
+          requiresScheduling: false,
+        }),
         include: {
           category: true,
           attachments: true,
@@ -104,6 +107,47 @@ describe('ProductsService', () => {
       expect(prismaMock.product.findUnique).toHaveBeenCalledWith({
         where: { slug: 'custom-slug' },
       });
+    });
+
+    it('should create a generic session without productType and sync legacy fields', async () => {
+      const genericData = {
+        name: 'Sessão Integrativa',
+        price: 150,
+        serviceKind: 'SESSION',
+        capabilities: {
+          scheduling: { enabled: true, durationMinutes: 60 },
+          intake: { enabled: true, maxQuestions: 2 },
+        },
+      };
+
+      prismaMock.product.findUnique.mockResolvedValue(null);
+      prismaMock.product.create.mockResolvedValue({
+        ...mockProduct,
+        name: genericData.name,
+        slug: 'sessão-integrativa',
+        productType: 'SESSION',
+        serviceKind: 'SESSION',
+        requiresScheduling: true,
+        sessionDurationMinutes: 60,
+        numQuestions: 2,
+        capabilities: genericData.capabilities,
+      } as any);
+
+      const result = await productsService.create(genericData as any);
+
+      expect(prismaMock.product.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            serviceKind: 'SESSION',
+            productType: 'SESSION',
+            requiresScheduling: true,
+            sessionDurationMinutes: 60,
+            numQuestions: 2,
+          }),
+        })
+      );
+      expect(result.serviceKind).toBe('SESSION');
+      expect(result.capabilities.scheduling?.durationMinutes).toBe(60);
     });
 
     it('should throw conflict error if slug already exists', async () => {
@@ -237,7 +281,15 @@ describe('ProductsService', () => {
       const result = await productsService.list(query as any);
 
       // Assert
-      expect(result.data).toEqual(mockProducts);
+      expect(result.data).toHaveLength(1);
+      expect(result.data[0]).toEqual(expect.objectContaining({
+        id: 'product-1',
+        serviceKind: 'SERVICE',
+        capabilities: expect.objectContaining({
+          scheduling: { enabled: false },
+          intake: { enabled: false },
+        }),
+      }));
       expect(result.meta).toBeDefined();
       expect(prismaMock.product.findMany).toHaveBeenCalledWith({
         where: {},
@@ -325,6 +377,28 @@ describe('ProductsService', () => {
         expect.objectContaining({
           where: expect.objectContaining({
             productType: 'READING',
+          }),
+        })
+      );
+    });
+
+    it('should filter by serviceKind', async () => {
+      const query = {
+        page: 1,
+        limit: 10,
+        serviceKind: 'SESSION',
+        sortBy: 'createdAt' as const,
+        sortOrder: 'desc' as const,
+      };
+      prismaMock.product.findMany.mockResolvedValue(mockProducts as any);
+      prismaMock.product.count.mockResolvedValue(1);
+
+      await productsService.list(query as any);
+
+      expect(prismaMock.product.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            serviceKind: 'SESSION',
           }),
         })
       );
@@ -455,7 +529,8 @@ describe('ProductsService', () => {
       const result = await productsService.getFeatured();
 
       // Assert
-      expect(result).toEqual(mockProducts);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual(expect.objectContaining({ serviceKind: 'SERVICE' }));
       expect(prismaMock.product.findMany).toHaveBeenCalledWith({
         where: {
           isActive: true,
@@ -479,7 +554,8 @@ describe('ProductsService', () => {
       const result = await productsService.getFeatured(3);
 
       // Assert
-      expect(result).toEqual(mockProducts);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual(expect.objectContaining({ serviceKind: 'SERVICE' }));
       expect(prismaMock.product.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           take: 3,
@@ -519,7 +595,13 @@ describe('ProductsService', () => {
       expect(result.name).toBe('Leitura Atualizada');
       expect(prismaMock.product.update).toHaveBeenCalledWith({
         where: { id: productId },
-        data: updateData,
+        data: expect.objectContaining({
+          ...updateData,
+          serviceKind: 'SERVICE',
+          productType: 'SPECIAL',
+          capabilities: {},
+          requiresScheduling: false,
+        }),
         include: {
           category: true,
           attachments: true,

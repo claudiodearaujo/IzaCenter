@@ -20,6 +20,16 @@ import { CategoriesService, ProductCategory } from '../../../../core/services/ca
 import { NotificationService } from '../../../../core/services/notification.service';
 import { TextareaModule } from 'primeng/textarea';
 
+type ProductFormModel = CreateProductDTO & {
+  serviceKind: string;
+  capabilities: {
+    scheduling: { enabled: boolean; durationMinutes?: number };
+    intake: { enabled: boolean; maxQuestions?: number };
+    digitalDelivery: { enabled: boolean; format?: 'TEXT' | 'PDF' | 'AUDIO' | 'VIDEO' | 'MIXED' };
+    recurring: { enabled: boolean; sessions?: number; cadence?: string };
+  };
+};
+
 @Component({
   selector: 'app-product-form',
   standalone: true,
@@ -56,26 +66,41 @@ export class ProductFormComponent implements OnInit {
 
   categories = signal<ProductCategory[]>([]);
 
-  form: CreateProductDTO = {
+  form: ProductFormModel = {
     name: '',
     shortDescription: '',
     fullDescription: '',
-    productType: 'QUESTION',
+    serviceKind: 'SERVICE',
+    capabilities: {
+      scheduling: { enabled: false },
+      intake: { enabled: false },
+      digitalDelivery: { enabled: false },
+      recurring: { enabled: false },
+    },
     price: 0,
     originalPrice: undefined,
-    numQuestions: 3,
-    sessionDurationMinutes: undefined,
     categoryId: '',
     isActive: true,
     isFeatured: false,
   };
 
-  get typeOptions() {
+  get serviceKindOptions() {
     return [
-      { label: this.translate.instant('admin.products.typeQuestion'), value: 'QUESTION' },
-      { label: this.translate.instant('admin.products.typeSession'), value: 'SESSION' },
-      { label: this.translate.instant('admin.products.typeMonthly'), value: 'MONTHLY' },
-      { label: this.translate.instant('admin.products.typeSpecial'), value: 'SPECIAL' },
+      { label: 'Serviço', value: 'SERVICE' },
+      { label: 'Sessão', value: 'SESSION' },
+      { label: 'Pacote / acompanhamento', value: 'PACKAGE' },
+      { label: 'Serviço assíncrono', value: 'ASYNC_SERVICE' },
+      { label: 'Produto digital', value: 'DIGITAL_PRODUCT' },
+    ];
+  }
+
+  get deliveryFormatOptions() {
+    return [
+      { label: 'Texto', value: 'TEXT' },
+      { label: 'PDF', value: 'PDF' },
+      { label: 'Áudio', value: 'AUDIO' },
+      { label: 'Vídeo', value: 'VIDEO' },
+      { label: 'Misto', value: 'MIXED' },
     ];
   }
 
@@ -109,10 +134,21 @@ export class ProductFormComponent implements OnInit {
           shortDescription: product.shortDescription || '',
           fullDescription: product.fullDescription || '',
           productType: product.productType,
+          serviceKind: product.serviceKind || 'SERVICE',
+          capabilities: {
+            scheduling: product.capabilities?.scheduling || {
+              enabled: product.requiresScheduling,
+              durationMinutes: product.sessionDurationMinutes,
+            },
+            intake: product.capabilities?.intake || {
+              enabled: !!product.numQuestions,
+              maxQuestions: product.numQuestions,
+            },
+            digitalDelivery: product.capabilities?.digitalDelivery || { enabled: false },
+            recurring: product.capabilities?.recurring || { enabled: false },
+          },
           price: product.price,
           originalPrice: product.originalPrice,
-          numQuestions: product.numQuestions,
-          sessionDurationMinutes: product.sessionDurationMinutes,
           categoryId: product.categoryId || '',
           isActive: product.isActive,
           isFeatured: product.isFeatured,

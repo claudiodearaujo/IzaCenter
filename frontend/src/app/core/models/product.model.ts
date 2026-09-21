@@ -1,4 +1,14 @@
 export type ProductType = 'QUESTION' | 'SESSION' | 'MONTHLY' | 'SPECIAL';
+export type ServiceKind = 'SERVICE' | 'SESSION' | 'PACKAGE' | 'ASYNC_SERVICE' | 'DIGITAL_PRODUCT' | (string & {});
+
+export interface ServiceCapabilities {
+  scheduling?: { enabled: boolean; durationMinutes?: number };
+  intake?: { enabled: boolean; maxQuestions?: number };
+  digitalDelivery?: { enabled: boolean; format?: 'TEXT' | 'PDF' | 'AUDIO' | 'VIDEO' | 'MIXED' };
+  recurring?: { enabled: boolean; sessions?: number; cadence?: string };
+  specialtyModule?: { key: string; config?: Record<string, unknown> };
+  [key: string]: unknown;
+}
 
 export interface ProductCategory {
   id: string;
@@ -19,6 +29,8 @@ export interface Product {
   shortDescription?: string;
   fullDescription?: string;
   productType: ProductType;
+  serviceKind: ServiceKind;
+  capabilities: ServiceCapabilities;
   price: number;
   originalPrice?: number;
   numQuestions?: number;

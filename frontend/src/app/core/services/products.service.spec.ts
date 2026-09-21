@@ -13,6 +13,8 @@ describe('ProductsService', () => {
     slug: 'leitura-cigana-completa',
     shortDescription: 'Leitura completa com 36 cartas',
     productType: 'SESSION',
+    serviceKind: 'SESSION',
+    capabilities: { scheduling: { enabled: true, durationMinutes: 60 } },
     price: 150,
     validityDays: 30,
     galleryUrls: [],
@@ -69,6 +71,8 @@ describe('ProductsService', () => {
         request.params.get('featured') === 'true' &&
         request.params.get('page') === '2'
       );
+      expect(req.request.method).toBe('GET');
+      expect(req.request.params.get('page')).toBe('2');
       req.flush({ data: [], meta: {} });
     });
   });
@@ -103,7 +107,8 @@ describe('ProductsService', () => {
     it('should create a new product', () => {
       const createData = {
         name: 'Novo Produto',
-        productType: 'QUESTION',
+        serviceKind: 'ASYNC_SERVICE',
+        capabilities: { intake: { enabled: true, maxQuestions: 1 } },
         price: 100,
       };
 

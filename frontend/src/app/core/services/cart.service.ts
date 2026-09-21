@@ -30,7 +30,45 @@ export class CartService {
   private loadCart(): void {
     const savedCart = this.storage.get<CartItem[]>('cart');
     if (savedCart) {
-      this.itemsSignal.set(savedCart);
+      this.itemsSignal.set(
+        savedCart.map((item) => ({
+          ...item,
+          product: this.normalizeStoredProduct(item.product),
+        }))
+      );
+    }
+  }
+
+  private normalizeStoredProduct(product: Product): Product {
+    const legacyProduct = product as Product & {
+      serviceKind?: Product['serviceKind'];
+      capabilities?: Product['capabilities'];
+    };
+
+    const serviceKind = legacyProduct.serviceKind || this.serviceKindFromLegacy(product.productType);
+
+    return {
+      ...product,
+      serviceKind,
+      capabilities: legacyProduct.capabilities || {
+        scheduling: {
+          enabled: product.requiresScheduling || false,
+          ...(product.sessionDurationMinutes ? { durationMinutes: product.sessionDurationMinutes } : {}),
+        },
+        intake: {
+          enabled: product.numQuestions != null,
+          ...(product.numQuestions ? { maxQuestions: product.numQuestions } : {}),
+        },
+      },
+    };
+  }
+
+  private serviceKindFromLegacy(productType: Product['productType']): Product['serviceKind'] {
+    switch (productType) {
+      case 'SESSION': return 'SESSION';
+      case 'MONTHLY': return 'PACKAGE';
+      case 'QUESTION': return 'ASYNC_SERVICE';
+      default: return 'SERVICE';
     }
   }
 
