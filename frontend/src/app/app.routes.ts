@@ -104,12 +104,21 @@ export const routes: Routes = [
         loadComponent: () => import('./features/client/dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
       {
-        path: 'leituras',
+        path: 'entregas',
         loadComponent: () => import('./features/client/readings/reading-list/reading-list.component').then(m => m.ReadingListComponent)
       },
       {
-        path: 'leituras/:id',
+        path: 'entregas/:id',
         loadComponent: () => import('./features/client/readings/reading-detail/reading-detail.component').then(m => m.ReadingDetailComponent)
+      },
+      {
+        path: 'leituras',
+        redirectTo: 'entregas',
+        pathMatch: 'full'
+      },
+      {
+        path: 'leituras/:id',
+        redirectTo: 'entregas/:id'
       },
       {
         path: 'agendamentos',
@@ -145,12 +154,21 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(m => m.AdminDashboardComponent)
       },
       {
-        path: 'leituras',
+        path: 'entregas',
         loadComponent: () => import('./features/admin/readings/reading-list/reading-list.component').then(m => m.AdminReadingListComponent)
       },
       {
-        path: 'leituras/:id',
+        path: 'entregas/:id',
         loadComponent: () => import('./features/admin/readings/reading-form/reading-form.component').then(m => m.ReadingFormComponent)
+      },
+      {
+        path: 'leituras',
+        redirectTo: 'entregas',
+        pathMatch: 'full'
+      },
+      {
+        path: 'leituras/:id',
+        redirectTo: 'entregas/:id'
       },
       {
         path: 'agendamentos',

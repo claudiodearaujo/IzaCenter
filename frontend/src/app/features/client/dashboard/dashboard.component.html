@@ -80,7 +80,7 @@
           <i class="pi pi-shopping-cart block mb-2 text-xl"></i>
           {{ 'client.dashboard.newConsultation' | translate }}
         </a>
-        <a routerLink="/cliente/leituras" class="btn-outline text-center py-4">
+        <a routerLink="/cliente/entregas" class="btn-outline text-center py-4">
           <i class="pi pi-book block mb-2 text-xl"></i>
           {{ 'client.dashboard.myReadings' | translate }}
         </a>
@@ -151,7 +151,7 @@
             <i class="pi pi-book mr-2"></i>
             {{ 'client.dashboard.recentReadings' | translate }}
           </h2>
-          <a routerLink="/cliente/leituras" class="text-accent hover:text-accent-light transition-colors text-sm">
+          <a routerLink="/cliente/entregas" class="text-accent hover:text-accent-light transition-colors text-sm">
             {{ 'client.dashboard.viewAllFemale' | translate }} <i class="pi pi-arrow-right ml-1"></i>
           </a>
         </div>
@@ -173,7 +173,7 @@
         } @else {
         <div class="space-y-4">
           @for (reading of recentReadings(); track reading.id) {
-          <a [routerLink]="['/cliente/leituras', reading.id]"
+          <a [routerLink]="['/cliente/entregas', reading.id]"
             class="flex items-center justify-between p-4 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors">
             <div>
               <p class="text-primary font-medium">{{ reading.title || (reading.product?.name ?? '') }}</p>

@@ -136,22 +136,49 @@ const options: swaggerJsdoc.Options = {
             createdAt: { type: 'string', format: 'date-time' },
           },
         },
-        // Reading
-        Reading: {
+        // Delivery Domain v3
+        Delivery: {
           type: 'object',
+          description: 'Generic digital delivery attached to an order item.',
           properties: {
             id: { type: 'string', format: 'uuid' },
+            orderItemId: { type: 'string', format: 'uuid' },
             clientId: { type: 'string', format: 'uuid' },
-            productId: { type: 'string', format: 'uuid' },
-            orderId: { type: 'string', format: 'uuid', nullable: true },
-            questions: { type: 'string' },
-            interpretation: { type: 'string', nullable: true },
+            title: { type: 'string' },
             status: {
               type: 'string',
-              enum: ['PENDING', 'WAITING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
+              enum: ['PENDING', 'IN_PROGRESS', 'PUBLISHED', 'ARCHIVED'],
             },
+            deliveryType: {
+              type: 'string',
+              example: 'PDF',
+              description: 'Open delivery classification such as CONTENT, PDF, AUDIO or VIDEO.',
+            },
+            content: {
+              type: 'object',
+              additionalProperties: true,
+              description: 'Generic versioned delivery content.',
+            },
+            specialtyModule: {
+              type: 'object',
+              nullable: true,
+              additionalProperties: true,
+              description: 'Optional specialty-specific module snapshot, e.g. tarot-cards.',
+            },
+            metadata: {
+              type: 'object',
+              additionalProperties: true,
+            },
+            audioUrl: { type: 'string', nullable: true },
+            videoUrl: { type: 'string', nullable: true },
+            pdfUrl: { type: 'string', nullable: true },
+            publishedAt: { type: 'string', format: 'date-time', nullable: true },
             createdAt: { type: 'string', format: 'date-time' },
           },
+        },
+        Reading: {
+          allOf: [{ $ref: '#/components/schemas/Delivery' }],
+          description: 'Legacy compatibility alias for Delivery. Prefer the Delivery schema and /deliveries routes.',
         },
         // Appointment
         Appointment: {

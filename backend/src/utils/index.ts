@@ -22,4 +22,4 @@ export {
   addHours,
 } from './helpers.util';
 export { sendEmail, emailTemplates } from './email.util';
-export { generateOrderPdf, generateReadingPdf } from './pdf.util';
+export { generateOrderPdf, generateDeliveryPdf, generateReadingPdf } from './pdf.util';

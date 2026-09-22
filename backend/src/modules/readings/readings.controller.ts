@@ -2,7 +2,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { readingsService } from './readings.service';
-import { generateReadingPdf } from '../../utils/pdf.util';
+import { generateDeliveryPdf } from '../../utils/pdf.util';
 
 export class ReadingsController {
   // Admin endpoints
@@ -48,6 +48,21 @@ export class ReadingsController {
       const { id } = req.params;
       const { status } = req.body;
       const result = await readingsService.updateStatus(id as string, status);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async uploadAudio(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      if (!req.file) {
+        return res.status(400).json({ message: 'Arquivo de áudio é obrigatório' });
+      }
+
+      const result = await readingsService.uploadAudio(id as string, req.file);
       res.json(result);
     } catch (error) {
       next(error);
@@ -121,10 +136,10 @@ export class ReadingsController {
       const { data: reading } = await readingsService.findById(id as string, userId);
 
       if (reading.status !== 'PUBLISHED') {
-        return res.status(403).json({ message: 'Leitura ainda não está disponível para download' });
+        return res.status(403).json({ message: 'Entrega ainda não está disponível para download' });
       }
 
-      generateReadingPdf(
+      generateDeliveryPdf(
         {
           title: reading.title ?? reading.orderItem.product.name,
           introduction: reading.introduction,

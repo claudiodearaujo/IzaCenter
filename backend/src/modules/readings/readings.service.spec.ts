@@ -1,3 +1,11 @@
+jest.mock('../../config/supabase', () => ({
+  storage: {
+    upload: jest.fn().mockResolvedValue({ path: 'deliveries/test/audio/test.mp3' }),
+    getPublicUrl: jest.fn().mockReturnValue('https://example.com/audio/test.mp3'),
+    delete: jest.fn().mockResolvedValue(undefined),
+  },
+}));
+
 import { ReadingsService } from './readings.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 
@@ -54,7 +62,14 @@ describe('ReadingsService', () => {
       const result = await readingsService.findAll({});
 
       // Assert
-      expect(result.data).toEqual(mockReadings);
+      expect(result.data).toHaveLength(mockReadings.length);
+      expect(result.data[0].id).toBe('reading-1');
+      expect(result.data[0].deliveryType).toBe('CONTENT');
+      expect(result.data[0].content).toEqual({});
+      expect(result.data[0].product).toEqual(
+        expect.objectContaining({ id: 'product-1', name: 'Produto 1' })
+      );
+      expect(result.data[0].orderItem.questions).toEqual([]);
       expect(result.meta).toEqual({
         total: 1,
         page: 1,
@@ -176,7 +191,15 @@ describe('ReadingsService', () => {
       const result = await readingsService.findByUser(userId);
 
       // Assert
-      expect(result.data).toEqual(mockReadings);
+      expect(result.data).toHaveLength(mockReadings.length);
+      expect(result.data[0].id).toBe('reading-1');
+      expect(result.data[0].clientId).toBe(userId);
+      expect(result.data[0].deliveryType).toBe('CONTENT');
+      expect(result.data[0].content).toEqual({});
+      expect(result.data[0].product).toEqual(
+        expect.objectContaining({ id: 'p-1', name: 'Produto' })
+      );
+      expect(result.data[0].orderItem.questions).toEqual([]);
       expect(prismaMock.reading.findMany).toHaveBeenCalledWith({
         where: { clientId: userId },
         include: expect.objectContaining({
@@ -222,7 +245,16 @@ describe('ReadingsService', () => {
       const result = await readingsService.findById(readingId);
 
       // Assert
-      expect(result.data).toEqual(mockReading);
+      expect(result.data.id).toBe(readingId);
+      expect(result.data.clientId).toBe('client-123');
+      expect(result.data.title).toBe('Leitura Completa');
+      expect(result.data.status).toBe('PENDING');
+      expect(result.data.deliveryType).toBe('CONTENT');
+      expect(result.data.content).toEqual({});
+      expect(result.data.product).toEqual(
+        expect.objectContaining({ id: 'p-1', name: 'Produto' })
+      );
+      expect(result.data.orderItem.questions).toEqual([]);
       expect(prismaMock.reading.findUnique).toHaveBeenCalledWith({
         where: { id: readingId },
         include: expect.objectContaining({
@@ -239,7 +271,7 @@ describe('ReadingsService', () => {
 
       // Act & Assert
       await expect(readingsService.findById(readingId)).rejects.toThrow(
-        'Leitura não encontrada'
+        'Entrega não encontrada'
       );
     });
 
@@ -251,7 +283,16 @@ describe('ReadingsService', () => {
       const result = await readingsService.findById(readingId, 'client-123');
 
       // Assert
-      expect(result.data).toEqual(mockReading);
+      expect(result.data.id).toBe(readingId);
+      expect(result.data.clientId).toBe('client-123');
+      expect(result.data.title).toBe('Leitura Completa');
+      expect(result.data.status).toBe('PENDING');
+      expect(result.data.deliveryType).toBe('CONTENT');
+      expect(result.data.content).toEqual({});
+      expect(result.data.product).toEqual(
+        expect.objectContaining({ id: 'p-1', name: 'Produto' })
+      );
+      expect(result.data.orderItem.questions).toEqual([]);
     });
 
     it('should throw NotFoundException when userId does not match clientId', async () => {
@@ -261,7 +302,7 @@ describe('ReadingsService', () => {
       // Act & Assert
       await expect(
         readingsService.findById(readingId, 'other-user')
-      ).rejects.toThrow('Leitura não encontrada');
+      ).rejects.toThrow('Entrega não encontrada');
     });
   });
 
@@ -304,7 +345,14 @@ describe('ReadingsService', () => {
       const result = await readingsService.update(readingId, updateData);
 
       // Assert
-      expect(result.data).toEqual(mockUpdatedReading);
+      expect(result.data).toEqual(expect.objectContaining({
+        ...mockUpdatedReading,
+        deliveryType: 'CONTENT',
+        content: expect.objectContaining({
+          introduction: 'Nova introdução',
+          body: 'Orientação geral',
+        }),
+      }));
     });
 
     it('should update reading with cards', async () => {
@@ -364,7 +412,7 @@ describe('ReadingsService', () => {
 
       // Act & Assert
       await expect(readingsService.update(readingId, updateData)).rejects.toThrow(
-        'Leitura não encontrada'
+        'Entrega não encontrada'
       );
     });
 
@@ -377,7 +425,7 @@ describe('ReadingsService', () => {
 
       // Act & Assert
       await expect(readingsService.update(readingId, updateData)).rejects.toThrow(
-        'Leituras publicadas não podem ser editadas'
+        'Entregas publicadas não podem ser editadas'
       );
     });
   });
@@ -457,7 +505,7 @@ describe('ReadingsService', () => {
       expect(sendEmail).toHaveBeenCalledWith(
         expect.objectContaining({
           to: 'client@test.com',
-          subject: expect.stringContaining('Leitura'),
+          subject: expect.stringContaining('entrega'),
           html: expect.stringContaining('Cliente Teste'),
         })
       );
@@ -490,7 +538,7 @@ describe('ReadingsService', () => {
       // Act & Assert
       await expect(
         readingsService.updateStatus(readingId, 'PUBLISHED')
-      ).rejects.toThrow('Leitura não encontrada');
+      ).rejects.toThrow('Entrega não encontrada');
     });
   });
 
@@ -512,7 +560,7 @@ describe('ReadingsService', () => {
       const result = await readingsService.delete(readingId);
 
       // Assert
-      expect(result.message).toBe('Leitura excluída com sucesso');
+      expect(result.message).toBe('Entrega excluída com sucesso');
       expect(prismaMock.reading.delete).toHaveBeenCalledWith({
         where: { id: readingId },
       });
@@ -530,7 +578,7 @@ describe('ReadingsService', () => {
       const result = await readingsService.delete(readingId);
 
       // Assert
-      expect(result.message).toBe('Leitura excluída com sucesso');
+      expect(result.message).toBe('Entrega excluída com sucesso');
     });
 
     it('should throw NotFoundException if reading not found', async () => {
@@ -539,7 +587,7 @@ describe('ReadingsService', () => {
 
       // Act & Assert
       await expect(readingsService.delete(readingId)).rejects.toThrow(
-        'Leitura não encontrada'
+        'Entrega não encontrada'
       );
     });
 
@@ -552,7 +600,7 @@ describe('ReadingsService', () => {
 
       // Act & Assert
       await expect(readingsService.delete(readingId)).rejects.toThrow(
-        'Leituras publicadas não podem ser excluídas'
+        'Entregas publicadas não podem ser excluídas'
       );
       expect(prismaMock.reading.delete).not.toHaveBeenCalled();
     });

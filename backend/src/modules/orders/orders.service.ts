@@ -10,6 +10,36 @@ import { sendEmail, emailTemplates } from '../../utils/email.util';
 import { CreateOrderDto, UpdateOrderDto, QueryOrdersDto, AddQuestionsDto } from './orders.schema';
 
 export class OrdersService {
+  private getProductCapabilities(product: any): Record<string, any> {
+    return product.capabilities && typeof product.capabilities === 'object'
+      ? product.capabilities as Record<string, any>
+      : {};
+  }
+
+  private shouldCreateDelivery(product: any): boolean {
+    const capabilities = this.getProductCapabilities(product);
+
+    if (Object.prototype.hasOwnProperty.call(capabilities, 'digitalDelivery')) {
+      return capabilities.digitalDelivery?.enabled === true;
+    }
+
+    // Legacy fallback: before Service Domain v2 every non-scheduled item
+    // generated a Reading. Keep this only for products without the new capability.
+    return !product.requiresScheduling;
+  }
+
+  private getDeliveryType(product: any): string {
+    const capabilities = this.getProductCapabilities(product);
+    return capabilities.digitalDelivery?.format || 'CONTENT';
+  }
+
+  private getDeliverySpecialtyModule(product: any): Prisma.InputJsonValue | typeof Prisma.JsonNull {
+    const capabilities = this.getProductCapabilities(product);
+    return capabilities.specialtyModule
+      ? capabilities.specialtyModule as Prisma.InputJsonValue
+      : Prisma.JsonNull;
+  }
+
   /**
    * Create order from cart
    */
@@ -379,15 +409,24 @@ export class OrdersService {
       },
     });
 
-    // Create readings for each order item
+    // Create generic deliveries according to service capabilities.
+    // The physical table remains "readings" during the compatibility window.
     for (const item of order.items) {
-      if (!item.product.requiresScheduling) {
+      if (this.shouldCreateDelivery(item.product)) {
         await prisma.reading.create({
           data: {
             orderItemId: item.id,
             clientId: order.clientId,
-            title: `Leitura - ${item.productName}`,
+            title: `Entrega - ${item.productName}`,
             status: 'PENDING',
+            deliveryType: this.getDeliveryType(item.product),
+            content: {},
+            specialtyModule: this.getDeliverySpecialtyModule(item.product),
+            metadata: {
+              schemaVersion: 1,
+              serviceKind: item.product.serviceKind || 'SERVICE',
+              productId: item.productId,
+            },
             clientQuestion: item.clientQuestions.join('\n'),
             expiresAt: addDays(new Date(), item.product.validityDays),
           },
