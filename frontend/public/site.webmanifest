@@ -61,12 +61,12 @@
   "theme_color": "#7c3aed",
   "background_color": "#ffffff",
   "display": "standalone",
-  "description": "Plataforma de Tarot Cigano — leituras, agendamentos e loja virtual",
+  "description": "Plataforma de serviços profissionais, agendamentos, entregas digitais e loja virtual",
   "start_url": "/",
   "orientation": "portrait",
   "lang": "pt-BR",
   "categories": [
-    "entertainment",
+    "business",
     "lifestyle"
   ]
 }
