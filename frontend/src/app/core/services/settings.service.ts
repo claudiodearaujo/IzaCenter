@@ -80,6 +80,7 @@ export interface SpecialtySettings {
   description?: string;
   isActive: boolean;
   usesCardModule: boolean;
+  moduleKey?: string;
   disclaimer?: string;
 }
 
@@ -103,6 +104,7 @@ export interface AllSettings {
   content: ContentSettings;
   professional: ProfessionalSettings;
   specialties: SpecialtySettings[];
+  enabledModules: string[];
   seo: SeoSettings;
   analytics: AnalyticsSettings;
 }
