@@ -28,4 +28,14 @@ describe('public root route', () => {
     expect(onboarding?.canActivate).toBeUndefined();
     expect(onboarding?.loadComponent).toBeDefined();
   });
+
+  it('should expose billing inside the admin route protected by the admin guard', () => {
+    const admin = routes.find((route) => route.path === 'admin');
+    const billing = admin?.children?.find((route) => route.path === 'assinatura');
+
+    expect(admin).toBeDefined();
+    expect(admin?.canActivate).toBeDefined();
+    expect(billing).toBeDefined();
+    expect(billing?.loadComponent).toBeDefined();
+  });
 });
