@@ -20,9 +20,10 @@ A direção arquitetural atual é: `Professional → Specialty → Service → C
 - [PRD — Service Domain v2](docs/PRD-SERVICE-DOMAIN-V2.md)
 - [PRD — Delivery Domain v3](docs/PRD-DELIVERY-DOMAIN-V3.md)
 - [PRD — Content / White-label Domain v4](docs/PRD-CONTENT-WHITELABEL-V4.md)
+- [PRD — Specialty Modules v5](docs/PRD-SPECIALTY-MODULES-V5.md)
 - O catálogo usa `serviceKind` + `capabilities`; `ProductType` permanece apenas como compatibilidade transitória.
 - Entregas digitais usam o contrato `Delivery`; a tabela física `readings` e as rotas `/readings` permanecem somente como compatibilidade transitória.
-- `CiganoCard`/`ReadingCard` passam a pertencer ao módulo opcional de especialidade `tarot-cards`, e não ao core de entregas.
+- `CiganoCard`/`ReadingCard` pertencem ao módulo opcional `tarot-cards`; API, rota e menu são habilitados apenas por especialidades ativas que usam esse módulo.
 
 ## Funcionalidades
 
