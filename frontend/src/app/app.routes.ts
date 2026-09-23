@@ -228,6 +228,10 @@ export const routes: Routes = [
       {
         path: 'relatorios',
         loadComponent: () => import('./features/admin/reports/reports.component').then(m => m.AdminReportsComponent)
+      },
+      {
+        path: 'assinatura',
+        loadComponent: () => import('./features/admin/billing/billing.component').then(m => m.BillingComponent)
       }
     ]
   },
