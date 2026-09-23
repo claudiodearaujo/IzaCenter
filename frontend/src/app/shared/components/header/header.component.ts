@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
 import { LanguageSelectorComponent } from '../language-selector/language-selector.component';
 import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
+import { DEFAULT_PUBLIC_SETTINGS, PublicSettingsStore } from '../../../core/services/public-settings.store';
 
 @Component({
   selector: 'app-header',
@@ -29,11 +30,13 @@ import { NotificationBellComponent } from '../notification-bell/notification-bel
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   private authService = inject(AuthService);
   private cartService = inject(CartService);
   private router = inject(Router);
+  private publicSettingsStore = inject(PublicSettingsStore);
 
+  publicSettings = signal(DEFAULT_PUBLIC_SETTINGS);
   isMenuOpen = signal(false);
   isSearchOpen = signal(false);
   globalSearchTerm = signal('');
@@ -42,6 +45,10 @@ export class HeaderComponent {
   readonly isAdmin = this.authService.isAdmin;
   readonly currentUser = this.authService.currentUser;
   readonly cartItemCount = this.cartService.itemCount;
+
+  ngOnInit(): void {
+    this.publicSettingsStore.load().subscribe((settings) => this.publicSettings.set(settings));
+  }
 
   toggleMenu(): void {
     this.isMenuOpen.update(value => !value);
