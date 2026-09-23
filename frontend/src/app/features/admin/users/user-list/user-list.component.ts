@@ -1,19 +1,24 @@
-// apps/frontend/src/app/features/admin/users/user-list/user-list.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { Select } from 'primeng/select';
-import { TagModule } from 'primeng/tag';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { UsersService, User } from '../../../../core/services/users.service';
+import {
+  DsAvatarComponent,
+  DsBadgeComponent,
+  DsButtonComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsFormFieldComponent,
+  DsPageHeaderComponent,
+} from '../../../../shared/design-system';
 
 @Component({
   selector: 'app-user-list',
@@ -22,13 +27,18 @@ import { UsersService, User } from '../../../../core/services/users.service';
     CommonModule,
     RouterLink,
     FormsModule,
-    ButtonModule,
     InputTextModule,
     TableModule,
     Select,
-    TagModule,
     SkeletonModule,
     TranslateModule,
+    DsAvatarComponent,
+    DsBadgeComponent,
+    DsButtonComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsFormFieldComponent,
+    DsPageHeaderComponent,
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
@@ -52,25 +62,16 @@ export class UserListComponent implements OnInit {
     ];
   }
 
-  ngOnInit() {
-    this.loadUsers();
-  }
+  ngOnInit(): void { this.loadUsers(); }
 
-  loadUsers(event?: any) {
+  loadUsers(event?: any): void {
     this.loading.set(true);
-
     const params: any = {
       page: event?.first ? Math.floor(event.first / (event.rows || 10)) + 1 : 1,
       limit: event?.rows || 10,
     };
-
-    if (this.searchTerm) {
-      params.search = this.searchTerm;
-    }
-
-    if (this.selectedRole) {
-      params.role = this.selectedRole;
-    }
+    if (this.searchTerm) params.search = this.searchTerm;
+    if (this.selectedRole) params.role = this.selectedRole;
 
     this.usersService.findAll(params).subscribe({
       next: (response) => {
@@ -85,20 +86,17 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  onSearch() {
-    this.loadUsers();
-  }
+  onSearch(): void { this.loadUsers(); }
+  onRoleChange(): void { this.loadUsers(); }
 
-  onRoleChange() {
-    this.loadUsers();
-  }
-
-  getRoleSeverity(role: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-    return role === 'ADMIN' ? 'warn' : 'info';
+  getRoleTone(role: string): 'brand' | 'warning' {
+    return role === 'ADMIN' ? 'warning' : 'brand';
   }
 
   getRoleLabel(role: string): string {
-    return role === 'ADMIN' ? this.translate.instant('admin.users.roleAdmin') : this.translate.instant('admin.users.roleClient');
+    return role === 'ADMIN'
+      ? this.translate.instant('admin.users.roleAdmin')
+      : this.translate.instant('admin.users.roleClient');
   }
 
   formatDate(dateString: string | Date): string {
