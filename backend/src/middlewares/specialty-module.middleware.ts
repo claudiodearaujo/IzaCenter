@@ -4,7 +4,7 @@ import { settingsService } from '../modules/settings/settings.service';
 export function requireSpecialtyModule(moduleKey: string) {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const enabled = await settingsService.isSpecialtyModuleEnabled(moduleKey);
+      const enabled = await settingsService.isSpecialtyModuleEnabled(moduleKey, req.tenant?.id);
 
       if (!enabled) {
         res.status(404).json({
