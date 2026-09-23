@@ -1,6 +1,7 @@
 // apps/backend/src/modules/settings/settings.service.ts
 
 import { prisma } from '../../config/database';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 
 interface GeneralSettings {
   siteName: string;
@@ -86,25 +87,29 @@ interface AnalyticsSettings {
 }
 
 export class SettingsService {
-  private async getSetting(key: string): Promise<any> {
+  private async getSetting(key: string, tenantId = DEFAULT_TENANT_ID): Promise<any> {
     const setting = await prisma.siteSetting.findUnique({
-      where: { key },
+      where: {
+        tenantId_key: { tenantId, key },
+      },
     });
 
     return setting?.value ? setting.value : null;
   }
 
-  private async setSetting(key: string, value: any): Promise<void> {
+  private async setSetting(key: string, value: any, tenantId = DEFAULT_TENANT_ID): Promise<void> {
     await prisma.siteSetting.upsert({
-      where: { key },
+      where: {
+        tenantId_key: { tenantId, key },
+      },
       update: { value },
-      create: { key, value },
+      create: { tenantId, key, value },
     });
   }
 
   // General Settings
-  async getGeneral(): Promise<{ data: GeneralSettings }> {
-    const settings = await this.getSetting('general');
+  async getGeneral(tenantId = DEFAULT_TENANT_ID): Promise<{ data: GeneralSettings }> {
+    const settings = await this.getSetting('general', tenantId);
     
     return {
       data: settings || {
@@ -117,16 +122,16 @@ export class SettingsService {
     };
   }
 
-  async updateGeneral(data: Partial<GeneralSettings>): Promise<{ data: GeneralSettings }> {
-    const current = (await this.getGeneral()).data;
+  async updateGeneral(data: Partial<GeneralSettings>, tenantId = DEFAULT_TENANT_ID): Promise<{ data: GeneralSettings }> {
+    const current = (await this.getGeneral(tenantId)).data;
     const updated = { ...current, ...data };
-    await this.setSetting('general', updated);
+    await this.setSetting('general', updated, tenantId);
     return { data: updated };
   }
 
   // Contact Settings
-  async getContact(): Promise<{ data: ContactSettings }> {
-    const settings = await this.getSetting('contact');
+  async getContact(tenantId = DEFAULT_TENANT_ID): Promise<{ data: ContactSettings }> {
+    const settings = await this.getSetting('contact', tenantId);
 
     return {
       data: settings || {
@@ -137,16 +142,16 @@ export class SettingsService {
     };
   }
 
-  async updateContact(data: Partial<ContactSettings>): Promise<{ data: ContactSettings }> {
-    const current = (await this.getContact()).data;
+  async updateContact(data: Partial<ContactSettings>, tenantId = DEFAULT_TENANT_ID): Promise<{ data: ContactSettings }> {
+    const current = (await this.getContact(tenantId)).data;
     const updated = { ...current, ...data };
-    await this.setSetting('contact', updated);
+    await this.setSetting('contact', updated, tenantId);
     return { data: updated };
   }
 
   // Business Hours
-  async getBusinessHours(): Promise<{ data: BusinessHour[] }> {
-    const settings = await this.getSetting('businessHours');
+  async getBusinessHours(tenantId = DEFAULT_TENANT_ID): Promise<{ data: BusinessHour[] }> {
+    const settings = await this.getSetting('businessHours', tenantId);
 
     return {
       data: settings || [
@@ -161,14 +166,14 @@ export class SettingsService {
     };
   }
 
-  async updateBusinessHours(data: BusinessHour[]): Promise<{ data: BusinessHour[] }> {
-    await this.setSetting('businessHours', data);
+  async updateBusinessHours(data: BusinessHour[], tenantId = DEFAULT_TENANT_ID): Promise<{ data: BusinessHour[] }> {
+    await this.setSetting('businessHours', data, tenantId);
     return { data };
   }
 
   // Content Settings
-  async getContent(): Promise<{ data: ContentSettings }> {
-    const settings = await this.getSetting('content');
+  async getContent(tenantId = DEFAULT_TENANT_ID): Promise<{ data: ContentSettings }> {
+    const settings = await this.getSetting('content', tenantId);
 
     return {
       data: settings || {
@@ -192,16 +197,16 @@ export class SettingsService {
     };
   }
 
-  async updateContent(data: Partial<ContentSettings>): Promise<{ data: ContentSettings }> {
-    const current = (await this.getContent()).data;
+  async updateContent(data: Partial<ContentSettings>, tenantId = DEFAULT_TENANT_ID): Promise<{ data: ContentSettings }> {
+    const current = (await this.getContent(tenantId)).data;
     const updated = { ...current, ...data };
-    await this.setSetting('content', updated);
+    await this.setSetting('content', updated, tenantId);
     return { data: updated };
   }
 
   // Professional Settings
-  async getProfessional(): Promise<{ data: ProfessionalSettings }> {
-    const settings = await this.getSetting('professional');
+  async getProfessional(tenantId = DEFAULT_TENANT_ID): Promise<{ data: ProfessionalSettings }> {
+    const settings = await this.getSetting('professional', tenantId);
 
     return {
       data: settings || {
@@ -217,21 +222,21 @@ export class SettingsService {
     };
   }
 
-  async updateProfessional(data: Partial<ProfessionalSettings>): Promise<{ data: ProfessionalSettings }> {
-    const current = (await this.getProfessional()).data;
+  async updateProfessional(data: Partial<ProfessionalSettings>, tenantId = DEFAULT_TENANT_ID): Promise<{ data: ProfessionalSettings }> {
+    const current = (await this.getProfessional(tenantId)).data;
     const updated = { ...current, ...data };
-    await this.setSetting('professional', updated);
+    await this.setSetting('professional', updated, tenantId);
     return { data: updated };
   }
 
   // Specialty Settings
-  async getSpecialties(): Promise<{ data: SpecialtySettings[] }> {
-    const settings = await this.getSetting('specialties');
+  async getSpecialties(tenantId = DEFAULT_TENANT_ID): Promise<{ data: SpecialtySettings[] }> {
+    const settings = await this.getSetting('specialties', tenantId);
     return { data: settings || [] };
   }
 
-  async updateSpecialties(data: SpecialtySettings[]): Promise<{ data: SpecialtySettings[] }> {
-    await this.setSetting('specialties', data);
+  async updateSpecialties(data: SpecialtySettings[], tenantId = DEFAULT_TENANT_ID): Promise<{ data: SpecialtySettings[] }> {
+    await this.setSetting('specialties', data, tenantId);
     return { data };
   }
 
@@ -253,19 +258,19 @@ export class SettingsService {
     return [...modules].sort();
   }
 
-  async getEnabledSpecialtyModules(): Promise<string[]> {
-    const specialties = (await this.getSpecialties()).data;
+  async getEnabledSpecialtyModules(tenantId = DEFAULT_TENANT_ID): Promise<string[]> {
+    const specialties = (await this.getSpecialties(tenantId)).data;
     return this.resolveEnabledSpecialtyModules(specialties);
   }
 
-  async isSpecialtyModuleEnabled(moduleKey: string): Promise<boolean> {
-    const modules = await this.getEnabledSpecialtyModules();
+  async isSpecialtyModuleEnabled(moduleKey: string, tenantId = DEFAULT_TENANT_ID): Promise<boolean> {
+    const modules = await this.getEnabledSpecialtyModules(tenantId);
     return modules.includes(moduleKey);
   }
 
   // SEO Settings
-  async getSeo(): Promise<{ data: SeoSettings }> {
-    const settings = await this.getSetting('seo');
+  async getSeo(tenantId = DEFAULT_TENANT_ID): Promise<{ data: SeoSettings }> {
+    const settings = await this.getSetting('seo', tenantId);
 
     return {
       data: settings || {
@@ -276,16 +281,16 @@ export class SettingsService {
     };
   }
 
-  async updateSeo(data: Partial<SeoSettings>): Promise<{ data: SeoSettings }> {
-    const current = (await this.getSeo()).data;
+  async updateSeo(data: Partial<SeoSettings>, tenantId = DEFAULT_TENANT_ID): Promise<{ data: SeoSettings }> {
+    const current = (await this.getSeo(tenantId)).data;
     const updated = { ...current, ...data };
-    await this.setSetting('seo', updated);
+    await this.setSetting('seo', updated, tenantId);
     return { data: updated };
   }
 
   // Analytics Settings
-  async getAnalytics(): Promise<{ data: AnalyticsSettings }> {
-    const settings = await this.getSetting('analytics');
+  async getAnalytics(tenantId = DEFAULT_TENANT_ID): Promise<{ data: AnalyticsSettings }> {
+    const settings = await this.getSetting('analytics', tenantId);
 
     return {
       data: settings || {
@@ -294,24 +299,24 @@ export class SettingsService {
     };
   }
 
-  async updateAnalytics(data: Partial<AnalyticsSettings>): Promise<{ data: AnalyticsSettings }> {
-    const current = (await this.getAnalytics()).data;
+  async updateAnalytics(data: Partial<AnalyticsSettings>, tenantId = DEFAULT_TENANT_ID): Promise<{ data: AnalyticsSettings }> {
+    const current = (await this.getAnalytics(tenantId)).data;
     const updated = { ...current, ...data };
-    await this.setSetting('analytics', updated);
+    await this.setSetting('analytics', updated, tenantId);
     return { data: updated };
   }
 
   // Get all settings at once
-  async getAll() {
+  async getAll(tenantId = DEFAULT_TENANT_ID) {
     const [general, contact, businessHours, content, professional, specialties, seo, analytics] = await Promise.all([
-      this.getGeneral(),
-      this.getContact(),
-      this.getBusinessHours(),
-      this.getContent(),
-      this.getProfessional(),
-      this.getSpecialties(),
-      this.getSeo(),
-      this.getAnalytics(),
+      this.getGeneral(tenantId),
+      this.getContact(tenantId),
+      this.getBusinessHours(tenantId),
+      this.getContent(tenantId),
+      this.getProfessional(tenantId),
+      this.getSpecialties(tenantId),
+      this.getSeo(tenantId),
+      this.getAnalytics(tenantId),
     ]);
 
     return {
@@ -330,15 +335,15 @@ export class SettingsService {
   }
 
   // Get public settings (for frontend)
-  async getPublic() {
+  async getPublic(tenantId = DEFAULT_TENANT_ID) {
     const [general, contact, businessHours, content, professional, specialties, seo] = await Promise.all([
-      this.getGeneral(),
-      this.getContact(),
-      this.getBusinessHours(),
-      this.getContent(),
-      this.getProfessional(),
-      this.getSpecialties(),
-      this.getSeo(),
+      this.getGeneral(tenantId),
+      this.getContact(tenantId),
+      this.getBusinessHours(tenantId),
+      this.getContent(tenantId),
+      this.getProfessional(tenantId),
+      this.getSpecialties(tenantId),
+      this.getSeo(tenantId),
     ]);
 
     return {
