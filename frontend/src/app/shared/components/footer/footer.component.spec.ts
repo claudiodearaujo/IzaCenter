@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { FooterComponent } from './footer.component';
+import { DEFAULT_PUBLIC_SETTINGS, PublicSettingsStore } from '../../../core/services/public-settings.store';
 
 class FakeTranslateLoader implements TranslateLoader {
   getTranslation() {
@@ -23,6 +24,22 @@ describe('FooterComponent', () => {
           loader: { provide: TranslateLoader, useClass: FakeTranslateLoader },
         }),
       ],
+      providers: [
+        {
+          provide: PublicSettingsStore,
+          useValue: {
+            load: () => of({
+              ...DEFAULT_PUBLIC_SETTINGS,
+              contact: {
+                ...DEFAULT_PUBLIC_SETTINGS.contact,
+                instagram: 'https://instagram.com/profissional',
+                whatsapp: '5511999999999',
+                email: 'contato@example.com',
+              },
+            }),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FooterComponent);
@@ -41,23 +58,23 @@ describe('FooterComponent', () => {
 
   describe('socialLinks', () => {
     it('should have 3 social links', () => {
-      expect(component.socialLinks.length).toBe(3);
+      expect(component.socialLinks().length).toBe(3);
     });
 
     it('should include Instagram link', () => {
-      const instagram = component.socialLinks.find(l => l.label === 'Instagram');
+      const instagram = component.socialLinks().find(l => l.label === 'Instagram');
       expect(instagram).toBeTruthy();
       expect(instagram?.icon).toBe('pi-instagram');
     });
 
     it('should include WhatsApp link', () => {
-      const whatsapp = component.socialLinks.find(l => l.label === 'WhatsApp');
+      const whatsapp = component.socialLinks().find(l => l.label === 'WhatsApp');
       expect(whatsapp).toBeTruthy();
       expect(whatsapp?.icon).toBe('pi-whatsapp');
     });
 
     it('should include Email link', () => {
-      const email = component.socialLinks.find(l => l.label === 'Email');
+      const email = component.socialLinks().find(l => l.label === 'Email');
       expect(email).toBeTruthy();
       expect(email?.icon).toBe('pi-envelope');
     });

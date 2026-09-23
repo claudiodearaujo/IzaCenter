@@ -322,6 +322,7 @@ export class SettingsService {
         content: content.data,
         professional: professional.data,
         specialties: specialties.data,
+        enabledModules: this.resolveEnabledSpecialtyModules(specialties.data),
         seo: seo.data,
         analytics: analytics.data,
       },
