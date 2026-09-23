@@ -63,3 +63,19 @@ http://<hostname-tailscale>:18080
 Se houver conflito na porta, ajuste `APP_PORT` no Coolify.
 
 Antes de adicionar uma regra HTTPS com `tailscale serve`, inspecione a configuração existente e preserve todos os serviços já publicados.
+
+
+## CI, E2E e deploy
+
+O GitHub Actions continua responsável pelos gates reprodutíveis de backend e frontend em pull requests e pushes.
+
+Os testes E2E são smoke tests contra uma aplicação já implantada. Como o ambiente local atual é acessível apenas pela tailnet, runners públicos do GitHub não conseguem assumir acesso a ele. Por isso o job E2E só é executado quando as variáveis do repositório estiverem explicitamente configuradas:
+
+- `E2E_ENABLED=true`;
+- `E2E_BASE_URL` apontando para um ambiente acessível pelo runner.
+
+Sem essas variáveis, o job é ignorado e não mascara os gates de build/unit.
+
+Para validar o ambiente local, execute o Playwright a partir de uma máquina conectada à tailnet usando a URL publicada do Therapist Platform.
+
+Os workflows legados de deploy automático no Render foram removidos. O destino ativo deste ambiente é o Coolify local. A automação remota de deploy deverá ser reintroduzida apenas quando existir um runner/webhook autorizado capaz de alcançar o Coolify sem expor a tailnet publicamente.
