@@ -1,84 +1,105 @@
-<div class="min-h-screen bg-neutral-50">
-  <!-- Mobile Header -->
-  <header class="lg:hidden sticky top-0 z-40 bg-white shadow-sm">
-    <div class="flex items-center justify-between px-4 py-3">
-      <button (click)="toggleSidebar()" class="p-2 text-neutral-700">
-        <i class="pi pi-bars text-xl"></i>
+<div class="min-h-screen bg-neutral-50 text-neutral-900">
+  <!-- Mobile header -->
+  <header class="lg:hidden sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur">
+    <div class="flex h-16 items-center justify-between px-4">
+      <button
+        type="button"
+        (click)="toggleSidebar()"
+        class="ds-focus-ring inline-flex h-10 w-10 items-center justify-center rounded-lg text-neutral-700 hover:bg-neutral-100"
+        aria-label="Abrir navegação">
+        <i class="pi pi-bars text-lg"></i>
       </button>
-      <a routerLink="/" class="flex items-center gap-2">
-        <img src="assets/images/logo.jpeg" alt="Therapist Platform" class="h-8 w-8 rounded-full object-cover">
-        <span class="font-serif font-semibold text-primary-800">Therapist Platform</span>
+
+      <a routerLink="/cliente" class="flex items-center gap-2.5">
+        <img
+          src="/assets/images/logo.jpeg"
+          alt="Therapist Platform"
+          class="h-9 w-9 rounded-xl border border-primary-100 object-cover" />
+        <span class="font-semibold tracking-tight text-neutral-900">Therapist Platform</span>
       </a>
+
       <div class="w-10"></div>
     </div>
   </header>
 
-  <div class="flex">
-    <!-- Sidebar Overlay (Mobile) -->
+  <div class="flex min-h-screen">
     @if (isSidebarOpen()) {
-    <div class="lg:hidden fixed inset-0 bg-black/50 z-40" (click)="closeSidebar()"></div>
+      <button
+        type="button"
+        class="lg:hidden fixed inset-0 z-40 bg-neutral-950/35"
+        (click)="closeSidebar()"
+        aria-label="Fechar navegação"></button>
     }
 
-    <!-- Sidebar -->
+    <!-- Application navigation -->
     <aside
-      class="fixed lg:sticky top-0 left-0 z-50 lg:z-0 h-screen w-72 bg-white shadow-lg transform transition-transform duration-300"
-      [class.-translate-x-full]="!isSidebarOpen()" [class.translate-x-0]="isSidebarOpen()"
+      class="fixed lg:sticky top-0 left-0 z-50 lg:z-30 flex h-screen w-60 shrink-0 flex-col border-r border-neutral-200 bg-[#FCFCFA] transition-transform duration-300"
+      [class.-translate-x-full]="!isSidebarOpen()"
+      [class.translate-x-0]="isSidebarOpen()"
       [class.lg:translate-x-0]="true">
 
-      <!-- Logo -->
-      <div class="p-6 border-b border-neutral-100">
-        <a routerLink="/" class="flex items-center gap-2">
-          <img src="assets/images/logo.jpeg" alt="Therapist Platform" class="h-10 w-10 rounded-full object-cover">
-          <span class="text-xl font-serif font-semibold text-primary-800">Therapist Platform</span>
+      <div class="flex h-20 items-center border-b border-neutral-200 px-5">
+        <a routerLink="/cliente" class="flex min-w-0 items-center gap-3" (click)="closeSidebar()">
+          <img
+            src="/assets/images/logo.jpeg"
+            alt="Therapist Platform"
+            class="h-10 w-10 shrink-0 rounded-xl border border-primary-100 object-cover" />
+          <div class="min-w-0">
+            <p class="truncate font-semibold tracking-tight text-neutral-900">Therapist Platform</p>
+            <p class="truncate text-xs text-neutral-500">Área do cliente</p>
+          </div>
         </a>
       </div>
 
-      <!-- User Info -->
-      <div class="p-6 border-b border-neutral-100">
-        <div class="flex items-center gap-3">
-          <div
-            class="w-12 h-12 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-semibold text-lg">
-            {{ currentUser()?.fullName?.charAt(0) || 'U' }}
-          </div>
-          <div>
-            <p class="font-semibold text-neutral-800">{{ currentUser()?.fullName }}</p>
-            <p class="text-sm text-neutral-500">{{ currentUser()?.email }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Navigation -->
-      <nav class="p-4">
+      <nav class="flex-1 overflow-y-auto p-3" aria-label="Navegação do cliente">
         <ul class="space-y-1">
           @for (item of menuItems; track item.route) {
-          <li>
-            <a [routerLink]="item.route" routerLinkActive="bg-primary-50 text-primary-700"
-              [routerLinkActiveOptions]="{exact: item.route === '/cliente'}" (click)="closeSidebar()"
-              class="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-600 hover:bg-neutral-50 transition-colors">
-              <i class="pi" [class]="item.icon"></i>
-              {{ item.labelKey | translate }}
-            </a>
-          </li>
+            <li>
+              <a
+                [routerLink]="item.route"
+                routerLinkActive="bg-primary-50 text-primary-800 font-medium"
+                [routerLinkActiveOptions]="{exact: item.route === '/cliente'}"
+                (click)="closeSidebar()"
+                class="ds-focus-ring flex min-h-10 items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-600 transition-colors duration-150 hover:bg-neutral-100 hover:text-neutral-900">
+                <i class="pi w-5 shrink-0 text-center text-base" [class]="item.icon"></i>
+                <span class="truncate">{{ item.labelKey | translate }}</span>
+              </a>
+            </li>
           }
         </ul>
       </nav>
 
-      <!-- Bottom Actions -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-neutral-100">
-        <a routerLink="/" class="flex items-center gap-3 px-4 py-3 text-neutral-600 hover:text-neutral-800">
-          <i class="pi pi-arrow-left"></i>
+      <div class="border-t border-neutral-200 p-3">
+        <div class="mb-2 flex items-center gap-3 rounded-xl bg-white px-3 py-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-100 font-semibold text-primary-800">
+            {{ currentUser()?.fullName?.charAt(0) || 'U' }}
+          </div>
+          <div class="min-w-0">
+            <p class="truncate text-sm font-medium text-neutral-800">{{ currentUser()?.fullName }}</p>
+            <p class="truncate text-xs text-neutral-500">{{ currentUser()?.email }}</p>
+          </div>
+        </div>
+
+        <a
+          routerLink="/"
+          class="ds-focus-ring flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
+          <i class="pi pi-arrow-left w-5 text-center"></i>
           {{ 'common.back' | translate }}
         </a>
-        <button (click)="logout()" class="flex items-center gap-3 px-4 py-3 text-red-600 hover:text-red-700 w-full">
-          <i class="pi pi-sign-out"></i>
+
+        <button
+          type="button"
+          (click)="logout()"
+          class="ds-focus-ring mt-1 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-red-700 hover:bg-red-50">
+          <i class="pi pi-sign-out w-5 text-center"></i>
           {{ 'nav.logout' | translate }}
         </button>
       </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 min-h-screen lg:ml-0">
-      <div class="p-6 lg:p-8">
+    <!-- Main workspace -->
+    <main class="min-w-0 flex-1">
+      <div class="mx-auto w-full max-w-[1440px] p-4 sm:p-6 lg:p-8">
         <router-outlet />
       </div>
     </main>
