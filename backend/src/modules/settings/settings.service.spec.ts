@@ -214,6 +214,49 @@ describe('SettingsService', () => {
       );
     });
 
+    it('should enable tarot-cards from an active specialty', async () => {
+      prismaMock.siteSetting.findUnique.mockResolvedValue({
+        key: 'specialties',
+        value: [
+          { slug: 'tarot', name: 'Tarot', isActive: true, usesCardModule: true },
+          { slug: 'reiki', name: 'Reiki', isActive: true, usesCardModule: false },
+        ],
+      } as any);
+
+      const modules = await settingsService.getEnabledSpecialtyModules();
+
+      expect(modules).toEqual(['tarot-cards']);
+      await expect(settingsService.isSpecialtyModuleEnabled('tarot-cards')).resolves.toBe(true);
+    });
+
+    it('should ignore modules from inactive specialties', async () => {
+      prismaMock.siteSetting.findUnique.mockResolvedValue({
+        key: 'specialties',
+        value: [
+          { slug: 'tarot', name: 'Tarot', isActive: false, usesCardModule: true, moduleKey: 'tarot-cards' },
+        ],
+      } as any);
+
+      const modules = await settingsService.getEnabledSpecialtyModules();
+
+      expect(modules).toEqual([]);
+    });
+
+    it('should expose enabled modules in public settings', async () => {
+      prismaMock.siteSetting.findUnique
+        .mockResolvedValueOnce({ key: 'general', value: { siteName: 'Therapist Platform', enableShop: true } } as any)
+        .mockResolvedValueOnce({ key: 'contact', value: { email: '' } } as any)
+        .mockResolvedValueOnce({ key: 'businessHours', value: [] } as any)
+        .mockResolvedValueOnce({ key: 'content', value: { heroTitle: 'Hello', heroSubtitle: 'World' } } as any)
+        .mockResolvedValueOnce({ key: 'professional', value: { displayName: 'Profissional', languages: ['pt-BR'], credentials: [], serviceMode: 'ONLINE' } } as any)
+        .mockResolvedValueOnce({ key: 'specialties', value: [{ slug: 'tarot', name: 'Tarot', isActive: true, usesCardModule: true }] } as any)
+        .mockResolvedValueOnce({ key: 'seo', value: { metaTitle: 'Site', metaDescription: 'Desc', keywords: [] } } as any);
+
+      const result = await settingsService.getPublic();
+
+      expect(result.data.enabledModules).toEqual(['tarot-cards']);
+    });
+
     it('should return neutral SEO defaults', async () => {
       prismaMock.siteSetting.findUnique.mockResolvedValue(null);
 
