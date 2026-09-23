@@ -65,9 +65,15 @@ export class OnboardingService {
           email: true,
           fullName: true,
           phone: true,
+          birthDate: true,
           role: true,
           avatarUrl: true,
+          preferredLanguage: true,
+          notificationEmail: true,
+          notificationWhatsapp: true,
           createdAt: true,
+          updatedAt: true,
+          lastLoginAt: true,
         },
       });
 

@@ -306,14 +306,14 @@ export class SettingsService {
 
     return {
       data: settings || {
-        primaryColor: '#4f46e5',
-        secondaryColor: '#7c3aed',
-        accentColor: '#0ea5e9',
-        surfaceColor: '#ffffff',
-        textColor: '#111827',
+        primaryColor: '#F59E0B',
+        secondaryColor: '#EC4899',
+        accentColor: '#D4AF37',
+        surfaceColor: '#FEFDFB',
+        textColor: '#2D2A24',
         logoUrl: '',
         faviconUrl: '',
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: 'Nunito, Open Sans, sans-serif',
         borderRadius: '12px',
       },
     };
@@ -391,8 +391,8 @@ export class SettingsService {
       data: {
         siteName: general.data.siteName,
         siteDescription: general.data.siteDescription,
-        logoUrl: general.data.logoUrl,
-        faviconUrl: general.data.faviconUrl,
+        logoUrl: general.data.logoUrl || branding.data.logoUrl,
+        faviconUrl: general.data.faviconUrl || branding.data.faviconUrl,
         enableShop: general.data.enableShop,
         enableAppointments: general.data.enableAppointments,
         enableTestimonials: general.data.enableTestimonials,

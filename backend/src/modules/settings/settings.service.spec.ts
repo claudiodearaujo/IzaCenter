@@ -289,13 +289,15 @@ describe('SettingsService', () => {
   });
 
   describe('branding', () => {
-    it('should return neutral branding defaults', async () => {
+    it('should preserve legacy-compatible branding defaults', async () => {
       prismaMock.siteSetting.findUnique.mockResolvedValue(null);
 
       const result = await settingsService.getBranding();
 
-      expect(result.data.primaryColor).toBe('#4f46e5');
-      expect(result.data.fontFamily).toContain('Inter');
+      expect(result.data.primaryColor).toBe('#F59E0B');
+      expect(result.data.secondaryColor).toBe('#EC4899');
+      expect(result.data.accentColor).toBe('#D4AF37');
+      expect(result.data.fontFamily).toContain('Nunito');
     });
 
     it('should persist branding in the requested tenant', async () => {

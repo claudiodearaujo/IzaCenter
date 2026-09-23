@@ -1,6 +1,6 @@
 # PRD — SaaS Foundation v3: Onboarding & Branding
 
-**Status:** 🟡 Em implementação
+**Status:** ✅ Implementado e validado
 
 ## Objetivo
 
@@ -137,5 +137,21 @@ Após sucesso:
 - tenant default continua compatível;
 - backend build/unit PASS;
 - frontend build/test PASS.
+
+## Validação concluída
+
+- Prisma validate/generate: PASS.
+- Backend build: PASS.
+- Backend unit tests: 21/21 suites, 344/344 testes PASS.
+- Frontend build: PASS; apenas warnings preexistentes de imports não usados.
+- Frontend tests: 267/267 PASS em ChromeHeadless.
+- `/onboarding/profissional` implementado como wizard público em 4 etapas.
+- bootstrap profissional cria Tenant + User + OWNER + settings + branding em transação.
+- OWNER/ADMIN de tenant é a autoridade administrativa; `User.role` deixou de conceder administração por si só.
+- tenant selecionado passa em `X-Tenant-Slug`, sem contaminar o endpoint de onboarding.
+- hostname/custom domain válido tem precedência sobre header de tenant persistido.
+- branding público aplica cores, tipografia, superfície e favicon por tenant.
+- tenant default preserva os defaults visuais legados quando não houver branding persistido.
+- área administrativa permite editar branding do tenant atual.
 
 Próxima fase: SaaS Foundation v4 — Plans & Billing.

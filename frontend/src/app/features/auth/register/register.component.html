@@ -54,9 +54,15 @@
           styleClass="w-full" size="large" />
       </form>
 
-      <div class="mt-8 pt-6 border-t border-neutral-100 text-center">
+      <div class="mt-8 pt-6 border-t border-neutral-100 text-center space-y-3">
         <p class="text-neutral-600">{{ 'auth.register.hasAccount' | translate }} <a routerLink="/auth/login"
             class="text-primary-600 hover:text-primary-700 font-medium">{{ 'auth.register.loginLink' | translate }}</a>
+        </p>
+        <p class="text-sm text-neutral-500">
+          É profissional e quer seu próprio espaço?
+          <a routerLink="/onboarding/profissional" class="text-primary-600 hover:text-primary-700 font-medium">
+            Criar workspace profissional
+          </a>
         </p>
       </div>
     </div>

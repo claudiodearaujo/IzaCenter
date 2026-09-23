@@ -33,12 +33,12 @@ export class TenantService {
   }
 
   async resolve(explicitSlug?: string, hostname?: string): Promise<TenantContext | null> {
-    if (explicitSlug) {
-      return this.findActiveBySlug(explicitSlug);
-    }
-
     const normalizedHost = this.normalizeHostname(hostname);
-    if (normalizedHost) {
+    const isLocalHost = normalizedHost === 'localhost' || !!normalizedHost?.match(/^\d{1,3}(\.\d{1,3}){3}$/);
+    if (normalizedHost && !isLocalHost) {
+      // Hostname is authoritative when it maps to a tenant. This prevents a
+      // stale X-Tenant-Slug/localStorage selection from overriding a custom
+      // domain or tenant subdomain visited explicitly by the user.
       const customDomainTenant = await this.findActiveByCustomDomain(normalizedHost);
       if (customDomainTenant) return customDomainTenant;
 
@@ -47,6 +47,10 @@ export class TenantService {
         const subdomainTenant = await this.findActiveBySlug(subdomain);
         if (subdomainTenant) return subdomainTenant;
       }
+    }
+
+    if (explicitSlug) {
+      return this.findActiveBySlug(explicitSlug);
     }
 
     return this.getDefaultTenant();

@@ -70,6 +70,13 @@ export const routes: Routes = [
     ]
   },
 
+  // Professional SaaS Onboarding
+  {
+    path: 'onboarding/profissional',
+    loadComponent: () => import('./features/onboarding/professional-onboarding/professional-onboarding.component')
+      .then(m => m.ProfessionalOnboardingComponent)
+  },
+
   // Auth Routes
   {
     path: 'auth',

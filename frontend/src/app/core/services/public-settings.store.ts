@@ -57,6 +57,17 @@ export const DEFAULT_PUBLIC_SETTINGS: PublicSettings = {
     metaDescription: 'Serviços e atendimentos profissionais em uma plataforma simples e segura.',
     keywords: ['atendimento', 'serviços', 'profissional'],
   },
+  branding: {
+    primaryColor: '#F59E0B',
+    secondaryColor: '#EC4899',
+    accentColor: '#D4AF37',
+    surfaceColor: '#FEFDFB',
+    textColor: '#2D2A24',
+    logoUrl: '',
+    faviconUrl: '',
+    fontFamily: 'Nunito, Open Sans, sans-serif',
+    borderRadius: '12px',
+  },
 };
 
 @Injectable({ providedIn: 'root' })
@@ -105,6 +116,10 @@ export class PublicSettingsStore {
         ...DEFAULT_PUBLIC_SETTINGS.seo,
         ...(data.seo || {}),
         keywords: data.seo?.keywords || DEFAULT_PUBLIC_SETTINGS.seo.keywords,
+      },
+      branding: {
+        ...DEFAULT_PUBLIC_SETTINGS.branding,
+        ...(data.branding || {}),
       },
     };
   }

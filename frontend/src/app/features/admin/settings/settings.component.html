@@ -80,6 +80,53 @@
               </div>
             </div>
 
+            <!-- Tenant branding -->
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Identidade visual</h3>
+              <p class="text-secondary/70 text-sm mb-5">
+                Estas cores são aplicadas apenas ao tenant atual e atualizam a experiência pública.
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Cor primária</label>
+                  <div class="flex items-center gap-3">
+                    <input type="color" [(ngModel)]="brandingSettings.primaryColor" class="h-10 w-14 rounded border-0" />
+                    <input pInputText [(ngModel)]="brandingSettings.primaryColor" class="w-full" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Cor secundária</label>
+                  <div class="flex items-center gap-3">
+                    <input type="color" [(ngModel)]="brandingSettings.secondaryColor" class="h-10 w-14 rounded border-0" />
+                    <input pInputText [(ngModel)]="brandingSettings.secondaryColor" class="w-full" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Cor de destaque</label>
+                  <div class="flex items-center gap-3">
+                    <input type="color" [(ngModel)]="brandingSettings.accentColor" class="h-10 w-14 rounded border-0" />
+                    <input pInputText [(ngModel)]="brandingSettings.accentColor" class="w-full" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Fundo</label>
+                  <input pInputText [(ngModel)]="brandingSettings.surfaceColor" class="w-full" />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Texto</label>
+                  <input pInputText [(ngModel)]="brandingSettings.textColor" class="w-full" />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Arredondamento</label>
+                  <input pInputText [(ngModel)]="brandingSettings.borderRadius" class="w-full" placeholder="12px" />
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-secondary text-sm mb-2">Fonte principal</label>
+                  <input pInputText [(ngModel)]="brandingSettings.fontFamily" class="w-full" placeholder="Nunito, sans-serif" />
+                </div>
+              </div>
+            </div>
+
             <!-- Generic professional domain -->
             <div class="glass-card p-6">
               <h3 class="heading-3 text-primary mb-4">Perfil profissional</h3>
