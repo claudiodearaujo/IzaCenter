@@ -1,185 +1,166 @@
-<section class="py-8">
-  <div class="container-custom">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="heading-1 text-primary mb-2">{{ 'admin.reports.title' | translate }}</h1>
-        <p class="text-secondary">{{ 'admin.reports.subtitle' | translate }}</p>
-      </div>
-      <div class="flex items-center gap-4">
-        <p-select
-          [options]="periodOptions"
-          [(ngModel)]="period"
-          optionLabel="label"
-          optionValue="value"
-          (onChange)="onPeriodChange()"
-          styleClass="w-40"
-        />
-      </div>
+<section class="reports-page">
+  <ds-page-header
+    [title]="'admin.reports.title' | translate"
+    [description]="'admin.reports.subtitle' | translate">
+    <div dsPageActions class="period-control">
+      <span>{{ 'common.period' | translate }}</span>
+      <p-select
+        [options]="periodOptions"
+        [(ngModel)]="period"
+        optionLabel="label"
+        optionValue="value"
+        (onChange)="onPeriodChange()"
+        styleClass="w-40" />
     </div>
+  </ds-page-header>
 
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <!-- Total Orders -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-gradient-gold rounded-lg flex items-center justify-center">
-            <i class="pi pi-shopping-bag text-xl text-white"></i>
-          </div>
-          @if (stats()?.ordersGrowth) {
-            <span class="text-green-400 text-sm">
-              <i class="pi pi-arrow-up mr-1"></i>{{ stats()!.ordersGrowth }}%
-            </span>
+  <div class="metrics-grid">
+    <ds-card padding="md">
+      <div class="metric">
+        <span class="metric__icon metric__icon--brand"><i class="pi pi-shopping-bag"></i></span>
+        <div>
+          @if (loading()) {
+            <p-skeleton height="1.8rem" width="4rem" />
+          } @else {
+            <p class="metric__value">{{ stats()?.totalOrders || 0 }}</p>
+            <p class="metric__label">{{ 'admin.dashboard.totalOrders' | translate }}</p>
+            @if (stats()?.ordersGrowth) {
+              <p class="metric__trend"><i class="pi pi-arrow-up"></i>{{ stats()!.ordersGrowth }}%</p>
+            }
           }
         </div>
-        @if (loading()) {
-          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
-          <p-skeleton height="1rem" width="40%" />
-        } @else {
-          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalOrders || 0 }}</p>
-          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalOrders' | translate }}</p>
-        }
       </div>
+    </ds-card>
 
-      <!-- Total Revenue -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-gradient-mystical rounded-lg flex items-center justify-center">
-            <i class="pi pi-dollar text-xl text-white"></i>
-          </div>
-          @if (stats()?.revenueGrowth) {
-            <span class="text-green-400 text-sm">
-              <i class="pi pi-arrow-up mr-1"></i>{{ stats()!.revenueGrowth }}%
-            </span>
+    <ds-card padding="md">
+      <div class="metric">
+        <span class="metric__icon metric__icon--success"><i class="pi pi-wallet"></i></span>
+        <div>
+          @if (loading()) {
+            <p-skeleton height="1.8rem" width="8rem" />
+          } @else {
+            <p class="metric__value metric__value--currency">{{ formatCurrency(stats()?.totalRevenue || 0) }}</p>
+            <p class="metric__label">{{ 'admin.dashboard.totalRevenue' | translate }}</p>
+            @if (stats()?.revenueGrowth) {
+              <p class="metric__trend"><i class="pi pi-arrow-up"></i>{{ stats()!.revenueGrowth }}%</p>
+            }
           }
         </div>
-        @if (loading()) {
-          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
-          <p-skeleton height="1rem" width="40%" />
-        } @else {
-          <p class="text-3xl font-bold text-primary mb-1">
-            {{ formatCurrency(stats()?.totalRevenue || 0) }}
-          </p>
-          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalRevenue' | translate }}</p>
-        }
       </div>
+    </ds-card>
 
-      <!-- Total Users -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-400 rounded-lg flex items-center justify-center">
-            <i class="pi pi-users text-xl text-white"></i>
-          </div>
-          @if (stats()?.usersGrowth) {
-            <span class="text-green-400 text-sm">
-              <i class="pi pi-arrow-up mr-1"></i>{{ stats()!.usersGrowth }}%
-            </span>
+    <ds-card padding="md">
+      <div class="metric">
+        <span class="metric__icon metric__icon--info"><i class="pi pi-users"></i></span>
+        <div>
+          @if (loading()) {
+            <p-skeleton height="1.8rem" width="4rem" />
+          } @else {
+            <p class="metric__value">{{ stats()?.totalUsers || 0 }}</p>
+            <p class="metric__label">{{ 'admin.dashboard.totalClients' | translate }}</p>
+            @if (stats()?.usersGrowth) {
+              <p class="metric__trend"><i class="pi pi-arrow-up"></i>{{ stats()!.usersGrowth }}%</p>
+            }
           }
         </div>
-        @if (loading()) {
-          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
-          <p-skeleton height="1rem" width="40%" />
-        } @else {
-          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalUsers || 0 }}</p>
-          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalClients' | translate }}</p>
-        }
       </div>
+    </ds-card>
 
-      <!-- Total Products -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-orange-400 rounded-lg flex items-center justify-center">
-            <i class="pi pi-box text-xl text-white"></i>
-          </div>
-          @if (stats()?.activeProducts) {
-            <span class="text-accent text-sm">
-              {{ stats()!.activeProducts }} {{ 'admin.reports.active' | translate }}
-            </span>
+    <ds-card padding="md">
+      <div class="metric">
+        <span class="metric__icon metric__icon--neutral"><i class="pi pi-box"></i></span>
+        <div>
+          @if (loading()) {
+            <p-skeleton height="1.8rem" width="4rem" />
+          } @else {
+            <p class="metric__value">{{ stats()?.totalProducts || 0 }}</p>
+            <p class="metric__label">{{ 'admin.reports.totalProducts' | translate }}</p>
+            @if (stats()?.activeProducts) {
+              <p class="metric__meta">{{ stats()!.activeProducts }} {{ 'admin.reports.active' | translate }}</p>
+            }
           }
         </div>
-        @if (loading()) {
-          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
-          <p-skeleton height="1rem" width="40%" />
-        } @else {
-          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalProducts || 0 }}</p>
-          <p class="text-secondary text-sm">{{ 'admin.reports.totalProducts' | translate }}</p>
-        }
       </div>
-    </div>
-
-    <!-- Sales Chart -->
-    <div class="glass-card p-6 mb-8">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="heading-3 text-primary">{{ 'admin.reports.salesChart' | translate }}</h3>
-      </div>
-      @if (loading()) {
-        <p-skeleton height="16rem" />
-      } @else if (salesChartData()) {
-        <div class="h-64">
-          <p-chart type="bar" [data]="salesChartData()!" [options]="chartOptions" />
-        </div>
-      } @else {
-        <div class="text-center py-8">
-          <i class="pi pi-chart-bar text-3xl text-secondary mb-2"></i>
-          <p class="text-secondary">{{ 'admin.reports.noChartData' | translate }}</p>
-        </div>
-      }
-    </div>
-
-    <!-- Top Products -->
-    <div class="glass-card p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="heading-3 text-primary">{{ 'admin.reports.topProducts' | translate }}</h3>
-      </div>
-
-      @if (loading()) {
-        <div class="space-y-4">
-          @for (_ of [1, 2, 3, 4, 5]; track $index) {
-            <p-skeleton height="3rem" />
-          }
-        </div>
-      } @else if (topProducts().length === 0) {
-        <div class="text-center py-8">
-          <i class="pi pi-box text-3xl text-secondary mb-2"></i>
-          <p class="text-secondary">{{ 'admin.reports.noProducts' | translate }}</p>
-        </div>
-      } @else {
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead>
-              <tr class="border-b border-primary/10">
-                <th class="text-left text-secondary text-sm font-medium py-3 px-4">#</th>
-                <th class="text-left text-secondary text-sm font-medium py-3 px-4">{{ 'admin.reports.product' | translate }}</th>
-                <th class="text-right text-secondary text-sm font-medium py-3 px-4">{{ 'admin.reports.price' | translate }}</th>
-                <th class="text-right text-secondary text-sm font-medium py-3 px-4">{{ 'admin.reports.sold' | translate }}</th>
-                <th class="text-right text-secondary text-sm font-medium py-3 px-4">{{ 'admin.reports.revenue' | translate }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (product of topProducts(); track product.id; let i = $index) {
-                <tr class="border-b border-primary/5 hover:bg-dark/30 transition-colors">
-                  <td class="py-3 px-4 text-secondary">{{ i + 1 }}</td>
-                  <td class="py-3 px-4">
-                    <div class="flex items-center gap-3">
-                      @if (product.imageUrl) {
-                        <img [src]="product.imageUrl" [alt]="product.name" class="w-10 h-10 rounded-lg object-cover" />
-                      } @else {
-                        <div class="w-10 h-10 bg-gradient-gold rounded-lg flex items-center justify-center">
-                          <i class="pi pi-box text-white text-sm"></i>
-                        </div>
-                      }
-                      <span class="text-primary font-medium">{{ product.name }}</span>
-                    </div>
-                  </td>
-                  <td class="py-3 px-4 text-right text-secondary">{{ formatCurrency(product.price) }}</td>
-                  <td class="py-3 px-4 text-right text-primary font-medium">{{ product.totalSold }}</td>
-                  <td class="py-3 px-4 text-right text-accent font-bold">{{ formatCurrency(product.price * product.totalSold) }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      }
-    </div>
+    </ds-card>
   </div>
+
+  <ds-card padding="lg">
+    <div dsCardHeader class="panel-header">
+      <div>
+        <h2>{{ 'admin.reports.salesChart' | translate }}</h2>
+        <p>Receita consolidada no período selecionado.</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <p-skeleton height="18rem" />
+    } @else if (salesChartData()) {
+      <div class="chart-container">
+        <p-chart type="bar" [data]="salesChartData()!" [options]="chartOptions" />
+      </div>
+    } @else {
+      <ds-empty-state
+        [title]="'admin.reports.noChartData' | translate"
+        description="Não há dados suficientes para o período selecionado."
+        icon="pi-chart-bar">
+      </ds-empty-state>
+    }
+  </ds-card>
+
+  <ds-card padding="lg">
+    <div dsCardHeader class="panel-header">
+      <div>
+        <h2>{{ 'admin.reports.topProducts' | translate }}</h2>
+        <p>Serviços com maior volume comercial no período.</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="skeleton-list">
+        @for (_ of [1,2,3,4,5]; track $index) {
+          <p-skeleton height="3.5rem" />
+        }
+      </div>
+    } @else if (topProducts().length === 0) {
+      <ds-empty-state
+        [title]="'admin.reports.noProducts' | translate"
+        description="Os serviços aparecerão aqui quando houver vendas suficientes."
+        icon="pi-box">
+      </ds-empty-state>
+    } @else {
+      <div class="report-table">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>{{ 'admin.reports.product' | translate }}</th>
+              <th class="is-number">{{ 'admin.reports.price' | translate }}</th>
+              <th class="is-number">{{ 'admin.reports.sold' | translate }}</th>
+              <th class="is-number">{{ 'admin.reports.revenue' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of topProducts(); track product.id; let i = $index) {
+              <tr>
+                <td><span class="rank">{{ i + 1 }}</span></td>
+                <td>
+                  <div class="service-cell">
+                    @if (product.imageUrl) {
+                      <img [src]="product.imageUrl" [alt]="product.name" />
+                    } @else {
+                      <span class="service-cell__icon"><i class="pi pi-box"></i></span>
+                    }
+                    <strong>{{ product.name }}</strong>
+                  </div>
+                </td>
+                <td class="is-number">{{ formatCurrency(product.price) }}</td>
+                <td class="is-number"><strong>{{ product.totalSold }}</strong></td>
+                <td class="is-number revenue">{{ formatCurrency(product.price * product.totalSold) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </ds-card>
 </section>
