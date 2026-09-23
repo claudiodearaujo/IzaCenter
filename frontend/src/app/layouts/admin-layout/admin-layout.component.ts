@@ -8,6 +8,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { PublicSettingsStore } from '../../core/services/public-settings.store';
 
+interface AdminMenuItem {
+  labelKey: string;
+  icon: string;
+  route: string;
+  badge?: boolean;
+  moduleKey?: string;
+}
+
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
@@ -24,14 +32,6 @@ import { PublicSettingsStore } from '../../core/services/public-settings.store';
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css'
 })
-interface AdminMenuItem {
-  labelKey: string;
-  icon: string;
-  route: string;
-  badge?: boolean;
-  moduleKey?: string;
-}
-
 export class AdminLayoutComponent implements OnInit {
   private authService = inject(AuthService);
   private publicSettingsStore = inject(PublicSettingsStore);
