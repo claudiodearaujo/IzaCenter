@@ -1,191 +1,53 @@
-<!-- apps/frontend/src/app/features/admin/users/user-detail/user-detail.component.html -->
-
 <p-confirmDialog />
+<section class="person-detail">
+  <a routerLink="/admin/usuarios" class="back-link"><i class="pi pi-arrow-left"></i>{{ 'admin.users.backToList' | translate }}</a>
 
-<section class="py-8">
-  <div class="container-custom max-w-5xl">
-    <!-- Back Button -->
-    <a routerLink="/admin/usuarios" class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6">
-      <i class="pi pi-arrow-left mr-2"></i>
-      {{ 'admin.users.backToList' | translate }}
-    </a>
-
-    @if (loading()) {
-      <div class="glass-card p-8">
-        <div class="flex items-center gap-6 mb-8">
-          <p-skeleton shape="circle" size="6rem" />
-          <div class="flex-1">
-            <p-skeleton height="2rem" width="40%" styleClass="mb-2" />
-            <p-skeleton height="1rem" width="30%" />
-          </div>
+  @if (loading()) {
+    <ds-card padding="lg"><div class="loading-head"><p-skeleton shape="circle" size="5rem"/><div><p-skeleton height="2rem" width="14rem"/><p-skeleton height="1rem" width="10rem"/></div></div><p-skeleton height="18rem"/></ds-card>
+  } @else if (user()) {
+    <ds-card padding="lg">
+      <div class="profile-head">
+        <ds-avatar [name]="user()?.fullName || 'Usuário'" [imageUrl]="user()?.avatarUrl || ''" size="lg" />
+        <div class="profile-copy">
+          <div class="profile-title-row"><h1>{{ user()?.fullName }}</h1><ds-badge [tone]="getRoleTone(user()?.role || 'CLIENT')">{{ getRoleLabel(user()?.role || 'CLIENT') }}</ds-badge><ds-badge [tone]="user()?.isActive ? 'success':'error'" [dot]="true">{{ user()?.isActive ? ('admin.users.active'|translate):('admin.users.inactive'|translate) }}</ds-badge></div>
+          <p>{{ user()?.email }}</p>@if(user()?.phone){<p>{{ user()?.phone }}</p>}
         </div>
-        <p-skeleton height="20rem" />
-      </div>
-    } @else if (user()) {
-      <!-- User Header -->
-      <div class="glass-card p-8 mb-6">
-        <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
-          <!-- Avatar -->
-          @if (user()?.avatarUrl) {
-            <img 
-              [src]="user()?.avatarUrl" 
-              [alt]="user()?.fullName"
-              class="w-24 h-24 rounded-full object-cover border-4 border-primary/30"
-            />
-          } @else {
-            <div class="w-24 h-24 rounded-full bg-gradient-mystical flex items-center justify-center text-3xl text-white">
-              {{ (user()?.fullName ?? 'U').charAt(0).toUpperCase() }}
-            </div>
-          }
-
-          <!-- Info -->
-          <div class="flex-1">
-            <div class="flex items-center gap-3 mb-2">
-              <h1 class="heading-1 text-primary">{{ user()?.fullName }}</h1>
-              <p-tag 
-                [value]="getRoleLabel(user()?.role ?? 'CLIENT')" 
-                [severity]="getRoleSeverity(user()?.role ?? 'CLIENT')"
-              />
-            </div>
-            <p class="text-secondary">{{ user()?.email }}</p>
-            @if (user()?.phone) {
-              <p class="text-secondary text-sm">{{ user()?.phone }}</p>
-            }
-          </div>
-
-          <!-- Actions -->
-          <div class="flex flex-col gap-2">
-            <button 
-              pButton 
-              [class]="user()?.isActive ? 'btn-outline' : 'btn-primary'"
-              (click)="toggleActive()"
-            >
-              <i class="pi" [class]="user()?.isActive ? 'pi-ban' : 'pi-check'" class="mr-2"></i>
-              {{ user()?.isActive ? ('admin.users.deactivate' | translate) : ('admin.users.activate' | translate) }}
-            </button>
-            <button
-              pButton
-              class="btn-outline"
-              (click)="toggleRole()"
-            >
-              <i class="pi pi-user-edit mr-2"></i>
-              {{ 'admin.users.changeRole' | translate }}
-            </button>
-          </div>
+        <div class="profile-actions">
+          <ds-button [variant]="user()?.isActive ? 'secondary':'primary'" (click)="toggleActive()">{{ user()?.isActive ? ('admin.users.deactivate'|translate):('admin.users.activate'|translate) }}</ds-button>
+          <ds-button variant="ghost" icon="pi-user-edit" (click)="toggleRole()">{{ 'admin.users.changeRole'|translate }}</ds-button>
         </div>
       </div>
+    </ds-card>
 
-      <!-- Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="glass-card p-4 text-center">
-          <p class="text-3xl font-bold text-primary">{{ user()?._count?.orders || 0 }}</p>
-          <p class="text-secondary text-sm">{{ 'admin.users.orders' | translate }}</p>
-        </div>
-        <div class="glass-card p-4 text-center">
-          <p class="text-3xl font-bold text-primary">{{ user()?._count?.readings || 0 }}</p>
-          <p class="text-secondary text-sm">{{ 'admin.users.readings' | translate }}</p>
-        </div>
-        <div class="glass-card p-4 text-center">
-          <p class="text-3xl font-bold text-primary">{{ user()?._count?.appointments || 0 }}</p>
-          <p class="text-secondary text-sm">{{ 'admin.users.appointments' | translate }}</p>
-        </div>
-        <div class="glass-card p-4 text-center">
-          <p class="text-lg font-bold" [class]="user()?.isActive ? 'text-green-400' : 'text-red-400'">
-            <i class="pi" [class]="user()?.isActive ? 'pi-check-circle' : 'pi-times-circle'" class="mr-1"></i>
-            {{ user()?.isActive ? ('admin.users.active' | translate) : ('admin.users.inactive' | translate) }}
-          </p>
-          <p class="text-secondary text-sm">{{ 'admin.users.status' | translate }}</p>
-        </div>
-      </div>
+    <div class="summary-grid">
+      <ds-card padding="md"><p class="summary-value">{{ user()?._count?.orders || 0 }}</p><p class="summary-label">{{ 'admin.users.orders'|translate }}</p></ds-card>
+      <ds-card padding="md"><p class="summary-value">{{ user()?._count?.readings || 0 }}</p><p class="summary-label">{{ 'admin.users.readings'|translate }}</p></ds-card>
+      <ds-card padding="md"><p class="summary-value">{{ user()?._count?.appointments || 0 }}</p><p class="summary-label">{{ 'admin.users.appointments'|translate }}</p></ds-card>
+      <ds-card padding="md"><p class="summary-value summary-value--date">{{ formatDate(user()?.createdAt) }}</p><p class="summary-label">{{ 'admin.users.createdAt'|translate }}</p></ds-card>
+    </div>
 
-      <!-- Tabs -->
-      <div class="glass-card p-6">
-        <p-tabs value="0">
-          <p-tablist>
-            <p-tab value="0">{{ 'admin.users.information' | translate }}</p-tab>
-            <p-tab value="1">{{ 'admin.users.orders' | translate }}</p-tab>
-            <p-tab value="2">{{ 'admin.users.readings' | translate }}</p-tab>
-          </p-tablist>
-          <p-tabpanels>
-          <!-- Info Tab -->
+    <ds-card padding="lg">
+      <p-tabs value="0">
+        <p-tablist><p-tab value="0">{{ 'admin.users.information'|translate }}</p-tab><p-tab value="1">{{ 'admin.users.orders'|translate }}</p-tab><p-tab value="2">{{ 'admin.users.readings'|translate }}</p-tab></p-tablist>
+        <p-tabpanels>
           <p-tabpanel value="0">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
-              <div>
-                <label class="text-secondary text-sm">{{ 'admin.users.fullName' | translate }}</label>
-                <p class="text-primary font-medium">{{ user()?.fullName }}</p>
-              </div>
-              <div>
-                <label class="text-secondary text-sm">{{ 'admin.users.email' | translate }}</label>
-                <p class="text-primary font-medium">{{ user()?.email }}</p>
-              </div>
-              <div>
-                <label class="text-secondary text-sm">{{ 'admin.users.phone' | translate }}</label>
-                <p class="text-primary font-medium">{{ user()?.phone || ('admin.users.notInformed' | translate) }}</p>
-              </div>
-              <div>
-                <label class="text-secondary text-sm">{{ 'admin.users.birthDate' | translate }}</label>
-                <p class="text-primary font-medium">{{ formatDate(user()?.birthDate) }}</p>
-              </div>
-              <div>
-                <label class="text-secondary text-sm">{{ 'admin.users.createdAt' | translate }}</label>
-                <p class="text-primary font-medium">{{ formatDateTime(user()?.createdAt ?? '') }}</p>
-              </div>
-              <div>
-                <label class="text-secondary text-sm">{{ 'admin.users.accountType' | translate }}</label>
-                <p class="text-primary font-medium">{{ getRoleLabel(user()?.role ?? 'CLIENT') }}</p>
-              </div>
+            <div class="info-grid">
+              <div><span>{{ 'admin.users.fullName'|translate }}</span><strong>{{ user()?.fullName }}</strong></div>
+              <div><span>{{ 'admin.users.email'|translate }}</span><strong>{{ user()?.email }}</strong></div>
+              <div><span>{{ 'admin.users.phone'|translate }}</span><strong>{{ user()?.phone || ('admin.users.notInformed'|translate) }}</strong></div>
+              <div><span>{{ 'admin.users.birthDate'|translate }}</span><strong>{{ formatDate(user()?.birthDate) }}</strong></div>
+              <div><span>{{ 'admin.users.createdAt'|translate }}</span><strong>{{ formatDateTime(user()?.createdAt ?? '') }}</strong></div>
+              <div><span>{{ 'admin.users.accountType'|translate }}</span><strong>{{ getRoleLabel(user()?.role ?? 'CLIENT') }}</strong></div>
             </div>
           </p-tabpanel>
-
-          <!-- Orders Tab -->
           <p-tabpanel value="1">
-            @if (user()?.orders?.length) {
-              <div class="space-y-3 py-4">
-                @for (order of user()?.orders ?? []; track order.id) {
-                  <a 
-                    [routerLink]="['/admin/pedidos', order.id]"
-                    class="flex items-center justify-between p-4 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
-                  >
-                    <div>
-                      <p class="text-primary font-medium">#{{ order.orderNumber }}</p>
-                      <p class="text-secondary text-sm">{{ formatDateTime(order.createdAt) }}</p>
-                    </div>
-                    <div class="text-right">
-                      <p class="text-accent font-bold">{{ order.total | currencyBrl }}</p>
-                      <span class="text-xs text-secondary">{{ order.status }}</span>
-                    </div>
-                  </a>
-                }
-              </div>
-            } @else {
-              <p class="text-secondary text-center py-8">{{ 'admin.users.noOrders' | translate }}</p>
-            }
+            @if(user()?.orders?.length){<div class="timeline-list">@for(order of user()?.orders ?? [];track order.id){<a [routerLink]="['/admin/pedidos',order.id]" class="timeline-row"><div><strong>#{{ order.orderNumber }}</strong><span>{{ formatDateTime(order.createdAt) }}</span></div><div><strong>{{ order.total|currencyBrl }}</strong><span>{{ order.status }}</span></div></a>}</div>}@else{<ds-empty-state [title]="'admin.users.noOrders'|translate" icon="pi-shopping-bag"></ds-empty-state>}
           </p-tabpanel>
-
-          <!-- Readings Tab -->
           <p-tabpanel value="2">
-            @if (user()?.readings?.length) {
-              <div class="space-y-3 py-4">
-                @for (reading of user()?.readings ?? []; track reading.id) {
-                  <a 
-                    [routerLink]="['/admin/entregas', reading.id]"
-                    class="flex items-center justify-between p-4 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
-                  >
-                    <div>
-                      <p class="text-primary font-medium">{{ reading.product?.name }}</p>
-                      <p class="text-secondary text-sm">{{ formatDateTime(reading.createdAt) }}</p>
-                    </div>
-                    <span class="text-xs text-secondary">{{ reading.status }}</span>
-                  </a>
-                }
-              </div>
-            } @else {
-              <p class="text-secondary text-center py-8">{{ 'admin.users.noReadings' | translate }}</p>
-            }
+            @if(user()?.readings?.length){<div class="timeline-list">@for(reading of user()?.readings ?? [];track reading.id){<a [routerLink]="['/admin/entregas',reading.id]" class="timeline-row"><div><strong>{{ reading.product?.name }}</strong><span>{{ formatDateTime(reading.createdAt) }}</span></div><span>{{ reading.status }}</span></a>}</div>}@else{<ds-empty-state [title]="'admin.users.noReadings'|translate" icon="pi-book"></ds-empty-state>}
           </p-tabpanel>
-          </p-tabpanels>
-        </p-tabs>
-      </div>
-    }
-  </div>
+        </p-tabpanels>
+      </p-tabs>
+    </ds-card>
+  }
 </section>
