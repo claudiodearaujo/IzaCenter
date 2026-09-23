@@ -210,7 +210,7 @@ describe('SettingsService', () => {
 
       expect(result.data).toEqual(specialties);
       expect(prismaMock.siteSetting.upsert).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { key: 'specialties' } })
+        expect.objectContaining({ where: { tenantId_key: { tenantId: '00000000-0000-0000-0000-000000000001', key: 'specialties' } } })
       );
     });
 
@@ -338,6 +338,74 @@ describe('SettingsService', () => {
       expect(result.data.businessHours).toHaveLength(1);
       expect(result.data.content.servicesTitle).toBe('Serviços');
       expect(result.data.heroTitle).toBe('Bem-vindo');
+    });
+  });
+ 
+  describe('tenant isolation', () => {
+    it('should read the same setting key independently for two tenants', async () => {
+      prismaMock.siteSetting.findUnique
+        .mockResolvedValueOnce({
+          id: 'setting-a',
+          tenantId: 'tenant-a',
+          key: 'general',
+          value: {
+            siteName: 'Clínica A',
+            enableShop: true,
+          },
+        } as any)
+        .mockResolvedValueOnce({
+          id: 'setting-b',
+          tenantId: 'tenant-b',
+          key: 'general',
+          value: {
+            siteName: 'Clínica B',
+            enableShop: true,
+          },
+        } as any);
+
+      const tenantA = await settingsService.getGeneral('tenant-a');
+      const tenantB = await settingsService.getGeneral('tenant-b');
+
+      expect(tenantA.data.siteName).toBe('Clínica A');
+      expect(tenantB.data.siteName).toBe('Clínica B');
+      expect(prismaMock.siteSetting.findUnique).toHaveBeenNthCalledWith(1, {
+        where: {
+          tenantId_key: { tenantId: 'tenant-a', key: 'general' },
+        },
+      });
+      expect(prismaMock.siteSetting.findUnique).toHaveBeenNthCalledWith(2, {
+        where: {
+          tenantId_key: { tenantId: 'tenant-b', key: 'general' },
+        },
+      });
+    });
+
+    it('should upsert a setting inside the requested tenant only', async () => {
+      prismaMock.siteSetting.findUnique.mockResolvedValue({
+        tenantId: 'tenant-b',
+        key: 'general',
+        value: {
+          siteName: 'Clínica B',
+          enableShop: true,
+        },
+      } as any);
+      prismaMock.siteSetting.upsert.mockResolvedValue({} as any);
+
+      await settingsService.updateGeneral({ siteName: 'Clínica B Nova' }, 'tenant-b');
+
+      expect(prismaMock.siteSetting.upsert).toHaveBeenCalledWith({
+        where: {
+          tenantId_key: { tenantId: 'tenant-b', key: 'general' },
+        },
+        update: {
+          value: expect.objectContaining({ siteName: 'Clínica B Nova' }),
+        },
+        create: {
+          tenantId: 'tenant-b',
+          key: 'general',
+          value: expect.objectContaining({ siteName: 'Clínica B Nova' }),
+        },
+      });
     });
   });
 });
