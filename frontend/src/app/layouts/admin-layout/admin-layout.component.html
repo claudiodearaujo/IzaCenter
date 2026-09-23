@@ -54,19 +54,21 @@
       <nav class="p-4 overflow-y-auto" style="max-height: calc(100vh - 250px);">
         <ul class="space-y-1">
           @for (item of menuItems; track item.route) {
-          <li>
-            <a [routerLink]="item.route" routerLinkActive="bg-primary-800 text-white"
-              [routerLinkActiveOptions]="{exact: item.route === '/admin'}" (click)="closeSidebar()"
-              class="flex items-center justify-between px-4 py-3 rounded-xl text-primary-200 hover:bg-primary-800 hover:text-white transition-colors">
-              <span class="flex items-center gap-3">
-                <i class="pi" [class]="item.icon"></i>
-                {{ item.labelKey | translate }}
-              </span>
-              @if (item.badge) {
-              <p-badge value="3" severity="danger" />
-              }
-            </a>
-          </li>
+            @if (isMenuItemEnabled(item)) {
+              <li>
+                <a [routerLink]="item.route" routerLinkActive="bg-primary-800 text-white"
+                  [routerLinkActiveOptions]="{exact: item.route === '/admin'}" (click)="closeSidebar()"
+                  class="flex items-center justify-between px-4 py-3 rounded-xl text-primary-200 hover:bg-primary-800 hover:text-white transition-colors">
+                  <span class="flex items-center gap-3">
+                    <i class="pi" [class]="item.icon"></i>
+                    {{ item.labelKey | translate }}
+                  </span>
+                  @if (item.badge) {
+                    <p-badge value="3" severity="danger" />
+                  }
+                </a>
+              </li>
+            }
           }
         </ul>
       </nav>
