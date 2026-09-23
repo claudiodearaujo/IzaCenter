@@ -4,12 +4,14 @@ import { Observable, tap, catchError, of } from 'rxjs';
 import { ApiService } from './api.service';
 import { StorageService } from './storage.service';
 import { User } from '../models/user.model';
+import { TenantMembership } from '../models/tenant.model';
 
 interface AuthResponse {
   success: boolean;
   message: string;
   data: {
     user: User;
+    membership: TenantMembership;
     accessToken: string;
   };
 }
@@ -35,12 +37,17 @@ export class AuthService {
   private router = inject(Router);
 
   private currentUserSignal = signal<User | null>(null);
+  private currentMembershipSignal = signal<TenantMembership | null>(null);
   private accessTokenSignal = signal<string | null>(null);
 
   readonly currentUser = this.currentUserSignal.asReadonly();
+  readonly currentMembership = this.currentMembershipSignal.asReadonly();
   readonly user = this.currentUser; // Alias for backward compatibility
   readonly isAuthenticated = computed(() => !!this.currentUserSignal());
-  readonly isAdmin = computed(() => this.currentUserSignal()?.role === 'ADMIN');
+  readonly isAdmin = computed(() => {
+    const role = this.currentMembershipSignal()?.role;
+    return role === 'OWNER' || role === 'ADMIN';
+  });
 
   constructor() {
     this.loadStoredUser();
@@ -48,10 +55,12 @@ export class AuthService {
 
   private loadStoredUser(): void {
     const user = this.storage.get<User>('user');
+    const membership = this.storage.get<TenantMembership>('tenantMembership');
     const token = this.storage.get<string>('accessToken');
     
     if (user && token) {
       this.currentUserSignal.set(user);
+      this.currentMembershipSignal.set(membership);
       this.accessTokenSignal.set(token);
     }
   }
@@ -60,13 +69,23 @@ export class AuthService {
     return this.accessTokenSignal();
   }
 
+  establishSession(data: {
+    user: User;
+    membership: TenantMembership;
+    accessToken: string;
+  }): void {
+    this.currentUserSignal.set(data.user);
+    this.currentMembershipSignal.set(data.membership);
+    this.accessTokenSignal.set(data.accessToken);
+    this.storage.set('user', data.user);
+    this.storage.set('tenantMembership', data.membership);
+    this.storage.set('accessToken', data.accessToken);
+  }
+
   login(data: LoginData): Observable<AuthResponse> {
     return this.api.post<AuthResponse>('/auth/login', data).pipe(
       tap(response => {
-        this.currentUserSignal.set(response.data.user);
-        this.accessTokenSignal.set(response.data.accessToken);
-        this.storage.set('user', response.data.user);
-        this.storage.set('accessToken', response.data.accessToken);
+        this.establishSession(response.data);
       })
     );
   }
@@ -74,10 +93,7 @@ export class AuthService {
   register(data: RegisterData): Observable<AuthResponse> {
     return this.api.post<AuthResponse>('/auth/register', data).pipe(
       tap(response => {
-        this.currentUserSignal.set(response.data.user);
-        this.accessTokenSignal.set(response.data.accessToken);
-        this.storage.set('user', response.data.user);
-        this.storage.set('accessToken', response.data.accessToken);
+        this.establishSession(response.data);
       })
     );
   }
@@ -108,8 +124,10 @@ export class AuthService {
   logout(): void {
     this.api.post('/auth/logout', {}).subscribe();
     this.currentUserSignal.set(null);
+    this.currentMembershipSignal.set(null);
     this.accessTokenSignal.set(null);
     this.storage.remove('user');
+    this.storage.remove('tenantMembership');
     this.storage.remove('accessToken');
     this.router.navigate(['/']);
   }
