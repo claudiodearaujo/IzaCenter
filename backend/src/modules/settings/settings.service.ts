@@ -69,6 +69,7 @@ interface SpecialtySettings {
   description?: string;
   isActive: boolean;
   usesCardModule: boolean;
+  moduleKey?: string;
   disclaimer?: string;
 }
 
@@ -234,6 +235,30 @@ export class SettingsService {
     return { data };
   }
 
+  async getEnabledSpecialtyModules(): Promise<string[]> {
+    const specialties = (await this.getSpecialties()).data;
+    const modules = new Set<string>();
+
+    for (const specialty of specialties) {
+      if (!specialty.isActive) continue;
+
+      if (specialty.moduleKey) {
+        modules.add(specialty.moduleKey);
+      }
+
+      if (specialty.usesCardModule) {
+        modules.add('tarot-cards');
+      }
+    }
+
+    return [...modules].sort();
+  }
+
+  async isSpecialtyModuleEnabled(moduleKey: string): Promise<boolean> {
+    const modules = await this.getEnabledSpecialtyModules();
+    return modules.includes(moduleKey);
+  }
+
   // SEO Settings
   async getSeo(): Promise<{ data: SeoSettings }> {
     const settings = await this.getSetting('seo');
@@ -337,6 +362,7 @@ export class SettingsService {
         footerText: content.data.footerText,
         professional: professional.data,
         specialties: specialties.data.filter((specialty) => specialty.isActive),
+        enabledModules: await this.getEnabledSpecialtyModules(),
         seo: seo.data,
       },
     };
