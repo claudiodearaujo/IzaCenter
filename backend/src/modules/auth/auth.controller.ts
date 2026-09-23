@@ -19,7 +19,7 @@ export class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       const data = req.body as RegisterDto;
-      const result = await authService.register(data);
+      const result = await authService.register(data, req.tenant?.id);
 
       res.status(201).json({
         success: true,

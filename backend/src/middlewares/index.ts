@@ -5,3 +5,4 @@ export { AppError, Errors, notFoundHandler, errorHandler } from './error.middlew
 export { validate, commonSchemas, idParamsSchema, paginationQuerySchema } from './validate.middleware';
 export { uploadImage, uploadDocument, uploadAudio, uploadVideo, uploadFile, generateFileName, getUploadFolder } from './upload.middleware';
 export { generalLimiter, authLimiter, passwordResetLimiter, uploadLimiter } from './rateLimiter.middleware';
+export { resolveTenant, requireTenantMembership } from './tenant.middleware';

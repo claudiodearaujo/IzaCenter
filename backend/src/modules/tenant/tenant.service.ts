@@ -1,0 +1,102 @@
+import { Tenant, TenantMemberRole } from '@prisma/client';
+import { prisma } from '../../config/database';
+import { DEFAULT_TENANT_ID, DEFAULT_TENANT_SLUG } from './tenant.constants';
+
+export type TenantContext = Pick<Tenant, 'id' | 'name' | 'slug' | 'status' | 'planKey' | 'customDomain'>;
+
+export class TenantService {
+  async getDefaultTenant(): Promise<TenantContext | null> {
+    return prisma.tenant.findFirst({
+      where: {
+        status: 'ACTIVE',
+        OR: [
+          { id: DEFAULT_TENANT_ID },
+          { slug: DEFAULT_TENANT_SLUG },
+        ],
+      },
+      select: this.contextSelect(),
+    });
+  }
+
+  async findActiveBySlug(slug: string): Promise<TenantContext | null> {
+    return prisma.tenant.findFirst({
+      where: { slug: slug.toLowerCase(), status: 'ACTIVE' },
+      select: this.contextSelect(),
+    });
+  }
+
+  async findActiveByCustomDomain(hostname: string): Promise<TenantContext | null> {
+    return prisma.tenant.findFirst({
+      where: { customDomain: hostname.toLowerCase(), status: 'ACTIVE' },
+      select: this.contextSelect(),
+    });
+  }
+
+  async resolve(explicitSlug?: string, hostname?: string): Promise<TenantContext | null> {
+    if (explicitSlug) {
+      return this.findActiveBySlug(explicitSlug);
+    }
+
+    const normalizedHost = this.normalizeHostname(hostname);
+    if (normalizedHost) {
+      const customDomainTenant = await this.findActiveByCustomDomain(normalizedHost);
+      if (customDomainTenant) return customDomainTenant;
+
+      const subdomain = this.extractSubdomain(normalizedHost);
+      if (subdomain) {
+        const subdomainTenant = await this.findActiveBySlug(subdomain);
+        if (subdomainTenant) return subdomainTenant;
+      }
+    }
+
+    return this.getDefaultTenant();
+  }
+
+  async getMembership(tenantId: string, userId: string) {
+    return prisma.tenantMembership.findUnique({
+      where: {
+        tenantId_userId: { tenantId, userId },
+      },
+      select: {
+        id: true,
+        role: true,
+        isActive: true,
+      },
+    });
+  }
+
+  isAllowedRole(role: TenantMemberRole, allowedRoles?: TenantMemberRole[]): boolean {
+    return !allowedRoles?.length || allowedRoles.includes(role);
+  }
+
+  private normalizeHostname(hostname?: string): string | null {
+    if (!hostname) return null;
+    return hostname.split(':')[0].trim().toLowerCase() || null;
+  }
+
+  private extractSubdomain(hostname: string): string | null {
+    if (hostname === 'localhost' || /^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)) {
+      return null;
+    }
+
+    const parts = hostname.split('.');
+    if (parts.length < 3) return null;
+
+    const candidate = parts[0];
+    if (!candidate || ['www', 'api'].includes(candidate)) return null;
+    return candidate;
+  }
+
+  private contextSelect() {
+    return {
+      id: true,
+      name: true,
+      slug: true,
+      status: true,
+      planKey: true,
+      customDomain: true,
+    } as const;
+  }
+}
+
+export const tenantService = new TenantService();

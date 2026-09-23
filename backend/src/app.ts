@@ -10,7 +10,7 @@ import swaggerUi from 'swagger-ui-express';
 
 import { env } from './config/env';
 import { Sentry } from './config/sentry';
-import { notFoundHandler, errorHandler, generalLimiter } from './middlewares';
+import { notFoundHandler, errorHandler, generalLimiter, resolveTenant } from './middlewares';
 import { auditLogger } from './middlewares/audit.middleware';
 import { swaggerSpec } from './config/swagger';
 import {
@@ -28,6 +28,7 @@ import {
   dashboardRoutes,
   notificationsRoutes,
   contactRoutes,
+  tenantRoutes,
 } from './modules';
 
 // Create Express app
@@ -49,7 +50,7 @@ app.use(cors({
     : [env.FRONTEND_URL],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Tenant-Slug'],
 }));
 
 // =============================================
@@ -124,6 +125,8 @@ const apiPrefix = env.API_PREFIX;
 const apiV1Prefix = `${apiPrefix}/v1`;
 
 function mountRoutes(prefix: string) {
+  app.use(prefix, resolveTenant);
+  app.use(prefix, tenantRoutes);
   app.use(`${prefix}/auth`, authRoutes);
   app.use(`${prefix}/users`, usersRoutes);
   app.use(`${prefix}/products`, productsRoutes);

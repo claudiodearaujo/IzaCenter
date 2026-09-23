@@ -3,6 +3,7 @@
 import { Router } from 'express';
 import { settingsController } from './settings.controller';
 import { authenticate, requireAdmin } from '../../middlewares/auth.middleware';
+import { requireTenantMembership } from '../../middlewares/tenant.middleware';
 
 const router = Router();
 
@@ -35,6 +36,7 @@ router.get(
   '/admin/settings',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.getAll.bind(settingsController)
 );
 
@@ -68,6 +70,7 @@ router.get(
   '/admin/settings/general',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.getGeneral.bind(settingsController)
 );
 
@@ -75,6 +78,7 @@ router.put(
   '/admin/settings/general',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.updateGeneral.bind(settingsController)
 );
 
@@ -108,6 +112,7 @@ router.get(
   '/admin/settings/contact',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.getContact.bind(settingsController)
 );
 
@@ -115,6 +120,7 @@ router.put(
   '/admin/settings/contact',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.updateContact.bind(settingsController)
 );
 
@@ -162,6 +168,7 @@ router.get(
   '/admin/settings/business-hours',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.getBusinessHours.bind(settingsController)
 );
 
@@ -169,6 +176,7 @@ router.put(
   '/admin/settings/business-hours',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.updateBusinessHours.bind(settingsController)
 );
 
@@ -202,6 +210,7 @@ router.get(
   '/admin/settings/content',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.getContent.bind(settingsController)
 );
 
@@ -209,6 +218,7 @@ router.put(
   '/admin/settings/content',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.updateContent.bind(settingsController)
 );
 
@@ -219,6 +229,7 @@ router.get(
   '/admin/settings/professional',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.getProfessional.bind(settingsController)
 );
 
@@ -226,6 +237,7 @@ router.put(
   '/admin/settings/professional',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.updateProfessional.bind(settingsController)
 );
 
@@ -233,6 +245,7 @@ router.get(
   '/admin/settings/specialties',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.getSpecialties.bind(settingsController)
 );
 
@@ -240,6 +253,7 @@ router.put(
   '/admin/settings/specialties',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.updateSpecialties.bind(settingsController)
 );
 
@@ -247,6 +261,7 @@ router.get(
   '/admin/settings/seo',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.getSeo.bind(settingsController)
 );
 
@@ -254,6 +269,7 @@ router.put(
   '/admin/settings/seo',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.updateSeo.bind(settingsController)
 );
 
@@ -287,6 +303,7 @@ router.get(
   '/admin/settings/analytics',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.getAnalytics.bind(settingsController)
 );
 
@@ -294,6 +311,7 @@ router.put(
   '/admin/settings/analytics',
   authenticate,
   requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
   settingsController.updateAnalytics.bind(settingsController)
 );
 

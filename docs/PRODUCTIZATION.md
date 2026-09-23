@@ -12,7 +12,7 @@ Transformar a implementação originalmente criada para uma profissional especí
 - retirar arquivos de ambiente com segredos do versionamento;
 - preservar apenas exemplos seguros de configuração.
 
-## Fase 2 — Generalização de domínio 🟡 em andamento
+## Fase 2 — Generalização de domínio ✅ concluída
 
 PRDs:
 - [PRD-GENERIC-DOMAIN.md](PRD-GENERIC-DOMAIN.md) — Generic Domain v1 ✅
@@ -31,9 +31,19 @@ Prioridades:
 - templates de e-mail e PDF configuráveis;
 - identidade visual configurável.
 
-## Fase 3 — SaaS
+## Fase 3 — SaaS 🟡 em andamento
 
-- tenancy e isolamento de dados;
+PRDs:
+- [PRD-SAAS-FOUNDATION-V1.md](PRD-SAAS-FOUNDATION-V1.md) — SaaS Foundation v1 ✅
+- SaaS Foundation v2 — Data Isolation ⏳
+- SaaS Foundation v3 — Onboarding & Branding ⏳
+- SaaS Foundation v4 — Plans & Billing ⏳
+- SaaS Foundation v5 — LGPD & Operations ⏳
+
+A v1 instala o contexto de tenant, memberships e settings tenant-scoped sem expor ainda criação pública de tenants. O isolamento completo dos agregados de negócio continua na v2.
+
+Prioridades:
+- isolamento de dados por tenant;
 - onboarding do profissional;
 - planos e assinaturas;
 - branding e domínio por tenant;

@@ -7,7 +7,7 @@ export class SettingsController {
   // Public endpoint
   async getPublic(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.getPublic();
+      const result = await settingsService.getPublic(req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -17,7 +17,7 @@ export class SettingsController {
   // Admin endpoints
   async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.getAll();
+      const result = await settingsService.getAll(req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -26,7 +26,7 @@ export class SettingsController {
 
   async getGeneral(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.getGeneral();
+      const result = await settingsService.getGeneral(req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -35,7 +35,7 @@ export class SettingsController {
 
   async updateGeneral(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.updateGeneral(req.body);
+      const result = await settingsService.updateGeneral(req.body, req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -44,7 +44,7 @@ export class SettingsController {
 
   async getContact(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.getContact();
+      const result = await settingsService.getContact(req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -53,7 +53,7 @@ export class SettingsController {
 
   async updateContact(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.updateContact(req.body);
+      const result = await settingsService.updateContact(req.body, req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -62,7 +62,7 @@ export class SettingsController {
 
   async getBusinessHours(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.getBusinessHours();
+      const result = await settingsService.getBusinessHours(req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -71,7 +71,7 @@ export class SettingsController {
 
   async updateBusinessHours(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.updateBusinessHours(req.body);
+      const result = await settingsService.updateBusinessHours(req.body, req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -80,7 +80,7 @@ export class SettingsController {
 
   async getContent(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.getContent();
+      const result = await settingsService.getContent(req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -89,7 +89,7 @@ export class SettingsController {
 
   async updateContent(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.updateContent(req.body);
+      const result = await settingsService.updateContent(req.body, req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -98,7 +98,7 @@ export class SettingsController {
 
   async getProfessional(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.getProfessional();
+      const result = await settingsService.getProfessional(req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -107,7 +107,7 @@ export class SettingsController {
 
   async updateProfessional(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.updateProfessional(req.body);
+      const result = await settingsService.updateProfessional(req.body, req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -116,7 +116,7 @@ export class SettingsController {
 
   async getSpecialties(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.getSpecialties();
+      const result = await settingsService.getSpecialties(req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -125,7 +125,7 @@ export class SettingsController {
 
   async updateSpecialties(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.updateSpecialties(req.body);
+      const result = await settingsService.updateSpecialties(req.body, req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -134,7 +134,7 @@ export class SettingsController {
 
   async getSeo(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.getSeo();
+      const result = await settingsService.getSeo(req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -143,7 +143,7 @@ export class SettingsController {
 
   async updateSeo(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.updateSeo(req.body);
+      const result = await settingsService.updateSeo(req.body, req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -152,7 +152,7 @@ export class SettingsController {
 
   async getAnalytics(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.getAnalytics();
+      const result = await settingsService.getAnalytics(req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -161,7 +161,7 @@ export class SettingsController {
 
   async updateAnalytics(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await settingsService.updateAnalytics(req.body);
+      const result = await settingsService.updateAnalytics(req.body, req.tenant?.id);
       res.json(result);
     } catch (error) {
       next(error);

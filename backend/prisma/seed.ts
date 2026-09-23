@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
+const DEFAULT_TENANT_ID = '00000000-0000-0000-0000-000000000001';
 
 // =============================================
 // HELPER FUNCTIONS
@@ -26,6 +27,23 @@ function generateOrderNumber(index: number): string {
 async function main() {
   console.log('🌱 Starting database seed...\n');
 
+  const defaultTenant = await prisma.tenant.upsert({
+    where: { slug: 'default' },
+    update: {
+      name: 'Default Tenant',
+      status: 'ACTIVE',
+      planKey: 'starter',
+    },
+    create: {
+      id: DEFAULT_TENANT_ID,
+      name: 'Default Tenant',
+      slug: 'default',
+      status: 'ACTIVE',
+      planKey: 'starter',
+    },
+  });
+  console.log(`   ✅ Default tenant ready: ${defaultTenant.slug}\n`);
+
   // =============================================
   // 1. CREATE ADMIN USER
   // =============================================
@@ -41,6 +59,24 @@ async function main() {
       fullName: 'Profissional Admin',
       role: 'ADMIN',
       phone: '(11) 99999-9999',
+    },
+  });
+  await prisma.tenantMembership.upsert({
+    where: {
+      tenantId_userId: {
+        tenantId: DEFAULT_TENANT_ID,
+        userId: admin.id,
+      },
+    },
+    update: {
+      role: 'OWNER',
+      isActive: true,
+    },
+    create: {
+      tenantId: DEFAULT_TENANT_ID,
+      userId: admin.id,
+      role: 'OWNER',
+      isActive: true,
     },
   });
   console.log(`   ✅ Admin created: ${admin.email}\n`);
@@ -68,6 +104,24 @@ async function main() {
       notes: 'Cliente fiel desde 2023. Prefere leituras de amor e carreira.',
       stripeCustomerId: 'cus_test_maria_silva',
       lastLoginAt: daysAgo(2),
+    },
+  });
+  await prisma.tenantMembership.upsert({
+    where: {
+      tenantId_userId: {
+        tenantId: DEFAULT_TENANT_ID,
+        userId: client.id,
+      },
+    },
+    update: {
+      role: 'CLIENT',
+      isActive: true,
+    },
+    create: {
+      tenantId: DEFAULT_TENANT_ID,
+      userId: client.id,
+      role: 'CLIENT',
+      isActive: true,
     },
   });
   console.log(`   ✅ Client created: ${client.email}\n`);
@@ -837,9 +891,18 @@ async function main() {
 
   for (const setting of siteSettings) {
     await prisma.siteSetting.upsert({
-      where: { key: setting.key },
+      where: {
+        tenantId_key: {
+          tenantId: DEFAULT_TENANT_ID,
+          key: setting.key,
+        },
+      },
       update: { value: setting.value },
-      create: setting,
+      create: {
+        tenantId: DEFAULT_TENANT_ID,
+        key: setting.key,
+        value: setting.value,
+      },
     });
   }
   console.log(`   ✅ ${siteSettings.length} site settings created\n`);
