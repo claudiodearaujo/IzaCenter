@@ -1,6 +1,7 @@
 // apps/backend/src/modules/auth/auth.service.ts
 
 import { prisma } from '../../config/database';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 import { env } from '../../config/env';
 import { AppError, Errors } from '../../middlewares/error.middleware';
 import {
@@ -24,7 +25,7 @@ export class AuthService {
   /**
    * Register a new user
    */
-  async register(data: RegisterDto) {
+  async register(data: RegisterDto, tenantId = DEFAULT_TENANT_ID) {
     // Check if email already exists
     const existingUser = await prisma.user.findUnique({
       where: { email: data.email },
@@ -46,6 +47,12 @@ export class AuthService {
         phone: data.phone,
         birthDate: data.birthDate,
         role: 'CLIENT',
+        tenantMemberships: {
+          create: {
+            tenantId,
+            role: 'CLIENT',
+          },
+        },
       },
       select: {
         id: true,
