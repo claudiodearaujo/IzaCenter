@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AdminDashboardComponent } from './dashboard.component';
 import { DashboardService, DashboardStats, RecentOrder } from '../../../core/services/dashboard.service';
-import { ReadingsService, Reading } from '../../../core/services/readings.service';
+import { ReadingsService } from '../../../core/services/readings.service';
 
 class FakeTranslateLoader implements TranslateLoader {
   getTranslation() {
@@ -34,6 +34,10 @@ class FakeTranslateLoader implements TranslateLoader {
         readings: {
           statusWaiting: 'Waiting',
           statusInProgress: 'In Progress',
+          noReadings: 'No pending readings',
+        },
+        orders: {
+          noOrders: 'No orders',
         },
       },
       client: {
@@ -161,12 +165,16 @@ describe('AdminDashboardComponent', () => {
     expect(component.getStatusLabel('UNKNOWN')).toBe('UNKNOWN');
   });
 
-  it('should return correct status class for COMPLETED', () => {
-    expect(component.getStatusClass('COMPLETED')).toContain('green');
+  it('should return semantic status tone for COMPLETED', () => {
+    expect(component.getStatusTone('COMPLETED')).toBe('success');
   });
 
-  it('should return correct status class for PENDING', () => {
-    expect(component.getStatusClass('PENDING')).toContain('yellow');
+  it('should return semantic status tone for PENDING', () => {
+    expect(component.getStatusTone('PENDING')).toBe('warning');
+  });
+
+  it('should return neutral tone for unknown status', () => {
+    expect(component.getStatusTone('UNKNOWN')).toBe('neutral');
   });
 
   it('should format date correctly', () => {
@@ -175,9 +183,9 @@ describe('AdminDashboardComponent', () => {
     expect(formatted).toContain('15');
   });
 
-  it('should initialize chart data', () => {
-    expect(component.ordersChartData).toBeDefined();
-    expect(component.ordersChartData.labels.length).toBe(4);
+  it('should initialize chart data with design system colors', () => {
+    expect(component.revenueChartData).toBeDefined();
+    expect(component.revenueChartData.datasets[0].borderColor).toBe('#477762');
     expect(component.revenueChartOptions).toBeDefined();
   });
 });

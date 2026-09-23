@@ -4,8 +4,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ChartModule } from 'primeng/chart';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -18,6 +16,15 @@ import {
 } from '../../../core/services/dashboard.service';
 import { ReadingsService, Reading } from '../../../core/services/readings.service';
 import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
+import {
+  DsAvatarComponent,
+  DsBadgeComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsPageHeaderComponent,
+} from '../../../shared/design-system';
+
+type DashboardStatusTone = 'neutral' | 'brand' | 'success' | 'warning' | 'error' | 'info';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -25,12 +32,15 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
   imports: [
     CommonModule,
     RouterLink,
-    ButtonModule,
-    CardModule,
     SkeletonModule,
     ChartModule,
     CurrencyBrlPipe,
     TranslateModule,
+    DsAvatarComponent,
+    DsBadgeComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsPageHeaderComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -45,27 +55,22 @@ export class AdminDashboardComponent implements OnInit {
   pendingReadings = signal<Reading[]>([]);
   loading = signal(true);
 
-  // Chart data
   revenueChartData: any;
   revenueChartOptions: any;
-  ordersChartData: any;
-  ordersChartOptions: any;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadDashboard();
     this.initCharts();
   }
 
-  loadDashboard() {
+  loadDashboard(): void {
     this.loading.set(true);
 
-    // Load stats
     this.dashboardService.getStats().subscribe({
       next: (response) => {
         this.stats.set(response.data);
       },
       error: () => {
-        // Use default values
         this.stats.set({
           totalOrders: 0,
           ordersGrowth: 0,
@@ -81,7 +86,6 @@ export class AdminDashboardComponent implements OnInit {
       },
     });
 
-    // Load recent orders
     this.dashboardService.getRecentOrders(5).subscribe({
       next: (response) => {
         this.recentOrders.set(response.data);
@@ -91,7 +95,6 @@ export class AdminDashboardComponent implements OnInit {
       },
     });
 
-    // Load pending readings
     this.readingsService.findAll({ status: 'PENDING', limit: 5 }).subscribe({
       next: (response) => {
         this.pendingReadings.set(response.data);
@@ -103,7 +106,6 @@ export class AdminDashboardComponent implements OnInit {
       },
     });
 
-    // Load sales chart data
     this.dashboardService.getSalesChart('month').subscribe({
       next: (response) => {
         this.updateRevenueChart(response.data);
@@ -111,15 +113,29 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  updateRevenueChart(chartData: SalesChartData) {
-    this.revenueChartData = chartData;
+  updateRevenueChart(chartData: SalesChartData): void {
+    this.revenueChartData = {
+      ...chartData,
+      datasets: chartData.datasets.map((dataset) => ({
+        ...dataset,
+        borderColor: '#477762',
+        backgroundColor: 'rgba(71, 119, 98, 0.12)',
+        pointBackgroundColor: '#477762',
+        pointBorderColor: '#ffffff',
+        pointHoverBackgroundColor: '#385E4E',
+        fill: true,
+        tension: 0.35,
+      })),
+    };
   }
 
-  initCharts() {
-    const primaryColor = '#F59E0B';
-
+  initCharts(): void {
     this.revenueChartOptions = {
       maintainAspectRatio: false,
+      interaction: {
+        intersect: false,
+        mode: 'index',
+      },
       plugins: {
         legend: {
           display: false,
@@ -127,45 +143,14 @@ export class AdminDashboardComponent implements OnInit {
       },
       scales: {
         x: {
-          ticks: { color: 'rgba(120, 53, 15, 0.7)' },
-          grid: { color: 'rgba(217, 119, 6, 0.1)' },
+          ticks: { color: '#7D7A73' },
+          grid: { color: 'rgba(30, 30, 27, 0.06)' },
+          border: { display: false },
         },
         y: {
-          ticks: { color: 'rgba(120, 53, 15, 0.7)' },
-          grid: { color: 'rgba(217, 119, 6, 0.1)' },
-        },
-      },
-    };
-
-    // Orders Chart
-    this.ordersChartData = {
-      labels: [
-        this.translate.instant('admin.products.typeQuestion'),
-        this.translate.instant('admin.products.typeSession'),
-        this.translate.instant('admin.products.typeMonthly'),
-        this.translate.instant('admin.products.typeSpecial'),
-      ],
-      datasets: [
-        {
-          data: [45, 25, 20, 10],
-          backgroundColor: [
-            'rgba(217, 119, 6, 0.8)',
-            'rgba(245, 158, 11, 0.8)',
-            'rgba(252, 211, 77, 0.8)',
-            'rgba(180, 83, 9, 0.8)',
-          ],
-        },
-      ],
-    };
-
-    this.ordersChartOptions = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            color: 'rgba(120, 53, 15, 0.7)',
-          },
+          ticks: { color: '#7D7A73' },
+          grid: { color: 'rgba(30, 30, 27, 0.06)' },
+          border: { display: false },
         },
       },
     };
@@ -183,16 +168,16 @@ export class AdminDashboardComponent implements OnInit {
     return labels[status] || status;
   }
 
-  getStatusClass(status: string): string {
-    const classes: Record<string, string> = {
-      PENDING: 'bg-yellow-500/20 text-yellow-400',
-      WAITING: 'bg-yellow-500/20 text-yellow-400',
-      PAID: 'bg-blue-500/20 text-blue-400',
-      PROCESSING: 'bg-primary-500/20 text-primary-400',
-      IN_PROGRESS: 'bg-primary-500/20 text-primary-400',
-      COMPLETED: 'bg-green-500/20 text-green-400',
+  getStatusTone(status: string): DashboardStatusTone {
+    const tones: Record<string, DashboardStatusTone> = {
+      PENDING: 'warning',
+      WAITING: 'warning',
+      PAID: 'success',
+      PROCESSING: 'brand',
+      IN_PROGRESS: 'brand',
+      COMPLETED: 'success',
     };
-    return classes[status] || 'bg-gray-500/20 text-gray-400';
+    return tones[status] || 'neutral';
   }
 
   formatDate(date: string | Date): string {
