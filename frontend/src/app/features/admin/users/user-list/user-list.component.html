@@ -1,64 +1,41 @@
-<!-- apps/frontend/src/app/features/admin/users/user-list/user-list.component.html -->
+<section class="users-page">
+  <ds-page-header
+    [title]="'admin.users.title' | translate"
+    [description]="'admin.users.subtitle' | translate">
+  </ds-page-header>
 
-<section class="py-8">
-  <div class="container-custom">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="heading-1 text-primary mb-2">
-          <i class="pi pi-users mr-3"></i>
-          {{ 'admin.users.title' | translate }}
-        </h1>
-        <p class="text-secondary">{{ 'admin.users.subtitle' | translate }}</p>
-      </div>
-    </div>
+  <ds-card padding="md">
+    <div class="filters">
+      <ds-form-field class="filters__search" [label]="'admin.users.searchPlaceholder' | translate">
+        <span class="search-control">
+          <i class="pi pi-search" aria-hidden="true"></i>
+          <input pInputText [(ngModel)]="searchTerm"
+            [placeholder]="'admin.users.searchPlaceholder' | translate"
+            (keyup.enter)="onSearch()" />
+        </span>
+      </ds-form-field>
 
-    <!-- Filters -->
-    <div class="glass-card p-4 mb-6">
-      <div class="flex flex-col md:flex-row gap-4">
-        <div class="flex-1">
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-search"></i>
-            <input
-              pInputText
-              [(ngModel)]="searchTerm"
-              [placeholder]="'admin.users.searchPlaceholder' | translate"
-              class="w-full"
-              (keyup.enter)="onSearch()"
-            />
-          </span>
-        </div>
-        <div class="w-full md:w-48">
-          <p-select
-            [options]="roleOptions"
-            [(ngModel)]="selectedRole"
-            optionLabel="label"
-            optionValue="value"
-            [placeholder]="'admin.users.filterByRole' | translate"
-            (onChange)="onRoleChange()"
-            styleClass="w-full"
-          />
-        </div>
-        <button pButton class="btn-primary" (click)="onSearch()">
-          <i class="pi pi-search mr-2"></i>
+      <ds-form-field class="filters__role" [label]="'admin.users.filterByRole' | translate">
+        <p-select [options]="roleOptions" [(ngModel)]="selectedRole"
+          optionLabel="label" optionValue="value"
+          [placeholder]="'admin.users.filterByRole' | translate"
+          (onChange)="onRoleChange()" styleClass="w-full" />
+      </ds-form-field>
+
+      <div class="filters__action">
+        <ds-button icon="pi-search" (click)="onSearch()">
           {{ 'common.search' | translate }}
-        </button>
+        </ds-button>
       </div>
     </div>
+  </ds-card>
 
-    <!-- Table -->
-    <div class="glass-card overflow-hidden">
-      <p-table 
-        [value]="users()" 
-        [loading]="loading()"
-        [paginator]="true"
-        [rows]="10"
-        [totalRecords]="totalRecords()"
-        [lazy]="true"
-        (onLazyLoad)="loadUsers($event)"
-        [rowHover]="true"
-        styleClass="p-datatable-striped"
-      >
+  <ds-card padding="sm">
+    <div class="table-shell">
+      <p-table [value]="users()" [loading]="loading()" [paginator]="true"
+        [rows]="10" [totalRecords]="totalRecords()" [lazy]="true"
+        (onLazyLoad)="loadUsers($event)" [rowHover]="true">
+
         <ng-template pTemplate="header">
           <tr>
             <th>{{ 'admin.users.name' | translate }}</th>
@@ -71,77 +48,50 @@
             <th>{{ 'admin.users.actions' | translate }}</th>
           </tr>
         </ng-template>
-        
+
         <ng-template pTemplate="loadingbody">
-          @for (_ of [1, 2, 3, 4, 5]; track $index) {
-            <tr>
-              @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track $index) {
-                <td><p-skeleton height="2rem" /></td>
-              }
-            </tr>
+          @for (_ of [1,2,3,4,5]; track $index) {
+            <tr>@for (_ of [1,2,3,4,5,6,7,8]; track $index) { <td><p-skeleton height="2rem" /></td> }</tr>
           }
         </ng-template>
+
         <ng-template pTemplate="body" let-user>
           <tr>
             <td>
-              <div class="flex items-center gap-3">
-                @if (user.avatarUrl) {
-                  <img 
-                    [src]="user.avatarUrl" 
-                    [alt]="user.fullName"
-                    class="w-10 h-10 rounded-full object-cover"
-                  />
-                } @else {
-                  <div class="w-10 h-10 rounded-full bg-gradient-mystical flex items-center justify-center text-white text-sm">
-                    {{ user.fullName?.charAt(0).toUpperCase() || 'U' }}
-                  </div>
-                }
-                <span class="text-primary font-medium">{{ user.fullName }}</span>
+              <div class="person-cell">
+                <ds-avatar [name]="user.fullName" [imageUrl]="user.avatarUrl || ''" size="md" />
+                <div>
+                  <p class="person-name">{{ user.fullName }}</p>
+                  @if (user.phone) { <p class="person-meta">{{ user.phone }}</p> }
+                </div>
               </div>
             </td>
-            <td class="text-secondary">{{ user.email }}</td>
+            <td><span class="table-muted">{{ user.email }}</span></td>
+            <td><ds-badge [tone]="getRoleTone(user.role)">{{ getRoleLabel(user.role) }}</ds-badge></td>
+            <td><span class="table-number">{{ user._count?.orders || 0 }}</span></td>
+            <td><span class="table-number">{{ user._count?.readings || 0 }}</span></td>
+            <td><span class="table-muted">{{ formatDate(user.createdAt) }}</span></td>
             <td>
-              <p-tag 
-                [value]="getRoleLabel(user.role)" 
-                [severity]="getRoleSeverity(user.role)"
-              />
-            </td>
-            <td class="text-secondary">{{ user._count?.orders || 0 }}</td>
-            <td class="text-secondary">{{ user._count?.readings || 0 }}</td>
-            <td class="text-secondary">{{ formatDate(user.createdAt) }}</td>
-            <td>
-              @if (user.isActive) {
-                <span class="inline-flex items-center gap-1 text-green-400 text-sm">
-                  <i class="pi pi-check-circle"></i>
-                  {{ 'admin.users.active' | translate }}
-                </span>
-              } @else {
-                <span class="inline-flex items-center gap-1 text-red-400 text-sm">
-                  <i class="pi pi-times-circle"></i>
-                  {{ 'admin.users.inactive' | translate }}
-                </span>
-              }
+              <ds-badge [tone]="user.isActive ? 'success' : 'error'" [dot]="true">
+                {{ user.isActive ? ('admin.users.active' | translate) : ('admin.users.inactive' | translate) }}
+              </ds-badge>
             </td>
             <td>
-              <a
-                [routerLink]="['/admin/usuarios', user.id]"
-                class="text-accent hover:text-accent-light transition-colors"
-              >
-                <i class="pi pi-eye mr-1"></i>
-                {{ 'admin.users.viewDetails' | translate }}
+              <a [routerLink]="['/admin/usuarios', user.id]" class="details-link">
+                {{ 'admin.users.viewDetails' | translate }} <i class="pi pi-arrow-right"></i>
               </a>
             </td>
           </tr>
         </ng-template>
+
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="8" class="text-center py-8">
-              <i class="pi pi-users text-4xl text-secondary/30 mb-4"></i>
-              <p class="text-secondary">{{ 'admin.users.noUsers' | translate }}</p>
+            <td colspan="8">
+              <ds-empty-state [title]="'admin.users.noUsers' | translate" icon="pi-users"></ds-empty-state>
             </td>
           </tr>
         </ng-template>
       </p-table>
     </div>
-  </div>
+  </ds-card>
 </section>
