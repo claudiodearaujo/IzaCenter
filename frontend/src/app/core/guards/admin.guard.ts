@@ -3,6 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 export const adminGuard: CanActivateFn = () => {
+  // Admin authority is tenant-scoped through TenantMembership (OWNER/ADMIN).
   const authService = inject(AuthService);
   const router = inject(Router);
 
