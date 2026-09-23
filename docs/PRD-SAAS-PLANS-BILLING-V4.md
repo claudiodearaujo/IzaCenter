@@ -1,6 +1,6 @@
 # PRD — SaaS Foundation v4: Plans & Billing
 
-**Status:** 🟡 Em implementação
+**Status:** 🟡 Implementação validada — deploy Coolify pendente
 
 ## Objetivo
 
@@ -271,4 +271,18 @@ Adicionar item "Plano e assinatura" no menu administrativo.
 - migration aplicada no Coolify local;
 - runtime permanece healthy.
 
-Próxima fase: SaaS Foundation v5 — LGPD & Operations.
+## Validação local concluída
+
+- Prisma validate/generate: PASS.
+- Migration DDL: PASS em banco scratch PostgreSQL derivado do schema Coolify.
+- Backfill de tenant existente: PASS — `starter | FREE`.
+- Backend build: PASS.
+- Backend unit tests: 22/22 suites, 351/351 testes PASS.
+- Frontend TypeScript check/build: PASS.
+- Frontend tests: 269/269 PASS em ChromeHeadless.
+- `git diff --check`: PASS.
+- fluxo de comércio `Order` preservado nos testes existentes.
+- billing SaaS permanece explicitamente desabilitado no ambiente local.
+- pendente para encerramento operacional: merge, migration no Coolify e smoke test do runtime.
+
+Próxima fase após o encerramento operacional: SaaS Foundation v5 — LGPD & Operations.
