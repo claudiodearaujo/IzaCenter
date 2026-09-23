@@ -1,230 +1,295 @@
-<section class="py-8">
-  <div class="container-custom max-w-6xl">
-    <a routerLink="/admin/entregas"
-      class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6">
-      <i class="pi pi-arrow-left mr-2"></i>
-      Voltar para entregas
-    </a>
+<section class="delivery-editor">
+  <a routerLink="/admin/entregas" class="back-link">
+    <i class="pi pi-arrow-left"></i>
+    Voltar para entregas
+  </a>
 
-    @if (loading()) {
-      <div class="glass-card p-8">
-        <div class="animate-pulse space-y-4">
-          <div class="h-10 bg-primary/10 rounded w-1/2"></div>
-          <div class="h-32 bg-primary/10 rounded"></div>
-          <div class="h-32 bg-primary/10 rounded"></div>
-        </div>
+  @if (loading()) {
+    <ds-card padding="lg">
+      <div class="loading-stack">
+        <div class="loading-line loading-line--title"></div>
+        <div class="loading-block"></div>
+        <div class="loading-block"></div>
       </div>
-    } @else if (reading()) {
-      <div class="glass-card p-6 mb-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    </ds-card>
+  } @else if (reading()) {
+    <ds-card padding="lg">
+      <div class="editor-header">
+        <div class="editor-header__identity">
+          <ds-avatar [name]="reading()?.client?.fullName || 'Cliente'" size="lg" />
           <div>
-            <div class="flex items-center gap-3 mb-2">
-              <h1 class="heading-1 text-primary">
-                Entrega para {{ reading()?.client?.fullName }}
-              </h1>
-              <p-tag [value]="getStatusLabel(reading()?.status ?? 'PENDING')"
-                [severity]="getStatusSeverity(reading()?.status ?? 'PENDING')" />
+            <div class="editor-header__title-row">
+              <h1>{{ form.title || ('Entrega para ' + (reading()?.client?.fullName || 'cliente')) }}</h1>
+              <ds-badge [tone]="getStatusTone(reading()?.status ?? 'PENDING')" [dot]="true">
+                {{ getStatusLabel(reading()?.status ?? 'PENDING') }}
+              </ds-badge>
             </div>
-            <p class="text-secondary">{{ reading()?.orderItem?.product?.name }}</p>
-            <p class="text-secondary/60 text-sm">
-              Criada em {{ formatDate(reading()?.createdAt ?? '') }}
-            </p>
+            <p>{{ reading()?.orderItem?.product?.name }}</p>
+            <small>Criada em {{ formatDate(reading()?.createdAt ?? '') }}</small>
           </div>
+        </div>
 
-          @if (reading()?.status !== 'PUBLISHED') {
-            <div class="flex gap-3">
-              <button pButton class="btn-outline" [loading]="saving()" (click)="saveReading()">
-                <i class="pi pi-save mr-2"></i>
-                Salvar rascunho
-              </button>
-              <button pButton class="btn-primary" [loading]="publishing()" (click)="publishReading()">
-                <i class="pi pi-send mr-2"></i>
-                Publicar entrega
-              </button>
+        @if (reading()?.status !== 'PUBLISHED') {
+          <div class="editor-header__actions">
+            <ds-button variant="secondary" icon="pi-save" [loading]="saving()" (click)="saveReading()">
+              Salvar rascunho
+            </ds-button>
+            <ds-button icon="pi-send" [loading]="publishing()" (click)="publishReading()">
+              Publicar entrega
+            </ds-button>
+          </div>
+        }
+      </div>
+    </ds-card>
+
+    @if (reading()?.orderItem?.clientQuestions?.length) {
+      <ds-card padding="lg">
+        <div class="section-heading">
+          <span class="section-heading__icon"><i class="pi pi-list"></i></span>
+          <div>
+            <h2>Informações do cliente</h2>
+            <p>Contexto informado no intake do serviço.</p>
+          </div>
+        </div>
+
+        <div class="intake-list">
+          @for (item of reading()?.orderItem?.clientQuestions ?? []; track $index) {
+            <div class="intake-item">
+              <span>Item {{ $index + 1 }}</span>
+              <p>{{ item }}</p>
             </div>
           }
         </div>
-      </div>
+      </ds-card>
+    }
 
-      @if (reading()?.orderItem?.clientQuestions?.length) {
-        <div class="glass-card p-6 mb-6 bg-linear-to-r from-primary-400/10 to-primary-600/10">
-          <h3 class="heading-3 text-primary mb-4 flex items-center gap-2">
-            <i class="pi pi-list"></i>
-            Informações do cliente
-          </h3>
-          <div class="space-y-3">
-            @for (item of reading()?.orderItem?.clientQuestions ?? []; track $index) {
-              <div class="p-4 bg-dark/30 rounded-lg">
-                <span class="text-accent text-sm">Item {{ $index + 1 }}</span>
-                <p class="text-primary mt-1">{{ item }}</p>
-              </div>
-            }
+    <div class="editor-layout">
+      <div class="editor-main">
+        <ds-card padding="lg">
+          <div class="form-stack">
+            <ds-form-field label="Título" forId="delivery-title">
+              <input
+                pInputText
+                id="delivery-title"
+                [(ngModel)]="form.title"
+                placeholder="Título da entrega"
+                [disabled]="reading()?.status === 'PUBLISHED'" />
+            </ds-form-field>
+
+            <ds-form-field label="Introdução">
+              <textarea
+                pInputTextarea
+                [(ngModel)]="form.content.introduction"
+                [rows]="4"
+                placeholder="Contextualização opcional"
+                [disabled]="reading()?.status === 'PUBLISHED'"></textarea>
+            </ds-form-field>
+
+            <ds-form-field label="Conteúdo principal" [required]="true">
+              <p-editor
+                [(ngModel)]="form.content.body"
+                [style]="{'height':'280px'}"
+                [readonly]="reading()?.status === 'PUBLISHED'" />
+            </ds-form-field>
+
+            <ds-form-field label="Recomendações">
+              <textarea
+                pInputTextarea
+                [(ngModel)]="form.content.recommendations"
+                [rows]="4"
+                placeholder="Recomendações, próximos passos ou orientações"
+                [disabled]="reading()?.status === 'PUBLISHED'"></textarea>
+            </ds-form-field>
+
+            <ds-form-field label="Objetivos">
+              <textarea
+                pInputTextarea
+                [(ngModel)]="form.content.goals"
+                [rows]="3"
+                placeholder="Objetivos ou focos sugeridos"
+                [disabled]="reading()?.status === 'PUBLISHED'"></textarea>
+            </ds-form-field>
+
+            <ds-form-field label="Mensagem final">
+              <textarea
+                pInputTextarea
+                [(ngModel)]="form.content.closing"
+                [rows]="4"
+                placeholder="Encerramento da entrega"
+                [disabled]="reading()?.status === 'PUBLISHED'"></textarea>
+            </ds-form-field>
           </div>
-        </div>
-      }
+        </ds-card>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 space-y-6">
-          <div class="glass-card p-6">
-            <label for="title" class="block text-secondary text-sm mb-2">Título</label>
-            <input pInputText id="title" [(ngModel)]="form.title" class="w-full"
-              placeholder="Título da entrega"
-              [disabled]="reading()?.status === 'PUBLISHED'" />
-          </div>
-
-          <div class="glass-card p-6">
-            <label class="block text-secondary text-sm mb-2">Introdução</label>
-            <textarea pInputTextarea [(ngModel)]="form.content.introduction" [rows]="4" class="w-full"
-              placeholder="Contextualização opcional"
-              [disabled]="reading()?.status === 'PUBLISHED'"></textarea>
-          </div>
-
-          @if (hasCardModule()) {
-            <div class="glass-card p-6">
-              <div class="flex items-center justify-between mb-6">
-                <h3 class="heading-3 text-primary">Módulo de cartas</h3>
-                @if (reading()?.status !== 'PUBLISHED') {
-                  <button pButton class="btn-outline" (click)="openCardDialog()">
-                    <i class="pi pi-plus mr-2"></i>
-                    Adicionar carta
-                  </button>
-                }
-              </div>
-
-              @if (selectedCards().length === 0) {
-                <div class="text-center py-8 border-2 border-dashed border-primary/20 rounded-lg">
-                  <p class="text-secondary">Nenhuma carta adicionada.</p>
+        @if (hasCardModule()) {
+          <ds-card padding="lg">
+            <div class="section-heading section-heading--actions">
+              <div class="section-heading__group">
+                <span class="section-heading__icon"><i class="pi pi-images"></i></span>
+                <div>
+                  <h2>Módulo de cartas</h2>
+                  <p>Extensão da especialidade ativa para esta entrega.</p>
                 </div>
-              } @else {
-                <div class="space-y-6">
-                  @for (card of selectedCards(); track $index) {
-                    <div class="p-4 bg-dark/30 rounded-lg">
-                      <div class="flex gap-4">
-                        <div class="shrink-0 w-24">
-                          @if (card.card?.imageUrl) {
-                            <img [src]="card.card?.imageUrl" [alt]="card.card?.name"
-                              class="w-full rounded-lg cursor-pointer"
-                              (click)="openCardDialog($index)" />
-                          }
-                        </div>
-                        <div class="flex-1">
-                          <div class="flex items-start justify-between mb-3">
-                            <div>
-                              <input pInputText [value]="card.positionName"
-                                (input)="updateCardPositionName($index, $any($event.target).value)"
-                                class="text-sm mb-1"
-                                placeholder="Nome da posição"
-                                [disabled]="reading()?.status === 'PUBLISHED'" />
-                              <h4 class="text-primary font-bold">{{ card.card?.name }}</h4>
-                            </div>
-                            @if (reading()?.status !== 'PUBLISHED') {
-                              <button pButton class="p-button-text p-button-danger" (click)="removeCard($index)">
-                                <i class="pi pi-trash"></i>
-                              </button>
-                            }
-                          </div>
-                          <textarea pInputTextarea [value]="card.interpretation"
-                            (input)="updateCardInterpretation($index, $any($event.target).value)"
-                            [rows]="3" class="w-full"
-                            placeholder="Interpretação desta posição"
-                            [disabled]="reading()?.status === 'PUBLISHED'"></textarea>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                </div>
+              </div>
+
+              @if (reading()?.status !== 'PUBLISHED') {
+                <ds-button variant="secondary" icon="pi-plus" (click)="openCardDialog()">
+                  Adicionar carta
+                </ds-button>
               }
             </div>
-          }
 
-          <div class="glass-card p-6">
-            <label class="block text-secondary text-sm mb-2">Conteúdo principal *</label>
-            <p-editor [(ngModel)]="form.content.body" [style]="{'height':'240px'}"
-              [readonly]="reading()?.status === 'PUBLISHED'" />
-          </div>
+            @if (selectedCards().length === 0) {
+              <ds-empty-state
+                title="Nenhuma carta adicionada"
+                description="Este módulo é opcional e só aparece para especialidades que utilizam cartas."
+                icon="pi-images">
+              </ds-empty-state>
+            } @else {
+              <div class="specialty-list">
+                @for (card of selectedCards(); track $index) {
+                  <article class="specialty-item">
+                    <div class="specialty-item__media">
+                      @if (card.card?.imageUrl) {
+                        <img
+                          [src]="card.card?.imageUrl"
+                          [alt]="card.card?.name"
+                          (click)="openCardDialog($index)" />
+                      } @else {
+                        <div class="specialty-item__placeholder"><i class="pi pi-image"></i></div>
+                      }
+                    </div>
 
-          <div class="glass-card p-6">
-            <label class="block text-secondary text-sm mb-2">Recomendações</label>
-            <textarea pInputTextarea [(ngModel)]="form.content.recommendations" [rows]="4" class="w-full"
-              placeholder="Recomendações, próximos passos ou orientações"
-              [disabled]="reading()?.status === 'PUBLISHED'"></textarea>
-          </div>
+                    <div class="specialty-item__content">
+                      <div class="specialty-item__top">
+                        <div>
+                          <input
+                            pInputText
+                            [value]="card.positionName"
+                            (input)="updateCardPositionName($index, $any($event.target).value)"
+                            placeholder="Nome da posição"
+                            [disabled]="reading()?.status === 'PUBLISHED'" />
+                          <h3>{{ card.card?.name }}</h3>
+                        </div>
 
-          <div class="glass-card p-6">
-            <label class="block text-secondary text-sm mb-2">Objetivos</label>
-            <textarea pInputTextarea [(ngModel)]="form.content.goals" [rows]="3" class="w-full"
-              placeholder="Objetivos ou focos sugeridos"
-              [disabled]="reading()?.status === 'PUBLISHED'"></textarea>
-          </div>
+                        @if (reading()?.status !== 'PUBLISHED') {
+                          <button
+                            type="button"
+                            class="icon-danger"
+                            aria-label="Remover carta"
+                            (click)="removeCard($index)">
+                            <i class="pi pi-trash"></i>
+                          </button>
+                        }
+                      </div>
 
-          <div class="glass-card p-6">
-            <label class="block text-secondary text-sm mb-2">Mensagem final</label>
-            <textarea pInputTextarea [(ngModel)]="form.content.closing" [rows]="4" class="w-full"
-              placeholder="Encerramento da entrega"
-              [disabled]="reading()?.status === 'PUBLISHED'"></textarea>
-          </div>
-        </div>
-
-        <div class="space-y-6">
-          <div class="glass-card p-6">
-            <h3 class="heading-4 text-primary mb-4">Cliente</h3>
-            <p class="text-primary font-medium">{{ reading()?.client?.fullName }}</p>
-            <p class="text-secondary text-sm">{{ reading()?.client?.email }}</p>
-          </div>
-
-          <div class="glass-card p-6">
-            <h3 class="heading-4 text-primary mb-4">Tipo de entrega</h3>
-            <p class="text-secondary">{{ reading()?.deliveryType }}</p>
-            @if (reading()?.specialtyModule?.key) {
-              <p class="text-secondary text-sm mt-2">
-                Módulo: {{ reading()?.specialtyModule?.key }}
-              </p>
+                      <textarea
+                        pInputTextarea
+                        [value]="card.interpretation"
+                        (input)="updateCardInterpretation($index, $any($event.target).value)"
+                        [rows]="3"
+                        placeholder="Interpretação desta posição"
+                        [disabled]="reading()?.status === 'PUBLISHED'"></textarea>
+                    </div>
+                  </article>
+                }
+              </div>
             }
-          </div>
+          </ds-card>
+        }
+      </div>
 
-          <div class="glass-card p-6">
-            <h3 class="heading-4 text-primary mb-4">Áudio</h3>
+      <aside class="editor-aside">
+        <ds-card padding="lg">
+          <div class="aside-section">
+            <h2>Cliente</h2>
+            <div class="person-summary">
+              <ds-avatar [name]="reading()?.client?.fullName || 'Cliente'" size="md" />
+              <div>
+                <strong>{{ reading()?.client?.fullName }}</strong>
+                <span>{{ reading()?.client?.email }}</span>
+              </div>
+            </div>
+          </div>
+        </ds-card>
+
+        <ds-card padding="lg">
+          <div class="aside-section">
+            <h2>Configuração da entrega</h2>
+            <dl class="metadata-list">
+              <div>
+                <dt>Tipo</dt>
+                <dd>{{ reading()?.deliveryType || 'CONTENT' }}</dd>
+              </div>
+              @if (reading()?.specialtyModule?.key) {
+                <div>
+                  <dt>Módulo</dt>
+                  <dd><ds-badge tone="neutral">{{ reading()?.specialtyModule?.key }}</ds-badge></dd>
+                </div>
+              }
+            </dl>
+          </div>
+        </ds-card>
+
+        <ds-card padding="lg">
+          <div class="aside-section">
+            <h2>Áudio</h2>
+
             @if (reading()?.audioUrl) {
-              <audio [src]="reading()?.audioUrl" controls class="w-full mb-4"></audio>
+              <audio [src]="reading()?.audioUrl" controls></audio>
+            } @else {
+              <p class="aside-help">Nenhum áudio anexado.</p>
             }
 
             @if (reading()?.status !== 'PUBLISHED') {
-              <p-fileUpload mode="basic" name="file" accept="audio/*" [maxFileSize]="50000000" [auto]="true"
-                chooseLabel="Enviar áudio" [customUpload]="true"
-                (uploadHandler)="onAudioUpload($event)" styleClass="w-full" />
-              <p class="text-secondary/60 text-xs mt-2">Máximo de 50 MB.</p>
+              <p-fileUpload
+                mode="basic"
+                name="file"
+                accept="audio/*"
+                [maxFileSize]="50000000"
+                [auto]="true"
+                chooseLabel="Enviar áudio"
+                [customUpload]="true"
+                (uploadHandler)="onAudioUpload($event)"
+                styleClass="w-full" />
+              <p class="aside-help">Máximo de 50 MB.</p>
             }
           </div>
+        </ds-card>
 
-          @if (reading()?.status !== 'PUBLISHED') {
-            <div class="glass-card p-6">
-              <button pButton class="btn-outline w-full mb-3" [loading]="saving()" (click)="saveReading()">
-                <i class="pi pi-save mr-2"></i>
+        @if (reading()?.status !== 'PUBLISHED') {
+          <ds-card padding="md">
+            <div class="aside-actions">
+              <ds-button variant="secondary" icon="pi-save" [loading]="saving()" [fullWidth]="true" (click)="saveReading()">
                 Salvar rascunho
-              </button>
-              <button pButton class="btn-primary w-full" [loading]="publishing()" (click)="publishReading()">
-                <i class="pi pi-send mr-2"></i>
+              </ds-button>
+              <ds-button icon="pi-send" [loading]="publishing()" [fullWidth]="true" (click)="publishReading()">
                 Publicar entrega
-              </button>
+              </ds-button>
             </div>
-          }
-        </div>
-      </div>
-    }
-  </div>
+          </ds-card>
+        }
+      </aside>
+    </div>
+  }
 </section>
 
 @if (hasCardModule()) {
-  <p-dialog [(visible)]="cardDialogVisible" [modal]="true" [closable]="true"
-    [style]="{width: '80vw', maxWidth: '900px'}" header="Selecionar carta">
-    <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 max-h-[60vh] overflow-y-auto">
+  <p-dialog
+    [(visible)]="cardDialogVisible"
+    [modal]="true"
+    [closable]="true"
+    [style]="{width: '80vw', maxWidth: '900px'}"
+    header="Selecionar carta">
+
+    <div class="card-picker">
       @for (card of availableCards(); track card.id) {
-        <div class="cursor-pointer transition-transform hover:scale-105" (click)="selectCard(card)">
+        <button type="button" class="card-picker__item" (click)="selectCard(card)">
           @if (card.imageUrl) {
-            <img [src]="card.imageUrl" [alt]="card.name" class="w-full rounded-lg mb-2" />
+            <img [src]="card.imageUrl" [alt]="card.name" />
           }
-          <p class="text-primary text-sm text-center">{{ card.name }}</p>
-        </div>
+          <span>{{ card.name }}</span>
+        </button>
       }
     </div>
   </p-dialog>
