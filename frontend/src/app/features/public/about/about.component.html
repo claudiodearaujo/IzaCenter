@@ -1,99 +1,69 @@
 <div class="py-16">
   <div class="container mx-auto px-4">
-    <!-- Header -->
     <div class="text-center mb-16">
-      <img src="assets/images/logo.jpeg" alt="Therapist Platform" class="h-48 w-48 mx-auto mb-4 rounded-full object-cover">
-      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">
-        {{ 'about.title' | translate }}
-      </h1>
-      <p class="text-xl text-neutral-600 max-w-2xl mx-auto">
-        {{ 'about.subtitle' | translate }}
-      </p>
+      <img [src]="publicSettings().professional.photoUrl || publicSettings().logoUrl || 'assets/images/professional-profile.svg'"
+        [alt]="publicSettings().professional.displayName" class="h-40 w-40 mx-auto mb-6 rounded-full object-cover shadow-lg">
+      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-3">{{ publicSettings().professional.displayName }}</h1>
+      <p class="text-xl text-primary-700 font-medium">{{ publicSettings().professional.professionalTitle }}</p>
     </div>
-
-    <!-- Content -->
-    <div class="grid lg:grid-cols-2 gap-16 items-center mb-16">
-      <!-- Image -->
+    <div class="grid lg:grid-cols-2 gap-16 items-start mb-16">
       <div class="relative">
         <div class="aspect-4/5 rounded-3xl bg-linear-to-br from-primary-100 to-secondary-100 overflow-hidden">
-          <img src="assets/images/profile2.jpeg" alt="Profissional" class="w-full h-full object-cover">
+          <img [src]="publicSettings().professional.photoUrl || publicSettings().logoUrl || 'assets/images/professional-profile.svg'"
+            [alt]="publicSettings().professional.displayName" class="w-full h-full object-cover">
         </div>
-        <div class="absolute -bottom-6 -left-6 w-48 h-48 bg-accent-gold/20 rounded-full -z-10"></div>
-        <div class="absolute -top-6 -right-6 w-32 h-32 bg-primary-200/40 rounded-full -z-10"></div>
       </div>
-
-      <!-- Text -->
-      <div class="space-y-6">
-        <h2 class="text-3xl font-serif font-bold text-neutral-900">
-          {{ 'about.journey.title' | translate }}
-        </h2>
-        <p class="text-neutral-600 leading-relaxed">
-          {{ 'about.journey.paragraph1' | translate }}
-        </p>
-        <p class="text-neutral-600 leading-relaxed">
-          {{ 'about.journey.paragraph2' | translate }}
-        </p>
-        <p class="text-neutral-600 leading-relaxed">
-          {{ 'about.journey.paragraph3' | translate }}
-        </p>
-
-        <div class="pt-4">
-          <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-4">{{ 'about.education.title' | translate }}
-          </h3>
-          <ul class="space-y-3">
-            <li class="flex items-center gap-3">
-              <i class="pi pi-check-circle text-primary-600"></i>
-              <span>{{ 'about.education.item1' | translate }}</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <i class="pi pi-check-circle text-primary-600"></i>
-              <span>{{ 'about.education.item2' | translate }}</span>
-            </li>
-            <li class="flex items-center gap-3">
-              <i class="pi pi-check-circle text-primary-600"></i>
-              <span>{{ 'about.education.item3' | translate }}</span>
-            </li>
-          </ul>
+      <div class="space-y-8">
+        <div>
+          <h2 class="text-3xl font-serif font-bold text-neutral-900 mb-4">{{ publicSettings().content.aboutTitle || 'Sobre o profissional' }}</h2>
+          <div class="text-neutral-600 leading-relaxed whitespace-pre-line">{{ publicSettings().content.aboutContent || publicSettings().professional.bio || publicSettings().siteDescription }}</div>
         </div>
+        @if (publicSettings().professional.credentials.length) {
+          <div>
+            <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-4">Credenciais</h3>
+            <ul class="space-y-3">
+              @for (credential of publicSettings().professional.credentials; track credential) {
+                <li class="flex items-start gap-3"><i class="pi pi-check-circle text-primary-600 mt-1"></i><span class="text-neutral-700">{{ credential }}</span></li>
+              }
+            </ul>
+          </div>
+        }
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="bg-primary-50 rounded-2xl p-5"><p class="text-sm text-neutral-500 mb-1">Modalidade</p><p class="font-medium text-neutral-800">{{ publicSettings().professional.serviceMode }}</p></div>
+          @if (publicSettings().professional.location) {
+            <div class="bg-primary-50 rounded-2xl p-5"><p class="text-sm text-neutral-500 mb-1">Localização</p><p class="font-medium text-neutral-800">{{ publicSettings().professional.location }}</p></div>
+          }
+        </div>
+        @if (publicSettings().professional.languages.length) {
+          <div>
+            <h3 class="text-lg font-semibold text-neutral-800 mb-3">Idiomas</h3>
+            <div class="flex flex-wrap gap-2">
+              @for (language of publicSettings().professional.languages; track language) {
+                <span class="px-3 py-1 bg-neutral-100 text-neutral-700 rounded-full text-sm">{{ language }}</span>
+              }
+            </div>
+          </div>
+        }
       </div>
     </div>
-
-    <!-- Values -->
-    <div class="bg-linear-to-br from-primary-50 to-secondary-50 rounded-3xl p-8 md:p-12 mb-16">
-      <h2 class="text-3xl font-serif font-bold text-neutral-900 text-center mb-10">
-        {{ 'about.values.title' | translate }}
-      </h2>
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="text-center">
-          <span class="text-4xl block mb-4">💜</span>
-          <h3 class="text-xl font-semibold text-neutral-800 mb-2">{{ 'about.values.welcome.title' | translate }}</h3>
-          <p class="text-neutral-600">{{ 'about.values.welcome.description' | translate }}</p>
-        </div>
-        <div class="text-center">
-          <span class="text-4xl block mb-4">🔮</span>
-          <h3 class="text-xl font-semibold text-neutral-800 mb-2">{{ 'about.values.honesty.title' | translate }}</h3>
-          <p class="text-neutral-600">{{ 'about.values.honesty.description' | translate }}</p>
-        </div>
-        <div class="text-center">
-          <span class="text-4xl block mb-4">✨</span>
-          <h3 class="text-xl font-semibold text-neutral-800 mb-2">{{ 'about.values.empowerment.title' | translate }}
-          </h3>
-          <p class="text-neutral-600">{{ 'about.values.empowerment.description' | translate }}</p>
+    @if (publicSettings().specialties.length) {
+      <div class="bg-linear-to-br from-primary-50 to-secondary-50 rounded-3xl p-8 md:p-12 mb-16">
+        <h2 class="text-3xl font-serif font-bold text-neutral-900 text-center mb-10">Especialidades</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          @for (specialty of publicSettings().specialties; track specialty.slug) {
+            <div class="bg-white/70 rounded-2xl p-6 text-center">
+              <i class="pi pi-check-circle text-3xl text-primary-600 mb-4"></i>
+              <h3 class="text-xl font-semibold text-neutral-800 mb-2">{{ specialty.name }}</h3>
+              <p class="text-neutral-600">{{ specialty.description }}</p>
+            </div>
+          }
         </div>
       </div>
-    </div>
-
-    <!-- CTA -->
+    }
     <div class="text-center">
-      <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-4">
-        {{ 'about.cta.title' | translate }}
-      </h2>
-      <p class="text-neutral-600 mb-6">
-        {{ 'about.cta.subtitle' | translate }}
-      </p>
-      <a routerLink="/loja">
-        <p-button [label]="'about.cta.button' | translate" icon="pi pi-arrow-right" iconPos="right" size="large" />
-      </a>
+      <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-4">Conheça os serviços disponíveis</h2>
+      <p class="text-neutral-600 mb-6">Veja formatos de atendimento, entregas e condições disponíveis.</p>
+      <a routerLink="/servicos"><p-button label="Ver serviços" icon="pi pi-arrow-right" iconPos="right" size="large" /></a>
     </div>
   </div>
 </div>
