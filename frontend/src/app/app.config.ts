@@ -10,7 +10,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import * as Sentry from '@sentry/angular';
 
 import { routes } from './app.routes';
-import LivriaPreset from './themes/livria-preset';
+import TherapistPreset from './themes/therapist-preset';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { tenantInterceptor } from './core/interceptors/tenant.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
@@ -51,7 +51,7 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       ripple: true,
       theme: {
-        preset: LivriaPreset,
+        preset: TherapistPreset,
         options: {
           darkModeSelector: '.dark',
           cssLayer: {

@@ -1,3 +1,7 @@
+/* Therapist Platform — Design System v1
+ * Visual direction: Calma estruturada
+ * Foundations: sage brand, warm stone neutrals, restrained terracotta accent.
+ */
 
 /* PrimeNG Icons */
 @import "primeicons/primeicons.css";
@@ -8,145 +12,314 @@
 /* Tailwind PrimeUI Plugin */
 @plugin "tailwindcss-primeui";
 
-
 @theme {
-  /* Cores Primárias - Gold Cromático */
-  --color-primary-50: #FFFBEB;
-  --color-primary-100: #FEF3C7;
-  --color-primary-200: #FDE68A;
-  --color-primary-300: #FCD34D;
-  --color-primary-400: #FBBF24;
-  --color-primary-500: #F59E0B;
-  --color-primary-600: #D97706;
-  --color-primary-700: #B45309;
-  --color-primary-800: #92400E;
-  --color-primary-900: #78350F;
+  /* Brand — Sage */
+  --color-primary-50: #F3F7F5;
+  --color-primary-100: #E4EEE9;
+  --color-primary-200: #C9DED3;
+  --color-primary-300: #A5C8B7;
+  --color-primary-400: #7EAE98;
+  --color-primary-500: #5B947B;
+  --color-primary-600: #477762;
+  --color-primary-700: #385E4E;
+  --color-primary-800: #304D42;
+  --color-primary-900: #293F37;
+  --color-primary-950: #15231E;
 
-  /* Cores Secundárias - Rosa Suave (Harmoniza com Gold) */
-  --color-secondary-50: #fdf2f8;
-  --color-secondary-100: #fce7f3;
-  --color-secondary-200: #fbcfe8;
-  --color-secondary-300: #f9a8d4;
-  --color-secondary-400: #f472b6;
-  --color-secondary-500: #ec4899;
-  --color-secondary-600: #db2777;
-  --color-secondary-700: #be185d;
-  --color-secondary-800: #9d174d;
-  --color-secondary-900: #831843;
+  /* Accent — Terracotta */
+  --color-secondary-50: #FFF5F1;
+  --color-secondary-100: #FDE7DE;
+  --color-secondary-200: #F8CDBD;
+  --color-secondary-300: #F0A98F;
+  --color-secondary-400: #E58365;
+  --color-secondary-500: #D56546;
+  --color-secondary-600: #B84E34;
+  --color-secondary-700: #963F2E;
+  --color-secondary-800: #783326;
+  --color-secondary-900: #612B22;
 
-  /* Cores de Destaque - Dourado */
-  --color-accent-gold: #d4af37;
-  --color-accent-gold-light: #f4e4bc;
-  --color-accent-gold-dark: #996515;
+  /* Warm neutrals — Stone */
+  --color-neutral-0: #FFFFFF;
+  --color-neutral-25: #FCFCFA;
+  --color-neutral-50: #F8F8F5;
+  --color-neutral-100: #F1F1EC;
+  --color-neutral-200: #E4E3DC;
+  --color-neutral-300: #D2D0C7;
+  --color-neutral-400: #A8A69E;
+  --color-neutral-500: #7D7A73;
+  --color-neutral-600: #5E5B55;
+  --color-neutral-700: #45433E;
+  --color-neutral-800: #302F2B;
+  --color-neutral-900: #1E1E1B;
+  --color-neutral-950: #121310;
 
-  /* Neutros Quentes */
-  --color-neutral-50: #FEFDFB;
-  --color-neutral-100: #FAF9F7;
-  --color-neutral-200: #E8E6E3;
-  --color-neutral-300: #D4D1CC;
-  --color-neutral-400: #A8A49E;
-  --color-neutral-500: #78746D;
-  --color-neutral-600: #5C584F;
-  --color-neutral-700: #454239;
-  --color-neutral-800: #2D2A24;
-  --color-neutral-900: #1A1814;
+  /* Semantic */
+  --color-success: #3F795F;
+  --color-warning: #B7791F;
+  --color-error: #B54747;
+  --color-info: #52718C;
 
-  /* Efeitos Especiais Gold */
-  --color-gold-shimmer: #FCD34D;
-  --shadow-gold-sm: 0 1px 2px rgba(180, 83, 9, 0.1);
-  --shadow-gold-md: 0 4px 6px rgba(180, 83, 9, 0.15);
-  --shadow-gold-lg: 0 10px 15px rgba(180, 83, 9, 0.2);
-  --shadow-gold-glow: 0 0 20px rgba(245, 158, 11, 0.4);
+  /* Transitional compatibility for old utilities.
+   * Remove after every feature area has migrated to semantic tokens.
+   */
+  --color-accent-gold: #5B947B;
+  --color-accent-gold-light: #E4EEE9;
+  --color-accent-gold-dark: #385E4E;
+  --color-gold-shimmer: #7EAE98;
 
-  --background-image-gradient-gold: linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #B45309 100%);
-  --background-image-gradient-gold-soft: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 50%, #FCD34D 100%);
-  --background-image-gradient-gold-rich: linear-gradient(135deg, #D97706 0%, #B45309 50%, #78350F 100%);
+  --shadow-gold-sm: 0 1px 2px rgba(30, 30, 27, 0.05);
+  --shadow-gold-md: 0 2px 8px rgba(30, 30, 27, 0.06);
+  --shadow-gold-lg: 0 8px 24px rgba(30, 30, 27, 0.08);
+  --shadow-gold-glow: 0 0 0 3px rgba(71, 119, 98, 0.14);
+
+  --background-image-gradient-gold: linear-gradient(135deg, #5B947B 0%, #477762 52%, #304D42 100%);
+  --background-image-gradient-gold-soft: linear-gradient(135deg, #F3F7F5 0%, #E4EEE9 100%);
+  --background-image-gradient-gold-rich: linear-gradient(135deg, #477762 0%, #304D42 100%);
 }
 
-/* PrimeNG Theme */
 @layer base {
   :root {
-    /* Cores Primárias - Gold Cromático */
-    --primary-50: #FFFBEB;
-    --primary-100: #FEF3C7;
-    --primary-200: #FDE68A;
-    --primary-300: #FCD34D;
-    --primary-400: #FBBF24;
-    --primary-500: #F59E0B;
-    --primary-600: #D97706;
-    --primary-700: #B45309;
-    --primary-800: #92400E;
-    --primary-900: #78350F;
+    color-scheme: light;
 
-    /* Cores Secundárias - Rosa Suave */
-    --secondary-50: #fdf2f8;
-    --secondary-100: #fce7f3;
-    --secondary-200: #fbcfe8;
-    --secondary-300: #f9a8d4;
-    --secondary-400: #f472b6;
-    --secondary-500: #ec4899;
+    /* Primitive brand tokens */
+    --brand-50: #F3F7F5;
+    --brand-100: #E4EEE9;
+    --brand-200: #C9DED3;
+    --brand-300: #A5C8B7;
+    --brand-400: #7EAE98;
+    --brand-500: #5B947B;
+    --brand-600: #477762;
+    --brand-700: #385E4E;
+    --brand-800: #304D42;
+    --brand-900: #293F37;
+    --brand-950: #15231E;
 
-    /* Ícones decorativos */
-    --icon-decorative: var(--primary-400);
+    /* Primitive accent tokens */
+    --terracotta-50: #FFF5F1;
+    --terracotta-100: #FDE7DE;
+    --terracotta-200: #F8CDBD;
+    --terracotta-300: #F0A98F;
+    --terracotta-400: #E58365;
+    --terracotta-500: #D56546;
+    --terracotta-600: #B84E34;
+    --terracotta-700: #963F2E;
 
-    /* Neutros Quentes */
-    --neutral-50: #FEFDFB;
-    --neutral-100: #FAF9F7;
-    --neutral-200: #E8E6E3;
-    --neutral-300: #D4D1CC;
-    --neutral-400: #A8A49E;
-    --neutral-500: #78746D;
-    --neutral-600: #5C584F;
-    --neutral-700: #454239;
-    --neutral-800: #2D2A24;
-    --neutral-900: #1A1814;
+    /* Semantic surfaces */
+    --background: #F8F8F5;
+    --surface: #FFFFFF;
+    --surface-secondary: #F1F1EC;
+    --surface-selected: #F3F7F5;
+    --surface-muted: #FCFCFA;
 
-    /* Efeitos Especiais Gold */
-    --gradient-gold: linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #B45309 100%);
-    --gradient-gold-soft: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 50%, #FCD34D 100%);
-    --gradient-gold-rich: linear-gradient(135deg, #D97706 0%, #B45309 50%, #78350F 100%);
-    
-    --shadow-gold-sm: 0 1px 2px rgba(180, 83, 9, 0.1);
-    --shadow-gold-md: 0 4px 6px rgba(180, 83, 9, 0.15);
-    --shadow-gold-lg: 0 10px 15px rgba(180, 83, 9, 0.2);
-    --glow-gold: 0 0 20px rgba(245, 158, 11, 0.4);
+    /* Semantic text */
+    --text-primary: #1E1E1B;
+    --text-secondary: #5E5B55;
+    --text-muted: #7D7A73;
+    --text-inverse: #FFFFFF;
 
-    --primary: var(--primary-600);
-    --secondary: var(--primary-800);
-    --accent: var(--primary-500);
+    /* Semantic structure */
+    --border: #E4E3DC;
+    --border-strong: #D2D0C7;
+    --focus: #477762;
 
-    /* Semânticas */
-    --success: #10b981;
-    --warning: #f59e0b;
-    --error: #ef4444;
-    --info: #3b82f6;
+    /* Semantic status */
+    --success: #3F795F;
+    --success-bg: #EDF7F1;
+    --warning: #B7791F;
+    --warning-bg: #FFF8E6;
+    --error: #B54747;
+    --error-bg: #FFF0F0;
+    --info: #52718C;
+    --info-bg: #EEF5FA;
+
+    /* Radius */
+    --radius-xs: 6px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-pill: 999px;
+
+    /* Elevation */
+    --shadow-xs: 0 1px 2px rgba(30, 30, 27, 0.05);
+    --shadow-sm: 0 2px 8px rgba(30, 30, 27, 0.06);
+    --shadow-md: 0 8px 24px rgba(30, 30, 27, 0.08);
+
+    /* Motion */
+    --motion-fast: 120ms;
+    --motion-normal: 180ms;
+    --motion-slow: 240ms;
+    --ease-standard: cubic-bezier(.2, .8, .2, 1);
+
+    /* Type */
+    --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    /* Compatibility aliases used throughout the existing application */
+    --primary-50: var(--brand-50);
+    --primary-100: var(--brand-100);
+    --primary-200: var(--brand-200);
+    --primary-300: var(--brand-300);
+    --primary-400: var(--brand-400);
+    --primary-500: var(--brand-500);
+    --primary-600: var(--brand-600);
+    --primary-700: var(--brand-700);
+    --primary-800: var(--brand-800);
+    --primary-900: var(--brand-900);
+
+    --secondary-50: var(--terracotta-50);
+    --secondary-100: var(--terracotta-100);
+    --secondary-200: var(--terracotta-200);
+    --secondary-300: var(--terracotta-300);
+    --secondary-400: var(--terracotta-400);
+    --secondary-500: var(--terracotta-500);
+
+    --neutral-50: #F8F8F5;
+    --neutral-100: #F1F1EC;
+    --neutral-200: #E4E3DC;
+    --neutral-300: #D2D0C7;
+    --neutral-400: #A8A69E;
+    --neutral-500: #7D7A73;
+    --neutral-600: #5E5B55;
+    --neutral-700: #45433E;
+    --neutral-800: #302F2B;
+    --neutral-900: #1E1E1B;
+
+    --primary: var(--brand-600);
+    --secondary: var(--terracotta-500);
+    --accent: var(--terracotta-500);
+    --icon-decorative: var(--brand-500);
+
+    --gradient-gold: linear-gradient(135deg, #5B947B 0%, #477762 52%, #304D42 100%);
+    --gradient-gold-soft: linear-gradient(135deg, #F3F7F5 0%, #E4EEE9 100%);
+    --gradient-gold-rich: linear-gradient(135deg, #477762 0%, #304D42 100%);
+    --shadow-gold-sm: var(--shadow-xs);
+    --shadow-gold-md: var(--shadow-sm);
+    --shadow-gold-lg: var(--shadow-md);
+    --glow-gold: 0 0 0 3px rgba(71, 119, 98, 0.14);
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: #151714;
+    --surface: #1E211E;
+    --surface-secondary: #272B27;
+    --surface-selected: #25342C;
+    --surface-muted: #1A1D1A;
+
+    --text-primary: #F3F3EE;
+    --text-secondary: #C8CBC5;
+    --text-muted: #A6AAA3;
+    --text-inverse: #15231E;
+
+    --border: #383C38;
+    --border-strong: #4B504B;
+    --focus: #76AD91;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-height: 100%;
+    background: var(--background);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background: var(--background);
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    letter-spacing: -0.015em;
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 2.5rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    color: var(--brand-950);
+    background: var(--brand-200);
   }
 }
 
+/* Semantic helpers: prefer these over raw palette values in new code. */
+.ds-surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
 
+.ds-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+}
 
-body {
-  font-family: 'Nunito', 'Open Sans', sans-serif;
-  color: var(--neutral-800);
-  background-color: var(--neutral-50);
+.ds-focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(71, 119, 98, 0.15);
 }
 
 .text-primary {
-  color: var(--primary-900) !important;
+  color: var(--brand-700) !important;
 }
 
 .text-secondary {
-  color: var(--primary-800) !important;
+  color: var(--text-secondary) !important;
 }
 
 .text-accent {
-  color: var(--primary-500) !important;
+  color: var(--terracotta-600) !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
-}
-
+/* Legacy typography classes now resolve to the product type system. */
+.font-serif,
 .font-decorative {
-  font-family: 'Dancing Script', cursive;
+  font-family: var(--font-sans) !important;
 }
