@@ -176,7 +176,7 @@ describe('SettingsService', () => {
       // Arrange
       const mockContent = {
         key: 'content',
-        value: { heroTitle: 'Bem-vindo', heroSubtitle: 'Tarot Online' },
+        value: { heroTitle: 'Bem-vindo', heroSubtitle: 'Serviços profissionais' },
       };
       prismaMock.siteSetting.findUnique.mockResolvedValue(mockContent as any);
 
@@ -279,7 +279,8 @@ describe('SettingsService', () => {
       prismaMock.siteSetting.findUnique
         .mockResolvedValueOnce({ key: 'general', value: { siteName: 'Therapist Platform', enableShop: true } } as any)
         .mockResolvedValueOnce({ key: 'contact', value: { email: 'contato@profissional.com', instagram: '@profissional' } } as any)
-        .mockResolvedValueOnce({ key: 'content', value: { heroTitle: 'Bem-vindo' } } as any)
+        .mockResolvedValueOnce({ key: 'businessHours', value: [{ day: 'monday', dayName: 'Segunda-feira', isOpen: true, start: '09:00', end: '18:00' }] } as any)
+        .mockResolvedValueOnce({ key: 'content', value: { heroTitle: 'Bem-vindo', servicesTitle: 'Serviços' } } as any)
         .mockResolvedValueOnce({ key: 'professional', value: { displayName: 'Profissional', serviceMode: 'ONLINE' } } as any)
         .mockResolvedValueOnce({ key: 'specialties', value: [{ slug: 'reiki', name: 'Reiki', isActive: true, usesCardModule: false }] } as any)
         .mockResolvedValueOnce({ key: 'seo', value: { metaTitle: 'Profissional', metaDescription: 'Atendimentos', keywords: [] } } as any);
@@ -291,6 +292,8 @@ describe('SettingsService', () => {
       expect(result.data.siteName).toBe('Therapist Platform');
       expect(result.data.enableShop).toBe(true);
       expect(result.data.contact.email).toBe('contato@profissional.com');
+      expect(result.data.businessHours).toHaveLength(1);
+      expect(result.data.content.servicesTitle).toBe('Serviços');
       expect(result.data.heroTitle).toBe('Bem-vindo');
     });
   });
