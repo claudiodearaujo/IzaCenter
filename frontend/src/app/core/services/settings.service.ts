@@ -104,7 +104,6 @@ export interface AllSettings {
   content: ContentSettings;
   professional: ProfessionalSettings;
   specialties: SpecialtySettings[];
-  enabledModules: string[];
   seo: SeoSettings;
   analytics: AnalyticsSettings;
 }
@@ -134,6 +133,7 @@ export interface PublicSettings {
   footerText?: string;
   professional: ProfessionalSettings;
   specialties: SpecialtySettings[];
+  enabledModules: string[];
   seo: SeoSettings;
 }
 
