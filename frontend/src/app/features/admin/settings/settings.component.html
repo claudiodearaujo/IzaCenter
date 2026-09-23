@@ -125,7 +125,15 @@
                 <div>
                   <label class="block text-secondary text-sm mb-2">Especialidades</label>
                   <textarea pInputTextarea [(ngModel)]="specialtiesText" [rows]="4" class="w-full" placeholder="Uma especialidade por linha"></textarea>
-                  <p class="text-secondary/60 text-xs mt-1">Tarot pode existir aqui como especialidade opcional, sem fazer parte do core.</p>
+                  <p class="text-secondary/60 text-xs mt-1">As especialidades definem quais capacidades e módulos opcionais podem ser ativados.</p>
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Especialidades com módulo de cartas</label>
+                  <textarea pInputTextarea [(ngModel)]="cardModuleSpecialtiesText" [rows]="3" class="w-full"
+                    placeholder="Uma especialidade por linha"></textarea>
+                  <p class="text-secondary/60 text-xs mt-1">
+                    Quando houver ao menos uma especialidade ativa nesta lista, o módulo opcional <code>tarot-cards</code> fica disponível na API e no painel.
+                  </p>
                 </div>
                 <div>
                   <label class="block text-secondary text-sm mb-2">Título SEO</label>
