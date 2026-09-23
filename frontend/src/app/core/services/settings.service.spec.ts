@@ -9,7 +9,7 @@ describe('SettingsService', () => {
 
   const mockGeneralSettings: GeneralSettings = {
     siteName: 'Therapist Platform',
-    siteDescription: 'Tarô e Ayurveda',
+    siteDescription: 'Serviços e atendimentos profissionais',
     enableShop: true,
     enableAppointments: true,
     enableTestimonials: true,
@@ -61,8 +61,23 @@ describe('SettingsService', () => {
           enableAppointments: true,
           enableTestimonials: true,
           contact: mockContactSettings,
+          businessHours: [],
+          content: mockContentSettings,
           heroTitle: 'Bem-vindo',
           heroSubtitle: 'Descubra seu caminho',
+          professional: {
+            displayName: 'Profissional',
+            professionalTitle: 'Profissional de atendimento',
+            languages: ['pt-BR'],
+            serviceMode: 'ONLINE',
+            credentials: [],
+          },
+          specialties: [],
+          seo: {
+            metaTitle: 'Therapist Platform',
+            metaDescription: 'Serviços e atendimentos profissionais',
+            keywords: ['serviços'],
+          },
         },
         success: true,
       };
@@ -85,6 +100,19 @@ describe('SettingsService', () => {
           contact: mockContactSettings,
           businessHours: [],
           content: mockContentSettings,
+          professional: {
+            displayName: 'Profissional',
+            professionalTitle: 'Profissional de atendimento',
+            languages: ['pt-BR'],
+            serviceMode: 'ONLINE',
+            credentials: [],
+          },
+          specialties: [],
+          seo: {
+            metaTitle: 'Therapist Platform',
+            metaDescription: 'Serviços e atendimentos profissionais',
+            keywords: ['serviços'],
+          },
           analytics: {},
         },
         success: true,
