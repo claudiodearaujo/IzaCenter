@@ -8,6 +8,7 @@ import { Errors } from '../../middlewares/error.middleware';
 import { generateOrderNumber, buildPaginationMeta, addDays } from '../../utils';
 import { sendEmail, emailTemplates } from '../../utils/email.util';
 import { CreateOrderDto, UpdateOrderDto, QueryOrdersDto, AddQuestionsDto } from './orders.schema';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 
 export class OrdersService {
   private getProductCapabilities(product: any): Record<string, any> {
@@ -43,7 +44,7 @@ export class OrdersService {
   /**
    * Create order from cart
    */
-  async create(clientId: string, data: CreateOrderDto) {
+  async create(clientId: string, data: CreateOrderDto, tenantId = DEFAULT_TENANT_ID) {
     // Get client
     const client = await prisma.user.findUnique({
       where: { id: clientId },
@@ -62,7 +63,7 @@ export class OrdersService {
     // Get products
     const productIds = data.items.map((item) => item.productId);
     const products = await prisma.product.findMany({
-      where: { id: { in: productIds }, isActive: true },
+      where: { tenantId, id: { in: productIds }, isActive: true },
     });
 
     if (products.length !== productIds.length) {
@@ -93,7 +94,7 @@ export class OrdersService {
     let discount = new Prisma.Decimal(0);
     if (data.couponCode) {
       const coupon = await prisma.coupon.findUnique({
-        where: { code: data.couponCode.toUpperCase() },
+        where: { tenantId_code: { tenantId, code: data.couponCode.toUpperCase() } },
       });
 
       if (coupon && coupon.isActive) {
@@ -125,6 +126,7 @@ export class OrdersService {
     // Create order
     const order = await prisma.order.create({
       data: {
+        tenantId,
         orderNumber: generateOrderNumber(),
         clientId,
         subtotal,
@@ -201,8 +203,8 @@ export class OrdersService {
   /**
    * Get order by ID
    */
-  async getById(id: string, clientId?: string) {
-    const where: any = { id };
+  async getById(id: string, clientId?: string, tenantId = DEFAULT_TENANT_ID) {
+    const where: any = { id, tenantId };
     if (clientId) {
       where.clientId = clientId;
     }
@@ -261,8 +263,8 @@ export class OrdersService {
   /**
    * Get order by order number
    */
-  async getByOrderNumber(orderNumber: string, clientId?: string) {
-    const where: any = { orderNumber };
+  async getByOrderNumber(orderNumber: string, clientId?: string, tenantId = DEFAULT_TENANT_ID) {
+    const where: any = { orderNumber, tenantId };
     if (clientId) {
       where.clientId = clientId;
     }
@@ -288,10 +290,10 @@ export class OrdersService {
   /**
    * List orders
    */
-  async list(query: QueryOrdersDto, clientId?: string) {
+  async list(query: QueryOrdersDto, clientId?: string, tenantId = DEFAULT_TENANT_ID) {
     const { page, limit, search, status, startDate, endDate, sortBy, sortOrder } = query;
 
-    const where: any = {};
+    const where: any = { tenantId };
 
     if (clientId) {
       where.clientId = clientId;
@@ -354,7 +356,12 @@ export class OrdersService {
   /**
    * Update order status (admin)
    */
-  async update(id: string, data: UpdateOrderDto) {
+  async update(id: string, data: UpdateOrderDto, tenantId = DEFAULT_TENANT_ID) {
+    const existing = await prisma.order.findFirst({ where: { id, tenantId }, select: { id: true } });
+    if (!existing) {
+      throw Errors.NotFound('Pedido');
+    }
+
     const order = await prisma.order.update({
       where: { id },
       data: {
@@ -415,6 +422,7 @@ export class OrdersService {
       if (this.shouldCreateDelivery(item.product)) {
         await prisma.reading.create({
           data: {
+            tenantId: order.tenantId,
             orderItemId: item.id,
             clientId: order.clientId,
             title: `Entrega - ${item.productName}`,
@@ -524,11 +532,11 @@ export class OrdersService {
   /**
    * Add questions to order item
    */
-  async addQuestions(orderItemId: string, clientId: string, data: AddQuestionsDto) {
+  async addQuestions(orderItemId: string, clientId: string, data: AddQuestionsDto, tenantId = DEFAULT_TENANT_ID) {
     const orderItem = await prisma.orderItem.findFirst({
       where: {
         id: orderItemId,
-        order: { clientId },
+        order: { clientId, tenantId },
       },
       include: { order: true },
     });
@@ -547,8 +555,8 @@ export class OrdersService {
     });
 
     // Update reading if exists
-    const reading = await prisma.reading.findUnique({
-      where: { orderItemId },
+    const reading = await prisma.reading.findFirst({
+      where: { orderItemId, tenantId },
     });
 
     if (reading) {
@@ -564,8 +572,8 @@ export class OrdersService {
   /**
    * Cancel order
    */
-  async cancel(id: string, clientId?: string) {
-    const where: any = { id };
+  async cancel(id: string, clientId?: string, tenantId = DEFAULT_TENANT_ID) {
+    const where: any = { id, tenantId };
     if (clientId) {
       where.clientId = clientId;
     }
@@ -594,8 +602,8 @@ export class OrdersService {
   /**
    * Get order statistics (admin)
    */
-  async getStatistics(startDate?: Date, endDate?: Date) {
-    const where: any = {};
+  async getStatistics(startDate?: Date, endDate?: Date, tenantId = DEFAULT_TENANT_ID) {
+    const where: any = { tenantId };
     if (startDate || endDate) {
       where.createdAt = {};
       if (startDate) where.createdAt.gte = startDate;
@@ -630,10 +638,10 @@ export class OrdersService {
   /**
    * Validate a coupon code
    */
-  async validateCoupon(code: string, orderTotal?: number) {
+  async validateCoupon(code: string, orderTotal?: number, tenantId = DEFAULT_TENANT_ID) {
     const now = new Date();
     const coupon = await prisma.coupon.findUnique({
-      where: { code: code.toUpperCase() },
+      where: { tenantId_code: { tenantId, code: code.toUpperCase() } },
     });
 
     if (!coupon || !coupon.isActive) {

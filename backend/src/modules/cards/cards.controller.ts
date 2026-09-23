@@ -6,7 +6,7 @@ import { cardsService } from './cards.service';
 export class CardsController {
   async findAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await cardsService.findAll();
+      const result = await cardsService.findAll(req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -16,7 +16,7 @@ export class CardsController {
   async findById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await cardsService.findById(id as string);
+      const result = await cardsService.findById(id as string, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -26,7 +26,7 @@ export class CardsController {
   async findByNumber(req: Request, res: Response, next: NextFunction) {
     try {
       const { number } = req.params;
-      const result = await cardsService.findByNumber(parseInt(number as string));
+      const result = await cardsService.findByNumber(parseInt(number as string), req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -39,7 +39,7 @@ export class CardsController {
         ...req.body,
         imageUrl: req.body.imageUrl || (req.file as any)?.location,
       };
-      const result = await cardsService.create(data);
+      const result = await cardsService.create(data, req.tenant!.id);
       res.status(201).json(result);
     } catch (error) {
       next(error);
@@ -53,7 +53,7 @@ export class CardsController {
         ...req.body,
         imageUrl: req.body.imageUrl || (req.file as any)?.location,
       };
-      const result = await cardsService.update(id as string, data);
+      const result = await cardsService.update(id as string, data, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -63,7 +63,7 @@ export class CardsController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await cardsService.delete(id as string);
+      const result = await cardsService.delete(id as string, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -72,7 +72,7 @@ export class CardsController {
 
   async generateDeck(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await cardsService.generateDeck();
+      const result = await cardsService.generateDeck(req.tenant!.id);
       res.status(201).json(result);
     } catch (error) {
       next(error);

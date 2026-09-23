@@ -2,6 +2,8 @@ import { ProductsService } from './products.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 import { Prisma } from '@prisma/client';
 
+const TENANT_ID = 'tenant-test';
+
 // Mock supabase storage
 jest.mock('../../config/supabase', () => ({
   storage: {
@@ -31,6 +33,7 @@ describe('ProductsService', () => {
   beforeEach(() => {
     productsService = new ProductsService();
     jest.clearAllMocks();
+    prismaMock.productCategory.findFirst.mockResolvedValue({ id: 'cat-123' } as any);
   });
 
   // =============================================
@@ -67,17 +70,18 @@ describe('ProductsService', () => {
       prismaMock.product.create.mockResolvedValue(mockProduct as any);
 
       // Act
-      const result = await productsService.create(createData as any);
+      const result = await productsService.create(createData as any, TENANT_ID);
 
       // Assert
       expect(result.id).toBe('product-123');
       expect(result.slug).toBe('leitura-de-tarot');
       expect(prismaMock.product.findUnique).toHaveBeenCalledWith({
-        where: { slug: 'leitura-de-tarot' },
+        where: { tenantId_slug: { tenantId: TENANT_ID, slug: 'leitura-de-tarot' } },
       });
       expect(prismaMock.product.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           ...createData,
+          tenantId: TENANT_ID,
           slug: 'leitura-de-tarot',
           serviceKind: 'SERVICE',
           capabilities: {},
@@ -100,12 +104,12 @@ describe('ProductsService', () => {
       } as any);
 
       // Act
-      const result = await productsService.create(dataWithSlug as any);
+      const result = await productsService.create(dataWithSlug as any, TENANT_ID);
 
       // Assert
       expect(result.slug).toBe('custom-slug');
       expect(prismaMock.product.findUnique).toHaveBeenCalledWith({
-        where: { slug: 'custom-slug' },
+        where: { tenantId_slug: { tenantId: TENANT_ID, slug: 'custom-slug' } },
       });
     });
 
@@ -133,7 +137,7 @@ describe('ProductsService', () => {
         capabilities: genericData.capabilities,
       } as any);
 
-      const result = await productsService.create(genericData as any);
+      const result = await productsService.create(genericData as any, TENANT_ID);
 
       expect(prismaMock.product.create).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -155,7 +159,7 @@ describe('ProductsService', () => {
       prismaMock.product.findUnique.mockResolvedValue(mockProduct as any);
 
       // Act & Assert
-      await expect(productsService.create(createData as any)).rejects.toThrow(
+      await expect(productsService.create(createData as any, TENANT_ID)).rejects.toThrow(
         'Já existe um produto com este slug'
       );
       expect(prismaMock.product.create).not.toHaveBeenCalled();
@@ -179,16 +183,16 @@ describe('ProductsService', () => {
 
     it('should get product by id successfully', async () => {
       // Arrange
-      prismaMock.product.findUnique.mockResolvedValue(mockProduct as any);
+      prismaMock.product.findFirst.mockResolvedValue(mockProduct as any);
 
       // Act
-      const result = await productsService.getById(productId);
+      const result = await productsService.getById(productId, TENANT_ID);
 
       // Assert
       expect(result.id).toBe(productId);
       expect(result.name).toBe('Leitura de Tarot');
-      expect(prismaMock.product.findUnique).toHaveBeenCalledWith({
-        where: { id: productId },
+      expect(prismaMock.product.findFirst).toHaveBeenCalledWith({
+        where: { id: productId, tenantId: TENANT_ID },
         include: {
           category: true,
           attachments: {
@@ -200,10 +204,10 @@ describe('ProductsService', () => {
 
     it('should throw not found error if product does not exist', async () => {
       // Arrange
-      prismaMock.product.findUnique.mockResolvedValue(null);
+      prismaMock.product.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(productsService.getById(productId)).rejects.toThrow('Produto');
+      await expect(productsService.getById(productId, TENANT_ID)).rejects.toThrow('Produto');
     });
   });
 
@@ -224,15 +228,15 @@ describe('ProductsService', () => {
 
     it('should get active product by slug successfully', async () => {
       // Arrange
-      prismaMock.product.findUnique.mockResolvedValue(mockProduct as any);
+      prismaMock.product.findFirst.mockResolvedValue(mockProduct as any);
 
       // Act
-      const result = await productsService.getBySlug(slug);
+      const result = await productsService.getBySlug(slug, TENANT_ID);
 
       // Assert
       expect(result.slug).toBe(slug);
-      expect(prismaMock.product.findUnique).toHaveBeenCalledWith({
-        where: { slug, isActive: true },
+      expect(prismaMock.product.findFirst).toHaveBeenCalledWith({
+        where: { tenantId: TENANT_ID, slug, isActive: true },
         include: {
           category: true,
           attachments: {
@@ -244,10 +248,10 @@ describe('ProductsService', () => {
 
     it('should throw not found error if product does not exist or is inactive', async () => {
       // Arrange
-      prismaMock.product.findUnique.mockResolvedValue(null);
+      prismaMock.product.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(productsService.getBySlug(slug)).rejects.toThrow('Produto');
+      await expect(productsService.getBySlug(slug, TENANT_ID)).rejects.toThrow('Produto');
     });
   });
 
@@ -278,7 +282,7 @@ describe('ProductsService', () => {
       prismaMock.product.count.mockResolvedValue(1);
 
       // Act
-      const result = await productsService.list(query as any);
+      const result = await productsService.list(query as any, false, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(1);
@@ -292,7 +296,7 @@ describe('ProductsService', () => {
       }));
       expect(result.meta).toBeDefined();
       expect(prismaMock.product.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { tenantId: TENANT_ID },
         skip: 0,
         take: 10,
         orderBy: { createdAt: 'desc' },
@@ -317,7 +321,7 @@ describe('ProductsService', () => {
       prismaMock.product.count.mockResolvedValue(1);
 
       // Act
-      await productsService.list(query as any);
+      await productsService.list(query as any, false, TENANT_ID);
 
       // Assert
       expect(prismaMock.product.findMany).toHaveBeenCalledWith(
@@ -345,7 +349,7 @@ describe('ProductsService', () => {
       prismaMock.product.count.mockResolvedValue(1);
 
       // Act
-      await productsService.list(query as any);
+      await productsService.list(query as any, false, TENANT_ID);
 
       // Assert
       expect(prismaMock.product.findMany).toHaveBeenCalledWith(
@@ -370,7 +374,7 @@ describe('ProductsService', () => {
       prismaMock.product.count.mockResolvedValue(1);
 
       // Act
-      await productsService.list(query as any);
+      await productsService.list(query as any, false, TENANT_ID);
 
       // Assert
       expect(prismaMock.product.findMany).toHaveBeenCalledWith(
@@ -393,7 +397,7 @@ describe('ProductsService', () => {
       prismaMock.product.findMany.mockResolvedValue(mockProducts as any);
       prismaMock.product.count.mockResolvedValue(1);
 
-      await productsService.list(query as any);
+      await productsService.list(query as any, false, TENANT_ID);
 
       expect(prismaMock.product.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -417,7 +421,7 @@ describe('ProductsService', () => {
       prismaMock.product.count.mockResolvedValue(1);
 
       // Act
-      await productsService.list(query as any);
+      await productsService.list(query as any, false, TENANT_ID);
 
       // Assert
       expect(prismaMock.product.findMany).toHaveBeenCalledWith(
@@ -442,7 +446,7 @@ describe('ProductsService', () => {
       prismaMock.product.count.mockResolvedValue(1);
 
       // Act
-      await productsService.list(query as any);
+      await productsService.list(query as any, false, TENANT_ID);
 
       // Assert
       expect(prismaMock.product.findMany).toHaveBeenCalledWith(
@@ -468,7 +472,7 @@ describe('ProductsService', () => {
       prismaMock.product.count.mockResolvedValue(1);
 
       // Act
-      await productsService.list(query as any);
+      await productsService.list(query as any, false, TENANT_ID);
 
       // Assert
       expect(prismaMock.product.findMany).toHaveBeenCalledWith(
@@ -492,7 +496,7 @@ describe('ProductsService', () => {
       prismaMock.product.count.mockResolvedValue(1);
 
       // Act
-      await productsService.list(query as any, true);
+      await productsService.list(query as any, true, TENANT_ID);
 
       // Assert
       expect(prismaMock.product.findMany).toHaveBeenCalledWith(
@@ -526,13 +530,14 @@ describe('ProductsService', () => {
       prismaMock.product.findMany.mockResolvedValue(mockProducts as any);
 
       // Act
-      const result = await productsService.getFeatured();
+      const result = await productsService.getFeatured(6, TENANT_ID);
 
       // Assert
       expect(result).toHaveLength(1);
       expect(result[0]).toEqual(expect.objectContaining({ serviceKind: 'SERVICE' }));
       expect(prismaMock.product.findMany).toHaveBeenCalledWith({
         where: {
+          tenantId: TENANT_ID,
           isActive: true,
           isFeatured: true,
         },
@@ -551,7 +556,7 @@ describe('ProductsService', () => {
       prismaMock.product.findMany.mockResolvedValue(mockProducts as any);
 
       // Act
-      const result = await productsService.getFeatured(3);
+      const result = await productsService.getFeatured(3, TENANT_ID);
 
       // Assert
       expect(result).toHaveLength(1);
@@ -580,7 +585,7 @@ describe('ProductsService', () => {
     it('should update product successfully', async () => {
       // Arrange
       const updateData = { name: 'Leitura Atualizada' };
-      prismaMock.product.findUnique.mockResolvedValue(existingProduct as any);
+      prismaMock.product.findFirst.mockResolvedValue(existingProduct as any);
       prismaMock.product.update.mockResolvedValue({
         ...existingProduct,
         ...updateData,
@@ -589,7 +594,7 @@ describe('ProductsService', () => {
       } as any);
 
       // Act
-      const result = await productsService.update(productId, updateData as any);
+      const result = await productsService.update(productId, updateData as any, TENANT_ID);
 
       // Assert
       expect(result.name).toBe('Leitura Atualizada');
@@ -612,7 +617,7 @@ describe('ProductsService', () => {
     it('should update product slug when unique', async () => {
       // Arrange
       const updateData = { slug: 'novo-slug' };
-      prismaMock.product.findUnique
+      prismaMock.product.findFirst
         .mockResolvedValueOnce(existingProduct as any) // existing product
         .mockResolvedValueOnce(null); // slug check
       prismaMock.product.update.mockResolvedValue({
@@ -623,22 +628,26 @@ describe('ProductsService', () => {
       } as any);
 
       // Act
-      const result = await productsService.update(productId, updateData as any);
+      const result = await productsService.update(productId, updateData as any, TENANT_ID);
 
       // Assert
       expect(result.slug).toBe('novo-slug');
-      expect(prismaMock.product.findUnique).toHaveBeenCalledWith({
-        where: { slug: 'novo-slug' },
+      expect(prismaMock.product.findFirst).toHaveBeenCalledWith({
+        where: {
+          tenantId: TENANT_ID,
+          slug: 'novo-slug',
+          id: { not: productId },
+        },
       });
     });
 
     it('should throw not found error if product does not exist', async () => {
       // Arrange
-      prismaMock.product.findUnique.mockResolvedValue(null);
+      prismaMock.product.findFirst.mockResolvedValue(null);
 
       // Act & Assert
       await expect(
-        productsService.update(productId, { name: 'test' } as any)
+        productsService.update(productId, { name: 'test' } as any, TENANT_ID)
       ).rejects.toThrow('Produto');
       expect(prismaMock.product.update).not.toHaveBeenCalled();
     });
@@ -646,13 +655,13 @@ describe('ProductsService', () => {
     it('should throw conflict error if new slug already exists', async () => {
       // Arrange
       const updateData = { slug: 'existing-slug' };
-      prismaMock.product.findUnique
+      prismaMock.product.findFirst
         .mockResolvedValueOnce(existingProduct as any) // existing product
         .mockResolvedValueOnce({ id: 'other-product', slug: 'existing-slug' } as any); // slug collision
 
       // Act & Assert
       await expect(
-        productsService.update(productId, updateData as any)
+        productsService.update(productId, updateData as any, TENANT_ID)
       ).rejects.toThrow('Já existe um produto com este slug');
       expect(prismaMock.product.update).not.toHaveBeenCalled();
     });
@@ -660,7 +669,7 @@ describe('ProductsService', () => {
     it('should skip slug uniqueness check if slug unchanged', async () => {
       // Arrange
       const updateData = { slug: 'leitura-de-tarot' };
-      prismaMock.product.findUnique.mockResolvedValue(existingProduct as any);
+      prismaMock.product.findFirst.mockResolvedValue(existingProduct as any);
       prismaMock.product.update.mockResolvedValue({
         ...existingProduct,
         category: null,
@@ -668,10 +677,10 @@ describe('ProductsService', () => {
       } as any);
 
       // Act
-      await productsService.update(productId, updateData as any);
+      await productsService.update(productId, updateData as any, TENANT_ID);
 
       // Assert - findUnique called only once (for existing product, not for slug check)
-      expect(prismaMock.product.findUnique).toHaveBeenCalledTimes(1);
+      expect(prismaMock.product.findFirst).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -690,7 +699,7 @@ describe('ProductsService', () => {
       } as any);
 
       // Act
-      const result = await productsService.delete(productId);
+      const result = await productsService.delete(productId, TENANT_ID);
 
       // Assert
       expect(result.message).toBe('Produto desativado (possui pedidos vinculados)');
@@ -709,7 +718,7 @@ describe('ProductsService', () => {
       } as any);
 
       // Act
-      const result = await productsService.delete(productId);
+      const result = await productsService.delete(productId, TENANT_ID);
 
       // Assert
       expect(result.message).toBe('Produto excluído com sucesso');
@@ -743,16 +752,16 @@ describe('ProductsService', () => {
       prismaMock.productCategory.create.mockResolvedValue(mockCategory as any);
 
       // Act
-      const result = await productsService.createCategory(createData as any);
+      const result = await productsService.createCategory(createData as any, TENANT_ID);
 
       // Assert
       expect(result.id).toBe('cat-123');
       expect(result.slug).toBe('tarot');
       expect(prismaMock.productCategory.findUnique).toHaveBeenCalledWith({
-        where: { slug: 'tarot' },
+        where: { tenantId_slug: { tenantId: TENANT_ID, slug: 'tarot' } },
       });
       expect(prismaMock.productCategory.create).toHaveBeenCalledWith({
-        data: { ...createData, slug: 'tarot' },
+        data: { ...createData, tenantId: TENANT_ID, slug: 'tarot' },
       });
     });
 
@@ -766,12 +775,12 @@ describe('ProductsService', () => {
       } as any);
 
       // Act
-      const result = await productsService.createCategory(dataWithSlug as any);
+      const result = await productsService.createCategory(dataWithSlug as any, TENANT_ID);
 
       // Assert
       expect(result.slug).toBe('custom-cat');
       expect(prismaMock.productCategory.findUnique).toHaveBeenCalledWith({
-        where: { slug: 'custom-cat' },
+        where: { tenantId_slug: { tenantId: TENANT_ID, slug: 'custom-cat' } },
       });
     });
 
@@ -780,7 +789,7 @@ describe('ProductsService', () => {
       prismaMock.productCategory.findUnique.mockResolvedValue(mockCategory as any);
 
       // Act & Assert
-      await expect(productsService.createCategory(createData as any)).rejects.toThrow(
+      await expect(productsService.createCategory(createData as any, TENANT_ID)).rejects.toThrow(
         'Já existe uma categoria com este slug'
       );
       expect(prismaMock.productCategory.create).not.toHaveBeenCalled();
@@ -815,12 +824,12 @@ describe('ProductsService', () => {
       prismaMock.productCategory.findMany.mockResolvedValue(mockCategories as any);
 
       // Act
-      const result = await productsService.listCategories();
+      const result = await productsService.listCategories(false, TENANT_ID);
 
       // Assert
       expect(result).toEqual(mockCategories);
       expect(prismaMock.productCategory.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { tenantId: TENANT_ID },
         orderBy: { displayOrder: 'asc' },
         include: {
           _count: { select: { products: true } },
@@ -834,12 +843,12 @@ describe('ProductsService', () => {
       prismaMock.productCategory.findMany.mockResolvedValue(activeOnly as any);
 
       // Act
-      const result = await productsService.listCategories(true);
+      const result = await productsService.listCategories(true, TENANT_ID);
 
       // Assert
       expect(result).toEqual(activeOnly);
       expect(prismaMock.productCategory.findMany).toHaveBeenCalledWith({
-        where: { isActive: true },
+        where: { tenantId: TENANT_ID, isActive: true },
         orderBy: { displayOrder: 'asc' },
         include: {
           _count: { select: { products: true } },
@@ -863,14 +872,14 @@ describe('ProductsService', () => {
     it('should update category successfully', async () => {
       // Arrange
       const updateData = { name: 'Tarot Atualizado' };
-      prismaMock.productCategory.findUnique.mockResolvedValue(existingCategory as any);
+      prismaMock.productCategory.findFirst.mockResolvedValue(existingCategory as any);
       prismaMock.productCategory.update.mockResolvedValue({
         ...existingCategory,
         ...updateData,
       } as any);
 
       // Act
-      const result = await productsService.updateCategory(categoryId, updateData as any);
+      const result = await productsService.updateCategory(categoryId, updateData as any, TENANT_ID);
 
       // Assert
       expect(result.name).toBe('Tarot Atualizado');
@@ -883,7 +892,7 @@ describe('ProductsService', () => {
     it('should update category slug when unique', async () => {
       // Arrange
       const updateData = { slug: 'novo-slug' };
-      prismaMock.productCategory.findUnique
+      prismaMock.productCategory.findFirst
         .mockResolvedValueOnce(existingCategory as any) // existing category
         .mockResolvedValueOnce(null); // slug check
       prismaMock.productCategory.update.mockResolvedValue({
@@ -892,7 +901,7 @@ describe('ProductsService', () => {
       } as any);
 
       // Act
-      const result = await productsService.updateCategory(categoryId, updateData as any);
+      const result = await productsService.updateCategory(categoryId, updateData as any, TENANT_ID);
 
       // Assert
       expect(result.slug).toBe('novo-slug');
@@ -900,11 +909,11 @@ describe('ProductsService', () => {
 
     it('should throw not found error if category does not exist', async () => {
       // Arrange
-      prismaMock.productCategory.findUnique.mockResolvedValue(null);
+      prismaMock.productCategory.findFirst.mockResolvedValue(null);
 
       // Act & Assert
       await expect(
-        productsService.updateCategory(categoryId, { name: 'test' } as any)
+        productsService.updateCategory(categoryId, { name: 'test' } as any, TENANT_ID)
       ).rejects.toThrow('Categoria');
       expect(prismaMock.productCategory.update).not.toHaveBeenCalled();
     });
@@ -912,13 +921,13 @@ describe('ProductsService', () => {
     it('should throw conflict error if new slug already exists', async () => {
       // Arrange
       const updateData = { slug: 'existing-slug' };
-      prismaMock.productCategory.findUnique
+      prismaMock.productCategory.findFirst
         .mockResolvedValueOnce(existingCategory as any) // existing category
         .mockResolvedValueOnce({ id: 'other-cat', slug: 'existing-slug' } as any); // slug collision
 
       // Act & Assert
       await expect(
-        productsService.updateCategory(categoryId, updateData as any)
+        productsService.updateCategory(categoryId, updateData as any, TENANT_ID)
       ).rejects.toThrow('Já existe uma categoria com este slug');
       expect(prismaMock.productCategory.update).not.toHaveBeenCalled();
     });
@@ -926,14 +935,14 @@ describe('ProductsService', () => {
     it('should skip slug uniqueness check if slug unchanged', async () => {
       // Arrange
       const updateData = { slug: 'tarot' };
-      prismaMock.productCategory.findUnique.mockResolvedValue(existingCategory as any);
+      prismaMock.productCategory.findFirst.mockResolvedValue(existingCategory as any);
       prismaMock.productCategory.update.mockResolvedValue(existingCategory as any);
 
       // Act
-      await productsService.updateCategory(categoryId, updateData as any);
+      await productsService.updateCategory(categoryId, updateData as any, TENANT_ID);
 
       // Assert - findUnique called only once (for existing category, not for slug check)
-      expect(prismaMock.productCategory.findUnique).toHaveBeenCalledTimes(1);
+      expect(prismaMock.productCategory.findFirst).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -951,7 +960,7 @@ describe('ProductsService', () => {
       } as any);
 
       // Act
-      const result = await productsService.deleteCategory(categoryId);
+      const result = await productsService.deleteCategory(categoryId, TENANT_ID);
 
       // Assert
       expect(result.message).toBe('Categoria excluída com sucesso');
@@ -965,7 +974,7 @@ describe('ProductsService', () => {
       prismaMock.product.count.mockResolvedValue(5);
 
       // Act & Assert
-      await expect(productsService.deleteCategory(categoryId)).rejects.toThrow(
+      await expect(productsService.deleteCategory(categoryId, TENANT_ID)).rejects.toThrow(
         'Categoria possui produtos vinculados'
       );
       expect(prismaMock.productCategory.delete).not.toHaveBeenCalled();

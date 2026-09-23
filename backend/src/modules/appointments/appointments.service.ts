@@ -4,6 +4,7 @@ import { prisma } from '../../config/database';
 import { sendEmail, emailTemplates } from '../../utils';
 import { NotFoundException, BadRequestException } from '../../utils/errors';
 import { settingsService } from '../settings';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 
 interface CreateAppointmentDTO {
   userId: string;
@@ -29,10 +30,10 @@ export class AppointmentsService {
     search?: string;
     page?: number;
     limit?: number;
-  }) {
+  }, tenantId = DEFAULT_TENANT_ID) {
     const { status, date, search, page = 1, limit = 10 } = filters;
 
-    const where: any = {};
+    const where: any = { tenantId };
 
     if (status) {
       where.status = status;
@@ -104,9 +105,9 @@ export class AppointmentsService {
     };
   }
 
-  async findByUser(userId: string) {
+  async findByUser(userId: string, tenantId = DEFAULT_TENANT_ID) {
     const appointments = await prisma.appointment.findMany({
-      where: { clientId: userId },
+      where: { clientId: userId, tenantId },
       include: {
         orderItem: {
           include: {
@@ -125,9 +126,9 @@ export class AppointmentsService {
     return { data: appointments };
   }
 
-  async findById(id: string) {
-    const appointment = await prisma.appointment.findUnique({
-      where: { id },
+  async findById(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const appointment = await prisma.appointment.findFirst({
+      where: { id, tenantId },
       include: {
         client: {
           select: {
@@ -153,12 +154,14 @@ export class AppointmentsService {
     return { data: appointment };
   }
 
-  async create(data: CreateAppointmentDTO) {
+  async create(data: CreateAppointmentDTO, tenantId = DEFAULT_TENANT_ID) {
     // Check for conflicts
     const hasConflict = await this.checkConflict(
       data.scheduledDate,
       data.startTime,
-      data.endTime
+      data.endTime,
+      undefined,
+      tenantId
     );
 
     if (hasConflict) {
@@ -167,6 +170,7 @@ export class AppointmentsService {
 
     const appointment = await prisma.appointment.create({
       data: {
+        tenantId,
         clientId: data.userId,
         orderItemId: data.orderItemId,
         scheduledDate: data.scheduledDate,
@@ -209,9 +213,9 @@ export class AppointmentsService {
     return { data: appointment };
   }
 
-  async update(id: string, data: UpdateAppointmentDTO) {
-    const appointment = await prisma.appointment.findUnique({
-      where: { id },
+  async update(id: string, data: UpdateAppointmentDTO, tenantId = DEFAULT_TENANT_ID) {
+    const appointment = await prisma.appointment.findFirst({
+      where: { id, tenantId },
       include: { client: true },
     });
 
@@ -260,9 +264,9 @@ export class AppointmentsService {
     return { data: updated };
   }
 
-  async reschedule(id: string, newDate: Date, newStartTime: string, newEndTime: string) {
-    const appointment = await prisma.appointment.findUnique({
-      where: { id },
+  async reschedule(id: string, newDate: Date, newStartTime: string, newEndTime: string, tenantId = DEFAULT_TENANT_ID) {
+    const appointment = await prisma.appointment.findFirst({
+      where: { id, tenantId },
       include: { client: true },
     });
 
@@ -271,7 +275,7 @@ export class AppointmentsService {
     }
 
     // Check for conflicts
-    const hasConflict = await this.checkConflict(newDate, newStartTime, newEndTime, id);
+    const hasConflict = await this.checkConflict(newDate, newStartTime, newEndTime, id, tenantId);
 
     if (hasConflict) {
       throw new BadRequestException('Este horário já está ocupado');
@@ -310,9 +314,9 @@ export class AppointmentsService {
     return { data: updated };
   }
 
-  async cancel(id: string, reason?: string) {
-    const appointment = await prisma.appointment.findUnique({
-      where: { id },
+  async cancel(id: string, reason?: string, tenantId = DEFAULT_TENANT_ID, clientId?: string) {
+    const appointment = await prisma.appointment.findFirst({
+      where: { id, tenantId, ...(clientId ? { clientId } : {}) },
       include: { client: true },
     });
 
@@ -350,7 +354,7 @@ export class AppointmentsService {
     return { data: updated };
   }
 
-  async getAvailableSlots(date: Date) {
+  async getAvailableSlots(date: Date, tenantId = DEFAULT_TENANT_ID) {
     // Load business hours from settings (falls back to defaults if not configured)
     const defaultStart = '09:00';
     const defaultEnd = '18:00';
@@ -361,7 +365,7 @@ export class AppointmentsService {
     let slotDuration = defaultSlotDuration;
 
     try {
-      const { data: businessHours } = await settingsService.getBusinessHours();
+      const { data: businessHours } = await settingsService.getBusinessHours(tenantId);
       if (businessHours && businessHours.length > 0) {
         // Get the day of week for the requested date
         const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -387,6 +391,7 @@ export class AppointmentsService {
 
     const existingAppointments = await prisma.appointment.findMany({
       where: {
+        tenantId,
         scheduledDate: {
           gte: startOfDay,
           lte: endOfDay,
@@ -433,7 +438,8 @@ export class AppointmentsService {
     date: Date,
     startTime: string,
     endTime: string,
-    excludeId?: string
+    excludeId?: string,
+    tenantId = DEFAULT_TENANT_ID
   ): Promise<boolean> {
     const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
@@ -441,6 +447,7 @@ export class AppointmentsService {
     endOfDay.setHours(23, 59, 59, 999);
 
     const where: any = {
+      tenantId,
       scheduledDate: {
         gte: startOfDay,
         lte: endOfDay,

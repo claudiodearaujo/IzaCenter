@@ -9,6 +9,8 @@ jest.mock('../../config/supabase', () => ({
 import { ReadingsService } from './readings.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 
+const TENANT_ID = 'tenant-test';
+
 // Mock email utils
 jest.mock('../../utils/email.util', () => ({
   sendEmail: jest.fn().mockResolvedValue(undefined),
@@ -37,6 +39,7 @@ describe('ReadingsService', () => {
   beforeEach(() => {
     readingsService = new ReadingsService();
     jest.clearAllMocks();
+    prismaMock.ciganoCard.count.mockResolvedValue(1);
   });
 
   // =============================================
@@ -59,7 +62,7 @@ describe('ReadingsService', () => {
       prismaMock.reading.count.mockResolvedValue(1);
 
       // Act
-      const result = await readingsService.findAll({});
+      const result = await readingsService.findAll({}, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(mockReadings.length);
@@ -77,7 +80,7 @@ describe('ReadingsService', () => {
         totalPages: 1,
       });
       expect(prismaMock.reading.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { tenantId: TENANT_ID },
         include: expect.objectContaining({
           client: expect.any(Object),
           orderItem: expect.any(Object),
@@ -86,7 +89,7 @@ describe('ReadingsService', () => {
         skip: 0,
         take: 10,
       });
-      expect(prismaMock.reading.count).toHaveBeenCalledWith({ where: {} });
+      expect(prismaMock.reading.count).toHaveBeenCalledWith({ where: { tenantId: TENANT_ID } });
     });
 
     it('should apply custom pagination', async () => {
@@ -95,7 +98,7 @@ describe('ReadingsService', () => {
       prismaMock.reading.count.mockResolvedValue(25);
 
       // Act
-      const result = await readingsService.findAll({ page: 3, limit: 5 });
+      const result = await readingsService.findAll({ page: 3, limit: 5 }, TENANT_ID);
 
       // Assert
       expect(result.meta).toEqual({
@@ -115,14 +118,14 @@ describe('ReadingsService', () => {
       prismaMock.reading.count.mockResolvedValue(1);
 
       // Act
-      await readingsService.findAll({ status: 'PENDING' });
+      await readingsService.findAll({ status: 'PENDING' }, TENANT_ID);
 
       // Assert
       expect(prismaMock.reading.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { status: 'PENDING' } })
+        expect.objectContaining({ where: { tenantId: TENANT_ID, status: 'PENDING' } })
       );
       expect(prismaMock.reading.count).toHaveBeenCalledWith({
-        where: { status: 'PENDING' },
+        where: { tenantId: TENANT_ID, status: 'PENDING' },
       });
     });
 
@@ -132,12 +135,13 @@ describe('ReadingsService', () => {
       prismaMock.reading.count.mockResolvedValue(1);
 
       // Act
-      await readingsService.findAll({ search: 'Cliente' });
+      await readingsService.findAll({ search: 'Cliente' }, TENANT_ID);
 
       // Assert
       expect(prismaMock.reading.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: {
+            tenantId: TENANT_ID,
             OR: [
               { client: { fullName: { contains: 'Cliente', mode: 'insensitive' } } },
               { client: { email: { contains: 'Cliente', mode: 'insensitive' } } },
@@ -154,12 +158,13 @@ describe('ReadingsService', () => {
       prismaMock.reading.count.mockResolvedValue(0);
 
       // Act
-      await readingsService.findAll({ status: 'IN_PROGRESS', search: 'test' });
+      await readingsService.findAll({ status: 'IN_PROGRESS', search: 'test' }, TENANT_ID);
 
       // Assert
       expect(prismaMock.reading.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: {
+            tenantId: TENANT_ID,
             status: 'IN_PROGRESS',
             OR: expect.any(Array),
           },
@@ -188,7 +193,7 @@ describe('ReadingsService', () => {
       prismaMock.reading.findMany.mockResolvedValue(mockReadings as any);
 
       // Act
-      const result = await readingsService.findByUser(userId);
+      const result = await readingsService.findByUser(userId, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(mockReadings.length);
@@ -201,7 +206,7 @@ describe('ReadingsService', () => {
       );
       expect(result.data[0].orderItem.questions).toEqual([]);
       expect(prismaMock.reading.findMany).toHaveBeenCalledWith({
-        where: { clientId: userId },
+        where: { clientId: userId, tenantId: TENANT_ID },
         include: expect.objectContaining({
           orderItem: expect.any(Object),
           cards: expect.any(Object),
@@ -215,7 +220,7 @@ describe('ReadingsService', () => {
       prismaMock.reading.findMany.mockResolvedValue([]);
 
       // Act
-      const result = await readingsService.findByUser(userId);
+      const result = await readingsService.findByUser(userId, TENANT_ID);
 
       // Assert
       expect(result.data).toEqual([]);
@@ -239,10 +244,10 @@ describe('ReadingsService', () => {
 
     it('should get reading by id', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue(mockReading as any);
+      prismaMock.reading.findFirst.mockResolvedValue(mockReading as any);
 
       // Act
-      const result = await readingsService.findById(readingId);
+      const result = await readingsService.findById(readingId, undefined, TENANT_ID);
 
       // Assert
       expect(result.data.id).toBe(readingId);
@@ -255,8 +260,8 @@ describe('ReadingsService', () => {
         expect.objectContaining({ id: 'p-1', name: 'Produto' })
       );
       expect(result.data.orderItem.questions).toEqual([]);
-      expect(prismaMock.reading.findUnique).toHaveBeenCalledWith({
-        where: { id: readingId },
+      expect(prismaMock.reading.findFirst).toHaveBeenCalledWith({
+        where: { id: readingId, tenantId: TENANT_ID },
         include: expect.objectContaining({
           client: expect.any(Object),
           orderItem: expect.any(Object),
@@ -267,20 +272,20 @@ describe('ReadingsService', () => {
 
     it('should throw NotFoundException if reading not found', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue(null);
+      prismaMock.reading.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(readingsService.findById(readingId)).rejects.toThrow(
+      await expect(readingsService.findById(readingId, undefined, TENANT_ID)).rejects.toThrow(
         'Entrega não encontrada'
       );
     });
 
     it('should return reading when userId matches clientId', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue(mockReading as any);
+      prismaMock.reading.findFirst.mockResolvedValue(mockReading as any);
 
       // Act
-      const result = await readingsService.findById(readingId, 'client-123');
+      const result = await readingsService.findById(readingId, 'client-123', TENANT_ID);
 
       // Assert
       expect(result.data.id).toBe(readingId);
@@ -297,11 +302,11 @@ describe('ReadingsService', () => {
 
     it('should throw NotFoundException when userId does not match clientId', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue(mockReading as any);
+      prismaMock.reading.findFirst.mockResolvedValue(mockReading as any);
 
       // Act & Assert
       await expect(
-        readingsService.findById(readingId, 'other-user')
+        readingsService.findById(readingId, 'other-user', TENANT_ID)
       ).rejects.toThrow('Entrega não encontrada');
     });
   });
@@ -333,7 +338,7 @@ describe('ReadingsService', () => {
 
     it('should update reading successfully', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue(mockReading as any);
+      prismaMock.reading.findFirst.mockResolvedValue(mockReading as any);
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         return fn({
           reading: { update: jest.fn().mockResolvedValue(mockUpdatedReading) },
@@ -342,7 +347,7 @@ describe('ReadingsService', () => {
       });
 
       // Act
-      const result = await readingsService.update(readingId, updateData);
+      const result = await readingsService.update(readingId, updateData, TENANT_ID);
 
       // Assert
       expect(result.data).toEqual(expect.objectContaining({
@@ -374,7 +379,7 @@ describe('ReadingsService', () => {
       const mockTxDeleteMany = jest.fn().mockResolvedValue({ count: 0 });
       const mockTxCreateMany = jest.fn().mockResolvedValue({ count: 1 });
 
-      prismaMock.reading.findUnique.mockResolvedValue(mockReading as any);
+      prismaMock.reading.findFirst.mockResolvedValue(mockReading as any);
       prismaMock.$transaction.mockImplementation(async (fn: any) => {
         return fn({
           reading: { update: mockTxReadingUpdate },
@@ -386,7 +391,7 @@ describe('ReadingsService', () => {
       });
 
       // Act
-      await readingsService.update(readingId, dataWithCards);
+      await readingsService.update(readingId, dataWithCards, TENANT_ID);
 
       // Assert
       expect(mockTxDeleteMany).toHaveBeenCalledWith({
@@ -408,23 +413,23 @@ describe('ReadingsService', () => {
 
     it('should throw NotFoundException if reading not found', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue(null);
+      prismaMock.reading.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(readingsService.update(readingId, updateData)).rejects.toThrow(
+      await expect(readingsService.update(readingId, updateData, TENANT_ID)).rejects.toThrow(
         'Entrega não encontrada'
       );
     });
 
     it('should throw BadRequestException if reading is published', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue({
+      prismaMock.reading.findFirst.mockResolvedValue({
         ...mockReading,
         status: 'PUBLISHED',
       } as any);
 
       // Act & Assert
-      await expect(readingsService.update(readingId, updateData)).rejects.toThrow(
+      await expect(readingsService.update(readingId, updateData, TENANT_ID)).rejects.toThrow(
         'Entregas publicadas não podem ser editadas'
       );
     });
@@ -448,14 +453,14 @@ describe('ReadingsService', () => {
 
     it('should update reading status', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue(mockReading as any);
+      prismaMock.reading.findFirst.mockResolvedValue(mockReading as any);
       prismaMock.reading.update.mockResolvedValue({
         ...mockReading,
         status: 'IN_PROGRESS',
       } as any);
 
       // Act
-      const result = await readingsService.updateStatus(readingId, 'IN_PROGRESS');
+      const result = await readingsService.updateStatus(readingId, 'IN_PROGRESS', TENANT_ID);
 
       // Assert
       expect(result.data.status).toBe('IN_PROGRESS');
@@ -467,7 +472,7 @@ describe('ReadingsService', () => {
 
     it('should set publishedAt and readingDate when publishing', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue(mockReading as any);
+      prismaMock.reading.findFirst.mockResolvedValue(mockReading as any);
       prismaMock.reading.update.mockResolvedValue({
         ...mockReading,
         status: 'PUBLISHED',
@@ -476,7 +481,7 @@ describe('ReadingsService', () => {
       } as any);
 
       // Act
-      await readingsService.updateStatus(readingId, 'PUBLISHED');
+      await readingsService.updateStatus(readingId, 'PUBLISHED', TENANT_ID);
 
       // Assert
       expect(prismaMock.reading.update).toHaveBeenCalledWith({
@@ -492,14 +497,14 @@ describe('ReadingsService', () => {
     it('should send email when publishing reading', async () => {
       // Arrange
       const { sendEmail } = require('../../utils/email.util');
-      prismaMock.reading.findUnique.mockResolvedValue(mockReading as any);
+      prismaMock.reading.findFirst.mockResolvedValue(mockReading as any);
       prismaMock.reading.update.mockResolvedValue({
         ...mockReading,
         status: 'PUBLISHED',
       } as any);
 
       // Act
-      await readingsService.updateStatus(readingId, 'PUBLISHED');
+      await readingsService.updateStatus(readingId, 'PUBLISHED', TENANT_ID);
 
       // Assert
       expect(sendEmail).toHaveBeenCalledWith(
@@ -518,14 +523,14 @@ describe('ReadingsService', () => {
         ...mockReading,
         client: { ...mockReading.client, email: '' },
       };
-      prismaMock.reading.findUnique.mockResolvedValue(readingNoEmail as any);
+      prismaMock.reading.findFirst.mockResolvedValue(readingNoEmail as any);
       prismaMock.reading.update.mockResolvedValue({
         ...readingNoEmail,
         status: 'PUBLISHED',
       } as any);
 
       // Act
-      await readingsService.updateStatus(readingId, 'PUBLISHED');
+      await readingsService.updateStatus(readingId, 'PUBLISHED', TENANT_ID);
 
       // Assert
       expect(sendEmail).not.toHaveBeenCalled();
@@ -533,11 +538,11 @@ describe('ReadingsService', () => {
 
     it('should throw NotFoundException if reading not found', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue(null);
+      prismaMock.reading.findFirst.mockResolvedValue(null);
 
       // Act & Assert
       await expect(
-        readingsService.updateStatus(readingId, 'PUBLISHED')
+        readingsService.updateStatus(readingId, 'PUBLISHED', TENANT_ID)
       ).rejects.toThrow('Entrega não encontrada');
     });
   });
@@ -550,14 +555,14 @@ describe('ReadingsService', () => {
 
     it('should delete reading successfully', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue({
+      prismaMock.reading.findFirst.mockResolvedValue({
         id: readingId,
         status: 'PENDING',
       } as any);
       prismaMock.reading.delete.mockResolvedValue({} as any);
 
       // Act
-      const result = await readingsService.delete(readingId);
+      const result = await readingsService.delete(readingId, TENANT_ID);
 
       // Assert
       expect(result.message).toBe('Entrega excluída com sucesso');
@@ -568,14 +573,14 @@ describe('ReadingsService', () => {
 
     it('should delete IN_PROGRESS reading', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue({
+      prismaMock.reading.findFirst.mockResolvedValue({
         id: readingId,
         status: 'IN_PROGRESS',
       } as any);
       prismaMock.reading.delete.mockResolvedValue({} as any);
 
       // Act
-      const result = await readingsService.delete(readingId);
+      const result = await readingsService.delete(readingId, TENANT_ID);
 
       // Assert
       expect(result.message).toBe('Entrega excluída com sucesso');
@@ -583,23 +588,23 @@ describe('ReadingsService', () => {
 
     it('should throw NotFoundException if reading not found', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue(null);
+      prismaMock.reading.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(readingsService.delete(readingId)).rejects.toThrow(
+      await expect(readingsService.delete(readingId, TENANT_ID)).rejects.toThrow(
         'Entrega não encontrada'
       );
     });
 
     it('should throw BadRequestException if reading is published', async () => {
       // Arrange
-      prismaMock.reading.findUnique.mockResolvedValue({
+      prismaMock.reading.findFirst.mockResolvedValue({
         id: readingId,
         status: 'PUBLISHED',
       } as any);
 
       // Act & Assert
-      await expect(readingsService.delete(readingId)).rejects.toThrow(
+      await expect(readingsService.delete(readingId, TENANT_ID)).rejects.toThrow(
         'Entregas publicadas não podem ser excluídas'
       );
       expect(prismaMock.reading.delete).not.toHaveBeenCalled();
@@ -618,7 +623,7 @@ describe('ReadingsService', () => {
       prismaMock.reading.count.mockResolvedValueOnce(7);  // published
 
       // Act
-      const result = await readingsService.getStats();
+      const result = await readingsService.getStats(TENANT_ID);
 
       // Assert
       expect(result.data).toEqual({
@@ -634,7 +639,7 @@ describe('ReadingsService', () => {
       prismaMock.reading.count.mockResolvedValue(0);
 
       // Act
-      const result = await readingsService.getStats();
+      const result = await readingsService.getStats(TENANT_ID);
 
       // Assert
       expect(result.data).toEqual({
@@ -650,19 +655,19 @@ describe('ReadingsService', () => {
       prismaMock.reading.count.mockResolvedValue(0);
 
       // Act
-      await readingsService.getStats();
+      await readingsService.getStats(TENANT_ID);
 
       // Assert
       expect(prismaMock.reading.count).toHaveBeenCalledTimes(4);
-      expect(prismaMock.reading.count).toHaveBeenNthCalledWith(1);
+      expect(prismaMock.reading.count).toHaveBeenNthCalledWith(1, { where: { tenantId: TENANT_ID } });
       expect(prismaMock.reading.count).toHaveBeenNthCalledWith(2, {
-        where: { status: 'PENDING' },
+        where: { tenantId: TENANT_ID, status: 'PENDING' },
       });
       expect(prismaMock.reading.count).toHaveBeenNthCalledWith(3, {
-        where: { status: 'IN_PROGRESS' },
+        where: { tenantId: TENANT_ID, status: 'IN_PROGRESS' },
       });
       expect(prismaMock.reading.count).toHaveBeenNthCalledWith(4, {
-        where: { status: 'PUBLISHED' },
+        where: { tenantId: TENANT_ID, status: 'PUBLISHED' },
       });
     });
   });

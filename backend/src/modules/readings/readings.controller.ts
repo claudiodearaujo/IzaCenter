@@ -15,7 +15,7 @@ export class ReadingsController {
         search: search as string,
         page: page ? parseInt(page as string) : undefined,
         limit: limit ? parseInt(limit as string) : undefined,
-      });
+      }, req.tenant!.id);
 
       res.json(result);
     } catch (error) {
@@ -26,7 +26,7 @@ export class ReadingsController {
   async findById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await readingsService.findById(id as string);
+      const result = await readingsService.findById(id as string, undefined, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -36,7 +36,7 @@ export class ReadingsController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await readingsService.update(id as string, req.body);
+      const result = await readingsService.update(id as string, req.body, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -47,7 +47,7 @@ export class ReadingsController {
     try {
       const { id } = req.params;
       const { status } = req.body;
-      const result = await readingsService.updateStatus(id as string, status);
+      const result = await readingsService.updateStatus(id as string, status, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -62,7 +62,7 @@ export class ReadingsController {
         return res.status(400).json({ message: 'Arquivo de áudio é obrigatório' });
       }
 
-      const result = await readingsService.uploadAudio(id as string, req.file);
+      const result = await readingsService.uploadAudio(id as string, req.file, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -80,7 +80,7 @@ export class ReadingsController {
         return res.status(400).json({ message: 'Audio file is required' });
       }
 
-      const result = await readingsService.updateAudio(id as string, audioUrl);
+      const result = await readingsService.updateAudio(id as string, audioUrl, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -90,7 +90,7 @@ export class ReadingsController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await readingsService.delete(id as string);
+      const result = await readingsService.delete(id as string, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -99,7 +99,7 @@ export class ReadingsController {
 
   async getStats(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await readingsService.getStats();
+      const result = await readingsService.getStats(req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -110,7 +110,7 @@ export class ReadingsController {
   async findByUser(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id;
-      const result = await readingsService.findByUser(userId);
+      const result = await readingsService.findByUser(userId, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -121,7 +121,7 @@ export class ReadingsController {
     try {
       const { id } = req.params;
       const userId = req.user!.id;
-      const result = await readingsService.findById(id as string, userId);
+      const result = await readingsService.findById(id as string, userId, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -133,7 +133,7 @@ export class ReadingsController {
     try {
       const { id } = req.params;
       const userId = req.user!.id;
-      const { data: reading } = await readingsService.findById(id as string, userId);
+      const { data: reading } = await readingsService.findById(id as string, userId, req.tenant!.id);
 
       if (reading.status !== 'PUBLISHED') {
         return res.status(403).json({ message: 'Entrega ainda não está disponível para download' });

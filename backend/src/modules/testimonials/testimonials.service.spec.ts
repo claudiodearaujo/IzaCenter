@@ -1,6 +1,8 @@
 import { TestimonialsService } from './testimonials.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 
+const TENANT_ID = 'tenant-test';
+
 describe('TestimonialsService', () => {
   let testimonialsService: TestimonialsService;
 
@@ -23,7 +25,7 @@ describe('TestimonialsService', () => {
       prismaMock.testimonial.count.mockResolvedValue(2);
 
       // Act
-      const result = await testimonialsService.findAll({});
+      const result = await testimonialsService.findAll({}, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(2);
@@ -36,7 +38,7 @@ describe('TestimonialsService', () => {
       prismaMock.testimonial.count.mockResolvedValue(0);
 
       // Act
-      const result = await testimonialsService.findAll({ status: 'pending' });
+      const result = await testimonialsService.findAll({ status: 'pending' }, TENANT_ID);
 
       // Assert
       expect(prismaMock.testimonial.findMany).toHaveBeenCalledWith(
@@ -52,7 +54,7 @@ describe('TestimonialsService', () => {
       prismaMock.testimonial.count.mockResolvedValue(0);
 
       // Act
-      const result = await testimonialsService.findAll({ status: 'approved' });
+      const result = await testimonialsService.findAll({ status: 'approved' }, TENANT_ID);
 
       // Assert
       expect(prismaMock.testimonial.findMany).toHaveBeenCalledWith(
@@ -75,13 +77,13 @@ describe('TestimonialsService', () => {
       prismaMock.testimonial.findMany.mockResolvedValue(mockTestimonials as any);
 
       // Act
-      const result = await testimonialsService.findPublic();
+      const result = await testimonialsService.findPublic(10, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(1);
       expect(prismaMock.testimonial.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { isApproved: true },
+          where: { tenantId: TENANT_ID, isApproved: true },
         })
       );
     });
@@ -91,7 +93,7 @@ describe('TestimonialsService', () => {
       prismaMock.testimonial.findMany.mockResolvedValue([]);
 
       // Act
-      await testimonialsService.findPublic();
+      await testimonialsService.findPublic(10, TENANT_ID);
 
       // Assert
       expect(prismaMock.testimonial.findMany).toHaveBeenCalledWith(
@@ -112,13 +114,13 @@ describe('TestimonialsService', () => {
       prismaMock.testimonial.findMany.mockResolvedValue(mockTestimonials as any);
 
       // Act
-      const result = await testimonialsService.findFeatured();
+      const result = await testimonialsService.findFeatured(6, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(1);
       expect(prismaMock.testimonial.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { isApproved: true, isFeatured: true },
+          where: { tenantId: TENANT_ID, isApproved: true, isFeatured: true },
         })
       );
     });
@@ -154,7 +156,7 @@ describe('TestimonialsService', () => {
       } as any);
 
       // Act
-      const result = await testimonialsService.create(createData);
+      const result = await testimonialsService.create(createData, TENANT_ID);
 
       // Assert
       expect(result.data.content).toBe(createData.content);
@@ -174,7 +176,7 @@ describe('TestimonialsService', () => {
       } as any);
 
       // Act
-      const result = await testimonialsService.create(createData);
+      const result = await testimonialsService.create(createData, TENANT_ID);
 
       // Assert
       expect(result.data.clientName).toBe('Anônimo');
@@ -191,14 +193,14 @@ describe('TestimonialsService', () => {
         id: 'test-1',
         isApproved: false,
       };
-      prismaMock.testimonial.findUnique.mockResolvedValue(mockTestimonial as any);
+      prismaMock.testimonial.findFirst.mockResolvedValue(mockTestimonial as any);
       prismaMock.testimonial.update.mockResolvedValue({
         ...mockTestimonial,
         isApproved: true,
       } as any);
 
       // Act
-      const result = await testimonialsService.update('test-1', { isApproved: true });
+      const result = await testimonialsService.update('test-1', { isApproved: true }, TENANT_ID);
 
       // Assert
       expect(result.data.isApproved).toBe(true);
@@ -210,14 +212,14 @@ describe('TestimonialsService', () => {
         id: 'test-1',
         isFeatured: false,
       };
-      prismaMock.testimonial.findUnique.mockResolvedValue(mockTestimonial as any);
+      prismaMock.testimonial.findFirst.mockResolvedValue(mockTestimonial as any);
       prismaMock.testimonial.update.mockResolvedValue({
         ...mockTestimonial,
         isFeatured: true,
       } as any);
 
       // Act
-      const result = await testimonialsService.update('test-1', { isFeatured: true });
+      const result = await testimonialsService.update('test-1', { isFeatured: true }, TENANT_ID);
 
       // Assert
       expect(result.data.isFeatured).toBe(true);
@@ -225,11 +227,11 @@ describe('TestimonialsService', () => {
 
     it('should throw error if testimonial not found', async () => {
       // Arrange
-      prismaMock.testimonial.findUnique.mockResolvedValue(null);
+      prismaMock.testimonial.findFirst.mockResolvedValue(null);
 
       // Act & Assert
       await expect(
-        testimonialsService.update('nonexistent', { isApproved: true })
+        testimonialsService.update('nonexistent', { isApproved: true }, TENANT_ID)
       ).rejects.toThrow('Depoimento não encontrado');
     });
   });
@@ -241,11 +243,11 @@ describe('TestimonialsService', () => {
     it('should delete testimonial successfully', async () => {
       // Arrange
       const mockTestimonial = { id: 'test-1', clientName: 'Maria' };
-      prismaMock.testimonial.findUnique.mockResolvedValue(mockTestimonial as any);
+      prismaMock.testimonial.findFirst.mockResolvedValue(mockTestimonial as any);
       prismaMock.testimonial.delete.mockResolvedValue(mockTestimonial as any);
 
       // Act
-      const result = await testimonialsService.delete('test-1');
+      const result = await testimonialsService.delete('test-1', TENANT_ID);
 
       // Assert
       expect(result.message).toContain('excluído');
@@ -253,10 +255,10 @@ describe('TestimonialsService', () => {
 
     it('should throw error if testimonial not found', async () => {
       // Arrange
-      prismaMock.testimonial.findUnique.mockResolvedValue(null);
+      prismaMock.testimonial.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(testimonialsService.delete('nonexistent')).rejects.toThrow(
+      await expect(testimonialsService.delete('nonexistent', TENANT_ID)).rejects.toThrow(
         'Depoimento não encontrado'
       );
     });
@@ -276,7 +278,7 @@ describe('TestimonialsService', () => {
       } as any);
 
       // Act
-      const result = await testimonialsService.getStats();
+      const result = await testimonialsService.getStats(TENANT_ID);
 
       // Assert
       expect(result.data.total).toBe(10);
@@ -293,7 +295,7 @@ describe('TestimonialsService', () => {
       } as any);
 
       // Act
-      const result = await testimonialsService.getStats();
+      const result = await testimonialsService.getStats(TENANT_ID);
 
       // Assert
       expect(result.data.averageRating).toBe(0);

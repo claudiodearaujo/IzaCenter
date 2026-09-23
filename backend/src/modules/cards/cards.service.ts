@@ -2,6 +2,7 @@
 
 import { prisma } from '../../config/database';
 import { NotFoundException, BadRequestException } from '../../utils/errors';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 
 interface CreateCardDTO {
   number: number;
@@ -60,17 +61,18 @@ const CIGANO_DECK = [
 ];
 
 export class CardsService {
-  async findAll() {
+  async findAll(tenantId = DEFAULT_TENANT_ID) {
     const cards = await prisma.ciganoCard.findMany({
+      where: { tenantId },
       orderBy: { number: 'asc' },
     });
 
     return { data: cards };
   }
 
-  async findById(id: string) {
-    const card = await prisma.ciganoCard.findUnique({
-      where: { id },
+  async findById(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const card = await prisma.ciganoCard.findFirst({
+      where: { id, tenantId },
     });
 
     if (!card) {
@@ -80,9 +82,9 @@ export class CardsService {
     return { data: card };
   }
 
-  async findByNumber(number: number) {
+  async findByNumber(number: number, tenantId = DEFAULT_TENANT_ID) {
     const card = await prisma.ciganoCard.findUnique({
-      where: { number },
+      where: { tenantId_number: { tenantId, number } },
     });
 
     if (!card) {
@@ -92,9 +94,9 @@ export class CardsService {
     return { data: card };
   }
 
-  async create(data: CreateCardDTO) {
+  async create(data: CreateCardDTO, tenantId = DEFAULT_TENANT_ID) {
     const existingNumber = await prisma.ciganoCard.findUnique({
-      where: { number: data.number },
+      where: { tenantId_number: { tenantId, number: data.number } },
     });
 
     if (existingNumber) {
@@ -103,6 +105,7 @@ export class CardsService {
 
     const card = await prisma.ciganoCard.create({
       data: {
+        tenantId,
         number: data.number,
         name: data.name,
         keywords: data.keywords || [],
@@ -120,8 +123,8 @@ export class CardsService {
     return { data: card };
   }
 
-  async update(id: string, data: UpdateCardDTO) {
-    const card = await prisma.ciganoCard.findUnique({ where: { id } });
+  async update(id: string, data: UpdateCardDTO, tenantId = DEFAULT_TENANT_ID) {
+    const card = await prisma.ciganoCard.findFirst({ where: { id, tenantId } });
 
     if (!card) {
       throw new NotFoundException('Carta não encontrada');
@@ -141,8 +144,8 @@ export class CardsService {
     return { data: updated };
   }
 
-  async delete(id: string) {
-    const card = await prisma.ciganoCard.findUnique({ where: { id } });
+  async delete(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const card = await prisma.ciganoCard.findFirst({ where: { id, tenantId } });
 
     if (!card) {
       throw new NotFoundException('Carta não encontrada');
@@ -150,7 +153,7 @@ export class CardsService {
 
     // Check if card is used in any readings
     const usedInReadings = await prisma.readingCard.findFirst({
-      where: { cardId: id },
+      where: { cardId: id, reading: { tenantId } },
     });
 
     if (usedInReadings) {
@@ -162,9 +165,9 @@ export class CardsService {
     return { message: 'Carta excluída com sucesso' };
   }
 
-  async generateDeck() {
+  async generateDeck(tenantId = DEFAULT_TENANT_ID) {
     // Check if deck already exists
-    const existingCards = await prisma.ciganoCard.count();
+    const existingCards = await prisma.ciganoCard.count({ where: { tenantId } });
 
     if (existingCards > 0) {
       throw new BadRequestException('O baralho já foi gerado. Exclua as cartas existentes primeiro.');
@@ -173,6 +176,7 @@ export class CardsService {
     // Create all cards
     const cards = await prisma.ciganoCard.createMany({
       data: CIGANO_DECK.map((card) => ({
+        tenantId,
         number: card.number,
         name: card.name,
         keywords: card.keywords,

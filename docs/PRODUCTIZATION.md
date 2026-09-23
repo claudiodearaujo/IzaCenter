@@ -35,12 +35,12 @@ Prioridades:
 
 PRDs:
 - [PRD-SAAS-FOUNDATION-V1.md](PRD-SAAS-FOUNDATION-V1.md) — SaaS Foundation v1 ✅
-- SaaS Foundation v2 — Data Isolation ⏳
+- [PRD-SAAS-DATA-ISOLATION-V2.md](PRD-SAAS-DATA-ISOLATION-V2.md) — SaaS Foundation v2 — Data Isolation ✅
 - SaaS Foundation v3 — Onboarding & Branding ⏳
 - SaaS Foundation v4 — Plans & Billing ⏳
 - SaaS Foundation v5 — LGPD & Operations ⏳
 
-A v1 instala o contexto de tenant, memberships e settings tenant-scoped sem expor ainda criação pública de tenants. O isolamento completo dos agregados de negócio continua na v2.
+A v1 instalou o contexto de tenant, memberships e settings tenant-scoped. A v2 concluiu o isolamento lógico dos agregados de negócio com backfill seguro do tenant legado. A próxima etapa é a v3 — Onboarding & Branding.
 
 Prioridades:
 - isolamento de dados por tenant;

@@ -2,6 +2,8 @@ import { UsersService } from './users.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 import { Prisma } from '@prisma/client';
 
+const TENANT_ID = 'tenant-test';
+
 // Mock supabase storage
 jest.mock('../../config/supabase', () => ({
   storage: {
@@ -28,6 +30,12 @@ describe('UsersService', () => {
   beforeEach(() => {
     usersService = new UsersService();
     jest.clearAllMocks();
+    prismaMock.tenantMembership.findUnique.mockResolvedValue({
+      id: 'membership-1',
+      role: 'CLIENT',
+      isActive: true,
+    } as any);
+    prismaMock.tenantMembership.count.mockResolvedValue(0);
   });
 
   // =============================================
@@ -54,16 +62,19 @@ describe('UsersService', () => {
 
     it('should get user by id successfully', async () => {
       // Arrange
-      prismaMock.user.findUnique.mockResolvedValue(mockUser as any);
+      prismaMock.user.findFirst.mockResolvedValue(mockUser as any);
 
       // Act
-      const result = await usersService.getById(userId);
+      const result = await usersService.getById(userId, TENANT_ID);
 
       // Assert
       expect(result.id).toBe(userId);
       expect(result.email).toBe('user@test.com');
-      expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
-        where: { id: userId },
+      expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
+        where: {
+          id: userId,
+          tenantMemberships: { some: { tenantId: TENANT_ID, isActive: true } },
+        },
         select: expect.objectContaining({
           id: true,
           email: true,
@@ -80,9 +91,9 @@ describe('UsersService', () => {
           lastLoginAt: true,
           _count: {
             select: {
-              orders: true,
-              readings: true,
-              appointments: true,
+              orders: { where: { tenantId: TENANT_ID } },
+              readings: { where: { tenantId: TENANT_ID } },
+              appointments: { where: { tenantId: TENANT_ID } },
             },
           },
         }),
@@ -91,10 +102,10 @@ describe('UsersService', () => {
 
     it('should throw NotFound if user does not exist', async () => {
       // Arrange
-      prismaMock.user.findUnique.mockResolvedValue(null);
+      prismaMock.user.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(usersService.getById(userId)).rejects.toThrow('Usuário');
+      await expect(usersService.getById(userId, TENANT_ID)).rejects.toThrow('Usuário');
     });
   });
 
@@ -182,13 +193,13 @@ describe('UsersService', () => {
       prismaMock.user.count.mockResolvedValue(1);
 
       // Act
-      const result = await usersService.list(query);
+      const result = await usersService.list(query, TENANT_ID);
 
       // Assert
       expect(result.data).toEqual(mockUsers);
       expect(result.meta).toBeDefined();
       expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { tenantMemberships: { some: { tenantId: TENANT_ID, isActive: true } } },
         skip: 0,
         take: 10,
         orderBy: { createdAt: 'desc' },
@@ -213,11 +224,11 @@ describe('UsersService', () => {
       prismaMock.user.count.mockResolvedValue(1);
 
       // Act
-      await usersService.list(query);
+      await usersService.list(query, TENANT_ID);
 
       // Assert
       expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-        where: { role: 'ADMIN' },
+        where: { tenantMemberships: { some: { tenantId: TENANT_ID, isActive: true } }, role: 'ADMIN' },
         skip: 0,
         take: 10,
         orderBy: { createdAt: 'desc' },
@@ -238,11 +249,12 @@ describe('UsersService', () => {
       prismaMock.user.count.mockResolvedValue(1);
 
       // Act
-      await usersService.list(query);
+      await usersService.list(query, TENANT_ID);
 
       // Assert
       expect(prismaMock.user.findMany).toHaveBeenCalledWith({
         where: {
+          tenantMemberships: { some: { tenantId: TENANT_ID, isActive: true } },
           OR: [
             { fullName: { contains: 'User', mode: 'insensitive' } },
             { email: { contains: 'User', mode: 'insensitive' } },
@@ -270,11 +282,12 @@ describe('UsersService', () => {
       prismaMock.user.count.mockResolvedValue(1);
 
       // Act
-      await usersService.list(query);
+      await usersService.list(query, TENANT_ID);
 
       // Assert
       expect(prismaMock.user.findMany).toHaveBeenCalledWith({
         where: {
+          tenantMemberships: { some: { tenantId: TENANT_ID, isActive: true } },
           role: 'CLIENT',
           OR: [
             { fullName: { contains: 'User', mode: 'insensitive' } },
@@ -301,11 +314,11 @@ describe('UsersService', () => {
       prismaMock.user.count.mockResolvedValue(0);
 
       // Act
-      await usersService.list(query);
+      await usersService.list(query, TENANT_ID);
 
       // Assert
       expect(prismaMock.user.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { tenantMemberships: { some: { tenantId: TENANT_ID, isActive: true } } },
         skip: 10,
         take: 5,
         orderBy: { createdAt: 'asc' },
@@ -343,7 +356,7 @@ describe('UsersService', () => {
       prismaMock.user.update.mockResolvedValue(mockUpdatedUser as any);
 
       // Act
-      const result = await usersService.adminUpdate(userId, updateData);
+      const result = await usersService.adminUpdate(userId, updateData, TENANT_ID);
 
       // Assert
       expect(result.role).toBe('ADMIN');
@@ -375,12 +388,12 @@ describe('UsersService', () => {
       prismaMock.user.delete.mockResolvedValue({} as any);
 
       // Act
-      const result = await usersService.delete(userId);
+      const result = await usersService.delete(userId, TENANT_ID);
 
       // Assert
       expect(result.message).toBe('Usuário excluído com sucesso');
       expect(prismaMock.order.count).toHaveBeenCalledWith({
-        where: { clientId: userId },
+        where: { clientId: userId, tenantId: TENANT_ID },
       });
       expect(prismaMock.user.delete).toHaveBeenCalledWith({
         where: { id: userId },
@@ -392,7 +405,7 @@ describe('UsersService', () => {
       prismaMock.order.count.mockResolvedValue(3);
 
       // Act & Assert
-      await expect(usersService.delete(userId)).rejects.toThrow(
+      await expect(usersService.delete(userId, TENANT_ID)).rejects.toThrow(
         'Usuário possui pedidos e não pode ser excluído'
       );
       expect(prismaMock.user.delete).not.toHaveBeenCalled();
@@ -415,7 +428,7 @@ describe('UsersService', () => {
       prismaMock.appointment.count.mockResolvedValue(2);
 
       // Act
-      const result = await usersService.getStatistics(userId);
+      const result = await usersService.getStatistics(userId, TENANT_ID);
 
       // Assert
       expect(result.totalSpent).toEqual(new Prisma.Decimal('500.00'));
@@ -423,15 +436,15 @@ describe('UsersService', () => {
       expect(result.readingsCount).toBe(3);
       expect(result.appointmentsCount).toBe(2);
       expect(prismaMock.order.aggregate).toHaveBeenCalledWith({
-        where: { clientId: userId, status: 'COMPLETED' },
+        where: { clientId: userId, tenantId: TENANT_ID, status: 'COMPLETED' },
         _sum: { total: true },
         _count: true,
       });
       expect(prismaMock.reading.count).toHaveBeenCalledWith({
-        where: { clientId: userId },
+        where: { clientId: userId, tenantId: TENANT_ID },
       });
       expect(prismaMock.appointment.count).toHaveBeenCalledWith({
-        where: { clientId: userId },
+        where: { clientId: userId, tenantId: TENANT_ID },
       });
     });
 
@@ -445,7 +458,7 @@ describe('UsersService', () => {
       prismaMock.appointment.count.mockResolvedValue(0);
 
       // Act
-      const result = await usersService.getStatistics(userId);
+      const result = await usersService.getStatistics(userId, TENANT_ID);
 
       // Assert
       expect(result.totalSpent).toBe(0);

@@ -29,6 +29,7 @@ const mockRequest = (overrides: Partial<Request> = {}): Partial<Request> => ({
   query: {},
   headers: {},
   file: undefined,
+  tenant: { id: 'tenant-test' } as any,
   ...overrides,
 });
 
@@ -67,7 +68,7 @@ describe('ProductsController', () => {
 
       await controller.listPublic(req as Request, res as Response, mockNext);
 
-      expect(productsService.list).toHaveBeenCalledWith({}, true);
+      expect(productsService.list).toHaveBeenCalledWith({}, true, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockResult.data,
@@ -93,7 +94,7 @@ describe('ProductsController', () => {
 
       await controller.getFeatured(req as Request, res as Response, mockNext);
 
-      expect(productsService.getFeatured).toHaveBeenCalledWith(6);
+      expect(productsService.getFeatured).toHaveBeenCalledWith(6, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockProducts,
@@ -106,7 +107,7 @@ describe('ProductsController', () => {
 
       await controller.getFeatured(req as Request, res as Response, mockNext);
 
-      expect(productsService.getFeatured).toHaveBeenCalledWith(3);
+      expect(productsService.getFeatured).toHaveBeenCalledWith(3, 'tenant-test');
     });
 
     it('should call next with error on failure', async () => {
@@ -127,7 +128,7 @@ describe('ProductsController', () => {
 
       await controller.getBySlug(req as Request, res as Response, mockNext);
 
-      expect(productsService.getBySlug).toHaveBeenCalledWith('product-1');
+      expect(productsService.getBySlug).toHaveBeenCalledWith('product-1', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockProduct,
@@ -157,6 +158,7 @@ describe('ProductsController', () => {
 
       await controller.create(req as Request, res as Response, mockNext);
 
+      expect(productsService.create).toHaveBeenCalledWith(createData, 'tenant-test');
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
         success: true,
@@ -187,7 +189,7 @@ describe('ProductsController', () => {
 
       await controller.list(req as Request, res as Response, mockNext);
 
-      expect(productsService.list).toHaveBeenCalledWith({}, false);
+      expect(productsService.list).toHaveBeenCalledWith({}, false, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockResult.data,
@@ -204,7 +206,7 @@ describe('ProductsController', () => {
 
       await controller.getById(req as Request, res as Response, mockNext);
 
-      expect(productsService.getById).toHaveBeenCalledWith('prod-1');
+      expect(productsService.getById).toHaveBeenCalledWith('prod-1', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockProduct,
@@ -232,7 +234,7 @@ describe('ProductsController', () => {
 
       await controller.update(req as Request, res as Response, mockNext);
 
-      expect(productsService.update).toHaveBeenCalledWith('prod-1', updateData);
+      expect(productsService.update).toHaveBeenCalledWith('prod-1', updateData, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Produto atualizado com sucesso',
@@ -251,7 +253,7 @@ describe('ProductsController', () => {
 
       await controller.updateCover(req as Request, res as Response, mockNext);
 
-      expect(productsService.updateCoverImage).toHaveBeenCalledWith('prod-1', mockFile);
+      expect(productsService.updateCoverImage).toHaveBeenCalledWith('prod-1', mockFile, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Imagem atualizada com sucesso',
@@ -282,7 +284,7 @@ describe('ProductsController', () => {
 
       await controller.delete(req as Request, res as Response, mockNext);
 
-      expect(productsService.delete).toHaveBeenCalledWith('prod-1');
+      expect(productsService.delete).toHaveBeenCalledWith('prod-1', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Produto excluído com sucesso',
@@ -312,6 +314,7 @@ describe('ProductsController', () => {
 
       await controller.createCategory(req as Request, res as Response, mockNext);
 
+      expect(productsService.createCategory).toHaveBeenCalledWith(createData, 'tenant-test');
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
         success: true,
@@ -328,7 +331,7 @@ describe('ProductsController', () => {
 
       await controller.listCategories(req as Request, res as Response, mockNext);
 
-      expect(productsService.listCategories).toHaveBeenCalledWith(false);
+      expect(productsService.listCategories).toHaveBeenCalledWith(false, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockCategories,
@@ -343,7 +346,7 @@ describe('ProductsController', () => {
 
       await controller.listCategoriesPublic(req as Request, res as Response, mockNext);
 
-      expect(productsService.listCategories).toHaveBeenCalledWith(true);
+      expect(productsService.listCategories).toHaveBeenCalledWith(true, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockCategories,
@@ -359,7 +362,7 @@ describe('ProductsController', () => {
 
       await controller.getCategoryById(req as Request, res as Response, mockNext);
 
-      expect(productsService.getCategoryById).toHaveBeenCalledWith('cat-1');
+      expect(productsService.getCategoryById).toHaveBeenCalledWith('cat-1', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockCategory,
@@ -377,7 +380,7 @@ describe('ProductsController', () => {
 
       await controller.updateCategory(req as Request, res as Response, mockNext);
 
-      expect(productsService.updateCategory).toHaveBeenCalledWith('cat-1', updateData);
+      expect(productsService.updateCategory).toHaveBeenCalledWith('cat-1', updateData, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Categoria atualizada com sucesso',
@@ -395,7 +398,7 @@ describe('ProductsController', () => {
 
       await controller.deleteCategory(req as Request, res as Response, mockNext);
 
-      expect(productsService.deleteCategory).toHaveBeenCalledWith('cat-1');
+      expect(productsService.deleteCategory).toHaveBeenCalledWith('cat-1', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Categoria excluída com sucesso',

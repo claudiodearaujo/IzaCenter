@@ -1,6 +1,8 @@
 import { CardsService } from './cards.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 
+const TENANT_ID = 'tenant-test';
+
 describe('CardsService', () => {
   let cardsService: CardsService;
 
@@ -22,12 +24,13 @@ describe('CardsService', () => {
       prismaMock.ciganoCard.findMany.mockResolvedValue(mockCards as any);
 
       // Act
-      const result = await cardsService.findAll();
+      const result = await cardsService.findAll(TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(2);
       expect(prismaMock.ciganoCard.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
+          where: { tenantId: TENANT_ID },
           orderBy: { number: 'asc' },
         })
       );
@@ -38,7 +41,7 @@ describe('CardsService', () => {
       prismaMock.ciganoCard.findMany.mockResolvedValue([]);
 
       // Act
-      const result = await cardsService.findAll();
+      const result = await cardsService.findAll(TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(0);
@@ -58,10 +61,10 @@ describe('CardsService', () => {
         keywords: ['notícias', 'viagem'],
         generalMeaning: 'Significa notícias chegando',
       };
-      prismaMock.ciganoCard.findUnique.mockResolvedValue(mockCard as any);
+      prismaMock.ciganoCard.findFirst.mockResolvedValue(mockCard as any);
 
       // Act
-      const result = await cardsService.findById('card-1');
+      const result = await cardsService.findById('card-1', TENANT_ID);
 
       // Assert
       expect(result.data.name).toBe('O Cavaleiro');
@@ -70,10 +73,10 @@ describe('CardsService', () => {
 
     it('should throw error if card not found', async () => {
       // Arrange
-      prismaMock.ciganoCard.findUnique.mockResolvedValue(null);
+      prismaMock.ciganoCard.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(cardsService.findById('nonexistent')).rejects.toThrow(
+      await expect(cardsService.findById('nonexistent', TENANT_ID)).rejects.toThrow(
         'Carta não encontrada'
       );
     });
@@ -94,7 +97,7 @@ describe('CardsService', () => {
       prismaMock.ciganoCard.findUnique.mockResolvedValue(mockCard as any);
 
       // Act
-      const result = await cardsService.findByNumber(31);
+      const result = await cardsService.findByNumber(31, TENANT_ID);
 
       // Assert
       expect(result.data.name).toBe('O Sol');
@@ -106,7 +109,7 @@ describe('CardsService', () => {
       prismaMock.ciganoCard.findUnique.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(cardsService.findByNumber(99)).rejects.toThrow(
+      await expect(cardsService.findByNumber(99, TENANT_ID)).rejects.toThrow(
         'Carta não encontrada'
       );
     });
@@ -133,7 +136,7 @@ describe('CardsService', () => {
       } as any);
 
       // Act
-      const result = await cardsService.create(createData);
+      const result = await cardsService.create(createData, TENANT_ID);
 
       // Assert
       expect(result.data.name).toBe('Nova Carta');
@@ -148,7 +151,7 @@ describe('CardsService', () => {
       } as any);
 
       // Act & Assert
-      await expect(cardsService.create(createData)).rejects.toThrow(
+      await expect(cardsService.create(createData, TENANT_ID)).rejects.toThrow(
         'Já existe uma carta com o número'
       );
     });
@@ -165,14 +168,14 @@ describe('CardsService', () => {
         number: 1,
         name: 'O Cavaleiro',
       };
-      prismaMock.ciganoCard.findUnique.mockResolvedValue(existingCard as any);
+      prismaMock.ciganoCard.findFirst.mockResolvedValue(existingCard as any);
       prismaMock.ciganoCard.update.mockResolvedValue({
         ...existingCard,
         generalMeaning: 'Novo significado',
       } as any);
 
       // Act
-      const result = await cardsService.update('card-1', { generalMeaning: 'Novo significado' });
+      const result = await cardsService.update('card-1', { generalMeaning: 'Novo significado' }, TENANT_ID);
 
       // Assert
       expect(result.data.generalMeaning).toBe('Novo significado');
@@ -180,11 +183,11 @@ describe('CardsService', () => {
 
     it('should throw error if card not found', async () => {
       // Arrange
-      prismaMock.ciganoCard.findUnique.mockResolvedValue(null);
+      prismaMock.ciganoCard.findFirst.mockResolvedValue(null);
 
       // Act & Assert
       await expect(
-        cardsService.update('nonexistent', { name: 'Updated' })
+        cardsService.update('nonexistent', { name: 'Updated' }, TENANT_ID)
       ).rejects.toThrow('Carta não encontrada');
     });
   });
@@ -196,12 +199,12 @@ describe('CardsService', () => {
     it('should delete card successfully', async () => {
       // Arrange
       const existingCard = { id: 'card-1', number: 1, name: 'O Cavaleiro' };
-      prismaMock.ciganoCard.findUnique.mockResolvedValue(existingCard as any);
+      prismaMock.ciganoCard.findFirst.mockResolvedValue(existingCard as any);
       prismaMock.readingCard.findFirst.mockResolvedValue(null); // not used in readings
       prismaMock.ciganoCard.delete.mockResolvedValue(existingCard as any);
 
       // Act
-      const result = await cardsService.delete('card-1');
+      const result = await cardsService.delete('card-1', TENANT_ID);
 
       // Assert
       expect(result.message).toContain('excluída');
@@ -209,21 +212,21 @@ describe('CardsService', () => {
 
     it('should throw error if card is used in readings', async () => {
       // Arrange
-      prismaMock.ciganoCard.findUnique.mockResolvedValue({ id: 'card-1' } as any);
+      prismaMock.ciganoCard.findFirst.mockResolvedValue({ id: 'card-1' } as any);
       prismaMock.readingCard.findFirst.mockResolvedValue({ id: 'reading-card-1' } as any);
 
       // Act & Assert
-      await expect(cardsService.delete('card-1')).rejects.toThrow(
+      await expect(cardsService.delete('card-1', TENANT_ID)).rejects.toThrow(
         'sendo usada em leituras'
       );
     });
 
     it('should throw error if card not found', async () => {
       // Arrange
-      prismaMock.ciganoCard.findUnique.mockResolvedValue(null);
+      prismaMock.ciganoCard.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(cardsService.delete('nonexistent')).rejects.toThrow(
+      await expect(cardsService.delete('nonexistent', TENANT_ID)).rejects.toThrow(
         'Carta não encontrada'
       );
     });
@@ -239,7 +242,7 @@ describe('CardsService', () => {
       prismaMock.ciganoCard.createMany.mockResolvedValue({ count: 36 });
 
       // Act
-      const result = await cardsService.generateDeck();
+      const result = await cardsService.generateDeck(TENANT_ID);
 
       // Assert
       expect(result.message).toContain('36 cartas criadas');
@@ -251,7 +254,7 @@ describe('CardsService', () => {
       prismaMock.ciganoCard.count.mockResolvedValue(36);
 
       // Act & Assert
-      await expect(cardsService.generateDeck()).rejects.toThrow(
+      await expect(cardsService.generateDeck(TENANT_ID)).rejects.toThrow(
         'já foi gerado'
       );
     });

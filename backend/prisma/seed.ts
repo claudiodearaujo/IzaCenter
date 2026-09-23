@@ -640,9 +640,14 @@ async function main() {
 
   for (const card of ciganoCards) {
     await prisma.ciganoCard.upsert({
-      where: { number: card.number },
-      update: card,
-      create: card,
+      where: {
+        tenantId_number: {
+          tenantId: DEFAULT_TENANT_ID,
+          number: card.number,
+        },
+      },
+      update: { ...card, tenantId: DEFAULT_TENANT_ID },
+      create: { ...card, tenantId: DEFAULT_TENANT_ID },
     });
   }
   console.log(`   ✅ ${ciganoCards.length} Cigano cards created\n`);
@@ -685,9 +690,14 @@ async function main() {
 
   for (const category of categories) {
     await prisma.productCategory.upsert({
-      where: { slug: category.slug },
-      update: category,
-      create: category,
+      where: {
+        tenantId_slug: {
+          tenantId: DEFAULT_TENANT_ID,
+          slug: category.slug,
+        },
+      },
+      update: { ...category, tenantId: DEFAULT_TENANT_ID },
+      create: { ...category, tenantId: DEFAULT_TENANT_ID },
     });
   }
   console.log(`   ✅ ${categories.length} categories created\n`);
@@ -697,10 +707,10 @@ async function main() {
   // =============================================
   console.log('🛍️ Creating products...');
 
-  const consultasCategory = await prisma.productCategory.findUnique({ where: { slug: 'consultas' } });
-  const leiturasCategory = await prisma.productCategory.findUnique({ where: { slug: 'leituras-escritas' } });
-  const pacotesCategory = await prisma.productCategory.findUnique({ where: { slug: 'pacotes-mensais' } });
-  const especialCategory = await prisma.productCategory.findUnique({ where: { slug: 'especiais' } });
+  const consultasCategory = await prisma.productCategory.findUnique({ where: { tenantId_slug: { tenantId: DEFAULT_TENANT_ID, slug: 'consultas' } } });
+  const leiturasCategory = await prisma.productCategory.findUnique({ where: { tenantId_slug: { tenantId: DEFAULT_TENANT_ID, slug: 'leituras-escritas' } } });
+  const pacotesCategory = await prisma.productCategory.findUnique({ where: { tenantId_slug: { tenantId: DEFAULT_TENANT_ID, slug: 'pacotes-mensais' } } });
+  const especialCategory = await prisma.productCategory.findUnique({ where: { tenantId_slug: { tenantId: DEFAULT_TENANT_ID, slug: 'especiais' } } });
 
   const products = [
     {
@@ -804,9 +814,14 @@ async function main() {
 
   for (const product of products) {
     await prisma.product.upsert({
-      where: { slug: product.slug },
-      update: product,
-      create: product,
+      where: {
+        tenantId_slug: {
+          tenantId: DEFAULT_TENANT_ID,
+          slug: product.slug,
+        },
+      },
+      update: { ...product, tenantId: DEFAULT_TENANT_ID },
+      create: { ...product, tenantId: DEFAULT_TENANT_ID },
     });
   }
   console.log(`   ✅ ${products.length} products created\n`);
@@ -816,11 +831,12 @@ async function main() {
   // =============================================
   console.log('📅 Creating schedule settings...');
   
-  const existingSettings = await prisma.scheduleSettings.findFirst();
+  const existingSettings = await prisma.scheduleSettings.findUnique({ where: { tenantId: DEFAULT_TENANT_ID } });
   
   if (!existingSettings) {
     await prisma.scheduleSettings.create({
       data: {
+        tenantId: DEFAULT_TENANT_ID,
         mondayStart: '09:00',
         mondayEnd: '18:00',
         mondayEnabled: true,
@@ -949,12 +965,12 @@ async function main() {
 
   for (const testimonial of testimonials) {
     const existing = await prisma.testimonial.findFirst({
-      where: { clientName: testimonial.clientName },
+      where: { tenantId: DEFAULT_TENANT_ID, clientName: testimonial.clientName },
     });
 
     if (!existing) {
       await prisma.testimonial.create({
-        data: testimonial,
+        data: { ...testimonial, tenantId: DEFAULT_TENANT_ID },
       });
     }
   }
@@ -966,11 +982,11 @@ async function main() {
   console.log('🧪 Creating test data for client user...\n');
 
   // Fetch products for orders
-  const perguntaUnica = await prisma.product.findUnique({ where: { slug: 'pergunta-unica' } });
-  const tresPerguntas = await prisma.product.findUnique({ where: { slug: 'tres-perguntas' } });
-  const consulta30 = await prisma.product.findUnique({ where: { slug: 'consulta-online-30min' } });
-  const acompanhamento = await prisma.product.findUnique({ where: { slug: 'acompanhamento-mensal' } });
-  const anoNovo = await prisma.product.findUnique({ where: { slug: 'leitura-ano-novo' } });
+  const perguntaUnica = await prisma.product.findUnique({ where: { tenantId_slug: { tenantId: DEFAULT_TENANT_ID, slug: 'pergunta-unica' } } });
+  const tresPerguntas = await prisma.product.findUnique({ where: { tenantId_slug: { tenantId: DEFAULT_TENANT_ID, slug: 'tres-perguntas' } } });
+  const consulta30 = await prisma.product.findUnique({ where: { tenantId_slug: { tenantId: DEFAULT_TENANT_ID, slug: 'consulta-online-30min' } } });
+  const acompanhamento = await prisma.product.findUnique({ where: { tenantId_slug: { tenantId: DEFAULT_TENANT_ID, slug: 'acompanhamento-mensal' } } });
+  const anoNovo = await prisma.product.findUnique({ where: { tenantId_slug: { tenantId: DEFAULT_TENANT_ID, slug: 'leitura-ano-novo' } } });
 
   // =============================================
   // 8a. CREATE ORDERS
@@ -980,6 +996,7 @@ async function main() {
   // Order 1: Pergunta Única - COMPLETED
   const order1 = await prisma.order.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderNumber: generateOrderNumber(1),
       clientId: client.id,
       subtotal: perguntaUnica!.price,
@@ -998,6 +1015,7 @@ async function main() {
   // Order 2: Três Perguntas - PROCESSING
   const order2 = await prisma.order.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderNumber: generateOrderNumber(2),
       clientId: client.id,
       subtotal: tresPerguntas!.price,
@@ -1015,6 +1033,7 @@ async function main() {
   // Order 3: Consulta 30min - PROCESSING
   const order3 = await prisma.order.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderNumber: generateOrderNumber(3),
       clientId: client.id,
       subtotal: consulta30!.price,
@@ -1032,6 +1051,7 @@ async function main() {
   // Order 4: Acompanhamento Mensal - COMPLETED
   const order4 = await prisma.order.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderNumber: generateOrderNumber(4),
       clientId: client.id,
       subtotal: acompanhamento!.price,
@@ -1050,6 +1070,7 @@ async function main() {
   // Order 5: Leitura de Ano Novo - COMPLETED
   const order5 = await prisma.order.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderNumber: generateOrderNumber(5),
       clientId: client.id,
       subtotal: anoNovo!.price,
@@ -1227,6 +1248,7 @@ async function main() {
   // Reading 1: Order 1 - PUBLISHED (Amor)
   const reading1 = await prisma.reading.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderItemId: orderItem1.id,
       clientId: client.id,
       title: 'Leitura sobre Amor',
@@ -1248,6 +1270,7 @@ async function main() {
   // Reading 2: Order 2a - PUBLISHED (Carreira)
   const reading2 = await prisma.reading.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderItemId: orderItem2a.id,
       clientId: client.id,
       title: 'Leitura sobre Carreira',
@@ -1268,6 +1291,7 @@ async function main() {
   // Reading 3: Order 2b - PUBLISHED (Saúde)
   const reading3 = await prisma.reading.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderItemId: orderItem2b.id,
       clientId: client.id,
       title: 'Leitura sobre Saúde e Energia',
@@ -1288,6 +1312,7 @@ async function main() {
   // Reading 4: Order 2c - IN_PROGRESS (Família)
   const reading4 = await prisma.reading.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderItemId: orderItem2c.id,
       clientId: client.id,
       title: 'Leitura sobre Conflito Familiar',
@@ -1308,6 +1333,7 @@ async function main() {
   // Reading 5: Order 4a - PUBLISHED (Acompanhamento Semana 1)
   const reading5 = await prisma.reading.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderItemId: orderItem4a.id,
       clientId: client.id,
       title: 'Acompanhamento Mensal - Semana 1',
@@ -1328,6 +1354,7 @@ async function main() {
   // Reading 6: Order 4b - PUBLISHED (Acompanhamento Semana 2)
   const reading6 = await prisma.reading.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderItemId: orderItem4b.id,
       clientId: client.id,
       title: 'Acompanhamento Mensal - Semana 2',
@@ -1348,6 +1375,7 @@ async function main() {
   // Reading 7: Order 4c - PUBLISHED (Acompanhamento Semana 3)
   const reading7 = await prisma.reading.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderItemId: orderItem4c.id,
       clientId: client.id,
       title: 'Acompanhamento Mensal - Semana 3',
@@ -1368,6 +1396,7 @@ async function main() {
   // Reading 8: Order 4d - PUBLISHED (Acompanhamento Semana 4)
   const reading8 = await prisma.reading.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderItemId: orderItem4d.id,
       clientId: client.id,
       title: 'Acompanhamento Mensal - Semana 4',
@@ -1388,6 +1417,7 @@ async function main() {
   // Reading 9: Order 5 - PUBLISHED (Ano Novo - 12 meses)
   const reading9 = await prisma.reading.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderItemId: orderItem5.id,
       clientId: client.id,
       title: 'Leitura de Ano Novo - 12 Meses',
@@ -1414,23 +1444,23 @@ async function main() {
   console.log('🃏 Creating reading cards...');
 
   // Fetch cigano cards needed
-  const card1 = await prisma.ciganoCard.findUnique({ where: { number: 1 } }); // Cavaleiro
-  const card2 = await prisma.ciganoCard.findUnique({ where: { number: 2 } }); // Trevo
-  const card5 = await prisma.ciganoCard.findUnique({ where: { number: 5 } }); // Árvore
-  const card9 = await prisma.ciganoCard.findUnique({ where: { number: 9 } }); // Buquê
-  const card16 = await prisma.ciganoCard.findUnique({ where: { number: 16 } }); // Estrela
-  const card20 = await prisma.ciganoCard.findUnique({ where: { number: 20 } }); // Jardim
-  const card21 = await prisma.ciganoCard.findUnique({ where: { number: 21 } }); // Montanha
-  const card24 = await prisma.ciganoCard.findUnique({ where: { number: 24 } }); // Coração
-  const card29 = await prisma.ciganoCard.findUnique({ where: { number: 29 } }); // Cigana
-  const card31 = await prisma.ciganoCard.findUnique({ where: { number: 31 } }); // Sol
-  const card32 = await prisma.ciganoCard.findUnique({ where: { number: 32 } }); // Lua
-  const card33 = await prisma.ciganoCard.findUnique({ where: { number: 33 } }); // Chave
-  const card34 = await prisma.ciganoCard.findUnique({ where: { number: 34 } }); // Peixes
-  const card35 = await prisma.ciganoCard.findUnique({ where: { number: 35 } }); // Âncora
-  const card30 = await prisma.ciganoCard.findUnique({ where: { number: 30 } }); // Lírios
-  const card36 = await prisma.ciganoCard.findUnique({ where: { number: 36 } }); // Cruz
-  const card22 = await prisma.ciganoCard.findUnique({ where: { number: 22 } }); // Caminhos
+  const card1 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 1 } } }); // Cavaleiro
+  const card2 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 2 } } }); // Trevo
+  const card5 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 5 } } }); // Árvore
+  const card9 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 9 } } }); // Buquê
+  const card16 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 16 } } }); // Estrela
+  const card20 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 20 } } }); // Jardim
+  const card21 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 21 } } }); // Montanha
+  const card24 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 24 } } }); // Coração
+  const card29 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 29 } } }); // Cigana
+  const card31 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 31 } } }); // Sol
+  const card32 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 32 } } }); // Lua
+  const card33 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 33 } } }); // Chave
+  const card34 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 34 } } }); // Peixes
+  const card35 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 35 } } }); // Âncora
+  const card30 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 30 } } }); // Lírios
+  const card36 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 36 } } }); // Cruz
+  const card22 = await prisma.ciganoCard.findUnique({ where: { tenantId_number: { tenantId: DEFAULT_TENANT_ID, number: 22 } } }); // Caminhos
 
   // Reading 1 Cards (3 cartas)
   await prisma.readingCard.createMany({
@@ -1604,6 +1634,7 @@ async function main() {
   // Appointment 1: SCHEDULED (Futuro - vinculado ao order3)
   await prisma.appointment.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       orderItemId: orderItem3.id,
       clientId: client.id,
       scheduledDate: daysFromNow(3),
@@ -1621,6 +1652,7 @@ async function main() {
   // Appointment 2: CONFIRMED (Futuro - sem order)
   await prisma.appointment.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       clientId: client.id,
       scheduledDate: daysFromNow(7),
       startTime: '10:00',
@@ -1638,6 +1670,7 @@ async function main() {
   // Appointment 3: COMPLETED (Passado)
   await prisma.appointment.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       clientId: client.id,
       scheduledDate: daysAgo(20),
       startTime: '15:00',
@@ -1655,6 +1688,7 @@ async function main() {
   // Appointment 4: CANCELLED (Passado)
   await prisma.appointment.create({
     data: {
+      tenantId: DEFAULT_TENANT_ID,
       clientId: client.id,
       scheduledDate: daysAgo(45),
       startTime: '16:00',
@@ -1698,7 +1732,7 @@ async function main() {
         displayOrder: 6,
         createdAt: daysAgo(10),
       },
-    ],
+    ].map((item) => ({ ...item, tenantId: DEFAULT_TENANT_ID })),
   });
 
   console.log('   ✅ 2 client testimonials created\n');
@@ -1784,7 +1818,7 @@ async function main() {
         isRead: false,
         createdAt: daysAgo(2),
       },
-    ],
+    ].map((item) => ({ ...item, tenantId: DEFAULT_TENANT_ID })),
   });
 
   console.log('   ✅ 8 notifications created\n');

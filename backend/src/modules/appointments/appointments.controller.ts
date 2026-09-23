@@ -16,7 +16,7 @@ export class AppointmentsController {
         search: search as string,
         page: page ? parseInt(page as string) : undefined,
         limit: limit ? parseInt(limit as string) : undefined,
-      });
+      }, req.tenant!.id);
 
       res.json(result);
     } catch (error) {
@@ -27,7 +27,7 @@ export class AppointmentsController {
   async findById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await appointmentsService.findById(id as string);
+      const result = await appointmentsService.findById(id as string, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -37,7 +37,7 @@ export class AppointmentsController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await appointmentsService.update(id as string, req.body);
+      const result = await appointmentsService.update(id as string, req.body, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -48,7 +48,7 @@ export class AppointmentsController {
     try {
       const { id } = req.params;
       const { status } = req.body;
-      const result = await appointmentsService.update(id as string, { status });
+      const result = await appointmentsService.update(id as string, { status }, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -63,7 +63,8 @@ export class AppointmentsController {
         id as string,
         new Date(date),
         startTime,
-        endTime
+        endTime,
+        req.tenant!.id
       );
       res.json(result);
     } catch (error) {
@@ -85,14 +86,14 @@ export class AppointmentsController {
       if (orderItemId) {
         const orderItem = await prisma.orderItem.findUnique({
           where: { id: orderItemId },
-          include: { order: { select: { clientId: true } } },
+          include: { order: { select: { clientId: true, tenantId: true } } },
         });
 
         if (!orderItem) {
           return res.status(404).json({ message: 'Item do pedido não encontrado' });
         }
 
-        if (orderItem.order.clientId !== userId) {
+        if (orderItem.order.clientId !== userId || orderItem.order.tenantId !== req.tenant!.id) {
           return res.status(403).json({ message: 'Acesso negado: este item não pertence ao seu pedido' });
         }
       }
@@ -115,7 +116,7 @@ export class AppointmentsController {
         endTime,
         durationMinutes,
         clientNotes,
-      });
+      }, req.tenant!.id);
 
       res.status(201).json(result);
     } catch (error) {
@@ -126,7 +127,7 @@ export class AppointmentsController {
   async findByUser(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id;
-      const result = await appointmentsService.findByUser(userId);
+      const result = await appointmentsService.findByUser(userId, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -137,7 +138,7 @@ export class AppointmentsController {
     try {
       const { id } = req.params;
       const { reason } = req.body;
-      const result = await appointmentsService.cancel(id as string, reason);
+      const result = await appointmentsService.cancel(id as string, reason, req.tenant!.id, req.user!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -153,7 +154,8 @@ export class AppointmentsController {
       }
 
       const result = await appointmentsService.getAvailableSlots(
-        new Date(date as string)
+        new Date(date as string),
+        req.tenant!.id
       );
 
       res.json(result);

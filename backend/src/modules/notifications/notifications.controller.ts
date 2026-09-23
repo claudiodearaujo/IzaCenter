@@ -12,7 +12,7 @@ export class NotificationsController {
     try {
       const userId = req.user!.id;
       const unreadOnly = req.query['unreadOnly'] === 'true';
-      const result = await notificationsService.list(userId, unreadOnly);
+      const result = await notificationsService.list(userId, unreadOnly, req.tenant!.id);
       res.json({ success: true, ...result });
     } catch (error) {
       next(error);
@@ -27,7 +27,7 @@ export class NotificationsController {
     try {
       const userId = req.user!.id;
       const id = req.params['id'] as string;
-      const notification = await notificationsService.markRead(id, userId);
+      const notification = await notificationsService.markRead(id, userId, req.tenant!.id);
       res.json({ success: true, data: notification });
     } catch (error) {
       next(error);
@@ -41,7 +41,7 @@ export class NotificationsController {
   async markAllRead(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id;
-      const result = await notificationsService.markAllRead(userId);
+      const result = await notificationsService.markAllRead(userId, req.tenant!.id);
       res.json({ success: true, ...result });
     } catch (error) {
       next(error);
@@ -56,7 +56,7 @@ export class NotificationsController {
     try {
       const userId = req.user!.id;
       const id = req.params['id'] as string;
-      const result = await notificationsService.delete(id, userId);
+      const result = await notificationsService.delete(id, userId, req.tenant!.id);
       res.json({ success: true, ...result });
     } catch (error) {
       next(error);

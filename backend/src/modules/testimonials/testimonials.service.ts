@@ -2,6 +2,7 @@
 
 import { prisma } from '../../config/database';
 import { NotFoundException } from '../../utils/errors';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 
 interface CreateTestimonialDTO {
   userId: string;
@@ -20,10 +21,10 @@ export class TestimonialsService {
     search?: string;
     page?: number;
     limit?: number;
-  }) {
+  }, tenantId = DEFAULT_TENANT_ID) {
     const { status, search, page = 1, limit = 10 } = filters;
 
-    const where: any = {};
+    const where: any = { tenantId };
 
     if (status === 'pending') {
       where.isApproved = false;
@@ -72,9 +73,10 @@ export class TestimonialsService {
     };
   }
 
-  async findPublic(limit = 10) {
+  async findPublic(limit = 10, tenantId = DEFAULT_TENANT_ID) {
     const testimonials = await prisma.testimonial.findMany({
       where: {
+        tenantId,
         isApproved: true,
       },
       include: {
@@ -96,9 +98,10 @@ export class TestimonialsService {
     return { data: testimonials };
   }
 
-  async findFeatured(limit = 6) {
+  async findFeatured(limit = 6, tenantId = DEFAULT_TENANT_ID) {
     const testimonials = await prisma.testimonial.findMany({
       where: {
+        tenantId,
         isApproved: true,
         isFeatured: true,
       },
@@ -118,7 +121,7 @@ export class TestimonialsService {
     return { data: testimonials };
   }
 
-  async create(data: CreateTestimonialDTO) {
+  async create(data: CreateTestimonialDTO, tenantId = DEFAULT_TENANT_ID) {
     const user = await prisma.user.findUnique({
       where: { id: data.userId },
       select: { fullName: true, avatarUrl: true },
@@ -126,6 +129,7 @@ export class TestimonialsService {
 
     const testimonial = await prisma.testimonial.create({
       data: {
+        tenantId,
         clientId: data.userId,
         clientName: user?.fullName || 'Anônimo',
         clientAvatarUrl: user?.avatarUrl,
@@ -146,8 +150,8 @@ export class TestimonialsService {
     return { data: testimonial };
   }
 
-  async update(id: string, data: UpdateTestimonialDTO) {
-    const testimonial = await prisma.testimonial.findUnique({ where: { id } });
+  async update(id: string, data: UpdateTestimonialDTO, tenantId = DEFAULT_TENANT_ID) {
+    const testimonial = await prisma.testimonial.findFirst({ where: { id, tenantId } });
 
     if (!testimonial) {
       throw new NotFoundException('Depoimento não encontrado');
@@ -161,8 +165,8 @@ export class TestimonialsService {
     return { data: updated };
   }
 
-  async delete(id: string) {
-    const testimonial = await prisma.testimonial.findUnique({ where: { id } });
+  async delete(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const testimonial = await prisma.testimonial.findFirst({ where: { id, tenantId } });
 
     if (!testimonial) {
       throw new NotFoundException('Depoimento não encontrado');
@@ -173,13 +177,13 @@ export class TestimonialsService {
     return { message: 'Depoimento excluído com sucesso' };
   }
 
-  async getStats() {
+  async getStats(tenantId = DEFAULT_TENANT_ID) {
     const [total, approved, pending, avgRating] = await Promise.all([
-      prisma.testimonial.count(),
-      prisma.testimonial.count({ where: { isApproved: true } }),
-      prisma.testimonial.count({ where: { isApproved: false } }),
+      prisma.testimonial.count({ where: { tenantId } }),
+      prisma.testimonial.count({ where: { tenantId, isApproved: true } }),
+      prisma.testimonial.count({ where: { tenantId, isApproved: false } }),
       prisma.testimonial.aggregate({
-        where: { isApproved: true },
+        where: { tenantId, isApproved: true },
         _avg: { rating: true },
       }),
     ]);

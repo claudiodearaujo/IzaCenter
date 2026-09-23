@@ -12,7 +12,7 @@ export class UsersController {
   async getProfile(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id;
-      const user = await usersService.getById(userId);
+      const user = await usersService.getById(userId, req.tenant!.id);
 
       res.json({
         success: true,
@@ -96,7 +96,7 @@ export class UsersController {
   async getStatistics(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user!.id;
-      const stats = await usersService.getStatistics(userId);
+      const stats = await usersService.getStatistics(userId, req.tenant!.id);
 
       res.json({
         success: true,
@@ -116,7 +116,7 @@ export class UsersController {
   async list(req: Request, res: Response, next: NextFunction) {
     try {
       const query = req.query as unknown as QueryUsersDto;
-      const result = await usersService.list(query);
+      const result = await usersService.list(query, req.tenant!.id);
 
       res.json({
         success: true,
@@ -135,7 +135,7 @@ export class UsersController {
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const user = await usersService.getById(id as string);
+      const user = await usersService.getById(id as string, req.tenant!.id);
 
       res.json({
         success: true,
@@ -154,7 +154,7 @@ export class UsersController {
     try {
       const { id } = req.params;
       const data = req.body as AdminUpdateUserDto;
-      const user = await usersService.adminUpdate(id as string, data);
+      const user = await usersService.adminUpdate(id as string, data, req.tenant!.id);
 
       res.json({
         success: true,
@@ -173,7 +173,7 @@ export class UsersController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await usersService.delete(id as string);
+      const result = await usersService.delete(id as string, req.tenant!.id);
 
       res.json({
         success: true,
@@ -191,7 +191,7 @@ export class UsersController {
   async getUserStatistics(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const stats = await usersService.getStatistics(id as string);
+      const stats = await usersService.getStatistics(id as string, req.tenant!.id);
 
       res.json({
         success: true,

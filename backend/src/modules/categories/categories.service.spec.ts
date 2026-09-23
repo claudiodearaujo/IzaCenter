@@ -1,6 +1,8 @@
 import { CategoriesService } from './categories.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 
+const TENANT_ID = 'tenant-test';
+
 describe('CategoriesService', () => {
   let categoriesService: CategoriesService;
 
@@ -22,13 +24,13 @@ describe('CategoriesService', () => {
       prismaMock.productCategory.findMany.mockResolvedValue(mockCategories as any);
 
       // Act
-      const result = await categoriesService.findAll();
+      const result = await categoriesService.findAll(false, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(2);
       expect(prismaMock.productCategory.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { isActive: true },
+          where: { tenantId: TENANT_ID, isActive: true },
         })
       );
     });
@@ -42,13 +44,13 @@ describe('CategoriesService', () => {
       prismaMock.productCategory.findMany.mockResolvedValue(mockCategories as any);
 
       // Act
-      const result = await categoriesService.findAll(true);
+      const result = await categoriesService.findAll(true, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(2);
       expect(prismaMock.productCategory.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: {},
+          where: { tenantId: TENANT_ID },
         })
       );
     });
@@ -66,10 +68,10 @@ describe('CategoriesService', () => {
         slug: 'consultas',
         _count: { products: 5 },
       };
-      prismaMock.productCategory.findUnique.mockResolvedValue(mockCategory as any);
+      prismaMock.productCategory.findFirst.mockResolvedValue(mockCategory as any);
 
       // Act
-      const result = await categoriesService.findById('cat-1');
+      const result = await categoriesService.findById('cat-1', TENANT_ID);
 
       // Assert
       expect(result.data.id).toBe('cat-1');
@@ -78,10 +80,10 @@ describe('CategoriesService', () => {
 
     it('should throw error if category not found', async () => {
       // Arrange
-      prismaMock.productCategory.findUnique.mockResolvedValue(null);
+      prismaMock.productCategory.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(categoriesService.findById('nonexistent')).rejects.toThrow(
+      await expect(categoriesService.findById('nonexistent', TENANT_ID)).rejects.toThrow(
         'Categoria não encontrada'
       );
     });
@@ -101,10 +103,10 @@ describe('CategoriesService', () => {
           { id: 'prod-1', name: 'Leitura Básica' },
         ],
       };
-      prismaMock.productCategory.findUnique.mockResolvedValue(mockCategory as any);
+      prismaMock.productCategory.findFirst.mockResolvedValue(mockCategory as any);
 
       // Act
-      const result = await categoriesService.findBySlug('consultas');
+      const result = await categoriesService.findBySlug('consultas', TENANT_ID);
 
       // Assert
       expect(result.data.slug).toBe('consultas');
@@ -113,10 +115,10 @@ describe('CategoriesService', () => {
 
     it('should throw error if category slug not found', async () => {
       // Arrange
-      prismaMock.productCategory.findUnique.mockResolvedValue(null);
+      prismaMock.productCategory.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(categoriesService.findBySlug('nonexistent')).rejects.toThrow(
+      await expect(categoriesService.findBySlug('nonexistent', TENANT_ID)).rejects.toThrow(
         'Categoria não encontrada'
       );
     });
@@ -133,7 +135,7 @@ describe('CategoriesService', () => {
 
     it('should create a new category with auto-generated slug', async () => {
       // Arrange
-      prismaMock.productCategory.findUnique.mockResolvedValue(null); // slug not exists
+      prismaMock.productCategory.findFirst.mockResolvedValue(null); // slug not exists
       prismaMock.productCategory.aggregate.mockResolvedValue({ _max: { displayOrder: 2 } } as any);
       prismaMock.productCategory.create.mockResolvedValue({
         id: 'new-cat-id',
@@ -145,7 +147,7 @@ describe('CategoriesService', () => {
       } as any);
 
       // Act
-      const result = await categoriesService.create(createData);
+      const result = await categoriesService.create(createData, TENANT_ID);
 
       // Assert
       expect(result.data.name).toBe('Nova Categoria');
@@ -154,13 +156,13 @@ describe('CategoriesService', () => {
 
     it('should throw error if slug already exists', async () => {
       // Arrange
-      prismaMock.productCategory.findUnique.mockResolvedValue({
+      prismaMock.productCategory.findFirst.mockResolvedValue({
         id: 'existing',
         slug: 'nova-categoria',
       } as any);
 
       // Act & Assert
-      await expect(categoriesService.create(createData)).rejects.toThrow(
+      await expect(categoriesService.create(createData, TENANT_ID)).rejects.toThrow(
         'Já existe uma categoria com este nome'
       );
     });
@@ -177,14 +179,14 @@ describe('CategoriesService', () => {
         name: 'Consultas',
         slug: 'consultas',
       };
-      prismaMock.productCategory.findUnique.mockResolvedValue(existingCategory as any);
+      prismaMock.productCategory.findFirst.mockResolvedValue(existingCategory as any);
       prismaMock.productCategory.update.mockResolvedValue({
         ...existingCategory,
         description: 'Nova descrição',
       } as any);
 
       // Act
-      const result = await categoriesService.update('cat-1', { description: 'Nova descrição' });
+      const result = await categoriesService.update('cat-1', { description: 'Nova descrição' }, TENANT_ID);
 
       // Assert
       expect(result.data.description).toBe('Nova descrição');
@@ -192,11 +194,11 @@ describe('CategoriesService', () => {
 
     it('should throw error if category not found', async () => {
       // Arrange
-      prismaMock.productCategory.findUnique.mockResolvedValue(null);
+      prismaMock.productCategory.findFirst.mockResolvedValue(null);
 
       // Act & Assert
       await expect(
-        categoriesService.update('nonexistent', { name: 'Updated' })
+        categoriesService.update('nonexistent', { name: 'Updated' }, TENANT_ID)
       ).rejects.toThrow('Categoria não encontrada');
     });
 
@@ -207,8 +209,9 @@ describe('CategoriesService', () => {
         name: 'Consultas',
         slug: 'consultas',
       };
-      prismaMock.productCategory.findUnique.mockResolvedValue(existingCategory as any);
-      prismaMock.productCategory.findFirst.mockResolvedValue(null); // no conflicting slug
+      prismaMock.productCategory.findFirst
+        .mockResolvedValueOnce(existingCategory as any)
+        .mockResolvedValueOnce(null); // no conflicting slug
       prismaMock.productCategory.update.mockResolvedValue({
         ...existingCategory,
         name: 'Novo Nome',
@@ -216,7 +219,7 @@ describe('CategoriesService', () => {
       } as any);
 
       // Act
-      const result = await categoriesService.update('cat-1', { name: 'Novo Nome' });
+      const result = await categoriesService.update('cat-1', { name: 'Novo Nome' }, TENANT_ID);
 
       // Assert
       expect(result.data.name).toBe('Novo Nome');
@@ -233,7 +236,7 @@ describe('CategoriesService', () => {
         id: 'cat-1',
         displayOrder: 3,
       };
-      prismaMock.productCategory.findUnique.mockResolvedValue(existingCategory as any);
+      prismaMock.productCategory.findFirst.mockResolvedValue(existingCategory as any);
       prismaMock.productCategory.updateMany.mockResolvedValue({ count: 2 } as any);
       prismaMock.productCategory.update.mockResolvedValue({
         ...existingCategory,
@@ -241,7 +244,7 @@ describe('CategoriesService', () => {
       } as any);
 
       // Act
-      const result = await categoriesService.reorder('cat-1', 1);
+      const result = await categoriesService.reorder('cat-1', 1, TENANT_ID);
 
       // Assert
       expect(result.data.displayOrder).toBe(1);
@@ -249,10 +252,10 @@ describe('CategoriesService', () => {
 
     it('should throw error if category not found', async () => {
       // Arrange
-      prismaMock.productCategory.findUnique.mockResolvedValue(null);
+      prismaMock.productCategory.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(categoriesService.reorder('nonexistent', 1)).rejects.toThrow(
+      await expect(categoriesService.reorder('nonexistent', 1, TENANT_ID)).rejects.toThrow(
         'Categoria não encontrada'
       );
     });
@@ -270,12 +273,12 @@ describe('CategoriesService', () => {
         displayOrder: 2,
         _count: { products: 0 },
       };
-      prismaMock.productCategory.findUnique.mockResolvedValue(existingCategory as any);
+      prismaMock.productCategory.findFirst.mockResolvedValue(existingCategory as any);
       prismaMock.productCategory.delete.mockResolvedValue(existingCategory as any);
       prismaMock.productCategory.updateMany.mockResolvedValue({ count: 1 } as any);
 
       // Act
-      const result = await categoriesService.delete('cat-1');
+      const result = await categoriesService.delete('cat-1', TENANT_ID);
 
       // Assert
       expect(result.message).toContain('excluída');
@@ -288,20 +291,20 @@ describe('CategoriesService', () => {
         name: 'Consultas',
         _count: { products: 5 },
       };
-      prismaMock.productCategory.findUnique.mockResolvedValue(categoryWithProducts as any);
+      prismaMock.productCategory.findFirst.mockResolvedValue(categoryWithProducts as any);
 
       // Act & Assert
-      await expect(categoriesService.delete('cat-1')).rejects.toThrow(
+      await expect(categoriesService.delete('cat-1', TENANT_ID)).rejects.toThrow(
         'produto(s) vinculado(s)'
       );
     });
 
     it('should throw error if category not found', async () => {
       // Arrange
-      prismaMock.productCategory.findUnique.mockResolvedValue(null);
+      prismaMock.productCategory.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(categoriesService.delete('nonexistent')).rejects.toThrow(
+      await expect(categoriesService.delete('nonexistent', TENANT_ID)).rejects.toThrow(
         'Categoria não encontrada'
       );
     });
