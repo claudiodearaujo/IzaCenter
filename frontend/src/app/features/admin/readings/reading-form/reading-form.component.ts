@@ -1,22 +1,26 @@
-// apps/frontend/src/app/features/admin/readings/reading-form/reading-form.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { Textarea, TextareaModule } from 'primeng/textarea';
-import { Select, SelectModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
 import { EditorModule } from 'primeng/editor';
 import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule, FileUploadHandlerEvent } from 'primeng/fileupload';
-import { TagModule } from 'primeng/tag';
-import { DividerModule } from 'primeng/divider';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ReadingsService, Reading, ReadingCard, UpdateReadingDTO } from '../../../../core/services/readings.service';
+import { CardsService, CiganoCard } from '../../../../core/services/cards.service';
+import { NotificationService } from '../../../../core/services/notification.service';
+import {
+  DsAvatarComponent,
+  DsBadgeComponent,
+  DsButtonComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsFormFieldComponent,
+} from '../../../../shared/design-system';
 
 type DeliveryFormModel = UpdateReadingDTO & {
   content: {
@@ -27,8 +31,8 @@ type DeliveryFormModel = UpdateReadingDTO & {
     closing?: string;
   };
 };
-import { CardsService, CiganoCard } from '../../../../core/services/cards.service';
-import { NotificationService } from '../../../../core/services/notification.service';
+
+type DeliveryTone = 'neutral' | 'brand' | 'success' | 'warning' | 'error' | 'info';
 
 @Component({
   selector: 'app-reading-form',
@@ -37,16 +41,18 @@ import { NotificationService } from '../../../../core/services/notification.serv
     CommonModule,
     FormsModule,
     RouterLink,
-    ButtonModule,
     InputTextModule,
     TextareaModule,
-    SelectModule,
     EditorModule,
     DialogModule,
     FileUploadModule,
-    TagModule,
-    DividerModule,
     TranslateModule,
+    DsAvatarComponent,
+    DsBadgeComponent,
+    DsButtonComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsFormFieldComponent,
   ],
   templateUrl: './reading-form.component.html',
   styleUrl: './reading-form.component.css',
@@ -65,13 +71,11 @@ export class ReadingFormComponent implements OnInit {
   saving = signal(false);
   publishing = signal(false);
 
-  // Cards
   availableCards = signal<CiganoCard[]>([]);
   selectedCards = signal<ReadingCard[]>([]);
   cardDialogVisible = signal(false);
   editingCardIndex = signal<number | null>(null);
 
-  // Form fields
   form: DeliveryFormModel = {
     title: '',
     content: {
@@ -83,7 +87,7 @@ export class ReadingFormComponent implements OnInit {
     },
   };
 
-  ngOnInit() {
+  ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.readingId.set(id);
@@ -91,7 +95,7 @@ export class ReadingFormComponent implements OnInit {
     }
   }
 
-  loadReading(id: string) {
+  loadReading(id: string): void {
     this.loading.set(true);
 
     this.readingsService.findById(id).subscribe({
@@ -119,7 +123,6 @@ export class ReadingFormComponent implements OnInit {
           this.loadCards();
         }
 
-        // If first time opening, start the delivery
         if (reading.status === 'PENDING') {
           this.startReading();
         }
@@ -133,7 +136,7 @@ export class ReadingFormComponent implements OnInit {
     });
   }
 
-  loadCards() {
+  loadCards(): void {
     this.cardsService.findAll().subscribe({
       next: (response) => {
         this.availableCards.set(response.data);
@@ -141,7 +144,7 @@ export class ReadingFormComponent implements OnInit {
     });
   }
 
-  startReading() {
+  startReading(): void {
     this.readingsService.updateStatus(this.readingId()!, 'IN_PROGRESS').subscribe({
       next: () => {
         this.reading.update((r) => (r ? { ...r, status: 'IN_PROGRESS' } : null));
@@ -149,7 +152,7 @@ export class ReadingFormComponent implements OnInit {
     });
   }
 
-  saveReading() {
+  saveReading(): void {
     this.saving.set(true);
 
     const data: UpdateReadingDTO = {
@@ -176,7 +179,7 @@ export class ReadingFormComponent implements OnInit {
     });
   }
 
-  publishReading() {
+  publishReading(): void {
     if (!this.form.content.body) {
       this.notification.warning(this.translate.instant('admin.readings.interpretationRequired'));
       return;
@@ -184,7 +187,6 @@ export class ReadingFormComponent implements OnInit {
 
     this.publishing.set(true);
 
-    // First save
     const data: UpdateReadingDTO = {
       ...this.form,
       cards: this.hasCardModule()
@@ -199,7 +201,6 @@ export class ReadingFormComponent implements OnInit {
 
     this.readingsService.update(this.readingId()!, data).subscribe({
       next: () => {
-        // Then publish
         this.readingsService.updateStatus(this.readingId()!, 'PUBLISHED').subscribe({
           next: () => {
             this.notification.success(this.translate.instant('admin.readings.publishedSuccess'));
@@ -222,20 +223,15 @@ export class ReadingFormComponent implements OnInit {
     return this.reading()?.specialtyModule?.key === 'tarot-cards';
   }
 
-  // Specialty card module management
-  openCardDialog(index?: number) {
-    if (index !== undefined) {
-      this.editingCardIndex.set(index);
-    } else {
-      this.editingCardIndex.set(null);
-    }
+  openCardDialog(index?: number): void {
+    this.editingCardIndex.set(index ?? null);
     this.cardDialogVisible.set(true);
   }
 
-  selectCard(card: CiganoCard) {
+  selectCard(card: CiganoCard): void {
     const newCard: ReadingCard = {
       cardId: card.id,
-      card: card,
+      card,
       position: this.selectedCards().length + 1,
       positionName: this.translate.instant('admin.readings.cardPosition', { number: this.selectedCards().length + 1 }),
       interpretation: '',
@@ -246,7 +242,7 @@ export class ReadingFormComponent implements OnInit {
       cards[this.editingCardIndex()!] = {
         ...cards[this.editingCardIndex()!],
         cardId: card.id,
-        card: card,
+        card,
       };
       this.selectedCards.set(cards);
     } else {
@@ -257,15 +253,14 @@ export class ReadingFormComponent implements OnInit {
     this.editingCardIndex.set(null);
   }
 
-  removeCard(index: number) {
+  removeCard(index: number): void {
     this.selectedCards.update((cards) => cards.filter((_, i) => i !== index));
-    // Update positions
     this.selectedCards.update((cards) =>
       cards.map((c, i) => ({ ...c, position: i + 1 }))
     );
   }
 
-  updateCardInterpretation(index: number, interpretation: string) {
+  updateCardInterpretation(index: number, interpretation: string): void {
     this.selectedCards.update((cards) => {
       const updated = [...cards];
       updated[index] = { ...updated[index], interpretation };
@@ -273,7 +268,7 @@ export class ReadingFormComponent implements OnInit {
     });
   }
 
-  updateCardPositionName(index: number, positionName: string) {
+  updateCardPositionName(index: number, positionName: string): void {
     this.selectedCards.update((cards) => {
       const updated = [...cards];
       updated[index] = { ...updated[index], positionName };
@@ -281,8 +276,8 @@ export class ReadingFormComponent implements OnInit {
     });
   }
 
-  onAudioUpload(event: FileUploadHandlerEvent) {
-    if (event.files && event.files.length > 0) {
+  onAudioUpload(event: FileUploadHandlerEvent): void {
+    if (event.files?.length) {
       const file = event.files[0];
       this.readingsService.uploadAudio(this.readingId()!, file).subscribe({
         next: (response) => {
@@ -303,17 +298,19 @@ export class ReadingFormComponent implements OnInit {
       PENDING: this.translate.instant('admin.readings.statusPending'),
       IN_PROGRESS: this.translate.instant('admin.readings.statusInProgress'),
       PUBLISHED: this.translate.instant('admin.readings.statusPublished'),
+      ARCHIVED: 'Arquivada',
     };
     return labels[status] || status;
   }
 
-  getStatusSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-    const severities: Record<string, 'success' | 'info' | 'warn' | 'danger'> = {
-      PENDING: 'warn',
-      IN_PROGRESS: 'info',
+  getStatusTone(status: string): DeliveryTone {
+    const tones: Record<string, DeliveryTone> = {
+      PENDING: 'warning',
+      IN_PROGRESS: 'brand',
       PUBLISHED: 'success',
+      ARCHIVED: 'neutral',
     };
-    return severities[status] || 'info';
+    return tones[status] || 'neutral';
   }
 
   formatDate(dateString: string | Date): string {
