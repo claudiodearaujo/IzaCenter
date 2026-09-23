@@ -34,9 +34,22 @@ interface BusinessHour {
 interface ContentSettings {
   heroTitle: string;
   heroSubtitle: string;
+  heroPrimaryCtaLabel?: string;
+  heroPrimaryCtaUrl?: string;
+  heroSecondaryCtaLabel?: string;
+  heroSecondaryCtaUrl?: string;
   aboutTitle?: string;
   aboutContent?: string;
+  servicesTitle?: string;
+  servicesSubtitle?: string;
+  ctaTitle?: string;
+  ctaSubtitle?: string;
+  ctaButtonLabel?: string;
+  ctaButtonUrl?: string;
   footerText?: string;
+  footerDisclaimer?: string;
+  privacyPolicy?: string;
+  termsOfService?: string;
 }
 
 interface ProfessionalSettings {
@@ -160,6 +173,20 @@ export class SettingsService {
       data: settings || {
         heroTitle: 'Atendimento profissional de forma simples e personalizada',
         heroSubtitle: 'Conheça os serviços disponíveis e escolha a melhor forma de atendimento para você.',
+        heroPrimaryCtaLabel: 'Conhecer serviços',
+        heroPrimaryCtaUrl: '/servicos',
+        heroSecondaryCtaLabel: 'Conhecer o profissional',
+        heroSecondaryCtaUrl: '/sobre',
+        aboutTitle: 'Conheça o profissional',
+        aboutContent: 'Apresente aqui sua trajetória, abordagem e forma de trabalho.',
+        servicesTitle: 'Serviços',
+        servicesSubtitle: 'Escolha o serviço que melhor atende ao seu momento.',
+        ctaTitle: 'Pronto para começar?',
+        ctaSubtitle: 'Conheça as opções disponíveis ou entre em contato para tirar dúvidas.',
+        ctaButtonLabel: 'Ver serviços',
+        ctaButtonUrl: '/servicos',
+        footerText: 'Atendimento profissional com informação clara e experiência personalizada.',
+        footerDisclaimer: 'As informações e serviços apresentados não substituem orientação profissional regulamentada quando aplicável.',
       },
     };
   }
@@ -274,9 +301,10 @@ export class SettingsService {
 
   // Get public settings (for frontend)
   async getPublic() {
-    const [general, contact, content, professional, specialties, seo] = await Promise.all([
+    const [general, contact, businessHours, content, professional, specialties, seo] = await Promise.all([
       this.getGeneral(),
       this.getContact(),
+      this.getBusinessHours(),
       this.getContent(),
       this.getProfessional(),
       this.getSpecialties(),
@@ -288,6 +316,7 @@ export class SettingsService {
         siteName: general.data.siteName,
         siteDescription: general.data.siteDescription,
         logoUrl: general.data.logoUrl,
+        faviconUrl: general.data.faviconUrl,
         enableShop: general.data.enableShop,
         enableAppointments: general.data.enableAppointments,
         enableTestimonials: general.data.enableTestimonials,
@@ -298,7 +327,11 @@ export class SettingsService {
           instagram: contact.data.instagram,
           facebook: contact.data.facebook,
           youtube: contact.data.youtube,
+          tiktok: contact.data.tiktok,
+          address: contact.data.address,
         },
+        businessHours: businessHours.data,
+        content: content.data,
         heroTitle: content.data.heroTitle,
         heroSubtitle: content.data.heroSubtitle,
         footerText: content.data.footerText,
