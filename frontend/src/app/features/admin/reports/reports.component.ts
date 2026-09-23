@@ -2,9 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
 import { Select } from 'primeng/select';
-import { TagModule } from 'primeng/tag';
 import { ChartModule } from 'primeng/chart';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -16,6 +14,11 @@ import {
   TopProduct,
 } from '../../../core/services/dashboard.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import {
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsPageHeaderComponent,
+} from '../../../shared/design-system';
 
 @Component({
   selector: 'app-admin-reports',
@@ -23,12 +26,13 @@ import { NotificationService } from '../../../core/services/notification.service
   imports: [
     CommonModule,
     FormsModule,
-    ButtonModule,
     Select,
-    TagModule,
     ChartModule,
     SkeletonModule,
     TranslateModule,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsPageHeaderComponent,
   ],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.css',
@@ -56,30 +60,34 @@ export class AdminReportsComponent implements OnInit {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        labels: {
-          color: 'rgba(120, 53, 15, 0.7)',
-        },
+        display: false,
+      },
+      tooltip: {
+        intersect: false,
+        mode: 'index',
       },
     },
     scales: {
       x: {
-        ticks: { color: 'rgba(120, 53, 15, 0.7)' },
-        grid: { color: 'rgba(217, 119, 6, 0.1)' },
+        ticks: { color: '#7D7A73' },
+        grid: { color: 'rgba(30, 30, 27, 0.05)' },
+        border: { display: false },
       },
       y: {
-        ticks: { color: 'rgba(120, 53, 15, 0.7)' },
-        grid: { color: 'rgba(217, 119, 6, 0.1)' },
+        ticks: { color: '#7D7A73' },
+        grid: { color: 'rgba(30, 30, 27, 0.06)' },
+        border: { display: false },
       },
     },
   };
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadReports();
     this.loadSalesChart();
     this.loadTopProducts();
   }
 
-  loadReports() {
+  loadReports(): void {
     this.loading.set(true);
 
     this.dashboardService.getStats().subscribe({
@@ -106,10 +114,18 @@ export class AdminReportsComponent implements OnInit {
     });
   }
 
-  loadSalesChart() {
+  loadSalesChart(): void {
     this.dashboardService.getSalesChart(this.period() as 'week' | 'month' | 'year').subscribe({
       next: (response) => {
-        this.salesChartData.set(response.data);
+        this.salesChartData.set({
+          ...response.data,
+          datasets: response.data.datasets.map((dataset) => ({
+            ...dataset,
+            backgroundColor: 'rgba(71, 119, 98, 0.72)',
+            borderColor: '#477762',
+            borderRadius: 6,
+          })),
+        } as SalesChartData);
       },
       error: () => {
         this.salesChartData.set(null);
@@ -117,7 +133,7 @@ export class AdminReportsComponent implements OnInit {
     });
   }
 
-  loadTopProducts() {
+  loadTopProducts(): void {
     this.dashboardService.getTopProducts().subscribe({
       next: (response) => {
         this.topProducts.set(response.data);
@@ -128,7 +144,7 @@ export class AdminReportsComponent implements OnInit {
     });
   }
 
-  onPeriodChange() {
+  onPeriodChange(): void {
     this.loadSalesChart();
   }
 
