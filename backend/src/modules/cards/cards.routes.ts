@@ -3,6 +3,9 @@
 import { Router } from 'express';
 import { cardsController } from './cards.controller';
 import { authenticate, requireAdmin } from '../../middlewares/auth.middleware';
+import { requireSpecialtyModule } from '../../middlewares/specialty-module.middleware';
+
+const requireCardsModule = requireSpecialtyModule('tarot-cards');
 
 const router = Router();
 
@@ -17,7 +20,7 @@ const router = Router();
  *       200:
  *         description: List of tarot cards
  */
-router.get('/cards', cardsController.findAll.bind(cardsController));
+router.get('/cards', requireCardsModule, cardsController.findAll.bind(cardsController));
 
 /**
  * @openapi
@@ -39,7 +42,7 @@ router.get('/cards', cardsController.findAll.bind(cardsController));
  *       404:
  *         description: Card not found
  */
-router.get('/cards/:id', cardsController.findById.bind(cardsController));
+router.get('/cards/:id', requireCardsModule, cardsController.findById.bind(cardsController));
 
 /**
  * @openapi
@@ -60,7 +63,7 @@ router.get('/cards/:id', cardsController.findById.bind(cardsController));
  *       404:
  *         description: Card not found
  */
-router.get('/cards/number/:number', cardsController.findByNumber.bind(cardsController));
+router.get('/cards/number/:number', requireCardsModule, cardsController.findByNumber.bind(cardsController));
 
 /**
  * @openapi
@@ -109,6 +112,7 @@ router.get(
   '/admin/cards',
   authenticate,
   requireAdmin,
+  requireCardsModule,
   cardsController.findAll.bind(cardsController)
 );
 
@@ -116,6 +120,7 @@ router.post(
   '/admin/cards',
   authenticate,
   requireAdmin,
+  requireCardsModule,
   cardsController.create.bind(cardsController)
 );
 
@@ -135,6 +140,7 @@ router.post(
   '/admin/cards/generate-deck',
   authenticate,
   requireAdmin,
+  requireCardsModule,
   cardsController.generateDeck.bind(cardsController)
 );
 
@@ -182,6 +188,7 @@ router.put(
   '/admin/cards/:id',
   authenticate,
   requireAdmin,
+  requireCardsModule,
   cardsController.update.bind(cardsController)
 );
 
@@ -189,6 +196,7 @@ router.delete(
   '/admin/cards/:id',
   authenticate,
   requireAdmin,
+  requireCardsModule,
   cardsController.delete.bind(cardsController)
 );
 
