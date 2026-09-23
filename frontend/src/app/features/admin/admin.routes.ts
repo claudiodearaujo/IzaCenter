@@ -1,6 +1,7 @@
 // apps/frontend/src/app/features/admin/admin.routes.ts
 
 import { Routes } from '@angular/router';
+import { specialtyModuleGuard } from '../../core/guards/specialty-module.guard';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -82,6 +83,7 @@ export const ADMIN_ROUTES: Routes = [
   },
   {
     path: 'cartas',
+    canActivate: [specialtyModuleGuard('tarot-cards')],
     loadComponent: () =>
       import('./cards/card-list/card-list.component').then(
         (m) => m.CardListComponent
