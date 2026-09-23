@@ -325,7 +325,7 @@
                     pInputText 
                     [(ngModel)]="settings.instagramUrl"
                     class="w-full"
-                    placeholder="https://instagram.com/profissionaltarot"
+                    placeholder="https://instagram.com/seuperfil"
                   />
                 </div>
                 <div>
@@ -336,7 +336,7 @@
                     pInputText 
                     [(ngModel)]="settings.facebookUrl"
                     class="w-full"
-                    placeholder="https://facebook.com/profissionaltarot"
+                    placeholder="https://facebook.com/seuperfil"
                   />
                 </div>
                 <div>
@@ -347,7 +347,7 @@
                     pInputText 
                     [(ngModel)]="settings.youtubeUrl"
                     class="w-full"
-                    placeholder="https://youtube.com/@profissionaltarot"
+                    placeholder="https://youtube.com/@seuperfil"
                   />
                 </div>
                 <div>
@@ -358,7 +358,7 @@
                     pInputText 
                     [(ngModel)]="settings.tiktokUrl"
                     class="w-full"
-                    placeholder="https://tiktok.com/@profissionaltarot"
+                    placeholder="https://tiktok.com/@seuperfil"
                   />
                 </div>
               </div>
@@ -418,7 +418,7 @@
                     pInputText 
                     [(ngModel)]="settings.homeHeroTitle"
                     class="w-full"
-                    placeholder="Descubra seu Destino"
+                    placeholder="Atendimento profissional de forma simples e personalizada"
                   />
                 </div>
                 <div>
@@ -428,7 +428,7 @@
                     [(ngModel)]="settings.homeHeroSubtitle"
                     [rows]="2"
                     class="w-full"
-                    placeholder="Leituras de tarot cigano..."
+                    placeholder="Conheça os serviços disponíveis e escolha a melhor forma de atendimento para você."
                   ></textarea>
                 </div>
               </div>
@@ -440,6 +440,57 @@
                 [(ngModel)]="settings.aboutText"
                 [style]="{'height':'200px'}"
               />
+            </div>
+
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Página de serviços</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Título</label>
+                  <input pInputText [(ngModel)]="settings.servicesTitle" class="w-full" placeholder="Serviços" />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Subtítulo</label>
+                  <textarea pInputTextarea [(ngModel)]="settings.servicesSubtitle" [rows]="2" class="w-full"
+                    placeholder="Escolha o serviço que melhor atende ao seu momento."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">CTA final</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Título</label>
+                  <input pInputText [(ngModel)]="settings.ctaTitle" class="w-full" />
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Texto do botão</label>
+                  <input pInputText [(ngModel)]="settings.ctaButtonLabel" class="w-full" />
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-secondary text-sm mb-2">Subtítulo</label>
+                  <textarea pInputTextarea [(ngModel)]="settings.ctaSubtitle" [rows]="2" class="w-full"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-secondary text-sm mb-2">Destino do botão</label>
+                  <input pInputText [(ngModel)]="settings.ctaButtonUrl" class="w-full" placeholder="/servicos" />
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card p-6">
+              <h3 class="heading-3 text-primary mb-4">Rodapé</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Texto do rodapé</label>
+                  <textarea pInputTextarea [(ngModel)]="settings.footerText" [rows]="2" class="w-full"></textarea>
+                </div>
+                <div>
+                  <label class="block text-secondary text-sm mb-2">Disclaimer</label>
+                  <textarea pInputTextarea [(ngModel)]="settings.footerDisclaimer" [rows]="2" class="w-full"></textarea>
+                </div>
+              </div>
             </div>
           </div>
         </p-tabpanel>
