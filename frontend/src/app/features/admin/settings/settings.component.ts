@@ -25,6 +25,7 @@ import {
   ProfessionalSettings,
   SpecialtySettings,
   SeoSettings,
+  BrandingSettings,
 } from '../../../core/services/settings.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -201,6 +202,17 @@ export class SettingsComponent implements OnInit {
     metaDescription: 'Serviços e atendimentos profissionais em uma plataforma simples e segura.',
     keywords: ['atendimento', 'serviços', 'profissional'],
   };
+  brandingSettings: BrandingSettings = {
+    primaryColor: '#F59E0B',
+    secondaryColor: '#EC4899',
+    accentColor: '#D4AF37',
+    surfaceColor: '#FEFDFB',
+    textColor: '#2D2A24',
+    logoUrl: '',
+    faviconUrl: '',
+    fontFamily: 'Nunito, Open Sans, sans-serif',
+    borderRadius: '12px',
+  };
 
   languagesText = 'pt-BR';
   credentialsText = '';
@@ -228,6 +240,7 @@ export class SettingsComponent implements OnInit {
         this.professionalSettings = data.professional || this.professionalSettings;
         this.specialties = data.specialties || [];
         this.seoSettings = data.seo || this.seoSettings;
+        this.brandingSettings = data.branding || this.brandingSettings;
         this.analyticsSettings = data.analytics || this.analyticsSettings;
         this.languagesText = this.professionalSettings.languages.join(', ');
         this.credentialsText = this.professionalSettings.credentials.join('\n');
@@ -300,6 +313,7 @@ export class SettingsComponent implements OnInit {
       this.settingsService.updateProfessional(this.professionalSettings),
       this.settingsService.updateSpecialties(this.specialties),
       this.settingsService.updateSeo(this.seoSettings),
+      this.settingsService.updateBranding(this.brandingSettings),
     ]).subscribe({
       next: () => {
         this.notification.success('Configurações white-label salvas com sucesso.');

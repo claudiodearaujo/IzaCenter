@@ -90,6 +90,18 @@ export interface SeoSettings {
   keywords: string[];
 }
 
+export interface BrandingSettings {
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  surfaceColor: string;
+  textColor: string;
+  logoUrl?: string;
+  faviconUrl?: string;
+  fontFamily: string;
+  borderRadius: string;
+}
+
 export interface AnalyticsSettings {
   googleAnalyticsId?: string;
   facebookPixelId?: string;
@@ -105,6 +117,7 @@ export interface AllSettings {
   professional: ProfessionalSettings;
   specialties: SpecialtySettings[];
   seo: SeoSettings;
+  branding: BrandingSettings;
   analytics: AnalyticsSettings;
 }
 
@@ -135,6 +148,7 @@ export interface PublicSettings {
   specialties: SpecialtySettings[];
   enabledModules: string[];
   seo: SeoSettings;
+  branding: BrandingSettings;
 }
 
 @Injectable({
@@ -207,6 +221,14 @@ export class SettingsService {
 
   updateSeo(data: Partial<SeoSettings>): Observable<ApiResponse<SeoSettings>> {
     return this.api.put<ApiResponse<SeoSettings>>('/admin/settings/seo', data);
+  }
+
+  getBranding(): Observable<ApiResponse<BrandingSettings>> {
+    return this.api.get<ApiResponse<BrandingSettings>>('/admin/settings/branding');
+  }
+
+  updateBranding(data: Partial<BrandingSettings>): Observable<ApiResponse<BrandingSettings>> {
+    return this.api.put<ApiResponse<BrandingSettings>>('/admin/settings/branding', data);
   }
 
   getAnalytics(): Observable<ApiResponse<AnalyticsSettings>> {

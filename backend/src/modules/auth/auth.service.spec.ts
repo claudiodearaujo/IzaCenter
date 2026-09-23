@@ -111,6 +111,7 @@ describe('AuthService', () => {
       // Assert
       expect(result.user.email).toBe(loginData.email);
       expect(result.accessToken).toBeDefined();
+      expect(result.membership.role).toBe('CLIENT');
     });
 
     it('should throw error if user not found', async () => {
@@ -147,7 +148,7 @@ describe('AuthService', () => {
             userId: 'user-123',
           },
         },
-        select: { isActive: true },
+        select: { id: true, role: true, isActive: true },
       });
     });
 

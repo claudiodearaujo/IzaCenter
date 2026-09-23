@@ -55,6 +55,27 @@ describe('TenantService', () => {
     expect(prismaMock.tenant.findFirst).toHaveBeenCalledTimes(1);
   });
 
+  it('should prefer an explicit custom domain over a stale tenant header', async () => {
+    prismaMock.tenant.findFirst.mockResolvedValueOnce({
+      id: 'tenant-domain',
+      name: 'Tenant Domain',
+      slug: 'domain',
+      status: 'ACTIVE',
+      planKey: 'starter',
+      customDomain: 'profissional.example.com',
+    } as any);
+
+    const tenant = await service.resolve('tenant-antigo', 'profissional.example.com');
+
+    expect(tenant?.id).toBe('tenant-domain');
+    expect(prismaMock.tenant.findFirst).toHaveBeenCalledTimes(1);
+    expect(prismaMock.tenant.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { customDomain: 'profissional.example.com', status: 'ACTIVE' },
+      })
+    );
+  });
+
   it('should fall back to the deterministic default tenant', async () => {
     prismaMock.tenant.findFirst
       .mockResolvedValueOnce(null)

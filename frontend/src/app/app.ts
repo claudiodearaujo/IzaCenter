@@ -2,6 +2,8 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Toast } from 'primeng/toast';
 import { TranslateService } from '@ngx-translate/core';
+import { PublicSettingsStore } from './core/services/public-settings.store';
+import { BrandingService } from './core/services/branding.service';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +14,14 @@ import { TranslateService } from '@ngx-translate/core';
 export class App implements OnInit {
   protected readonly title = signal('frontend');
   private translate = inject(TranslateService);
+  private publicSettings = inject(PublicSettingsStore);
+  private branding = inject(BrandingService);
 
   ngOnInit(): void {
+    this.publicSettings.load().subscribe((settings) => {
+      this.branding.apply(settings.branding);
+    });
+
     // Configure available languages
     this.translate.addLangs(['pt-BR', 'en', 'es', 'fr']);
 

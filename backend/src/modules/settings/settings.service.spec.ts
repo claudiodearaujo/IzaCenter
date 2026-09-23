@@ -250,7 +250,8 @@ describe('SettingsService', () => {
         .mockResolvedValueOnce({ key: 'content', value: { heroTitle: 'Hello', heroSubtitle: 'World' } } as any)
         .mockResolvedValueOnce({ key: 'professional', value: { displayName: 'Profissional', languages: ['pt-BR'], credentials: [], serviceMode: 'ONLINE' } } as any)
         .mockResolvedValueOnce({ key: 'specialties', value: [{ slug: 'tarot', name: 'Tarot', isActive: true, usesCardModule: true }] } as any)
-        .mockResolvedValueOnce({ key: 'seo', value: { metaTitle: 'Site', metaDescription: 'Desc', keywords: [] } } as any);
+        .mockResolvedValueOnce({ key: 'seo', value: { metaTitle: 'Site', metaDescription: 'Desc', keywords: [] } } as any)
+        .mockResolvedValueOnce({ key: 'branding', value: { primaryColor: '#112233' } } as any);
 
       const result = await settingsService.getPublic();
 
@@ -287,6 +288,35 @@ describe('SettingsService', () => {
     });
   });
 
+  describe('branding', () => {
+    it('should preserve legacy-compatible branding defaults', async () => {
+      prismaMock.siteSetting.findUnique.mockResolvedValue(null);
+
+      const result = await settingsService.getBranding();
+
+      expect(result.data.primaryColor).toBe('#F59E0B');
+      expect(result.data.secondaryColor).toBe('#EC4899');
+      expect(result.data.accentColor).toBe('#D4AF37');
+      expect(result.data.fontFamily).toContain('Nunito');
+    });
+
+    it('should persist branding in the requested tenant', async () => {
+      prismaMock.siteSetting.findUnique.mockResolvedValue({
+        key: 'branding',
+        value: { primaryColor: '#112233' },
+      } as any);
+      prismaMock.siteSetting.upsert.mockResolvedValue({} as any);
+
+      await settingsService.updateBranding({ primaryColor: '#abcdef' }, 'tenant-brand');
+
+      expect(prismaMock.siteSetting.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { tenantId_key: { tenantId: 'tenant-brand', key: 'branding' } },
+        })
+      );
+    });
+  });
+
   // =============================================
   // GET ALL
   // =============================================
@@ -301,6 +331,7 @@ describe('SettingsService', () => {
         .mockResolvedValueOnce({ key: 'professional', value: { displayName: 'Profissional' } } as any)
         .mockResolvedValueOnce({ key: 'specialties', value: [] } as any)
         .mockResolvedValueOnce({ key: 'seo', value: { metaTitle: 'Profissional' } } as any)
+        .mockResolvedValueOnce({ key: 'branding', value: { primaryColor: '#112233' } } as any)
         .mockResolvedValueOnce({ key: 'analytics', value: { enableAnalytics: false } } as any);
 
       // Act
@@ -326,7 +357,8 @@ describe('SettingsService', () => {
         .mockResolvedValueOnce({ key: 'content', value: { heroTitle: 'Bem-vindo', servicesTitle: 'Serviços' } } as any)
         .mockResolvedValueOnce({ key: 'professional', value: { displayName: 'Profissional', serviceMode: 'ONLINE' } } as any)
         .mockResolvedValueOnce({ key: 'specialties', value: [{ slug: 'reiki', name: 'Reiki', isActive: true, usesCardModule: false }] } as any)
-        .mockResolvedValueOnce({ key: 'seo', value: { metaTitle: 'Profissional', metaDescription: 'Atendimentos', keywords: [] } } as any);
+        .mockResolvedValueOnce({ key: 'seo', value: { metaTitle: 'Profissional', metaDescription: 'Atendimentos', keywords: [] } } as any)
+        .mockResolvedValueOnce({ key: 'branding', value: { primaryColor: '#112233' } } as any);
 
       // Act
       const result = await settingsService.getPublic();

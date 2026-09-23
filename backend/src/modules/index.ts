@@ -15,3 +15,4 @@ export { dashboardRoutes } from './dashboard';
 export { notificationsRoutes } from './notifications';
 export { contactRoutes } from './contact';
 export { tenantRoutes } from './tenant';
+export { onboardingRoutes } from './onboarding';

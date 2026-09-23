@@ -118,7 +118,6 @@ export function requireAdmin(
 ): void {
   if (
     !req.user ||
-    req.user.role !== 'ADMIN' ||
     !req.tenantMembership ||
     !['OWNER', 'ADMIN'].includes(req.tenantMembership.role)
   ) {

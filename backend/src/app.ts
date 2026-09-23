@@ -29,6 +29,7 @@ import {
   notificationsRoutes,
   contactRoutes,
   tenantRoutes,
+  onboardingRoutes,
 } from './modules';
 
 // Create Express app
@@ -127,6 +128,7 @@ const apiV1Prefix = `${apiPrefix}/v1`;
 function mountRoutes(prefix: string) {
   app.use(prefix, resolveTenant);
   app.use(prefix, tenantRoutes);
+  app.use(prefix, onboardingRoutes);
   app.use(`${prefix}/auth`, authRoutes);
   app.use(`${prefix}/users`, usersRoutes);
   app.use(`${prefix}/products`, productsRoutes);

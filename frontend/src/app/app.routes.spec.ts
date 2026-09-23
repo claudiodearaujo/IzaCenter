@@ -20,4 +20,12 @@ describe('public root route', () => {
     expect(authRoute).toBeDefined();
     expect(authRoute?.path).toBe('auth');
   });
+
+  it('should expose professional onboarding without an auth guard', () => {
+    const onboarding = routes.find((route) => route.path === 'onboarding/profissional');
+
+    expect(onboarding).toBeDefined();
+    expect(onboarding?.canActivate).toBeUndefined();
+    expect(onboarding?.loadComponent).toBeDefined();
+  });
 });

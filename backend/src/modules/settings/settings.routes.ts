@@ -273,6 +273,22 @@ router.put(
   settingsController.updateSeo.bind(settingsController)
 );
 
+router.get(
+  '/admin/settings/branding',
+  authenticate,
+  requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
+  settingsController.getBranding.bind(settingsController)
+);
+
+router.put(
+  '/admin/settings/branding',
+  authenticate,
+  requireAdmin,
+  requireTenantMembership(['OWNER', 'ADMIN']),
+  settingsController.updateBranding.bind(settingsController)
+);
+
 /**
  * @openapi
  * /admin/settings/analytics:
