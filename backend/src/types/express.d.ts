@@ -10,6 +10,18 @@ declare global {
         email: string;
         role: 'CLIENT' | 'ADMIN';
       };
+      tenant?: {
+        id: string;
+        name: string;
+        slug: string;
+        status: 'ACTIVE' | 'SUSPENDED' | 'ARCHIVED';
+        planKey: string;
+        customDomain: string | null;
+      };
+      tenantMembership?: {
+        id: string;
+        role: 'OWNER' | 'ADMIN' | 'CLIENT';
+      };
       file?: Express.Multer.File;
       files?: Express.Multer.File[];
     }
