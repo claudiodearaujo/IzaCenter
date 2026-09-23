@@ -1,78 +1,73 @@
-<section class="py-8">
-  <div class="container-custom">
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="heading-1 text-primary mb-2">
-          <i class="pi pi-file mr-3"></i>
-          Entregas
-        </h1>
-        <p class="text-secondary">Gerencie conteúdos, relatórios e materiais digitais dos serviços contratados.</p>
+<section class="deliveries-page">
+  <ds-page-header
+    title="Entregas"
+    description="Gerencie conteúdos, relatórios e materiais digitais dos serviços contratados.">
+  </ds-page-header>
+
+  <div class="stats-grid">
+    <ds-card padding="md">
+      <div class="stat">
+        <span class="stat__icon stat__icon--warning"><i class="pi pi-clock"></i></span>
+        <div>
+          <p class="stat__value">{{ pendingCount() }}</p>
+          <p class="stat__label">Pendentes</p>
+        </div>
+      </div>
+    </ds-card>
+
+    <ds-card padding="md">
+      <div class="stat">
+        <span class="stat__icon stat__icon--brand"><i class="pi pi-spinner"></i></span>
+        <div>
+          <p class="stat__value">{{ inProgressCount() }}</p>
+          <p class="stat__label">Em andamento</p>
+        </div>
+      </div>
+    </ds-card>
+
+    <ds-card padding="md">
+      <div class="stat">
+        <span class="stat__icon stat__icon--success"><i class="pi pi-check-circle"></i></span>
+        <div>
+          <p class="stat__value">{{ publishedCount() }}</p>
+          <p class="stat__label">Publicadas</p>
+        </div>
+      </div>
+    </ds-card>
+  </div>
+
+  <ds-card padding="md">
+    <div class="filters">
+      <ds-form-field class="filters__search" label="Buscar entrega">
+        <span class="search-control">
+          <i class="pi pi-search" aria-hidden="true"></i>
+          <input
+            pInputText
+            [(ngModel)]="searchTerm"
+            placeholder="Buscar por cliente, e-mail ou título"
+            (keyup.enter)="onSearch()" />
+        </span>
+      </ds-form-field>
+
+      <ds-form-field class="filters__status" label="Status">
+        <p-select
+          [options]="statusOptions"
+          [(ngModel)]="selectedStatus"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Status"
+          (onChange)="onSearch()"
+          styleClass="w-full" />
+      </ds-form-field>
+
+      <div class="filters__action">
+        <ds-button icon="pi-search" (click)="onSearch()">Buscar</ds-button>
       </div>
     </div>
+  </ds-card>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-      <div class="glass-card p-4 flex items-center gap-4">
-        <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-          <i class="pi pi-clock text-xl text-yellow-400"></i>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-primary">{{ pendingCount() }}</p>
-          <p class="text-secondary text-sm">Pendentes</p>
-        </div>
-      </div>
-      <div class="glass-card p-4 flex items-center gap-4">
-        <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-          <i class="pi pi-spin pi-spinner text-xl text-blue-400"></i>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-primary">{{ inProgressCount() }}</p>
-          <p class="text-secondary text-sm">Em andamento</p>
-        </div>
-      </div>
-      <div class="glass-card p-4 flex items-center gap-4">
-        <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-          <i class="pi pi-check-circle text-xl text-green-400"></i>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-primary">{{ publishedCount() }}</p>
-          <p class="text-secondary text-sm">Publicadas</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="glass-card p-4 mb-6">
-      <div class="flex flex-col md:flex-row gap-4">
-        <div class="flex-1">
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-search"></i>
-            <input
-              pInputText
-              [(ngModel)]="searchTerm"
-              placeholder="Buscar por cliente, e-mail ou título"
-              class="w-full"
-              (keyup.enter)="onSearch()"
-            />
-          </span>
-        </div>
-        <div class="w-full md:w-48">
-          <p-select
-            [options]="statusOptions"
-            [(ngModel)]="selectedStatus"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Status"
-            (onChange)="onSearch()"
-            styleClass="w-full"
-          />
-        </div>
-        <button pButton class="btn-primary" (click)="onSearch()">
-          <i class="pi pi-search mr-2"></i>
-          Buscar
-        </button>
-      </div>
-    </div>
-
-    <div class="glass-card overflow-hidden">
+  <ds-card padding="sm">
+    <div class="table-shell">
       <p-table
         [value]="readings()"
         [loading]="loading()"
@@ -81,9 +76,8 @@
         [totalRecords]="totalRecords()"
         [lazy]="true"
         (onLazyLoad)="loadReadings($event)"
-        [rowHover]="true"
-        styleClass="p-datatable-striped"
-      >
+        [rowHover]="true">
+
         <ng-template pTemplate="header">
           <tr>
             <th>Cliente</th>
@@ -92,68 +86,77 @@
             <th>Intake</th>
             <th>Status</th>
             <th>Criada em</th>
-            <th>Ações</th>
+            <th>Ação</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="loadingbody">
-          @for (_ of [1, 2, 3, 4, 5]; track $index) {
+          @for (_ of [1,2,3,4,5]; track $index) {
             <tr>
-              <td><p-skeleton height="2.5rem" /></td>
-              <td><p-skeleton height="1.5rem" width="7rem" /></td>
-              <td><p-skeleton height="1.5rem" width="6rem" /></td>
-              <td><p-skeleton height="1.5rem" width="4rem" /></td>
-              <td><p-skeleton height="1.5rem" width="6rem" /></td>
-              <td><p-skeleton height="1.5rem" width="5rem" /></td>
-              <td><p-skeleton height="1.5rem" width="6rem" /></td>
+              @for (_ of [1,2,3,4,5,6,7]; track $index) {
+                <td><p-skeleton height="2rem" /></td>
+              }
             </tr>
           }
         </ng-template>
 
         <ng-template pTemplate="body" let-reading>
-          <tr [class.bg-yellow-500/5]="reading.status === 'PENDING'">
+          <tr [class.is-pending]="reading.status === 'PENDING'">
             <td>
-              <p class="text-primary font-medium">{{ reading.client?.fullName }}</p>
-              <p class="text-secondary text-xs">{{ reading.client?.email }}</p>
+              <div class="person-cell">
+                <ds-avatar [name]="reading.client?.fullName || 'Cliente'" size="sm" />
+                <div>
+                  <p class="cell-title">{{ reading.client?.fullName }}</p>
+                  <p class="cell-subtitle">{{ reading.client?.email }}</p>
+                </div>
+              </div>
             </td>
-            <td class="text-primary">{{ reading.orderItem?.product?.name }}</td>
+
             <td>
-              <span class="text-secondary text-sm">{{ reading.deliveryType || 'CONTENT' }}</span>
-              @if (reading.specialtyModule?.key) {
-                <p class="text-secondary/60 text-xs mt-1">{{ reading.specialtyModule.key }}</p>
-              }
+              <p class="cell-title">{{ reading.orderItem?.product?.name }}</p>
             </td>
+
+            <td>
+              <div class="delivery-type">
+                <span>{{ getDeliveryTypeLabel(reading) }}</span>
+                @if (reading.specialtyModule?.key) {
+                  <ds-badge tone="neutral">{{ reading.specialtyModule.key }}</ds-badge>
+                }
+              </div>
+            </td>
+
             <td>
               @if (reading.orderItem?.clientQuestions?.length) {
                 <span
-                  class="text-secondary text-sm cursor-help"
+                  class="intake-count"
                   [pTooltip]="reading.orderItem.clientQuestions.join(' | ')"
-                  tooltipPosition="top"
-                >
+                  tooltipPosition="top">
+                  <i class="pi pi-list" aria-hidden="true"></i>
                   {{ reading.orderItem.clientQuestions.length }} item(ns)
                 </span>
               } @else {
-                <span class="text-secondary/50 text-sm">-</span>
+                <span class="cell-subtitle">Sem intake</span>
               }
             </td>
+
             <td>
-              <p-tag
-                [value]="getStatusLabel(reading.status)"
-                [severity]="getStatusSeverity(reading.status)"
-              />
+              <ds-badge [tone]="getStatusTone(reading.status)" [dot]="true">
+                {{ getStatusLabel(reading.status) }}
+              </ds-badge>
             </td>
-            <td class="text-secondary text-sm">
-              {{ formatDate(reading.createdAt) }}
-              @if (reading.status !== 'PUBLISHED') {
-                <p class="text-secondary/60 text-xs mt-1">{{ getTimeSinceCreation(reading.createdAt) }}</p>
-              }
-            </td>
+
             <td>
-              <a
-                [routerLink]="['/admin/entregas', reading.id]"
-                class="btn-primary text-sm py-2 px-4"
-              >
-                <i class="pi" [class]="reading.status === 'PUBLISHED' ? 'pi-eye' : 'pi-pencil'" class="mr-1"></i>
+              <div class="date-cell">
+                <span>{{ formatDate(reading.createdAt) }}</span>
+                @if (reading.status !== 'PUBLISHED') {
+                  <small>{{ getTimeSinceCreation(reading.createdAt) }}</small>
+                }
+              </div>
+            </td>
+
+            <td>
+              <a [routerLink]="['/admin/entregas', reading.id]" class="delivery-action">
+                <i class="pi" [class]="reading.status === 'PUBLISHED' ? 'pi-eye' : 'pi-pencil'"></i>
                 {{ reading.status === 'PUBLISHED' ? 'Visualizar' : 'Editar' }}
               </a>
             </td>
@@ -162,13 +165,16 @@
 
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="7" class="text-center py-8">
-              <i class="pi pi-file text-4xl text-secondary/30 mb-4"></i>
-              <p class="text-secondary">Nenhuma entrega encontrada.</p>
+            <td colspan="7">
+              <ds-empty-state
+                title="Nenhuma entrega encontrada"
+                description="Ajuste os filtros ou aguarde a criação de novas entregas."
+                icon="pi-file">
+              </ds-empty-state>
             </td>
           </tr>
         </ng-template>
       </p-table>
     </div>
-  </div>
+  </ds-card>
 </section>

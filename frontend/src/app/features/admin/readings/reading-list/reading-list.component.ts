@@ -1,20 +1,27 @@
-// apps/frontend/src/app/features/admin/readings/reading-list/reading-list.component.ts
-
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
-import { TagModule } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ReadingsService, Reading } from '../../../../core/services/readings.service';
+import {
+  DsAvatarComponent,
+  DsBadgeComponent,
+  DsButtonComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsFormFieldComponent,
+  DsPageHeaderComponent,
+} from '../../../../shared/design-system';
+
+type DeliveryTone = 'neutral' | 'brand' | 'success' | 'warning' | 'error' | 'info';
 
 @Component({
   selector: 'app-admin-reading-list',
@@ -23,14 +30,19 @@ import { ReadingsService, Reading } from '../../../../core/services/readings.ser
     CommonModule,
     RouterLink,
     FormsModule,
-    ButtonModule,
     TableModule,
     InputTextModule,
     Select,
-    TagModule,
     Tooltip,
     SkeletonModule,
     TranslateModule,
+    DsAvatarComponent,
+    DsBadgeComponent,
+    DsButtonComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsFormFieldComponent,
+    DsPageHeaderComponent,
   ],
   templateUrl: './reading-list.component.html',
   styleUrl: './reading-list.component.css',
@@ -43,7 +55,6 @@ export class AdminReadingListComponent implements OnInit {
   loading = signal(true);
   totalRecords = signal(0);
 
-  // Computed stats
   pendingCount = computed(() => this.readings().filter(r => r.status === 'PENDING').length);
   inProgressCount = computed(() => this.readings().filter(r => r.status === 'IN_PROGRESS').length);
   publishedCount = computed(() => this.readings().filter(r => r.status === 'PUBLISHED').length);
@@ -60,25 +71,19 @@ export class AdminReadingListComponent implements OnInit {
     ];
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadReadings();
   }
 
-  loadReadings(event?: any) {
+  loadReadings(event?: any): void {
     this.loading.set(true);
-
     const params: any = {
       page: event?.first ? Math.floor(event.first / (event.rows || 10)) + 1 : 1,
       limit: event?.rows || 10,
     };
 
-    if (this.searchTerm) {
-      params.search = this.searchTerm;
-    }
-
-    if (this.selectedStatus) {
-      params.status = this.selectedStatus;
-    }
+    if (this.searchTerm) params.search = this.searchTerm;
+    if (this.selectedStatus) params.status = this.selectedStatus;
 
     this.readingsService.findAll(params).subscribe({
       next: (response) => {
@@ -93,7 +98,7 @@ export class AdminReadingListComponent implements OnInit {
     });
   }
 
-  onSearch() {
+  onSearch(): void {
     this.loadReadings();
   }
 
@@ -102,20 +107,22 @@ export class AdminReadingListComponent implements OnInit {
       PENDING: this.translate.instant('admin.readings.statusWaiting'),
       IN_PROGRESS: this.translate.instant('admin.readings.statusInProgress'),
       PUBLISHED: this.translate.instant('admin.readings.statusPublished'),
+      ARCHIVED: 'Arquivada',
     };
     return labels[status] || status;
   }
 
-  getStatusSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-    const severities: Record<string, 'success' | 'info' | 'warn' | 'danger'> = {
-      PENDING: 'warn',
-      IN_PROGRESS: 'info',
+  getStatusTone(status: string): DeliveryTone {
+    const tones: Record<string, DeliveryTone> = {
+      PENDING: 'warning',
+      IN_PROGRESS: 'brand',
       PUBLISHED: 'success',
+      ARCHIVED: 'neutral',
     };
-    return severities[status] || 'info';
+    return tones[status] || 'neutral';
   }
 
-  formatDate(dateString: string): string {
+  formatDate(dateString: string | Date): string {
     return new Date(dateString).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
@@ -125,16 +132,21 @@ export class AdminReadingListComponent implements OnInit {
     });
   }
 
-  getTimeSinceCreation(dateString: string): string {
+  getTimeSinceCreation(dateString: string | Date): string {
     const created = new Date(dateString);
     const now = new Date();
     const diffMs = now.getTime() - created.getTime();
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffHours = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60)));
     const diffDays = Math.floor(diffHours / 24);
 
     if (diffDays > 0) {
       return this.translate.instant('admin.readings.daysAgo', { count: diffDays });
     }
     return this.translate.instant('admin.readings.hoursAgo', { count: diffHours });
+  }
+
+  getDeliveryTypeLabel(reading: Reading): string {
+    if (reading.deliveryType) return reading.deliveryType;
+    return 'CONTENT';
   }
 }
