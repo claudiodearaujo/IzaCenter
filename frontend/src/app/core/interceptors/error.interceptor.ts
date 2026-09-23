@@ -3,10 +3,12 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { NotificationService } from '../services/notification.service';
+import { AuthService } from '../services/auth.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const notificationService = inject(NotificationService);
+  const authService = inject(AuthService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -29,10 +31,19 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       } else {
         // Server-side error
         switch (error.status) {
-          case 401:
-            errorMessage = 'Sessão expirada. Faça login novamente.';
-            router.navigate(['/auth/login']);
+          case 401: {
+            const hasAuthenticatedSession = !!authService.getAccessToken();
+
+            if (hasAuthenticatedSession) {
+              errorMessage = 'Sessão expirada. Faça login novamente.';
+              router.navigate(['/auth/login']);
+            } else {
+              // Public/anonymous requests must never force navigation to login.
+              // A 401 here is an API contract/error response, not an expired session.
+              errorMessage = error.error?.message || error.error?.error || 'Não autorizado.';
+            }
             break;
+          }
           case 403:
             errorMessage = 'Você não tem permissão para acessar este recurso.';
             break;
