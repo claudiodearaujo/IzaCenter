@@ -85,6 +85,14 @@ export class SettingsComponent implements OnInit {
     homeHeroTitle: string;
     homeHeroSubtitle: string;
     aboutText: string;
+    servicesTitle: string;
+    servicesSubtitle: string;
+    ctaTitle: string;
+    ctaSubtitle: string;
+    ctaButtonLabel: string;
+    ctaButtonUrl: string;
+    footerText: string;
+    footerDisclaimer: string;
     privacyPolicy: string;
     termsOfService: string;
     googleAnalyticsId: string;
@@ -92,7 +100,7 @@ export class SettingsComponent implements OnInit {
     hotjarId: string;
   } = {
     siteName: 'Therapist Platform',
-    siteDescription: 'Leituras de Tarot Cigano com o profissional',
+    siteDescription: 'Plataforma de serviços e atendimentos profissionais',
     siteKeywords: '',
     logoUrl: '',
     faviconUrl: '',
@@ -114,6 +122,14 @@ export class SettingsComponent implements OnInit {
     homeHeroTitle: 'Therapist Platform',
     homeHeroSubtitle: 'Serviços e atendimentos personalizados em um só lugar',
     aboutText: '',
+    servicesTitle: 'Serviços',
+    servicesSubtitle: 'Escolha o serviço que melhor atende ao seu momento.',
+    ctaTitle: 'Pronto para começar?',
+    ctaSubtitle: 'Conheça as opções disponíveis ou entre em contato para tirar dúvidas.',
+    ctaButtonLabel: 'Ver serviços',
+    ctaButtonUrl: '/servicos',
+    footerText: 'Atendimento profissional com informação clara e experiência personalizada.',
+    footerDisclaimer: 'As informações e serviços apresentados não substituem orientação profissional regulamentada quando aplicável.',
     privacyPolicy: '',
     termsOfService: '',
     googleAnalyticsId: '',
@@ -123,15 +139,15 @@ export class SettingsComponent implements OnInit {
 
   generalSettings: GeneralSettings = {
     siteName: 'Therapist Platform',
-    siteDescription: 'Leituras de Tarot Cigano com o profissional',
+    siteDescription: 'Plataforma de serviços e atendimentos profissionais',
     logoUrl: '',
     faviconUrl: '',
     maintenanceMode: false,
   };
 
   contactSettings: ContactSettings = {
-    email: 'contato@example.com',
-    phone: '(11) 99999-9999',
+    email: '',
+    phone: '',
     whatsapp: '',
     address: '',
     instagramUrl: '',
@@ -142,9 +158,22 @@ export class SettingsComponent implements OnInit {
   businessHours: BusinessHour[] = [];
 
   contentSettings: ContentSettings = {
-    homeTitle: 'Therapist Platform',
-    homeSubtitle: 'Serviços e atendimentos personalizados em um só lugar',
-    aboutText: '',
+    heroTitle: 'Atendimento profissional de forma simples e personalizada',
+    heroSubtitle: 'Conheça os serviços disponíveis e escolha a melhor forma de atendimento para você.',
+    heroPrimaryCtaLabel: 'Conhecer serviços',
+    heroPrimaryCtaUrl: '/servicos',
+    heroSecondaryCtaLabel: 'Conhecer o profissional',
+    heroSecondaryCtaUrl: '/sobre',
+    aboutTitle: 'Conheça o profissional',
+    aboutContent: '',
+    servicesTitle: 'Serviços',
+    servicesSubtitle: 'Escolha o serviço que melhor atende ao seu momento.',
+    ctaTitle: 'Pronto para começar?',
+    ctaSubtitle: 'Conheça as opções disponíveis ou entre em contato para tirar dúvidas.',
+    ctaButtonLabel: 'Ver serviços',
+    ctaButtonUrl: '/servicos',
+    footerText: 'Atendimento profissional com informação clara e experiência personalizada.',
+    footerDisclaimer: 'As informações e serviços apresentados não substituem orientação profissional regulamentada quando aplicável.',
     privacyPolicy: '',
     termsOfService: '',
   };
@@ -223,6 +252,16 @@ export class SettingsComponent implements OnInit {
           homeHeroTitle: this.contentSettings.heroTitle || this.contentSettings.homeTitle || '',
           homeHeroSubtitle: this.contentSettings.heroSubtitle || this.contentSettings.homeSubtitle || '',
           aboutText: this.contentSettings.aboutContent || this.contentSettings.aboutText || '',
+          servicesTitle: this.contentSettings.servicesTitle || 'Serviços',
+          servicesSubtitle: this.contentSettings.servicesSubtitle || '',
+          ctaTitle: this.contentSettings.ctaTitle || '',
+          ctaSubtitle: this.contentSettings.ctaSubtitle || '',
+          ctaButtonLabel: this.contentSettings.ctaButtonLabel || '',
+          ctaButtonUrl: this.contentSettings.ctaButtonUrl || '/servicos',
+          footerText: this.contentSettings.footerText || '',
+          footerDisclaimer: this.contentSettings.footerDisclaimer || '',
+          privacyPolicy: this.contentSettings.privacyPolicy || '',
+          termsOfService: this.contentSettings.termsOfService || '',
           googleAnalyticsId: this.analyticsSettings.googleAnalyticsId || '',
           facebookPixelId: this.analyticsSettings.facebookPixelId || '',
           hotjarId: this.analyticsSettings.hotjarId || '',
@@ -243,11 +282,34 @@ export class SettingsComponent implements OnInit {
   }
 
   saveSettings() {
-    this.saveGeneralSettings();
+    this.saving.set(true);
+    this.syncUnifiedSettings();
+    this.normalizeDomainSettings();
+
+    forkJoin([
+      this.settingsService.updateGeneralSettings(this.generalSettings),
+      this.settingsService.updateContactSettings(this.contactSettings),
+      this.settingsService.updateBusinessHours(this.businessHours),
+      this.settingsService.updateContentSettings(this.contentSettings),
+      this.settingsService.updateAnalyticsSettings(this.analyticsSettings),
+      this.settingsService.updateProfessional(this.professionalSettings),
+      this.settingsService.updateSpecialties(this.specialties),
+      this.settingsService.updateSeo(this.seoSettings),
+    ]).subscribe({
+      next: () => {
+        this.notification.success('Configurações white-label salvas com sucesso.');
+        this.saving.set(false);
+      },
+      error: () => {
+        this.notification.error(this.translate.instant('admin.settings.errorSaving'));
+        this.saving.set(false);
+      },
+    });
   }
 
   saveGeneralSettings() {
     this.saving.set(true);
+    this.syncUnifiedSettings();
     this.settingsService.updateGeneralSettings(this.generalSettings).subscribe({
       next: () => {
         this.notification.success(this.translate.instant('admin.settings.generalSaved'));
@@ -262,6 +324,7 @@ export class SettingsComponent implements OnInit {
 
   saveContactSettings() {
     this.saving.set(true);
+    this.syncUnifiedSettings();
     this.settingsService.updateContactSettings(this.contactSettings).subscribe({
       next: () => {
         this.notification.success(this.translate.instant('admin.settings.contactSaved'));
@@ -290,6 +353,7 @@ export class SettingsComponent implements OnInit {
 
   saveContentSettings() {
     this.saving.set(true);
+    this.syncUnifiedSettings();
     this.settingsService.updateContentSettings(this.contentSettings).subscribe({
       next: () => {
         this.notification.success(this.translate.instant('admin.settings.contentSaved'));
@@ -304,6 +368,7 @@ export class SettingsComponent implements OnInit {
 
   saveAnalyticsSettings() {
     this.saving.set(true);
+    this.syncUnifiedSettings();
     this.settingsService.updateAnalyticsSettings(this.analyticsSettings).subscribe({
       next: () => {
         this.notification.success(this.translate.instant('admin.settings.analyticsSaved'));
@@ -318,7 +383,75 @@ export class SettingsComponent implements OnInit {
 
   saveDomainSettings() {
     this.saving.set(true);
+    this.normalizeDomainSettings();
 
+    forkJoin([
+      this.settingsService.updateProfessional(this.professionalSettings),
+      this.settingsService.updateSpecialties(this.specialties),
+      this.settingsService.updateSeo(this.seoSettings),
+    ]).subscribe({
+      next: () => {
+        this.notification.success('Configuração profissional salva com sucesso.');
+        this.saving.set(false);
+      },
+      error: () => {
+        this.notification.error(this.translate.instant('admin.settings.errorSaving'));
+        this.saving.set(false);
+      },
+    });
+  }
+
+  private syncUnifiedSettings(): void {
+    this.generalSettings = {
+      ...this.generalSettings,
+      siteName: this.settings.siteName,
+      siteDescription: this.settings.siteDescription,
+      logoUrl: this.settings.logoUrl,
+      faviconUrl: this.settings.faviconUrl,
+      maintenanceMode: this.settings.maintenanceMode,
+      enableTestimonials: this.settings.allowTestimonials,
+      enableShop: this.settings.allowOnlinePayment,
+      enableAppointments: this.settings.allowRegistration,
+    };
+
+    this.contactSettings = {
+      ...this.contactSettings,
+      email: this.settings.email,
+      phone: this.settings.phone,
+      whatsapp: this.settings.whatsapp,
+      address: this.settings.address,
+      instagram: this.settings.instagramUrl,
+      facebook: this.settings.facebookUrl,
+      youtube: this.settings.youtubeUrl,
+      tiktok: this.settings.tiktokUrl,
+    };
+
+    this.contentSettings = {
+      ...this.contentSettings,
+      heroTitle: this.settings.homeHeroTitle,
+      heroSubtitle: this.settings.homeHeroSubtitle,
+      aboutContent: this.settings.aboutText,
+      servicesTitle: this.settings.servicesTitle,
+      servicesSubtitle: this.settings.servicesSubtitle,
+      ctaTitle: this.settings.ctaTitle,
+      ctaSubtitle: this.settings.ctaSubtitle,
+      ctaButtonLabel: this.settings.ctaButtonLabel,
+      ctaButtonUrl: this.settings.ctaButtonUrl,
+      footerText: this.settings.footerText,
+      footerDisclaimer: this.settings.footerDisclaimer,
+      privacyPolicy: this.settings.privacyPolicy,
+      termsOfService: this.settings.termsOfService,
+    };
+
+    this.analyticsSettings = {
+      ...this.analyticsSettings,
+      googleAnalyticsId: this.settings.googleAnalyticsId,
+      facebookPixelId: this.settings.facebookPixelId,
+      hotjarId: this.settings.hotjarId,
+    };
+  }
+
+  private normalizeDomainSettings(): void {
     this.professionalSettings = {
       ...this.professionalSettings,
       languages: this.parseList(this.languagesText),
@@ -342,21 +475,6 @@ export class SettingsComponent implements OnInit {
       ...this.seoSettings,
       keywords: this.parseList(this.seoKeywordsText),
     };
-
-    forkJoin([
-      this.settingsService.updateProfessional(this.professionalSettings),
-      this.settingsService.updateSpecialties(this.specialties),
-      this.settingsService.updateSeo(this.seoSettings),
-    ]).subscribe({
-      next: () => {
-        this.notification.success('Configuração profissional salva com sucesso.');
-        this.saving.set(false);
-      },
-      error: () => {
-        this.notification.error(this.translate.instant('admin.settings.errorSaving'));
-        this.saving.set(false);
-      },
-    });
   }
 
   private parseList(value: string): string[] {
