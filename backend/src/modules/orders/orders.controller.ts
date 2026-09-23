@@ -14,7 +14,7 @@ export class OrdersController {
     try {
       const clientId = req.user!.id;
       const data = req.body as CreateOrderDto;
-      const result = await ordersService.create(clientId, data);
+      const result = await ordersService.create(clientId, data, req.tenant!.id);
 
       res.status(201).json({
         success: true,
@@ -34,7 +34,7 @@ export class OrdersController {
     try {
       const clientId = req.user!.id;
       const query = req.query as unknown as QueryOrdersDto;
-      const result = await ordersService.list(query, clientId);
+      const result = await ordersService.list(query, clientId, req.tenant!.id);
 
       res.json({
         success: true,
@@ -54,7 +54,7 @@ export class OrdersController {
     try {
       const clientId = req.user!.id;
       const { id } = req.params;
-      const order = await ordersService.getById(id as string, clientId);
+      const order = await ordersService.getById(id as string, clientId, req.tenant!.id);
 
       res.json({
         success: true,
@@ -73,7 +73,7 @@ export class OrdersController {
     try {
       const clientId = req.user!.id;
       const { id } = req.params;
-      const order = await ordersService.getById(id as string, clientId);
+      const order = await ordersService.getById(id as string, clientId, req.tenant!.id);
 
       generateOrderPdf(
         {
@@ -109,7 +109,7 @@ export class OrdersController {
     try {
       const clientId = req.user!.id;
       const { id } = req.params;
-      const result = await ordersService.cancel(id as string, clientId);
+      const result = await ordersService.cancel(id as string, clientId, req.tenant!.id);
 
       res.json({
         success: true,
@@ -129,7 +129,7 @@ export class OrdersController {
       const clientId = req.user!.id;
       const { itemId } = req.params;
       const data = req.body as AddQuestionsDto;
-      const result = await ordersService.addQuestions(itemId as string, clientId, data);
+      const result = await ordersService.addQuestions(itemId as string, clientId, data, req.tenant!.id);
 
       res.json({
         success: true,
@@ -151,7 +151,7 @@ export class OrdersController {
   async list(req: Request, res: Response, next: NextFunction) {
     try {
       const query = req.query as unknown as QueryOrdersDto;
-      const result = await ordersService.list(query);
+      const result = await ordersService.list(query, undefined, req.tenant!.id);
 
       res.json({
         success: true,
@@ -170,7 +170,7 @@ export class OrdersController {
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const order = await ordersService.getById(id as string);
+      const order = await ordersService.getById(id as string, undefined, req.tenant!.id);
 
       res.json({
         success: true,
@@ -189,7 +189,7 @@ export class OrdersController {
     try {
       const { id } = req.params;
       const data = req.body as UpdateOrderDto;
-      const order = await ordersService.update(id as string, data);
+      const order = await ordersService.update(id as string, data, req.tenant!.id);
 
       res.json({
         success: true,
@@ -208,7 +208,7 @@ export class OrdersController {
   async cancel(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await ordersService.cancel(id as string);
+      const result = await ordersService.cancel(id as string, undefined, req.tenant!.id);
 
       res.json({
         success: true,
@@ -228,7 +228,8 @@ export class OrdersController {
       const { startDate, endDate } = req.query;
       const stats = await ordersService.getStatistics(
         startDate ? new Date(startDate as string) : undefined,
-        endDate ? new Date(endDate as string) : undefined
+        endDate ? new Date(endDate as string) : undefined,
+        req.tenant!.id
       );
 
       res.json({
@@ -247,7 +248,7 @@ export class OrdersController {
   async validateCoupon(req: Request, res: Response, next: NextFunction) {
     try {
       const { code, orderTotal } = req.body as { code: string; orderTotal?: number };
-      const result = await ordersService.validateCoupon(code, orderTotal);
+      const result = await ordersService.validateCoupon(code, orderTotal, req.tenant!.id);
 
       res.json({
         success: true,

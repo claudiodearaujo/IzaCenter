@@ -38,7 +38,7 @@ export class AuthController {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const data = req.body as LoginDto;
-      const result = await authService.login(data);
+      const result = await authService.login(data, req.tenant?.id);
 
       res.json({
         success: true,
@@ -57,7 +57,7 @@ export class AuthController {
   async forgotPassword(req: Request, res: Response, next: NextFunction) {
     try {
       const data = req.body as ForgotPasswordDto;
-      const result = await authService.forgotPassword(data);
+      const result = await authService.forgotPassword(data, req.tenant?.id);
 
       res.json({
         success: true,
@@ -112,7 +112,7 @@ export class AuthController {
   async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
       const { refreshToken } = req.body as RefreshTokenDto;
-      const result = await authService.refreshToken(refreshToken);
+      const result = await authService.refreshToken(refreshToken, req.tenant?.id);
 
       res.json({
         success: true,

@@ -3,6 +3,7 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../../config/database';
 import { storage } from '../../config/supabase';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 import { Errors } from '../../middlewares/error.middleware';
 import { generateSlug, generateFileName, buildPaginationMeta, buildCursorMeta } from '../../utils';
 import {
@@ -15,6 +16,17 @@ import {
 } from './products.schema';
 
 export class ProductsService {
+  private async assertCategoryInTenant(categoryId: string | null | undefined, tenantId: string) {
+    if (!categoryId) return;
+    const category = await prisma.productCategory.findFirst({
+      where: { id: categoryId, tenantId },
+      select: { id: true },
+    });
+    if (!category) {
+      throw Errors.NotFound('Categoria');
+    }
+  }
+
   private legacyTypeFromServiceKind(serviceKind: string): 'QUESTION' | 'SESSION' | 'MONTHLY' | 'SPECIAL' {
     switch (serviceKind) {
       case 'SESSION':
@@ -108,12 +120,12 @@ export class ProductsService {
   /**
    * Create a new product
    */
-  async create(data: CreateProductDto) {
+  async create(data: CreateProductDto, tenantId = DEFAULT_TENANT_ID) {
     const slug = data.slug || generateSlug(data.name);
 
     // Check if slug exists
     const existingSlug = await prisma.product.findUnique({
-      where: { slug },
+      where: { tenantId_slug: { tenantId, slug } },
     });
 
     if (existingSlug) {
@@ -121,10 +133,12 @@ export class ProductsService {
     }
 
     const persistenceData = this.buildPersistenceData(data);
+    await this.assertCategoryInTenant(persistenceData.categoryId, tenantId);
 
     const product = await prisma.product.create({
       data: {
         ...persistenceData,
+        tenantId,
         slug,
       } as Prisma.ProductUncheckedCreateInput,
       include: {
@@ -139,9 +153,9 @@ export class ProductsService {
   /**
    * Get product by ID
    */
-  async getById(id: string) {
-    const product = await prisma.product.findUnique({
-      where: { id },
+  async getById(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const product = await prisma.product.findFirst({
+      where: { id, tenantId },
       include: {
         category: true,
         attachments: {
@@ -160,9 +174,9 @@ export class ProductsService {
   /**
    * Get product by slug (public)
    */
-  async getBySlug(slug: string) {
-    const product = await prisma.product.findUnique({
-      where: { slug, isActive: true },
+  async getBySlug(slug: string, tenantId = DEFAULT_TENANT_ID) {
+    const product = await prisma.product.findFirst({
+      where: { tenantId, slug, isActive: true },
       include: {
         category: true,
         attachments: {
@@ -181,7 +195,7 @@ export class ProductsService {
   /**
    * List products
    */
-  async list(query: QueryProductsDto, publicOnly: boolean = false) {
+  async list(query: QueryProductsDto, publicOnly: boolean = false, tenantId = DEFAULT_TENANT_ID) {
     const {
       page,
       limit,
@@ -197,7 +211,7 @@ export class ProductsService {
       sortOrder,
     } = query;
 
-    const where: any = {};
+    const where: any = { tenantId };
 
     if (publicOnly) {
       where.isActive = true;
@@ -274,9 +288,10 @@ export class ProductsService {
   /**
    * Get featured products
    */
-  async getFeatured(limit: number = 6) {
+  async getFeatured(limit: number = 6, tenantId = DEFAULT_TENANT_ID) {
     const products = await prisma.product.findMany({
       where: {
+        tenantId,
         isActive: true,
         isFeatured: true,
       },
@@ -301,10 +316,10 @@ export class ProductsService {
     limit?: number;
     search?: string;
     categoryId?: string;
-  }) {
+  }, tenantId = DEFAULT_TENANT_ID) {
     const { cursor, limit = 12, search, categoryId } = opts;
 
-    const where: any = { isActive: true };
+    const where: any = { tenantId, isActive: true };
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
@@ -338,17 +353,17 @@ export class ProductsService {
   /**
    * Update product
    */
-  async update(id: string, data: UpdateProductDto) {
+  async update(id: string, data: UpdateProductDto, tenantId = DEFAULT_TENANT_ID) {
     // Check if product exists
-    const existing = await prisma.product.findUnique({ where: { id } });
+    const existing = await prisma.product.findFirst({ where: { id, tenantId } });
     if (!existing) {
       throw Errors.NotFound('Produto');
     }
 
     // If updating slug, check uniqueness
     if (data.slug && data.slug !== existing.slug) {
-      const existingSlug = await prisma.product.findUnique({
-        where: { slug: data.slug },
+      const existingSlug = await prisma.product.findFirst({
+        where: { tenantId, slug: data.slug, id: { not: id } },
       });
       if (existingSlug) {
         throw Errors.Conflict('Já existe um produto com este slug');
@@ -356,6 +371,7 @@ export class ProductsService {
     }
 
     const persistenceData = this.buildPersistenceData(data, existing);
+    await this.assertCategoryInTenant(persistenceData.categoryId, tenantId);
 
     const product = await prisma.product.update({
       where: { id },
@@ -372,9 +388,9 @@ export class ProductsService {
   /**
    * Update product cover image
    */
-  async updateCoverImage(id: string, file: Express.Multer.File) {
-    const product = await prisma.product.findUnique({
-      where: { id },
+  async updateCoverImage(id: string, file: Express.Multer.File, tenantId = DEFAULT_TENANT_ID) {
+    const product = await prisma.product.findFirst({
+      where: { id, tenantId },
       select: { coverImageUrl: true },
     });
 
@@ -411,10 +427,15 @@ export class ProductsService {
   /**
    * Delete product
    */
-  async delete(id: string) {
+  async delete(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const existing = await prisma.product.findFirst({ where: { id, tenantId }, select: { id: true } });
+    if (!existing) {
+      throw Errors.NotFound('Produto');
+    }
+
     // Check if product has orders
     const orderCount = await prisma.orderItem.count({
-      where: { productId: id },
+      where: { productId: id, order: { tenantId } },
     });
 
     if (orderCount > 0) {
@@ -438,11 +459,11 @@ export class ProductsService {
   /**
    * Create category
    */
-  async createCategory(data: CreateCategoryDto) {
+  async createCategory(data: CreateCategoryDto, tenantId = DEFAULT_TENANT_ID) {
     const slug = data.slug || generateSlug(data.name);
 
     const existingSlug = await prisma.productCategory.findUnique({
-      where: { slug },
+      where: { tenantId_slug: { tenantId, slug } },
     });
 
     if (existingSlug) {
@@ -450,16 +471,16 @@ export class ProductsService {
     }
 
     return prisma.productCategory.create({
-      data: { ...data, slug },
+      data: { ...data, tenantId, slug },
     });
   }
 
   /**
    * Get category by ID
    */
-  async getCategoryById(id: string) {
-    const category = await prisma.productCategory.findUnique({
-      where: { id },
+  async getCategoryById(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const category = await prisma.productCategory.findFirst({
+      where: { id, tenantId },
       include: {
         _count: { select: { products: true } },
       },
@@ -475,8 +496,8 @@ export class ProductsService {
   /**
    * List categories
    */
-  async listCategories(activeOnly: boolean = false) {
-    const where = activeOnly ? { isActive: true } : {};
+  async listCategories(activeOnly: boolean = false, tenantId = DEFAULT_TENANT_ID) {
+    const where = activeOnly ? { tenantId, isActive: true } : { tenantId };
     return prisma.productCategory.findMany({
       where,
       orderBy: { displayOrder: 'asc' },
@@ -489,15 +510,15 @@ export class ProductsService {
   /**
    * Update category
    */
-  async updateCategory(id: string, data: UpdateCategoryDto) {
-    const existing = await prisma.productCategory.findUnique({ where: { id } });
+  async updateCategory(id: string, data: UpdateCategoryDto, tenantId = DEFAULT_TENANT_ID) {
+    const existing = await prisma.productCategory.findFirst({ where: { id, tenantId } });
     if (!existing) {
       throw Errors.NotFound('Categoria');
     }
 
     if (data.slug && data.slug !== existing.slug) {
-      const existingSlug = await prisma.productCategory.findUnique({
-        where: { slug: data.slug },
+      const existingSlug = await prisma.productCategory.findFirst({
+        where: { tenantId, slug: data.slug, id: { not: id } },
       });
       if (existingSlug) {
         throw Errors.Conflict('Já existe uma categoria com este slug');
@@ -513,15 +534,19 @@ export class ProductsService {
   /**
    * Delete category
    */
-  async deleteCategory(id: string) {
+  async deleteCategory(id: string, tenantId = DEFAULT_TENANT_ID) {
     const productCount = await prisma.product.count({
-      where: { categoryId: id },
+      where: { categoryId: id, tenantId },
     });
 
     if (productCount > 0) {
       throw Errors.Conflict('Categoria possui produtos vinculados');
     }
 
+    const category = await prisma.productCategory.findFirst({ where: { id, tenantId }, select: { id: true } });
+    if (!category) {
+      throw Errors.NotFound('Categoria');
+    }
     await prisma.productCategory.delete({ where: { id } });
     return { message: 'Categoria excluída com sucesso' };
   }

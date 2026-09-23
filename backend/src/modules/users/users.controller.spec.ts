@@ -23,6 +23,7 @@ const mockRequest = (overrides: Partial<Request> = {}): Partial<Request> => ({
   params: {},
   query: {},
   user: { id: 'user-1', email: 'user@test.com', role: 'CLIENT' } as any,
+  tenant: { id: 'tenant-test' } as any,
   file: undefined,
   ...overrides,
 });
@@ -58,7 +59,7 @@ describe('UsersController', () => {
 
       await controller.getProfile(req as Request, res as Response, mockNext);
 
-      expect(usersService.getById).toHaveBeenCalledWith('user-1');
+      expect(usersService.getById).toHaveBeenCalledWith('user-1', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockUser,
@@ -171,7 +172,7 @@ describe('UsersController', () => {
 
       await controller.getStatistics(req as Request, res as Response, mockNext);
 
-      expect(usersService.getStatistics).toHaveBeenCalledWith('user-1');
+      expect(usersService.getStatistics).toHaveBeenCalledWith('user-1', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockStats,
@@ -193,7 +194,7 @@ describe('UsersController', () => {
 
       await controller.list(req as Request, res as Response, mockNext);
 
-      expect(usersService.list).toHaveBeenCalledWith({});
+      expect(usersService.list).toHaveBeenCalledWith({}, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockResult.data,
@@ -210,7 +211,7 @@ describe('UsersController', () => {
 
       await controller.getById(req as Request, res as Response, mockNext);
 
-      expect(usersService.getById).toHaveBeenCalledWith('user-2');
+      expect(usersService.getById).toHaveBeenCalledWith('user-2', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockUser,
@@ -228,7 +229,7 @@ describe('UsersController', () => {
 
       await controller.update(req as Request, res as Response, mockNext);
 
-      expect(usersService.adminUpdate).toHaveBeenCalledWith('user-2', updateData);
+      expect(usersService.adminUpdate).toHaveBeenCalledWith('user-2', updateData, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Usuário atualizado com sucesso',
@@ -246,7 +247,7 @@ describe('UsersController', () => {
 
       await controller.delete(req as Request, res as Response, mockNext);
 
-      expect(usersService.delete).toHaveBeenCalledWith('user-2');
+      expect(usersService.delete).toHaveBeenCalledWith('user-2', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Usuário excluído com sucesso',
@@ -272,7 +273,7 @@ describe('UsersController', () => {
 
       await controller.getUserStatistics(req as Request, res as Response, mockNext);
 
-      expect(usersService.getStatistics).toHaveBeenCalledWith('user-2');
+      expect(usersService.getStatistics).toHaveBeenCalledWith('user-2', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockStats,

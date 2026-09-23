@@ -22,6 +22,7 @@ const mockRequest = (overrides: Partial<Request> = {}): Partial<Request> => ({
   params: {},
   query: {},
   user: { id: 'user-1', email: 'user@test.com', role: 'CLIENT' } as any,
+  tenant: { id: 'tenant-test' } as any,
   ...overrides,
 });
 
@@ -58,7 +59,7 @@ describe('OrdersController', () => {
 
       await controller.create(req as Request, res as Response, mockNext);
 
-      expect(ordersService.create).toHaveBeenCalledWith('user-1', orderData);
+      expect(ordersService.create).toHaveBeenCalledWith('user-1', orderData, 'tenant-test');
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
         success: true,
@@ -89,7 +90,7 @@ describe('OrdersController', () => {
 
       await controller.listMy(req as Request, res as Response, mockNext);
 
-      expect(ordersService.list).toHaveBeenCalledWith({}, 'user-1');
+      expect(ordersService.list).toHaveBeenCalledWith({}, 'user-1', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockResult.data,
@@ -106,7 +107,7 @@ describe('OrdersController', () => {
 
       await controller.getMyById(req as Request, res as Response, mockNext);
 
-      expect(ordersService.getById).toHaveBeenCalledWith('order-1', 'user-1');
+      expect(ordersService.getById).toHaveBeenCalledWith('order-1', 'user-1', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockOrder,
@@ -133,7 +134,7 @@ describe('OrdersController', () => {
 
       await controller.cancelMy(req as Request, res as Response, mockNext);
 
-      expect(ordersService.cancel).toHaveBeenCalledWith('order-1', 'user-1');
+      expect(ordersService.cancel).toHaveBeenCalledWith('order-1', 'user-1', 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Pedido cancelado com sucesso',
@@ -154,7 +155,8 @@ describe('OrdersController', () => {
       expect(ordersService.addQuestions).toHaveBeenCalledWith(
         'item-1',
         'user-1',
-        { questions: ['What does the future hold?'] }
+        { questions: ['What does the future hold?'] },
+        'tenant-test'
       );
       expect(res.json).toHaveBeenCalledWith({
         success: true,
@@ -177,7 +179,7 @@ describe('OrdersController', () => {
 
       await controller.list(req as Request, res as Response, mockNext);
 
-      expect(ordersService.list).toHaveBeenCalledWith({});
+      expect(ordersService.list).toHaveBeenCalledWith({}, undefined, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockResult.data,
@@ -194,7 +196,7 @@ describe('OrdersController', () => {
 
       await controller.getById(req as Request, res as Response, mockNext);
 
-      expect(ordersService.getById).toHaveBeenCalledWith('order-1');
+      expect(ordersService.getById).toHaveBeenCalledWith('order-1', undefined, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockOrder,
@@ -212,7 +214,7 @@ describe('OrdersController', () => {
 
       await controller.update(req as Request, res as Response, mockNext);
 
-      expect(ordersService.update).toHaveBeenCalledWith('order-1', updateData);
+      expect(ordersService.update).toHaveBeenCalledWith('order-1', updateData, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Pedido atualizado com sucesso',
@@ -230,7 +232,7 @@ describe('OrdersController', () => {
 
       await controller.cancel(req as Request, res as Response, mockNext);
 
-      expect(ordersService.cancel).toHaveBeenCalledWith('order-1');
+      expect(ordersService.cancel).toHaveBeenCalledWith('order-1', undefined, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Pedido cancelado com sucesso',
@@ -260,7 +262,7 @@ describe('OrdersController', () => {
 
       await controller.getStatistics(req as Request, res as Response, mockNext);
 
-      expect(ordersService.getStatistics).toHaveBeenCalledWith(undefined, undefined);
+      expect(ordersService.getStatistics).toHaveBeenCalledWith(undefined, undefined, 'tenant-test');
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         data: mockStats,
@@ -275,7 +277,8 @@ describe('OrdersController', () => {
 
       expect(ordersService.getStatistics).toHaveBeenCalledWith(
         new Date('2026-01-01'),
-        new Date('2026-01-31')
+        new Date('2026-01-31'),
+        'tenant-test'
       );
     });
   });

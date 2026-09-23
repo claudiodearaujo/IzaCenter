@@ -1,9 +1,10 @@
 // apps/backend/src/modules/dashboard/dashboard.service.ts
 
 import { prisma } from '../../config/database';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 
 export class DashboardService {
-  async getStats() {
+  async getStats(tenantId = DEFAULT_TENANT_ID) {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -30,24 +31,26 @@ export class DashboardService {
       pendingTestimonials,
     ] = await Promise.all([
       // Orders
-      prisma.order.count(),
+      prisma.order.count({ where: { tenantId } }),
       prisma.order.count({
-        where: { createdAt: { gte: startOfMonth } },
+        where: { tenantId, createdAt: { gte: startOfMonth } },
       }),
       prisma.order.count({
         where: {
+          tenantId,
           createdAt: { gte: startOfLastMonth, lte: endOfLastMonth },
         },
       }),
-      prisma.order.count({ where: { status: 'PENDING' } }),
+      prisma.order.count({ where: { tenantId, status: 'PENDING' } }),
 
       // Revenue
       prisma.order.aggregate({
-        where: { paymentStatus: 'SUCCEEDED' },
+        where: { tenantId, paymentStatus: 'SUCCEEDED' },
         _sum: { total: true },
       }),
       prisma.order.aggregate({
         where: {
+          tenantId,
           paymentStatus: 'SUCCEEDED',
           createdAt: { gte: startOfMonth },
         },
@@ -55,6 +58,7 @@ export class DashboardService {
       }),
       prisma.order.aggregate({
         where: {
+          tenantId,
           paymentStatus: 'SUCCEEDED',
           createdAt: { gte: startOfLastMonth, lte: endOfLastMonth },
         },
@@ -62,35 +66,38 @@ export class DashboardService {
       }),
 
       // Users
-      prisma.user.count({ where: { role: 'CLIENT' } }),
-      prisma.user.count({
+      prisma.tenantMembership.count({ where: { tenantId, role: 'CLIENT', isActive: true } }),
+      prisma.tenantMembership.count({
         where: {
+          tenantId,
           role: 'CLIENT',
+          isActive: true,
           createdAt: { gte: startOfMonth },
         },
       }),
 
       // Products
-      prisma.product.count(),
-      prisma.product.count({ where: { isActive: true } }),
+      prisma.product.count({ where: { tenantId } }),
+      prisma.product.count({ where: { tenantId, isActive: true } }),
 
       // Readings
-      prisma.reading.count({ where: { status: 'PENDING' } }),
-      prisma.reading.count({ where: { status: 'PUBLISHED' } }),
+      prisma.reading.count({ where: { tenantId, status: 'PENDING' } }),
+      prisma.reading.count({ where: { tenantId, status: 'PUBLISHED' } }),
 
       // Appointments
       prisma.appointment.count({
         where: {
+          tenantId,
           scheduledDate: {
             gte: startOfToday,
             lt: new Date(startOfToday.getTime() + 24 * 60 * 60 * 1000),
           },
         },
       }),
-      prisma.appointment.count({ where: { status: 'SCHEDULED' } }),
+      prisma.appointment.count({ where: { tenantId, status: 'SCHEDULED' } }),
 
       // Testimonials
-      prisma.testimonial.count({ where: { isApproved: false } }),
+      prisma.testimonial.count({ where: { tenantId, isApproved: false } }),
     ]);
 
     // Calculate growth percentages
@@ -140,8 +147,9 @@ export class DashboardService {
     };
   }
 
-  async getRecentOrders(limit = 5) {
+  async getRecentOrders(limit = 5, tenantId = DEFAULT_TENANT_ID) {
     const orders = await prisma.order.findMany({
+      where: { tenantId },
       include: {
         client: {
           select: {
@@ -168,9 +176,9 @@ export class DashboardService {
     return { data: orders };
   }
 
-  async getRecentUsers(limit = 5) {
+  async getRecentUsers(limit = 5, tenantId = DEFAULT_TENANT_ID) {
     const users = await prisma.user.findMany({
-      where: { role: 'CLIENT' },
+      where: { tenantMemberships: { some: { tenantId, role: 'CLIENT', isActive: true } } },
       select: {
         id: true,
         fullName: true,
@@ -185,7 +193,7 @@ export class DashboardService {
     return { data: users };
   }
 
-  async getSalesChart(period: 'week' | 'month' | 'year' = 'month') {
+  async getSalesChart(period: 'week' | 'month' | 'year' = 'month', tenantId = DEFAULT_TENANT_ID) {
     const now = new Date();
     let startDate: Date;
     let groupBy: string;
@@ -217,6 +225,7 @@ export class DashboardService {
 
     const orders = await prisma.order.findMany({
       where: {
+        tenantId,
         paymentStatus: 'SUCCEEDED',
         createdAt: { gte: startDate },
       },
@@ -266,9 +275,10 @@ export class DashboardService {
     };
   }
 
-  async getTopProducts(limit = 5) {
+  async getTopProducts(limit = 5, tenantId = DEFAULT_TENANT_ID) {
     const products = await prisma.orderItem.groupBy({
       by: ['productId'],
+      where: { order: { tenantId } },
       _sum: { quantity: true },
       orderBy: { _sum: { quantity: 'desc' } },
       take: limit,
@@ -276,7 +286,7 @@ export class DashboardService {
 
     const productIds = products.map((p: { productId: string }) => p.productId);
     const productDetails = await prisma.product.findMany({
-      where: { id: { in: productIds } },
+      where: { tenantId, id: { in: productIds } },
       select: {
         id: true,
         name: true,

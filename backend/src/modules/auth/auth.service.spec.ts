@@ -1,6 +1,8 @@
 import { AuthService } from './auth.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 
+const TENANT_ID = 'tenant-test';
+
 // Mock utils
 jest.mock('../../utils', () => ({
   hashPassword: jest.fn().mockResolvedValue('hashed_password'),
@@ -32,6 +34,11 @@ describe('AuthService', () => {
   beforeEach(() => {
     authService = new AuthService();
     jest.clearAllMocks();
+    prismaMock.tenantMembership.findUnique.mockResolvedValue({
+      id: 'membership-1',
+      role: 'CLIENT',
+      isActive: true,
+    } as any);
   });
 
   // =============================================
@@ -99,7 +106,7 @@ describe('AuthService', () => {
       prismaMock.user.update.mockResolvedValue(mockUser as any);
 
       // Act
-      const result = await authService.login(loginData);
+      const result = await authService.login(loginData, TENANT_ID);
 
       // Assert
       expect(result.user.email).toBe(loginData.email);
@@ -111,9 +118,37 @@ describe('AuthService', () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(authService.login(loginData)).rejects.toThrow(
+      await expect(authService.login(loginData, TENANT_ID)).rejects.toThrow(
         'Email ou senha incorretos'
       );
+    });
+
+    it('should deny login when tenant membership is inactive', async () => {
+      prismaMock.user.findUnique.mockResolvedValue({
+        id: 'user-123',
+        email: loginData.email,
+        passwordHash: 'hashed_password',
+        fullName: 'Test User',
+        role: 'CLIENT',
+      } as any);
+      prismaMock.tenantMembership.findUnique.mockResolvedValue({
+        id: 'membership-1',
+        role: 'CLIENT',
+        isActive: false,
+      } as any);
+
+      await expect(authService.login(loginData, TENANT_ID)).rejects.toThrow(
+        'Email ou senha incorretos'
+      );
+      expect(prismaMock.tenantMembership.findUnique).toHaveBeenCalledWith({
+        where: {
+          tenantId_userId: {
+            tenantId: TENANT_ID,
+            userId: 'user-123',
+          },
+        },
+        select: { isActive: true },
+      });
     });
 
     it('should throw error if password is wrong', async () => {
@@ -128,7 +163,7 @@ describe('AuthService', () => {
       } as any);
 
       // Act & Assert
-      await expect(authService.login(loginData)).rejects.toThrow(
+      await expect(authService.login(loginData, TENANT_ID)).rejects.toThrow(
         'Email ou senha incorretos'
       );
     });
@@ -143,7 +178,7 @@ describe('AuthService', () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
 
       // Act
-      const result = await authService.forgotPassword({ email: 'nonexistent@test.com' });
+      const result = await authService.forgotPassword({ email: 'nonexistent@test.com' }, TENANT_ID);
 
       // Assert
       expect(result.message).toContain('receberá um link');
@@ -160,7 +195,7 @@ describe('AuthService', () => {
       prismaMock.user.update.mockResolvedValue(mockUser as any);
 
       // Act
-      const result = await authService.forgotPassword({ email: 'test@test.com' });
+      const result = await authService.forgotPassword({ email: 'test@test.com' }, TENANT_ID);
 
       // Assert
       expect(result.message).toContain('receberá um link');
@@ -276,7 +311,7 @@ describe('AuthService', () => {
       } as any);
 
       // Act
-      const result = await authService.refreshToken('valid_refresh_token');
+      const result = await authService.refreshToken('valid_refresh_token', TENANT_ID);
 
       // Assert
       expect(result.accessToken).toBe('access_token_123');
@@ -289,7 +324,7 @@ describe('AuthService', () => {
 
       // Act & Assert
       await expect(
-        authService.refreshToken('valid_refresh_token')
+        authService.refreshToken('valid_refresh_token', TENANT_ID)
       ).rejects.toThrow('Refresh token inválido');
     });
 
@@ -302,7 +337,7 @@ describe('AuthService', () => {
 
       // Act & Assert
       await expect(
-        authService.refreshToken('invalid_refresh_token')
+        authService.refreshToken('invalid_refresh_token', TENANT_ID)
       ).rejects.toThrow('Refresh token inválido');
     });
   });

@@ -1,6 +1,8 @@
 import { AppointmentsService } from './appointments.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 
+const TENANT_ID = 'tenant-test';
+
 // Mock email utils
 jest.mock('../../utils/email.util', () => ({
   sendEmail: jest.fn().mockResolvedValue(undefined),
@@ -95,7 +97,7 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.count.mockResolvedValue(1);
 
       // Act
-      const result = await service.findAll({});
+      const result = await service.findAll({}, TENANT_ID);
 
       // Assert
       expect(result.data).toEqual([mockAppointment]);
@@ -120,7 +122,7 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.count.mockResolvedValue(0);
 
       // Act
-      await service.findAll({ status: 'CONFIRMED' });
+      await service.findAll({ status: 'CONFIRMED' }, TENANT_ID);
 
       // Assert
       expect(prismaMock.appointment.findMany).toHaveBeenCalledWith(
@@ -137,7 +139,7 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.count.mockResolvedValue(0);
 
       // Act
-      await service.findAll({ date });
+      await service.findAll({ date }, TENANT_ID);
 
       // Assert
       expect(prismaMock.appointment.findMany).toHaveBeenCalledWith(
@@ -158,7 +160,7 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.count.mockResolvedValue(0);
 
       // Act
-      await service.findAll({ search: 'Cliente' });
+      await service.findAll({ search: 'Cliente' }, TENANT_ID);
 
       // Assert
       expect(prismaMock.appointment.findMany).toHaveBeenCalledWith(
@@ -181,7 +183,7 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.count.mockResolvedValue(25);
 
       // Act
-      const result = await service.findAll({ page: 2, limit: 5 });
+      const result = await service.findAll({ page: 2, limit: 5 }, TENANT_ID);
 
       // Assert
       expect(result.meta).toEqual({
@@ -205,12 +207,12 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.findMany.mockResolvedValue([mockAppointment] as any);
 
       // Act
-      const result = await service.findByUser('user-123');
+      const result = await service.findByUser('user-123', TENANT_ID);
 
       // Assert
       expect(result.data).toEqual([mockAppointment]);
       expect(prismaMock.appointment.findMany).toHaveBeenCalledWith({
-        where: { clientId: 'user-123' },
+        where: { clientId: 'user-123', tenantId: TENANT_ID },
         include: {
           orderItem: {
             include: {
@@ -229,7 +231,7 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.findMany.mockResolvedValue([]);
 
       // Act
-      const result = await service.findByUser('user-999');
+      const result = await service.findByUser('user-999', TENANT_ID);
 
       // Assert
       expect(result.data).toEqual([]);
@@ -242,28 +244,27 @@ describe('AppointmentsService', () => {
   describe('findById', () => {
     it('should get appointment by id', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
 
       // Act
-      const result = await service.findById('appt-123');
+      const result = await service.findById('appt-123', TENANT_ID);
 
       // Assert
       expect(result.data).toEqual(mockAppointment);
-      expect(prismaMock.appointment.findUnique).toHaveBeenCalledWith({
-        where: { id: 'appt-123' },
-        include: expect.objectContaining({
-          client: expect.any(Object),
-          orderItem: expect.any(Object),
-        }),
-      });
+      expect(prismaMock.appointment.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'appt-123', tenantId: TENANT_ID },
+          include: expect.any(Object),
+        })
+      );
     });
 
     it('should throw NotFoundException if appointment not found', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(null);
+      prismaMock.appointment.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(service.findById('appt-999')).rejects.toThrow(
+      await expect(service.findById('appt-999', TENANT_ID)).rejects.toThrow(
         'Agendamento não encontrado'
       );
     });
@@ -289,12 +290,13 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.create.mockResolvedValue(mockAppointment as any);
 
       // Act
-      const result = await service.create(createData);
+      const result = await service.create(createData, TENANT_ID);
 
       // Assert
       expect(result.data).toEqual(mockAppointment);
       expect(prismaMock.appointment.create).toHaveBeenCalledWith({
         data: {
+          tenantId: TENANT_ID,
           clientId: 'user-123',
           orderItemId: 'item-123',
           scheduledDate: createData.scheduledDate,
@@ -324,7 +326,7 @@ describe('AppointmentsService', () => {
       ] as any);
 
       // Act & Assert
-      await expect(service.create(createData)).rejects.toThrow(
+      await expect(service.create(createData, TENANT_ID)).rejects.toThrow(
         'Este horário já está ocupado'
       );
       expect(prismaMock.appointment.create).not.toHaveBeenCalled();
@@ -343,7 +345,7 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.create.mockResolvedValue(mockAppointment as any);
 
       // Act
-      const result = await service.create(createData);
+      const result = await service.create(createData, TENANT_ID);
 
       // Assert
       expect(result.data).toEqual(mockAppointment);
@@ -356,7 +358,7 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.create.mockResolvedValue(mockAppointment as any);
 
       // Act
-      await service.create(createData);
+      await service.create(createData, TENANT_ID);
 
       // Assert
       expect(sendEmail).toHaveBeenCalledWith(
@@ -378,7 +380,7 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.create.mockResolvedValue(noEmailAppointment as any);
 
       // Act
-      await service.create(createData);
+      await service.create(createData, TENANT_ID);
 
       // Assert
       expect(sendEmail).not.toHaveBeenCalled();
@@ -391,14 +393,14 @@ describe('AppointmentsService', () => {
   describe('update', () => {
     it('should update appointment successfully', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       prismaMock.appointment.update.mockResolvedValue({
         ...mockAppointment,
         adminNotes: 'Admin note',
       } as any);
 
       // Act
-      const result = await service.update('appt-123', { adminNotes: 'Admin note' });
+      const result = await service.update('appt-123', { adminNotes: 'Admin note' }, TENANT_ID);
 
       // Assert
       expect(result.data.adminNotes).toBe('Admin note');
@@ -406,17 +408,17 @@ describe('AppointmentsService', () => {
 
     it('should throw NotFoundException if appointment not found', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(null);
+      prismaMock.appointment.findFirst.mockResolvedValue(null);
 
       // Act & Assert
       await expect(
-        service.update('appt-999', { adminNotes: 'test' })
+        service.update('appt-999', { adminNotes: 'test' }, TENANT_ID)
       ).rejects.toThrow('Agendamento não encontrado');
     });
 
     it('should set confirmedAt when status is CONFIRMED', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       prismaMock.appointment.update.mockResolvedValue({
         ...mockAppointment,
         status: 'CONFIRMED',
@@ -424,7 +426,7 @@ describe('AppointmentsService', () => {
       } as any);
 
       // Act
-      await service.update('appt-123', { status: 'CONFIRMED' });
+      await service.update('appt-123', { status: 'CONFIRMED' }, TENANT_ID);
 
       // Assert
       expect(prismaMock.appointment.update).toHaveBeenCalledWith({
@@ -438,7 +440,7 @@ describe('AppointmentsService', () => {
 
     it('should set cancelledAt when status is CANCELLED', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       prismaMock.appointment.update.mockResolvedValue({
         ...mockAppointment,
         status: 'CANCELLED',
@@ -446,7 +448,7 @@ describe('AppointmentsService', () => {
       } as any);
 
       // Act
-      await service.update('appt-123', { status: 'CANCELLED' });
+      await service.update('appt-123', { status: 'CANCELLED' }, TENANT_ID);
 
       // Assert
       expect(prismaMock.appointment.update).toHaveBeenCalledWith({
@@ -461,14 +463,14 @@ describe('AppointmentsService', () => {
     it('should send status update email when status changes', async () => {
       // Arrange
       const { sendEmail } = require('../../utils');
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       prismaMock.appointment.update.mockResolvedValue({
         ...mockAppointment,
         status: 'CONFIRMED',
       } as any);
 
       // Act
-      await service.update('appt-123', { status: 'CONFIRMED' });
+      await service.update('appt-123', { status: 'CONFIRMED' }, TENANT_ID);
 
       // Assert
       expect(sendEmail).toHaveBeenCalledWith(
@@ -482,14 +484,14 @@ describe('AppointmentsService', () => {
     it('should not send email when status is not changed', async () => {
       // Arrange
       const { sendEmail } = require('../../utils');
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       prismaMock.appointment.update.mockResolvedValue({
         ...mockAppointment,
         meetingUrl: 'https://meet.example.com',
       } as any);
 
       // Act
-      await service.update('appt-123', { meetingUrl: 'https://meet.example.com' });
+      await service.update('appt-123', { meetingUrl: 'https://meet.example.com' }, TENANT_ID);
 
       // Assert
       expect(sendEmail).not.toHaveBeenCalled();
@@ -506,7 +508,7 @@ describe('AppointmentsService', () => {
 
     it('should reschedule appointment successfully', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       // checkConflict findMany — no conflicts
       prismaMock.appointment.findMany.mockResolvedValue([]);
       prismaMock.appointment.update.mockResolvedValue({
@@ -519,7 +521,7 @@ describe('AppointmentsService', () => {
       } as any);
 
       // Act
-      const result = await service.reschedule('appt-123', newDate, newStartTime, newEndTime);
+      const result = await service.reschedule('appt-123', newDate, newStartTime, newEndTime, TENANT_ID);
 
       // Assert
       expect(result.data.startTime).toBe(newStartTime);
@@ -538,17 +540,17 @@ describe('AppointmentsService', () => {
 
     it('should throw NotFoundException if appointment not found', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(null);
+      prismaMock.appointment.findFirst.mockResolvedValue(null);
 
       // Act & Assert
       await expect(
-        service.reschedule('appt-999', newDate, newStartTime, newEndTime)
+        service.reschedule('appt-999', newDate, newStartTime, newEndTime, TENANT_ID)
       ).rejects.toThrow('Agendamento não encontrado');
     });
 
     it('should throw BadRequestException on time conflict', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       prismaMock.appointment.findMany.mockResolvedValue([
         {
           id: 'other-appt',
@@ -560,7 +562,7 @@ describe('AppointmentsService', () => {
 
       // Act & Assert
       await expect(
-        service.reschedule('appt-123', newDate, newStartTime, newEndTime)
+        service.reschedule('appt-123', newDate, newStartTime, newEndTime, TENANT_ID)
       ).rejects.toThrow('Este horário já está ocupado');
       expect(prismaMock.appointment.update).not.toHaveBeenCalled();
     });
@@ -568,7 +570,7 @@ describe('AppointmentsService', () => {
     it('should send reschedule email', async () => {
       // Arrange
       const { sendEmail } = require('../../utils');
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       prismaMock.appointment.findMany.mockResolvedValue([]);
       prismaMock.appointment.update.mockResolvedValue({
         ...mockAppointment,
@@ -578,7 +580,7 @@ describe('AppointmentsService', () => {
       } as any);
 
       // Act
-      await service.reschedule('appt-123', newDate, newStartTime, newEndTime);
+      await service.reschedule('appt-123', newDate, newStartTime, newEndTime, TENANT_ID);
 
       // Assert
       expect(sendEmail).toHaveBeenCalledWith(
@@ -596,7 +598,7 @@ describe('AppointmentsService', () => {
   describe('cancel', () => {
     it('should cancel appointment successfully', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       prismaMock.appointment.update.mockResolvedValue({
         ...mockAppointment,
         status: 'CANCELLED',
@@ -604,7 +606,7 @@ describe('AppointmentsService', () => {
       } as any);
 
       // Act
-      const result = await service.cancel('appt-123');
+      const result = await service.cancel('appt-123', undefined, TENANT_ID);
 
       // Assert
       expect(result.data.status).toBe('CANCELLED');
@@ -620,7 +622,7 @@ describe('AppointmentsService', () => {
 
     it('should cancel with reason', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       prismaMock.appointment.update.mockResolvedValue({
         ...mockAppointment,
         status: 'CANCELLED',
@@ -629,7 +631,7 @@ describe('AppointmentsService', () => {
       } as any);
 
       // Act
-      const result = await service.cancel('appt-123', 'Motivo pessoal');
+      const result = await service.cancel('appt-123', 'Motivo pessoal', TENANT_ID);
 
       // Assert
       expect(prismaMock.appointment.update).toHaveBeenCalledWith({
@@ -644,10 +646,10 @@ describe('AppointmentsService', () => {
 
     it('should throw NotFoundException if appointment not found', async () => {
       // Arrange
-      prismaMock.appointment.findUnique.mockResolvedValue(null);
+      prismaMock.appointment.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(service.cancel('appt-999')).rejects.toThrow(
+      await expect(service.cancel('appt-999', undefined, TENANT_ID)).rejects.toThrow(
         'Agendamento não encontrado'
       );
     });
@@ -655,14 +657,14 @@ describe('AppointmentsService', () => {
     it('should send cancellation email', async () => {
       // Arrange
       const { sendEmail } = require('../../utils');
-      prismaMock.appointment.findUnique.mockResolvedValue(mockAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(mockAppointment as any);
       prismaMock.appointment.update.mockResolvedValue({
         ...mockAppointment,
         status: 'CANCELLED',
       } as any);
 
       // Act
-      await service.cancel('appt-123', 'Motivo pessoal');
+      await service.cancel('appt-123', 'Motivo pessoal', TENANT_ID);
 
       // Assert
       expect(sendEmail).toHaveBeenCalledWith(
@@ -680,14 +682,14 @@ describe('AppointmentsService', () => {
         ...mockAppointment,
         client: { ...mockClient, email: null },
       };
-      prismaMock.appointment.findUnique.mockResolvedValue(noEmailAppointment as any);
+      prismaMock.appointment.findFirst.mockResolvedValue(noEmailAppointment as any);
       prismaMock.appointment.update.mockResolvedValue({
         ...noEmailAppointment,
         status: 'CANCELLED',
       } as any);
 
       // Act
-      await service.cancel('appt-123');
+      await service.cancel('appt-123', undefined, TENANT_ID);
 
       // Assert
       expect(sendEmail).not.toHaveBeenCalled();
@@ -704,7 +706,7 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.findMany.mockResolvedValue([]);
 
       // Act
-      const result = await service.getAvailableSlots(date);
+      const result = await service.getAvailableSlots(date, TENANT_ID);
 
       // Assert — 09:00 to 18:00 in 30min slots = 18 slots
       expect(result.data).toHaveLength(18);
@@ -729,7 +731,7 @@ describe('AppointmentsService', () => {
       ] as any);
 
       // Act
-      const result = await service.getAvailableSlots(date);
+      const result = await service.getAvailableSlots(date, TENANT_ID);
 
       // Assert
       const slot10 = result.data.find((s: any) => s.startTime === '10:00');
@@ -746,7 +748,7 @@ describe('AppointmentsService', () => {
       ] as any);
 
       // Act
-      const result = await service.getAvailableSlots(date);
+      const result = await service.getAvailableSlots(date, TENANT_ID);
 
       // Assert
       const slot10 = result.data.find((s: any) => s.startTime === '10:00');
@@ -763,11 +765,12 @@ describe('AppointmentsService', () => {
       prismaMock.appointment.findMany.mockResolvedValue([]);
 
       // Act
-      await service.getAvailableSlots(date);
+      await service.getAvailableSlots(date, TENANT_ID);
 
       // Assert
       expect(prismaMock.appointment.findMany).toHaveBeenCalledWith({
         where: {
+          tenantId: TENANT_ID,
           scheduledDate: {
             gte: expect.any(Date),
             lte: expect.any(Date),

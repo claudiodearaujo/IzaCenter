@@ -6,6 +6,7 @@ import { storage } from '../../config/supabase';
 import { NotFoundException, BadRequestException } from '../../utils/errors';
 import { generateFileName } from '../../utils';
 import { sendEmail } from '../../utils/email.util';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 
 interface DeliveryContent {
   introduction?: string;
@@ -47,6 +48,17 @@ interface UpdateReadingDTO {
 }
 
 export class ReadingsService {
+  private async assertCardsInTenant(cards: UpdateReadingDTO['cards'], tenantId: string) {
+    if (!cards?.length) return;
+    const cardIds = [...new Set(cards.map((card) => card.cardId))];
+    const count = await prisma.ciganoCard.count({
+      where: { tenantId, id: { in: cardIds } },
+    });
+    if (count != cardIds.length) {
+      throw new BadRequestException('Uma ou mais cartas não pertencem ao tenant atual');
+    }
+  }
+
   private normalizeContent(reading: any): DeliveryContent {
     const stored = (reading.content || {}) as DeliveryContent;
 
@@ -152,10 +164,10 @@ export class ReadingsService {
     search?: string;
     page?: number;
     limit?: number;
-  }) {
+  }, tenantId = DEFAULT_TENANT_ID) {
     const { status, search, page = 1, limit = 10 } = filters;
 
-    const where: any = {};
+    const where: any = { tenantId };
 
     if (status) {
       where.status = status;
@@ -212,9 +224,9 @@ export class ReadingsService {
     };
   }
 
-  async findByUser(userId: string) {
+  async findByUser(userId: string, tenantId = DEFAULT_TENANT_ID) {
     const readings = await prisma.reading.findMany({
-      where: { clientId: userId },
+      where: { clientId: userId, tenantId },
       include: {
         orderItem: {
           include: {
@@ -243,9 +255,9 @@ export class ReadingsService {
     return { data: readings.map((reading) => this.toDelivery(reading)) };
   }
 
-  async findById(id: string, userId?: string) {
-    const reading = await prisma.reading.findUnique({
-      where: { id },
+  async findById(id: string, userId?: string, tenantId = DEFAULT_TENANT_ID) {
+    const reading = await prisma.reading.findFirst({
+      where: { id, tenantId },
       include: {
         client: {
           select: {
@@ -280,8 +292,8 @@ export class ReadingsService {
     return { data: this.toDelivery(reading) };
   }
 
-  async update(id: string, data: UpdateReadingDTO) {
-    const reading = await prisma.reading.findUnique({ where: { id } });
+  async update(id: string, data: UpdateReadingDTO, tenantId = DEFAULT_TENANT_ID) {
+    const reading = await prisma.reading.findFirst({ where: { id, tenantId } });
 
     if (!reading) {
       throw new NotFoundException('Entrega não encontrada');
@@ -290,6 +302,8 @@ export class ReadingsService {
     if (reading.status === 'PUBLISHED') {
       throw new BadRequestException('Entregas publicadas não podem ser editadas');
     }
+
+    await this.assertCardsInTenant(data.cards, tenantId);
 
     const updated = await prisma.$transaction(async (tx) => {
       const updatedReading = await tx.reading.update({
@@ -320,9 +334,9 @@ export class ReadingsService {
     return { data: this.toDelivery(updated) };
   }
 
-  async updateStatus(id: string, status: string) {
-    const reading = await prisma.reading.findUnique({
-      where: { id },
+  async updateStatus(id: string, status: string, tenantId = DEFAULT_TENANT_ID) {
+    const reading = await prisma.reading.findFirst({
+      where: { id, tenantId },
       include: { client: true },
     });
 
@@ -361,9 +375,9 @@ export class ReadingsService {
     return { data: this.toDelivery(updated) };
   }
 
-  async uploadAudio(id: string, file: Express.Multer.File) {
-    const reading = await prisma.reading.findUnique({
-      where: { id },
+  async uploadAudio(id: string, file: Express.Multer.File, tenantId = DEFAULT_TENANT_ID) {
+    const reading = await prisma.reading.findFirst({
+      where: { id, tenantId },
       select: { id: true, audioUrl: true },
     });
 
@@ -389,8 +403,8 @@ export class ReadingsService {
     return { data: this.toDelivery(updated) };
   }
 
-  async updateAudio(id: string, audioUrl: string) {
-    const reading = await prisma.reading.findUnique({ where: { id } });
+  async updateAudio(id: string, audioUrl: string, tenantId = DEFAULT_TENANT_ID) {
+    const reading = await prisma.reading.findFirst({ where: { id, tenantId } });
 
     if (!reading) {
       throw new NotFoundException('Entrega não encontrada');
@@ -404,8 +418,8 @@ export class ReadingsService {
     return { data: this.toDelivery(updated) };
   }
 
-  async delete(id: string) {
-    const reading = await prisma.reading.findUnique({ where: { id } });
+  async delete(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const reading = await prisma.reading.findFirst({ where: { id, tenantId } });
 
     if (!reading) {
       throw new NotFoundException('Entrega não encontrada');
@@ -420,12 +434,12 @@ export class ReadingsService {
     return { message: 'Entrega excluída com sucesso' };
   }
 
-  async getStats() {
+  async getStats(tenantId = DEFAULT_TENANT_ID) {
     const [total, pending, inProgress, published] = await Promise.all([
-      prisma.reading.count(),
-      prisma.reading.count({ where: { status: 'PENDING' } }),
-      prisma.reading.count({ where: { status: 'IN_PROGRESS' } }),
-      prisma.reading.count({ where: { status: 'PUBLISHED' } }),
+      prisma.reading.count({ where: { tenantId } }),
+      prisma.reading.count({ where: { tenantId, status: 'PENDING' } }),
+      prisma.reading.count({ where: { tenantId, status: 'IN_PROGRESS' } }),
+      prisma.reading.count({ where: { tenantId, status: 'PUBLISHED' } }),
     ]);
 
     return {

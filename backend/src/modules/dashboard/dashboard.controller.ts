@@ -6,7 +6,7 @@ import { dashboardService } from './dashboard.service';
 export class DashboardController {
   async getStats(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await dashboardService.getStats();
+      const result = await dashboardService.getStats(req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -17,7 +17,8 @@ export class DashboardController {
     try {
       const { limit } = req.query;
       const result = await dashboardService.getRecentOrders(
-        limit ? parseInt(limit as string) : undefined
+        limit ? parseInt(limit as string) : undefined,
+        req.tenant!.id
       );
       res.json(result);
     } catch (error) {
@@ -29,7 +30,8 @@ export class DashboardController {
     try {
       const { limit } = req.query;
       const result = await dashboardService.getRecentUsers(
-        limit ? parseInt(limit as string) : undefined
+        limit ? parseInt(limit as string) : undefined,
+        req.tenant!.id
       );
       res.json(result);
     } catch (error) {
@@ -41,7 +43,8 @@ export class DashboardController {
     try {
       const { period } = req.query;
       const result = await dashboardService.getSalesChart(
-        period as 'week' | 'month' | 'year'
+        period as 'week' | 'month' | 'year',
+        req.tenant!.id
       );
       res.json(result);
     } catch (error) {
@@ -53,7 +56,8 @@ export class DashboardController {
     try {
       const { limit } = req.query;
       const result = await dashboardService.getTopProducts(
-        limit ? parseInt(limit as string) : undefined
+        limit ? parseInt(limit as string) : undefined,
+        req.tenant!.id
       );
       res.json(result);
     } catch (error) {

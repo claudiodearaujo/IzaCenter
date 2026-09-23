@@ -1,6 +1,8 @@
 import { DashboardService } from './dashboard.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 
+const TENANT_ID = 'tenant-test';
+
 describe('DashboardService', () => {
   let dashboardService: DashboardService;
 
@@ -24,8 +26,8 @@ describe('DashboardService', () => {
       prismaMock.order.aggregate.mockResolvedValueOnce({ _sum: { total: 7500 } } as any);  // thisMonthRevenue
       prismaMock.order.aggregate.mockResolvedValueOnce({ _sum: { total: 5000 } } as any);  // lastMonthRevenue
 
-      prismaMock.user.count.mockResolvedValueOnce(50);    // totalUsers
-      prismaMock.user.count.mockResolvedValueOnce(8);     // newUsersThisMonth
+      prismaMock.tenantMembership.count.mockResolvedValueOnce(50);    // totalUsers
+      prismaMock.tenantMembership.count.mockResolvedValueOnce(8);     // newUsersThisMonth
 
       prismaMock.product.count.mockResolvedValueOnce(20); // totalProducts
       prismaMock.product.count.mockResolvedValueOnce(15); // activeProducts
@@ -39,7 +41,7 @@ describe('DashboardService', () => {
       prismaMock.testimonial.count.mockResolvedValueOnce(4); // pendingTestimonials
 
       // Act
-      const result = await dashboardService.getStats();
+      const result = await dashboardService.getStats(TENANT_ID);
 
       // Assert
       expect(result.data.orders.total).toBe(100);
@@ -77,8 +79,8 @@ describe('DashboardService', () => {
       prismaMock.order.aggregate.mockResolvedValueOnce({ _sum: { total: 500 } } as any);
       prismaMock.order.aggregate.mockResolvedValueOnce({ _sum: { total: 0 } } as any); // lastMonthRevenue = 0
 
-      prismaMock.user.count.mockResolvedValueOnce(10);
-      prismaMock.user.count.mockResolvedValueOnce(3);
+      prismaMock.tenantMembership.count.mockResolvedValueOnce(10);
+      prismaMock.tenantMembership.count.mockResolvedValueOnce(3);
 
       prismaMock.product.count.mockResolvedValueOnce(5);
       prismaMock.product.count.mockResolvedValueOnce(4);
@@ -92,7 +94,7 @@ describe('DashboardService', () => {
       prismaMock.testimonial.count.mockResolvedValueOnce(0);
 
       // Act
-      const result = await dashboardService.getStats();
+      const result = await dashboardService.getStats(TENANT_ID);
 
       // Assert - growth should be 0 when last month is 0
       expect(result.data.orders.growth).toBe(0);
@@ -145,13 +147,14 @@ describe('DashboardService', () => {
       prismaMock.order.findMany.mockResolvedValue(mockOrders as any);
 
       // Act
-      const result = await dashboardService.getRecentOrders(5);
+      const result = await dashboardService.getRecentOrders(5, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(2);
       expect(result.data[0].client.fullName).toBe('Maria Silva');
       expect(prismaMock.order.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
+          where: { tenantId: TENANT_ID },
           take: 5,
           orderBy: { createdAt: 'desc' },
         })
@@ -163,11 +166,11 @@ describe('DashboardService', () => {
       prismaMock.order.findMany.mockResolvedValue([]);
 
       // Act
-      await dashboardService.getRecentOrders();
+      await dashboardService.getRecentOrders(5, TENANT_ID);
 
       // Assert
       expect(prismaMock.order.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ take: 5 })
+        expect.objectContaining({ where: { tenantId: TENANT_ID }, take: 5 })
       );
     });
   });
@@ -197,13 +200,17 @@ describe('DashboardService', () => {
       prismaMock.user.findMany.mockResolvedValue(mockUsers as any);
 
       // Act
-      const result = await dashboardService.getRecentUsers(5);
+      const result = await dashboardService.getRecentUsers(5, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(2);
       expect(prismaMock.user.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { role: 'CLIENT' },
+          where: {
+            tenantMemberships: {
+              some: { tenantId: TENANT_ID, role: 'CLIENT', isActive: true },
+            },
+          },
           take: 5,
           orderBy: { createdAt: 'desc' },
         })
@@ -224,7 +231,7 @@ describe('DashboardService', () => {
       prismaMock.order.findMany.mockResolvedValue(mockOrders as any);
 
       // Act
-      const result = await dashboardService.getSalesChart('week');
+      const result = await dashboardService.getSalesChart('week', TENANT_ID);
 
       // Assert
       expect(result.data.labels).toHaveLength(7);
@@ -237,7 +244,7 @@ describe('DashboardService', () => {
       prismaMock.order.findMany.mockResolvedValue([]);
 
       // Act
-      const result = await dashboardService.getSalesChart('month');
+      const result = await dashboardService.getSalesChart('month', TENANT_ID);
 
       // Assert
       // Labels should have number of days in current month
@@ -250,7 +257,7 @@ describe('DashboardService', () => {
       prismaMock.order.findMany.mockResolvedValue([]);
 
       // Act
-      const result = await dashboardService.getSalesChart('year');
+      const result = await dashboardService.getSalesChart('year', TENANT_ID);
 
       // Assert
       expect(result.data.labels).toHaveLength(12);
@@ -270,7 +277,7 @@ describe('DashboardService', () => {
       prismaMock.order.findMany.mockResolvedValue(mockOrders as any);
 
       // Act
-      const result = await dashboardService.getSalesChart('week');
+      const result = await dashboardService.getSalesChart('week', TENANT_ID);
 
       // Assert
       // Last position (today) should have sum of 250
@@ -296,7 +303,7 @@ describe('DashboardService', () => {
       prismaMock.product.findMany.mockResolvedValue(mockProductDetails as any);
 
       // Act
-      const result = await dashboardService.getTopProducts(5);
+      const result = await dashboardService.getTopProducts(5, TENANT_ID);
 
       // Assert
       expect(result.data).toHaveLength(2);
@@ -318,7 +325,7 @@ describe('DashboardService', () => {
       prismaMock.product.findMany.mockResolvedValue(mockProductDetails as any);
 
       // Act
-      const result = await dashboardService.getTopProducts();
+      const result = await dashboardService.getTopProducts(5, TENANT_ID);
 
       // Assert
       expect(result.data[0].totalSold).toBe(0);
@@ -330,11 +337,11 @@ describe('DashboardService', () => {
       prismaMock.product.findMany.mockResolvedValue([]);
 
       // Act
-      await dashboardService.getTopProducts();
+      await dashboardService.getTopProducts(5, TENANT_ID);
 
       // Assert
       expect(prismaMock.orderItem.groupBy).toHaveBeenCalledWith(
-        expect.objectContaining({ take: 5 })
+        expect.objectContaining({ where: { order: { tenantId: TENANT_ID } }, take: 5 })
       );
     });
   });

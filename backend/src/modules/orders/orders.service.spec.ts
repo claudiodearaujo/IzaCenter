@@ -2,6 +2,8 @@ import { OrdersService } from './orders.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 import { Prisma } from '@prisma/client';
 
+const TENANT_ID = 'tenant-test';
+
 // Mock stripe helpers
 jest.mock('../../config/stripe', () => ({
   stripeHelpers: {
@@ -124,7 +126,7 @@ describe('OrdersService', () => {
       prismaMock.order.update.mockResolvedValue({} as any);
 
       // Act
-      const result = await ordersService.create(clientId, createOrderData);
+      const result = await ordersService.create(clientId, createOrderData, TENANT_ID);
 
       // Assert
       expect(result.order.orderNumber).toBe('ORD-2026-0001');
@@ -139,7 +141,7 @@ describe('OrdersService', () => {
         },
       });
       expect(prismaMock.product.findMany).toHaveBeenCalledWith({
-        where: { id: { in: ['product-123'] }, isActive: true },
+        where: { id: { in: ['product-123'] }, isActive: true, tenantId: TENANT_ID },
       });
     });
 
@@ -148,7 +150,7 @@ describe('OrdersService', () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(ordersService.create(clientId, createOrderData)).rejects.toThrow(
+      await expect(ordersService.create(clientId, createOrderData, TENANT_ID)).rejects.toThrow(
         'Cliente'
       );
     });
@@ -159,7 +161,7 @@ describe('OrdersService', () => {
       prismaMock.product.findMany.mockResolvedValue([]);
 
       // Act & Assert
-      await expect(ordersService.create(clientId, createOrderData)).rejects.toThrow(
+      await expect(ordersService.create(clientId, createOrderData, TENANT_ID)).rejects.toThrow(
         'Um ou mais produtos não estão disponíveis'
       );
     });
@@ -201,11 +203,11 @@ describe('OrdersService', () => {
       prismaMock.order.update.mockResolvedValue({} as any);
 
       // Act
-      const result = await ordersService.create(clientId, dataWithCoupon);
+      const result = await ordersService.create(clientId, dataWithCoupon, TENANT_ID);
 
       // Assert
       expect(prismaMock.coupon.findUnique).toHaveBeenCalledWith({
-        where: { code: 'SAVE10' },
+        where: { tenantId_code: { tenantId: TENANT_ID, code: 'SAVE10' } },
       });
       expect(prismaMock.coupon.update).toHaveBeenCalledWith({
         where: { id: 'coupon-123' },
@@ -238,13 +240,13 @@ describe('OrdersService', () => {
       prismaMock.order.findFirst.mockResolvedValue(mockOrder as any);
 
       // Act
-      const result = await ordersService.getById(orderId);
+      const result = await ordersService.getById(orderId, undefined, TENANT_ID);
 
       // Assert
       expect(result.id).toBe(orderId);
       expect(result.orderNumber).toBe('ORD-2026-0001');
       expect(prismaMock.order.findFirst).toHaveBeenCalledWith({
-        where: { id: orderId },
+        where: { id: orderId, tenantId: TENANT_ID },
         include: expect.objectContaining({
           items: expect.any(Object),
           client: expect.any(Object),
@@ -258,12 +260,12 @@ describe('OrdersService', () => {
       prismaMock.order.findFirst.mockResolvedValue(mockOrder as any);
 
       // Act
-      const result = await ordersService.getById(orderId, clientId);
+      const result = await ordersService.getById(orderId, clientId, TENANT_ID);
 
       // Assert
       expect(result.id).toBe(orderId);
       expect(prismaMock.order.findFirst).toHaveBeenCalledWith({
-        where: { id: orderId, clientId },
+        where: { id: orderId, clientId, tenantId: TENANT_ID },
         include: expect.any(Object),
       });
     });
@@ -273,7 +275,7 @@ describe('OrdersService', () => {
       prismaMock.order.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(ordersService.getById(orderId)).rejects.toThrow('Pedido');
+      await expect(ordersService.getById(orderId, undefined, TENANT_ID)).rejects.toThrow('Pedido');
     });
   });
 
@@ -450,13 +452,13 @@ describe('OrdersService', () => {
       prismaMock.order.count.mockResolvedValue(1);
 
       // Act
-      const result = await ordersService.list(query);
+      const result = await ordersService.list(query, undefined, TENANT_ID);
 
       // Assert
       expect(result.data).toEqual(mockOrders);
       expect(result.meta).toBeDefined();
       expect(prismaMock.order.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { tenantId: TENANT_ID },
         skip: 0,
         take: 10,
         orderBy: { createdAt: 'desc' },
@@ -477,11 +479,11 @@ describe('OrdersService', () => {
       prismaMock.order.count.mockResolvedValue(1);
 
       // Act
-      await ordersService.list(query, clientId);
+      await ordersService.list(query, clientId, TENANT_ID);
 
       // Assert
       expect(prismaMock.order.findMany).toHaveBeenCalledWith({
-        where: { clientId },
+        where: { tenantId: TENANT_ID, clientId },
         skip: 0,
         take: 10,
         orderBy: { createdAt: 'desc' },
@@ -502,11 +504,11 @@ describe('OrdersService', () => {
       prismaMock.order.count.mockResolvedValue(1);
 
       // Act
-      await ordersService.list(query);
+      await ordersService.list(query, undefined, TENANT_ID);
 
       // Assert
       expect(prismaMock.order.findMany).toHaveBeenCalledWith({
-        where: { status: 'PAID' },
+        where: { tenantId: TENANT_ID, status: 'PAID' },
         skip: 0,
         take: 10,
         orderBy: { createdAt: 'desc' },
@@ -527,11 +529,12 @@ describe('OrdersService', () => {
       prismaMock.order.count.mockResolvedValue(1);
 
       // Act
-      await ordersService.list(query);
+      await ordersService.list(query, undefined, TENANT_ID);
 
       // Assert
       expect(prismaMock.order.findMany).toHaveBeenCalledWith({
         where: {
+          tenantId: TENANT_ID,
           OR: expect.arrayContaining([
             { orderNumber: { contains: 'ORD-2026', mode: 'insensitive' } },
           ]),
@@ -564,7 +567,7 @@ describe('OrdersService', () => {
       } as any);
 
       // Act
-      const result = await ordersService.cancel(orderId);
+      const result = await ordersService.cancel(orderId, undefined, TENANT_ID);
 
       // Assert
       expect(result.message).toBe('Pedido cancelado com sucesso');
@@ -582,7 +585,7 @@ describe('OrdersService', () => {
       prismaMock.order.findFirst.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(ordersService.cancel(orderId)).rejects.toThrow('Pedido');
+      await expect(ordersService.cancel(orderId, undefined, TENANT_ID)).rejects.toThrow('Pedido');
     });
 
     it('should throw error if order is not pending', async () => {
@@ -594,7 +597,7 @@ describe('OrdersService', () => {
       prismaMock.order.findFirst.mockResolvedValue(mockOrder as any);
 
       // Act & Assert
-      await expect(ordersService.cancel(orderId)).rejects.toThrow(
+      await expect(ordersService.cancel(orderId, undefined, TENANT_ID)).rejects.toThrow(
         'Só é possível cancelar pedidos pendentes'
       );
     });
@@ -626,11 +629,11 @@ describe('OrdersService', () => {
 
       prismaMock.orderItem.findFirst.mockResolvedValue(mockOrderItem as any);
       prismaMock.orderItem.update.mockResolvedValue(mockOrderItem as any);
-      prismaMock.reading.findUnique.mockResolvedValue(mockReading as any);
+      prismaMock.reading.findFirst.mockResolvedValue(mockReading as any);
       prismaMock.reading.update.mockResolvedValue(mockReading as any);
 
       // Act
-      const result = await ordersService.addQuestions(orderItemId, clientId, questionsData);
+      const result = await ordersService.addQuestions(orderItemId, clientId, questionsData, TENANT_ID);
 
       // Assert
       expect(result.message).toBe('Perguntas adicionadas com sucesso');
@@ -650,7 +653,7 @@ describe('OrdersService', () => {
 
       // Act & Assert
       await expect(
-        ordersService.addQuestions(orderItemId, clientId, questionsData)
+        ordersService.addQuestions(orderItemId, clientId, questionsData, TENANT_ID)
       ).rejects.toThrow('Item do pedido');
     });
 
@@ -667,7 +670,7 @@ describe('OrdersService', () => {
 
       // Act & Assert
       await expect(
-        ordersService.addQuestions(orderItemId, clientId, questionsData)
+        ordersService.addQuestions(orderItemId, clientId, questionsData, TENANT_ID)
       ).rejects.toThrow('Só é possível adicionar perguntas em pedidos pagos');
     });
   });
@@ -689,7 +692,7 @@ describe('OrdersService', () => {
       ] as any);
 
       // Act
-      const result = await ordersService.getStatistics();
+      const result = await ordersService.getStatistics(undefined, undefined, TENANT_ID);
 
       // Assert
       expect(result.totalOrders).toBe(10);
@@ -715,11 +718,11 @@ describe('OrdersService', () => {
       ] as any);
 
       // Act
-      await ordersService.getStatistics(startDate, endDate);
+      await ordersService.getStatistics(startDate, endDate, TENANT_ID);
 
       // Assert
       expect(prismaMock.order.count).toHaveBeenCalledWith({
-        where: { createdAt: { gte: startDate, lte: endDate } },
+        where: { tenantId: TENANT_ID, createdAt: { gte: startDate, lte: endDate } },
       });
     });
   });
@@ -911,7 +914,7 @@ describe('OrdersService', () => {
     it('should return valid coupon details', async () => {
       prismaMock.coupon.findUnique.mockResolvedValue(mockCoupon as any);
 
-      const result = await ordersService.validateCoupon('SAVE10');
+      const result = await ordersService.validateCoupon('SAVE10', undefined, TENANT_ID);
 
       expect(result.code).toBe('SAVE10');
       expect(result.discountType).toBe('PERCENTAGE');
@@ -922,13 +925,13 @@ describe('OrdersService', () => {
     it('should throw if coupon does not exist', async () => {
       prismaMock.coupon.findUnique.mockResolvedValue(null);
 
-      await expect(ordersService.validateCoupon('INVALID')).rejects.toThrow();
+      await expect(ordersService.validateCoupon('INVALID', undefined, TENANT_ID)).rejects.toThrow();
     });
 
     it('should throw if coupon is inactive', async () => {
       prismaMock.coupon.findUnique.mockResolvedValue({ ...mockCoupon, isActive: false } as any);
 
-      await expect(ordersService.validateCoupon('SAVE10')).rejects.toThrow();
+      await expect(ordersService.validateCoupon('SAVE10', undefined, TENANT_ID)).rejects.toThrow();
     });
 
     it('should throw if coupon is expired', async () => {
@@ -938,7 +941,7 @@ describe('OrdersService', () => {
         validUntil: pastDate,
       } as any);
 
-      await expect(ordersService.validateCoupon('SAVE10')).rejects.toThrow();
+      await expect(ordersService.validateCoupon('SAVE10', undefined, TENANT_ID)).rejects.toThrow();
     });
 
     it('should throw if coupon has reached max uses', async () => {
@@ -948,7 +951,7 @@ describe('OrdersService', () => {
         usesCount: 5,
       } as any);
 
-      await expect(ordersService.validateCoupon('SAVE10')).rejects.toThrow();
+      await expect(ordersService.validateCoupon('SAVE10', undefined, TENANT_ID)).rejects.toThrow();
     });
 
     it('should throw if order total is below minimum', async () => {
@@ -957,7 +960,7 @@ describe('OrdersService', () => {
         minOrderValue: new Prisma.Decimal(200),
       } as any);
 
-      await expect(ordersService.validateCoupon('SAVE10', 100)).rejects.toThrow();
+      await expect(ordersService.validateCoupon('SAVE10', 100, TENANT_ID)).rejects.toThrow();
     });
 
     it('should pass validation when order total meets minimum', async () => {
@@ -966,7 +969,7 @@ describe('OrdersService', () => {
         minOrderValue: new Prisma.Decimal(50),
       } as any);
 
-      const result = await ordersService.validateCoupon('SAVE10', 100);
+      const result = await ordersService.validateCoupon('SAVE10', 100, TENANT_ID);
 
       expect(result.valid).toBe(true);
     });

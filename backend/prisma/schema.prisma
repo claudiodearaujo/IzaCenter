@@ -82,8 +82,19 @@ model Tenant {
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
 
-  memberships TenantMembership[]
-  settings    SiteSetting[]
+  memberships     TenantMembership[]
+  settings        SiteSetting[]
+  categories      ProductCategory[]
+  products        Product[]
+  orders          Order[]
+  ciganoCards     CiganoCard[]
+  readings        Reading[]
+  scheduleSettings ScheduleSettings[]
+  appointments    Appointment[]
+  blockedSlots    BlockedSlot[]
+  testimonials    Testimonial[]
+  coupons         Coupon[]
+  notifications   Notification[]
 
   @@index([status])
   @@map("tenants")
@@ -141,24 +152,29 @@ model User {
 
 model ProductCategory {
   id           String    @id @default(uuid())
+  tenantId     String    @map("tenant_id")
   name         String
-  slug         String    @unique
+  slug         String
   description  String?
   icon         String?
   displayOrder Int       @default(0) @map("display_order")
   isActive     Boolean   @default(true) @map("is_active")
   createdAt    DateTime  @default(now()) @map("created_at")
 
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   products     Product[]
 
+  @@unique([tenantId, slug])
+  @@index([tenantId])
   @@map("product_categories")
 }
 
 model Product {
   id                     String          @id @default(uuid())
+  tenantId               String          @map("tenant_id")
   categoryId             String?         @map("category_id")
   name                   String
-  slug                   String          @unique
+  slug                   String
   shortDescription       String?         @map("short_description")
   fullDescription        String?         @map("full_description")
   productType            ProductType     @map("product_type")
@@ -190,10 +206,14 @@ model Product {
   createdAt              DateTime        @default(now()) @map("created_at")
   updatedAt              DateTime        @updatedAt @map("updated_at")
 
+  tenant                 Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   category               ProductCategory? @relation(fields: [categoryId], references: [id])
   attachments            ProductAttachment[]
   orderItems             OrderItem[]
 
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([tenantId, isActive])
   @@index([categoryId])
   @@index([isActive])
   @@index([isFeatured])
@@ -220,6 +240,7 @@ model ProductAttachment {
 
 model Order {
   id                       String        @id @default(uuid())
+  tenantId                 String        @map("tenant_id")
   orderNumber              String        @unique @map("order_number")
   clientId                 String        @map("client_id")
   
@@ -242,9 +263,13 @@ model Order {
   createdAt                DateTime      @default(now()) @map("created_at")
   updatedAt                DateTime      @updatedAt @map("updated_at")
 
+  tenant                   Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   client                   User          @relation(fields: [clientId], references: [id])
   items                    OrderItem[]
 
+  @@index([tenantId])
+  @@index([tenantId, clientId])
+  @@index([tenantId, status])
   @@index([clientId])
   @@index([status])
   @@index([clientId, status])
@@ -278,7 +303,8 @@ model OrderItem {
 
 model CiganoCard {
   id              String   @id @default(uuid())
-  number          Int      @unique
+  tenantId        String   @map("tenant_id")
+  number          Int
   name            String
   nameEn          String?  @map("name_en")
   nameEs          String?  @map("name_es")
@@ -294,13 +320,17 @@ model CiganoCard {
   element         String?
   createdAt       DateTime @default(now()) @map("created_at")
 
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   readingCards    ReadingCard[]
 
+  @@unique([tenantId, number])
+  @@index([tenantId])
   @@map("cigano_cards")
 }
 
 model Reading {
   id              String        @id @default(uuid())
+  tenantId        String        @map("tenant_id")
   orderItemId     String        @unique @map("order_item_id")
   clientId        String        @map("client_id")
   
@@ -333,6 +363,7 @@ model Reading {
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
 
+  tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   orderItem       OrderItem     @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
   client          User          @relation(fields: [clientId], references: [id])
   cards           ReadingCard[]
@@ -366,6 +397,7 @@ model ReadingCard {
 
 model ScheduleSettings {
   id                   String    @id @default(uuid())
+  tenantId             String    @unique @map("tenant_id")
   
   mondayStart          String?   @map("monday_start")
   mondayEnd            String?   @map("monday_end")
@@ -406,11 +438,14 @@ model ScheduleSettings {
   
   updatedAt            DateTime  @updatedAt @map("updated_at")
 
+  tenant               Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   @@map("schedule_settings")
 }
 
 model Appointment {
   id                 String            @id @default(uuid())
+  tenantId           String            @map("tenant_id")
   orderItemId        String?           @unique @map("order_item_id")
   clientId           String            @map("client_id")
   
@@ -436,9 +471,13 @@ model Appointment {
   createdAt          DateTime          @default(now()) @map("created_at")
   updatedAt          DateTime          @updatedAt @map("updated_at")
 
+  tenant             Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   orderItem          OrderItem?        @relation(fields: [orderItemId], references: [id])
   client             User              @relation(fields: [clientId], references: [id])
 
+  @@index([tenantId])
+  @@index([tenantId, clientId])
+  @@index([tenantId, scheduledDate])
   @@index([clientId])
   @@index([scheduledDate])
   @@index([clientId, scheduledDate])
@@ -449,6 +488,7 @@ model Appointment {
 
 model BlockedSlot {
   id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
   blockedDate DateTime @map("blocked_date")
   startTime   String?  @map("start_time")
   endTime     String?  @map("end_time")
@@ -456,11 +496,16 @@ model BlockedSlot {
   reason      String?
   createdAt   DateTime @default(now()) @map("created_at")
 
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([tenantId, blockedDate])
   @@map("blocked_slots")
 }
 
 model Testimonial {
   id              String   @id @default(uuid())
+  tenantId        String   @map("tenant_id")
   clientId        String?  @map("client_id")
   clientName      String   @map("client_name")
   clientAvatarUrl String?  @map("client_avatar_url")
@@ -471,14 +516,18 @@ model Testimonial {
   displayOrder    Int      @default(0) @map("display_order")
   createdAt       DateTime @default(now()) @map("created_at")
 
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   client          User?    @relation(fields: [clientId], references: [id])
 
+  @@index([tenantId])
+  @@index([tenantId, isApproved])
   @@map("testimonials")
 }
 
 model Coupon {
   id            String    @id @default(uuid())
-  code          String    @unique
+  tenantId      String    @map("tenant_id")
+  code          String
   description   String?
   discountType  String    @map("discount_type")
   discountValue Decimal   @db.Decimal(10, 2) @map("discount_value")
@@ -490,6 +539,10 @@ model Coupon {
   isActive      Boolean   @default(true) @map("is_active")
   createdAt     DateTime  @default(now()) @map("created_at")
 
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, code])
+  @@index([tenantId])
   @@map("coupons")
 }
 
@@ -509,6 +562,7 @@ model SiteSetting {
 
 model Notification {
   id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
   userId      String   @map("user_id")
   title       String
   message     String
@@ -518,8 +572,11 @@ model Notification {
   readAt      DateTime? @map("read_at")
   createdAt   DateTime @default(now()) @map("created_at")
 
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([tenantId])
+  @@index([tenantId, userId])
   @@index([userId])
   @@index([userId, isRead])
   @@index([createdAt])

@@ -50,6 +50,43 @@ export async function authenticate(
         role: user.role,
       };
 
+      if (!req.tenant) {
+        res.status(400).json({
+          success: false,
+          message: 'Contexto de tenant não resolvido',
+          code: 'TENANT_CONTEXT_MISSING',
+        });
+        return;
+      }
+
+      const membership = await prisma.tenantMembership.findUnique({
+        where: {
+          tenantId_userId: {
+            tenantId: req.tenant.id,
+            userId: user.id,
+          },
+        },
+        select: {
+          id: true,
+          role: true,
+          isActive: true,
+        },
+      });
+
+      if (!membership?.isActive) {
+        res.status(403).json({
+          success: false,
+          message: 'Usuário sem acesso ao tenant atual',
+          code: 'TENANT_ACCESS_DENIED',
+        });
+        return;
+      }
+
+      req.tenantMembership = {
+        id: membership.id,
+        role: membership.role,
+      };
+
       next();
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
@@ -79,10 +116,15 @@ export function requireAdmin(
   res: Response,
   next: NextFunction
 ): void {
-  if (!req.user || req.user.role !== 'ADMIN') {
+  if (
+    !req.user ||
+    req.user.role !== 'ADMIN' ||
+    !req.tenantMembership ||
+    !['OWNER', 'ADMIN'].includes(req.tenantMembership.role)
+  ) {
     res.status(403).json({
       success: false,
-      message: 'Acesso restrito a administradores',
+      message: 'Acesso restrito a administradores do tenant',
     });
     return;
   }
@@ -133,12 +175,32 @@ export async function optionalAuth(
         select: { id: true, email: true, role: true },
       });
 
-      if (user) {
-        req.user = {
-          id: user.id,
-          email: user.email,
-          role: user.role,
-        };
+      if (user && req.tenant) {
+        const membership = await prisma.tenantMembership.findUnique({
+          where: {
+            tenantId_userId: {
+              tenantId: req.tenant.id,
+              userId: user.id,
+            },
+          },
+          select: {
+            id: true,
+            role: true,
+            isActive: true,
+          },
+        });
+
+        if (membership?.isActive) {
+          req.user = {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+          };
+          req.tenantMembership = {
+            id: membership.id,
+            role: membership.role,
+          };
+        }
       }
     } catch {
       // Ignore token errors in optional auth

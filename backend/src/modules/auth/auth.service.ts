@@ -85,7 +85,7 @@ export class AuthService {
   /**
    * Login user
    */
-  async login(data: LoginDto) {
+  async login(data: LoginDto, tenantId = DEFAULT_TENANT_ID) {
     // Find user by email
     const user = await prisma.user.findUnique({
       where: { email: data.email },
@@ -99,6 +99,20 @@ export class AuthService {
     const isValidPassword = await comparePassword(data.password, user.passwordHash);
 
     if (!isValidPassword) {
+      throw Errors.Unauthorized('Email ou senha incorretos');
+    }
+
+    const membership = await prisma.tenantMembership.findUnique({
+      where: {
+        tenantId_userId: {
+          tenantId,
+          userId: user.id,
+        },
+      },
+      select: { isActive: true },
+    });
+
+    if (!membership?.isActive) {
       throw Errors.Unauthorized('Email ou senha incorretos');
     }
 
@@ -127,13 +141,27 @@ export class AuthService {
   /**
    * Request password reset
    */
-  async forgotPassword(data: ForgotPasswordDto) {
+  async forgotPassword(data: ForgotPasswordDto, tenantId = DEFAULT_TENANT_ID) {
     const user = await prisma.user.findUnique({
       where: { email: data.email },
     });
 
     // Always return success for security (don't reveal if email exists)
     if (!user) {
+      return { message: 'Se o email existir, você receberá um link de redefinição' };
+    }
+
+    const membership = await prisma.tenantMembership.findUnique({
+      where: {
+        tenantId_userId: {
+          tenantId,
+          userId: user.id,
+        },
+      },
+      select: { isActive: true },
+    });
+
+    if (!membership?.isActive) {
       return { message: 'Se o email existir, você receberá um link de redefinição' };
     }
 
@@ -234,7 +262,7 @@ export class AuthService {
   /**
    * Refresh access token
    */
-  async refreshToken(refreshToken: string) {
+  async refreshToken(refreshToken: string, tenantId = DEFAULT_TENANT_ID) {
     try {
       const decoded = verifyRefreshToken(refreshToken);
 
@@ -245,6 +273,20 @@ export class AuthService {
 
       if (!user) {
         throw Errors.Unauthorized('Usuário não encontrado');
+      }
+
+      const membership = await prisma.tenantMembership.findUnique({
+        where: {
+          tenantId_userId: {
+            tenantId,
+            userId: user.id,
+          },
+        },
+        select: { isActive: true },
+      });
+
+      if (!membership?.isActive) {
+        throw Errors.Unauthorized('Usuário sem acesso ao tenant atual');
       }
 
       // Generate new tokens

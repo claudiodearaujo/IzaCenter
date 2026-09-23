@@ -3,6 +3,7 @@
 import { prisma } from '../../config/database';
 import { NotFoundException, BadRequestException } from '../../utils/errors';
 import { generateSlug } from '../../utils';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 
 interface CreateCategoryDTO {
   name: string;
@@ -15,8 +16,8 @@ interface CreateCategoryDTO {
 interface UpdateCategoryDTO extends Partial<CreateCategoryDTO> {}
 
 export class CategoriesService {
-  async findAll(includeInactive = false) {
-    const where: any = {};
+  async findAll(includeInactive = false, tenantId = DEFAULT_TENANT_ID) {
+    const where: any = { tenantId };
 
     if (!includeInactive) {
       where.isActive = true;
@@ -35,9 +36,9 @@ export class CategoriesService {
     return { data: categories };
   }
 
-  async findById(id: string) {
-    const category = await prisma.productCategory.findUnique({
-      where: { id },
+  async findById(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const category = await prisma.productCategory.findFirst({
+      where: { id, tenantId },
       include: {
         _count: {
           select: { products: true },
@@ -52,12 +53,12 @@ export class CategoriesService {
     return { data: category };
   }
 
-  async findBySlug(slug: string) {
-    const category = await prisma.productCategory.findUnique({
-      where: { slug },
+  async findBySlug(slug: string, tenantId = DEFAULT_TENANT_ID) {
+    const category = await prisma.productCategory.findFirst({
+      where: { slug, tenantId },
       include: {
         products: {
-          where: { isActive: true },
+          where: { isActive: true, tenantId },
           orderBy: { createdAt: 'desc' },
         },
       },
@@ -70,21 +71,23 @@ export class CategoriesService {
     return { data: category };
   }
 
-  async create(data: CreateCategoryDTO) {
+  async create(data: CreateCategoryDTO, tenantId = DEFAULT_TENANT_ID) {
     const slug = generateSlug(data.name);
 
-    const existingSlug = await prisma.productCategory.findUnique({ where: { slug } });
+    const existingSlug = await prisma.productCategory.findFirst({ where: { slug, tenantId } });
     if (existingSlug) {
       throw new BadRequestException('Já existe uma categoria com este nome');
     }
 
     // Get max order
     const maxOrder = await prisma.productCategory.aggregate({
+      where: { tenantId },
       _max: { displayOrder: true },
     });
 
     const category = await prisma.productCategory.create({
       data: {
+        tenantId,
         name: data.name,
         slug,
         description: data.description,
@@ -97,8 +100,8 @@ export class CategoriesService {
     return { data: category };
   }
 
-  async update(id: string, data: UpdateCategoryDTO) {
-    const category = await prisma.productCategory.findUnique({ where: { id } });
+  async update(id: string, data: UpdateCategoryDTO, tenantId = DEFAULT_TENANT_ID) {
+    const category = await prisma.productCategory.findFirst({ where: { id, tenantId } });
 
     if (!category) {
       throw new NotFoundException('Categoria não encontrada');
@@ -111,6 +114,7 @@ export class CategoriesService {
 
       const existingSlug = await prisma.productCategory.findFirst({
         where: {
+          tenantId,
           slug: updateData.slug,
           id: { not: id },
         },
@@ -129,8 +133,8 @@ export class CategoriesService {
     return { data: updated };
   }
 
-  async reorder(id: string, newOrder: number) {
-    const category = await prisma.productCategory.findUnique({ where: { id } });
+  async reorder(id: string, newOrder: number, tenantId = DEFAULT_TENANT_ID) {
+    const category = await prisma.productCategory.findFirst({ where: { id, tenantId } });
 
     if (!category) {
       throw new NotFoundException('Categoria não encontrada');
@@ -143,6 +147,7 @@ export class CategoriesService {
       // Moving up
       await prisma.productCategory.updateMany({
         where: {
+          tenantId,
           displayOrder: {
             gte: newOrder,
             lt: oldOrder,
@@ -156,6 +161,7 @@ export class CategoriesService {
       // Moving down
       await prisma.productCategory.updateMany({
         where: {
+          tenantId,
           displayOrder: {
             gt: oldOrder,
             lte: newOrder,
@@ -176,9 +182,9 @@ export class CategoriesService {
     return { data: updated };
   }
 
-  async delete(id: string) {
-    const category = await prisma.productCategory.findUnique({
-      where: { id },
+  async delete(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const category = await prisma.productCategory.findFirst({
+      where: { id, tenantId },
       include: {
         _count: {
           select: { products: true },
@@ -201,6 +207,7 @@ export class CategoriesService {
     // Reorder remaining categories
     await prisma.productCategory.updateMany({
       where: {
+        tenantId,
         displayOrder: { gt: category.displayOrder },
       },
       data: {

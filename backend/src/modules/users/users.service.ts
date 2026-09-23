@@ -5,14 +5,15 @@ import { storage } from '../../config/supabase';
 import { Errors } from '../../middlewares/error.middleware';
 import { generateFileName, buildPaginationMeta } from '../../utils';
 import { UpdateProfileDto, AdminUpdateUserDto, QueryUsersDto } from './users.schema';
+import { DEFAULT_TENANT_ID } from '../tenant/tenant.constants';
 
 export class UsersService {
   /**
    * Get user by ID
    */
-  async getById(id: string) {
-    const user = await prisma.user.findUnique({
-      where: { id },
+  async getById(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const user = await prisma.user.findFirst({
+      where: { id, tenantMemberships: { some: { tenantId, isActive: true } } },
       select: {
         id: true,
         email: true,
@@ -29,9 +30,9 @@ export class UsersService {
         lastLoginAt: true,
         _count: {
           select: {
-            orders: true,
-            readings: true,
-            appointments: true,
+            orders: { where: { tenantId } },
+            readings: { where: { tenantId } },
+            appointments: { where: { tenantId } },
           },
         },
       },
@@ -143,10 +144,10 @@ export class UsersService {
   /**
    * List all users (admin)
    */
-  async list(query: QueryUsersDto) {
+  async list(query: QueryUsersDto, tenantId = DEFAULT_TENANT_ID) {
     const { page, limit, search, role, sortBy, sortOrder } = query;
 
-    const where: any = {};
+    const where: any = { tenantMemberships: { some: { tenantId, isActive: true } } };
 
     if (search) {
       where.OR = [
@@ -177,8 +178,8 @@ export class UsersService {
           lastLoginAt: true,
           _count: {
             select: {
-              orders: true,
-              readings: true,
+              orders: { where: { tenantId } },
+              readings: { where: { tenantId } },
             },
           },
         },
@@ -195,7 +196,15 @@ export class UsersService {
   /**
    * Admin update user
    */
-  async adminUpdate(id: string, data: AdminUpdateUserDto) {
+  async adminUpdate(id: string, data: AdminUpdateUserDto, tenantId = DEFAULT_TENANT_ID) {
+    const membership = await prisma.tenantMembership.findUnique({
+      where: { tenantId_userId: { tenantId, userId: id } },
+      select: { isActive: true },
+    });
+    if (!membership?.isActive) {
+      throw Errors.NotFound('Usuário');
+    }
+
     const user = await prisma.user.update({
       where: { id },
       data,
@@ -220,10 +229,25 @@ export class UsersService {
   /**
    * Delete user (soft delete or hard delete)
    */
-  async delete(id: string) {
-    // Check if user has orders
+  async delete(id: string, tenantId = DEFAULT_TENANT_ID) {
+    const membership = await prisma.tenantMembership.findUnique({
+      where: { tenantId_userId: { tenantId, userId: id } },
+      select: { isActive: true },
+    });
+    if (!membership?.isActive) {
+      throw Errors.NotFound('Usuário');
+    }
+
+    const otherMemberships = await prisma.tenantMembership.count({
+      where: { userId: id, isActive: true, tenantId: { not: tenantId } },
+    });
+    if (otherMemberships > 0) {
+      throw Errors.Conflict('Usuário pertence a outros tenants e não pode ser excluído globalmente');
+    }
+
+    // Check if user has orders in this tenant
     const orderCount = await prisma.order.count({
-      where: { clientId: id },
+      where: { clientId: id, tenantId },
     });
 
     if (orderCount > 0) {
@@ -240,18 +264,18 @@ export class UsersService {
   /**
    * Get user statistics
    */
-  async getStatistics(userId: string) {
+  async getStatistics(userId: string, tenantId = DEFAULT_TENANT_ID) {
     const [ordersTotal, readingsCount, appointmentsCount] = await Promise.all([
       prisma.order.aggregate({
-        where: { clientId: userId, status: 'COMPLETED' },
+        where: { clientId: userId, tenantId, status: 'COMPLETED' },
         _sum: { total: true },
         _count: true,
       }),
       prisma.reading.count({
-        where: { clientId: userId },
+        where: { clientId: userId, tenantId },
       }),
       prisma.appointment.count({
-        where: { clientId: userId },
+        where: { clientId: userId, tenantId },
       }),
     ]);
 

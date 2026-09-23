@@ -22,7 +22,7 @@ export class ProductsController {
   async listPublic(req: Request, res: Response, next: NextFunction) {
     try {
       const query = req.query as unknown as QueryProductsDto;
-      const result = await productsService.list(query, true);
+      const result = await productsService.list(query, true, req.tenant!.id);
 
       res.json({
         success: true,
@@ -41,7 +41,7 @@ export class ProductsController {
   async getFeatured(req: Request, res: Response, next: NextFunction) {
     try {
       const limit = parseInt(req.query.limit as string) || 6;
-      const products = await productsService.getFeatured(limit);
+      const products = await productsService.getFeatured(limit, req.tenant!.id);
 
       res.json({
         success: true,
@@ -63,7 +63,7 @@ export class ProductsController {
       const search = req.query['search'] as string | undefined;
       const categoryId = req.query['categoryId'] as string | undefined;
 
-      const result = await productsService.listCursor({ cursor, limit, search, categoryId });
+      const result = await productsService.listCursor({ cursor, limit, search, categoryId }, req.tenant!.id);
       res.json({ success: true, ...result });
     } catch (error) {
       next(error);
@@ -77,7 +77,7 @@ export class ProductsController {
   async getBySlug(req: Request, res: Response, next: NextFunction) {
     try {
       const { slug } = req.params;
-      const product = await productsService.getBySlug(slug as string);
+      const product = await productsService.getBySlug(slug as string, req.tenant!.id);
 
       res.json({
         success: true,
@@ -94,7 +94,7 @@ export class ProductsController {
    */
   async listCategoriesPublic(req: Request, res: Response, next: NextFunction) {
     try {
-      const categories = await productsService.listCategories(true);
+      const categories = await productsService.listCategories(true, req.tenant!.id);
 
       res.json({
         success: true,
@@ -116,7 +116,7 @@ export class ProductsController {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const data = req.body as CreateProductDto;
-      const product = await productsService.create(data);
+      const product = await productsService.create(data, req.tenant!.id);
 
       res.status(201).json({
         success: true,
@@ -135,7 +135,7 @@ export class ProductsController {
   async list(req: Request, res: Response, next: NextFunction) {
     try {
       const query = req.query as unknown as QueryProductsDto;
-      const result = await productsService.list(query, false);
+      const result = await productsService.list(query, false, req.tenant!.id);
 
       res.json({
         success: true,
@@ -154,7 +154,7 @@ export class ProductsController {
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const product = await productsService.getById(id as string);
+      const product = await productsService.getById(id as string, req.tenant!.id);
 
       res.json({
         success: true,
@@ -173,7 +173,7 @@ export class ProductsController {
     try {
       const { id } = req.params;
       const data = req.body as UpdateProductDto;
-      const product = await productsService.update(id as string, data);
+      const product = await productsService.update(id as string, data, req.tenant!.id);
 
       res.json({
         success: true,
@@ -201,7 +201,7 @@ export class ProductsController {
         return;
       }
 
-      const product = await productsService.updateCoverImage(id as string, req.file);
+      const product = await productsService.updateCoverImage(id as string, req.file, req.tenant!.id);
 
       res.json({
         success: true,
@@ -220,7 +220,7 @@ export class ProductsController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await productsService.delete(id as string);
+      const result = await productsService.delete(id as string, req.tenant!.id);
 
       res.json({
         success: true,
@@ -242,7 +242,7 @@ export class ProductsController {
   async createCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const data = req.body as CreateCategoryDto;
-      const category = await productsService.createCategory(data);
+      const category = await productsService.createCategory(data, req.tenant!.id);
 
       res.status(201).json({
         success: true,
@@ -260,7 +260,7 @@ export class ProductsController {
    */
   async listCategories(req: Request, res: Response, next: NextFunction) {
     try {
-      const categories = await productsService.listCategories(false);
+      const categories = await productsService.listCategories(false, req.tenant!.id);
 
       res.json({
         success: true,
@@ -278,7 +278,7 @@ export class ProductsController {
   async getCategoryById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const category = await productsService.getCategoryById(id as string);
+      const category = await productsService.getCategoryById(id as string, req.tenant!.id);
 
       res.json({
         success: true,
@@ -297,7 +297,7 @@ export class ProductsController {
     try {
       const { id } = req.params;
       const data = req.body as UpdateCategoryDto;
-      const category = await productsService.updateCategory(id as string, data);
+      const category = await productsService.updateCategory(id as string, data, req.tenant!.id);
 
       res.json({
         success: true,
@@ -316,7 +316,7 @@ export class ProductsController {
   async deleteCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await productsService.deleteCategory(id as string);
+      const result = await productsService.deleteCategory(id as string, req.tenant!.id);
 
       res.json({
         success: true,

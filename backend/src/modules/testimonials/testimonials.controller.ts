@@ -9,7 +9,8 @@ export class TestimonialsController {
     try {
       const { limit } = req.query;
       const result = await testimonialsService.findPublic(
-        limit ? parseInt(limit as string) : undefined
+        limit ? parseInt(limit as string) : undefined,
+        req.tenant!.id
       );
       res.json(result);
     } catch (error) {
@@ -21,7 +22,8 @@ export class TestimonialsController {
     try {
       const { limit } = req.query;
       const result = await testimonialsService.findFeatured(
-        limit ? parseInt(limit as string) : undefined
+        limit ? parseInt(limit as string) : undefined,
+        req.tenant!.id
       );
       res.json(result);
     } catch (error) {
@@ -39,7 +41,7 @@ export class TestimonialsController {
         userId,
         content,
         rating,
-      });
+      }, req.tenant!.id);
 
       res.status(201).json(result);
     } catch (error) {
@@ -57,7 +59,7 @@ export class TestimonialsController {
         search: search as string,
         page: page ? parseInt(page as string) : undefined,
         limit: limit ? parseInt(limit as string) : undefined,
-      });
+      }, req.tenant!.id);
 
       res.json(result);
     } catch (error) {
@@ -68,7 +70,7 @@ export class TestimonialsController {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await testimonialsService.update(id as string, req.body);
+      const result = await testimonialsService.update(id as string, req.body, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -78,7 +80,7 @@ export class TestimonialsController {
   async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const result = await testimonialsService.delete(id as string);
+      const result = await testimonialsService.delete(id as string, req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
@@ -87,7 +89,7 @@ export class TestimonialsController {
 
   async getStats(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await testimonialsService.getStats();
+      const result = await testimonialsService.getStats(req.tenant!.id);
       res.json(result);
     } catch (error) {
       next(error);
