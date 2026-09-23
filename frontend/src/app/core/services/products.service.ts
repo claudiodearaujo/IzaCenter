@@ -80,15 +80,15 @@ export class ProductsService {
     page?: number;
     limit?: number;
   }): Observable<PaginatedResponse<Product>> {
-    return this.api.get<PaginatedResponse<Product>>('/products', { params: params as any });
+    return this.api.get<PaginatedResponse<Product>>('/products/public', { params: params as any });
   }
 
   findBySlug(slug: string): Observable<ApiResponse<Product>> {
-    return this.api.get<ApiResponse<Product>>(`/products/${slug}`);
+    return this.api.get<ApiResponse<Product>>(`/products/public/${slug}`);
   }
 
   findFeatured(limit?: number): Observable<ApiResponse<Product[]>> {
-    return this.api.get<ApiResponse<Product[]>>('/products/featured', {
+    return this.api.get<ApiResponse<Product[]>>('/products/public/featured', {
       params: limit ? { limit } : {}
     });
   }

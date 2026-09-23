@@ -57,7 +57,7 @@ describe('ProductsService', () => {
         expect(response.data[0].name).toBe('Leitura Cigana Completa');
       });
 
-      const req = httpMock.expectOne(`${environment.apiUrl}/products`);
+      const req = httpMock.expectOne(`${environment.apiUrl}/products/public`);
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });
@@ -66,7 +66,7 @@ describe('ProductsService', () => {
       service.findAll({ category: 'leituras', featured: true, page: 2 }).subscribe();
 
       const req = httpMock.expectOne((request) =>
-        request.url === `${environment.apiUrl}/products` &&
+        request.url === `${environment.apiUrl}/products/public` &&
         request.params.get('category') === 'leituras' &&
         request.params.get('featured') === 'true' &&
         request.params.get('page') === '2'
@@ -83,7 +83,7 @@ describe('ProductsService', () => {
         expect(response.data.slug).toBe('leitura-cigana-completa');
       });
 
-      const req = httpMock.expectOne(`${environment.apiUrl}/products/leitura-cigana-completa`);
+      const req = httpMock.expectOne(`${environment.apiUrl}/products/public/leitura-cigana-completa`);
       expect(req.request.method).toBe('GET');
       req.flush({ data: mockProduct });
     });
@@ -96,7 +96,7 @@ describe('ProductsService', () => {
       });
 
       const req = httpMock.expectOne((request) =>
-        request.url === `${environment.apiUrl}/products/featured` &&
+        request.url === `${environment.apiUrl}/products/public/featured` &&
         request.params.get('limit') === '6'
       );
       req.flush({ data: mockProducts });
