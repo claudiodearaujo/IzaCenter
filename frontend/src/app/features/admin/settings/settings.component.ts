@@ -205,6 +205,7 @@ export class SettingsComponent implements OnInit {
   languagesText = 'pt-BR';
   credentialsText = '';
   specialtiesText = '';
+  cardModuleSpecialtiesText = '';
   seoKeywordsText = 'atendimento, serviços, profissional';
 
   logoPreview = signal<string | null>(null);
@@ -231,6 +232,10 @@ export class SettingsComponent implements OnInit {
         this.languagesText = this.professionalSettings.languages.join(', ');
         this.credentialsText = this.professionalSettings.credentials.join('\n');
         this.specialtiesText = this.specialties.map((specialty) => specialty.name).join('\n');
+        this.cardModuleSpecialtiesText = this.specialties
+          .filter((specialty) => specialty.usesCardModule || specialty.moduleKey === 'tarot-cards')
+          .map((specialty) => specialty.name)
+          .join('\n');
         this.seoKeywordsText = this.seoSettings.keywords.join(', ');
         
         // Populate unified settings object
@@ -461,13 +466,25 @@ export class SettingsComponent implements OnInit {
     const existingByName = new Map(
       this.specialties.map((specialty) => [specialty.name.toLowerCase(), specialty])
     );
+    const cardModuleNames = new Set(
+      this.parseList(this.cardModuleSpecialtiesText).map((name) => name.toLowerCase())
+    );
+
     this.specialties = this.parseList(this.specialtiesText).map((name) => {
       const existing = existingByName.get(name.toLowerCase());
-      return existing || {
-        slug: this.slugify(name),
-        name,
-        isActive: true,
-        usesCardModule: false,
+      const usesCardModule = cardModuleNames.has(name.toLowerCase());
+
+      return {
+        ...(existing || {
+          slug: this.slugify(name),
+          name,
+          isActive: true,
+          usesCardModule: false,
+        }),
+        usesCardModule,
+        moduleKey: usesCardModule
+          ? 'tarot-cards'
+          : (existing?.moduleKey === 'tarot-cards' ? undefined : existing?.moduleKey),
       };
     });
 

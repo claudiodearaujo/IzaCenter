@@ -51,6 +51,7 @@ export const DEFAULT_PUBLIC_SETTINGS: PublicSettings = {
     credentials: [],
   },
   specialties: [],
+  enabledModules: [],
   seo: {
     metaTitle: 'Therapist Platform',
     metaDescription: 'Serviços e atendimentos profissionais em uma plataforma simples e segura.',
@@ -79,6 +80,12 @@ export class PublicSettingsStore {
     return this.load();
   }
 
+  isModuleEnabled(moduleKey: string): Observable<boolean> {
+    return this.load().pipe(
+      map((settings) => settings.enabledModules.includes(moduleKey))
+    );
+  }
+
   private mergeDefaults(data: PublicSettings): PublicSettings {
     return {
       ...DEFAULT_PUBLIC_SETTINGS,
@@ -92,6 +99,7 @@ export class PublicSettingsStore {
         credentials: data.professional?.credentials || DEFAULT_PUBLIC_SETTINGS.professional.credentials,
       },
       specialties: data.specialties || [],
+      enabledModules: data.enabledModules || [],
       businessHours: data.businessHours || [],
       seo: {
         ...DEFAULT_PUBLIC_SETTINGS.seo,
