@@ -75,8 +75,8 @@
   },
   "home": {
     "hero": {
-      "title": "Descubre tu camino con el Tarot",
-      "subtitle": "Orientación, claridad y acogida a través de las cartas",
+      "title": "Atención profesional para tu momento",
+      "subtitle": "Claridad, acompañamiento y servicios personalizados",
       "cta": "Agendar Consulta",
       "meetAbout": "Conoce a Profissional"
     },
@@ -103,7 +103,7 @@
     },
     "cta": {
       "title": "¿Listo para comenzar tu viaje?",
-      "subtitle": "Agenda tu consulta y descubre lo que las cartas tienen para ti",
+      "subtitle": "Conoce los servicios disponibles y elige el formato que mejor se adapte a ti.",
       "button": "Agendar Ahora"
     }
   },
@@ -1063,12 +1063,12 @@
   },
   "about": {
     "title": "Acerca de Profissional",
-    "subtitle": "Tarotista, terapeuta integrativa y estudiante de psicología analítica junguiana.",
+    "subtitle": "Servicios profesionales con un enfoque personalizado.",
     "journey": {
       "title": "Mi Camino",
-      "paragraph1": "Mi pasión por el tarot comenzó como una búsqueda personal de autoconocimiento y se transformó en una vocación para ayudar a otras personas en sus caminos.",
+      "paragraph1": "Mi trayectoria profesional está dedicada a ofrecer atenciones claras, acogedoras y alineadas con las necesidades de cada persona.",
       "paragraph2": "Con formación en Administración de Empresas y especialización en Terapias Integrativas Naturales, uní mi conocimiento analítico a la sensibilidad intuitiva para ofrecer lecturas que van más allá de lo superficial.",
-      "paragraph3": "Actualmente, estudio Psicología Analítica Junguiana, integrando los arquetipos y símbolos a mis interpretaciones de las cartas Lenormand."
+      "paragraph3": "Integro formación, experiencia y escucha atenta para construir una experiencia responsable y personalizada."
     },
     "education": {
       "title": "Formación:",
@@ -1088,12 +1088,12 @@
       },
       "empowerment": {
         "title": "Empoderamiento",
-        "description": "El tarot es una herramienta para que tomes tus propias decisiones."
+        "description": "El objetivo del servicio es ayudarte a comprender posibilidades y tomar tus propias decisiones."
       }
     },
     "cta": {
       "title": "¿Lista para tu lectura?",
-      "subtitle": "Agenda una consulta y descubre los mensajes que las cartas tienen para ti.",
+      "subtitle": "Conoce los servicios disponibles y elige el formato más adecuado para ti.",
       "button": "Ver Servicios"
     }
   },
@@ -1104,7 +1104,7 @@
     "items": {
       "readingByQuestions": {
         "title": "Lectura por Preguntas",
-        "description": "Haz tus preguntas y recibe orientación a través de las cartas. Ideal para dudas específicas.",
+        "description": "Envía la información necesaria y recibe una entrega personalizada según el servicio contratado.",
         "features": {
           "feature1": "1, 3 o 5 preguntas",
           "feature2": "Respuesta en hasta 48h",
@@ -1193,19 +1193,19 @@
   },
   "faq": {
     "title": "Preguntas Frecuentes",
-    "subtitle": "Resuelve tus dudas sobre las lecturas de tarot.",
+    "subtitle": "Resuelve tus dudas sobre servicios, citas y entregas.",
     "items": {
       "therapeuticTarot": {
-        "question": "¿Qué es el tarot terapéutico?",
-        "answer": "El tarot terapéutico es una herramienta de autoconocimiento que utiliza las cartas para reflexión y orientación, no como predicción del futuro, sino como un espejo para comprender mejor situaciones y posibilidades."
+        "question": "¿Cómo funcionan los servicios?",
+        "answer": "Cada servicio informa su formato, plazo, necesidad de cita y posibles entregas digitales. Revisa los detalles antes de contratar."
       },
       "readingByQuestions": {
         "question": "¿Cómo funciona la lectura por preguntas?",
-        "answer": "Envías tus preguntas a través de la plataforma. Hago la tirada de cartas y preparo una interpretación detallada en PDF, que estará disponible en tu área de cliente en hasta 48h."
+        "answer": "Cada servicio informa su formato, plazo, necesidad de cita y posibles entregas digitales. Revisa los detalles antes de contratar."
       },
       "experience": {
-        "question": "¿Necesito experiencia con el tarot?",
-        "answer": "¡No! Las lecturas se realizan de forma clara y accesible. No necesitas ningún conocimiento previo sobre el tarot o las cartas Lenormand."
+        "question": "¿Necesito experiencia previa?",
+        "answer": "No. Toda la información necesaria se presenta de forma clara durante la contratación y el servicio."
       },
       "recording": {
         "question": "¿Las sesiones online se graban?",
@@ -1253,9 +1253,9 @@
       },
       "services": {
         "title": "2. Servicios",
-        "content": "Therapist Platform ofrece los siguientes servicios:",
-        "item1": "Lecturas de tarot por preguntas (entrega digital)",
-        "item2": "Sesiones en vivo de tarot y baraja gitana",
+        "content": "Therapist Platform ofrece servicios profesionales configurados por el responsable de la plataforma.",
+        "item1": "Servicios con entrega digital, cuando corresponda",
+        "item2": "Sesiones en vivo o presenciales, cuando estén disponibles",
         "item3": "Lecturas mensuales con seguimiento",
         "item4": "Programación de consultas personalizadas"
       },
@@ -1274,11 +1274,11 @@
       },
       "intellectualProperty": {
         "title": "5. Propiedad Intelectual",
-        "content": "Todo el contenido de la plataforma es propiedad de Therapist Platform y está protegido por derechos de autor."
+        "content": "Todo el contenido de la plataforma, incluidos textos, imágenes, logotipos y materiales entregados, está protegido por derechos de autor. Se prohíbe la reproducción sin autorización previa."
       },
       "liability": {
         "title": "6. Limitación de Responsabilidad",
-        "content": "Los servicios de tarot son orientativos y no reemplazan consultas profesionales de salud, legales o financieras."
+        "content": "Los servicios se limitan al alcance descrito en cada artículo y no sustituyen asesoramiento médico, psicológico, jurídico, financiero u otro profesional regulado cuando corresponda. La plataforma no se responsabiliza por decisiones tomadas fuera del alcance contratado."
       },
       "modifications": {
         "title": "7. Modificaciones",
@@ -1305,7 +1305,7 @@
         "content": "Recopilamos los siguientes datos personales:",
         "item1": "Datos de registro: nombre, email, teléfono",
         "item2": "Datos de pago: procesados por Stripe",
-        "item3": "Datos de uso: historial de pedidos y citas",
+        "item3": "Datos de uso: historial de pedidos, citas y entregas",
         "item4": "Datos técnicos: IP, tipo de dispositivo, cookies"
       },
       "dataUse": {
