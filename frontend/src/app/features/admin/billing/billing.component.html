@@ -1,0 +1,202 @@
+<section class="billing-page">
+  <ds-page-header
+    title="Plano e assinatura"
+    description="Acompanhe o plano do seu workspace, entitlements e lifecycle da cobrança SaaS.">
+    @if (data()?.subscription?.hasBillingCustomer) {
+      <div dsPageActions>
+        <ds-button
+          variant="secondary"
+          icon="pi-external-link"
+          [loading]="portalLoading()"
+          (click)="manageBilling()">
+          Gerenciar cobrança
+        </ds-button>
+      </div>
+    }
+  </ds-page-header>
+
+  @if (loading()) {
+    <ds-card padding="lg">
+      <div class="loading-state">
+        <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
+        <span>Carregando assinatura...</span>
+      </div>
+    </ds-card>
+  } @else if (data(); as billing) {
+    @if (!billing.billingEnabled) {
+      <div class="billing-notice" role="status">
+        <i class="pi pi-shield" aria-hidden="true"></i>
+        <div>
+          <strong>Cobrança SaaS desabilitada neste ambiente</strong>
+          <p>
+            Planos e entitlements já estão ativos, mas nenhum checkout Stripe pode ser iniciado
+            até que o billing seja habilitado explicitamente e os Price IDs sejam configurados.
+          </p>
+        </div>
+      </div>
+    }
+
+    <div class="billing-summary">
+      <ds-card padding="lg">
+        <div class="summary-card">
+          <span class="summary-card__icon">
+            <i class="pi pi-sparkles" aria-hidden="true"></i>
+          </span>
+          <div>
+            <p class="summary-card__label">Plano atual</p>
+            <h2 class="summary-card__value">{{ billing.plan.name }}</h2>
+            <p class="summary-card__description">{{ billing.plan.description }}</p>
+          </div>
+        </div>
+      </ds-card>
+
+      <ds-card padding="lg">
+        <div class="summary-card">
+          <span class="summary-card__icon summary-card__icon--neutral">
+            <i class="pi pi-credit-card" aria-hidden="true"></i>
+          </span>
+          <div class="subscription-summary">
+            <div>
+              <p class="summary-card__label">Assinatura</p>
+              <ds-badge [tone]="statusTone(billing.subscription.status)" [dot]="true">
+                {{ statusLabel(billing.subscription.status) }}
+              </ds-badge>
+            </div>
+            <dl>
+              <div>
+                <dt>Período atual</dt>
+                <dd>
+                  {{ formatDate(billing.subscription.currentPeriodStart) }}
+                  —
+                  {{ formatDate(billing.subscription.currentPeriodEnd) }}
+                </dd>
+              </div>
+              <div>
+                <dt>Cancelamento agendado</dt>
+                <dd>{{ billing.subscription.cancelAtPeriodEnd ? 'Sim' : 'Não' }}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </ds-card>
+    </div>
+
+    <ds-card padding="lg">
+      <div dsCardHeader class="section-heading">
+        <div>
+          <p class="section-heading__eyebrow">Entitlements</p>
+          <h2>Recursos do plano atual</h2>
+        </div>
+      </div>
+
+      <div class="entitlements-grid">
+        <div class="entitlement">
+          <i class="pi pi-palette" aria-hidden="true"></i>
+          <span>Identidade visual</span>
+          <strong>{{ billing.plan.entitlements.branding ? 'Incluída' : 'Não incluída' }}</strong>
+        </div>
+        <div class="entitlement">
+          <i class="pi pi-globe" aria-hidden="true"></i>
+          <span>Domínio customizado</span>
+          <strong>{{ billing.plan.entitlements.customDomain ? 'Incluído' : 'Não incluído' }}</strong>
+        </div>
+        <div class="entitlement">
+          <i class="pi pi-chart-line" aria-hidden="true"></i>
+          <span>Relatórios avançados</span>
+          <strong>{{ billing.plan.entitlements.advancedReports ? 'Incluídos' : 'Não incluídos' }}</strong>
+        </div>
+        <div class="entitlement">
+          <i class="pi pi-users" aria-hidden="true"></i>
+          <span>Membros da equipe</span>
+          <strong>{{ billing.plan.entitlements.teamMembers }}</strong>
+        </div>
+        <div class="entitlement">
+          <i class="pi pi-th-large" aria-hidden="true"></i>
+          <span>Módulos de especialidade</span>
+          <strong>{{ moduleLimit(billing.plan) }}</strong>
+        </div>
+      </div>
+    </ds-card>
+
+    <div class="plans-heading">
+      <div>
+        <p class="section-heading__eyebrow">Catálogo</p>
+        <h2>Planos disponíveis</h2>
+        <p>Os preços comerciais são configurados externamente e não ficam hardcoded na aplicação.</p>
+      </div>
+    </div>
+
+    <div class="plans-grid">
+      @for (plan of billing.plans; track plan.key) {
+        <ds-card padding="lg" [interactive]="plan.key !== billing.plan.key">
+          <div
+            class="plan-card"
+            [class.plan-card--current]="plan.key === billing.plan.key">
+            <div class="plan-card__top">
+              <div>
+                <p class="plan-card__name">{{ plan.name }}</p>
+                <p class="plan-card__price">{{ formatPrice(plan) }}</p>
+              </div>
+              @if (plan.key === billing.plan.key) {
+                <ds-badge tone="brand">Atual</ds-badge>
+              }
+            </div>
+
+            <p class="plan-card__description">{{ plan.description }}</p>
+
+            <ul class="plan-features">
+              <li>
+                <i class="pi pi-check" aria-hidden="true"></i>
+                Branding do workspace
+              </li>
+              <li [class.plan-features__muted]="!plan.entitlements.customDomain">
+                <i
+                  class="pi"
+                  [class.pi-check]="plan.entitlements.customDomain"
+                  [class.pi-minus]="!plan.entitlements.customDomain"
+                  aria-hidden="true"></i>
+                Domínio customizado
+              </li>
+              <li [class.plan-features__muted]="!plan.entitlements.advancedReports">
+                <i
+                  class="pi"
+                  [class.pi-check]="plan.entitlements.advancedReports"
+                  [class.pi-minus]="!plan.entitlements.advancedReports"
+                  aria-hidden="true"></i>
+                Relatórios avançados
+              </li>
+              <li>
+                <i class="pi pi-users" aria-hidden="true"></i>
+                Até {{ plan.entitlements.teamMembers }} membro(s)
+              </li>
+              <li>
+                <i class="pi pi-th-large" aria-hidden="true"></i>
+                {{ moduleLimit(plan) }} módulo(s) de especialidade
+              </li>
+            </ul>
+
+            <div class="plan-card__action">
+              <ds-button
+                [variant]="plan.key === billing.plan.key ? 'secondary' : 'primary'"
+                [fullWidth]="true"
+                [loading]="actionPlan() === plan.key"
+                [disabled]="
+                  plan.key === billing.plan.key ||
+                  plan.key === 'starter' ||
+                  !plan.checkoutAvailable
+                "
+                (click)="choosePlan(plan)">
+                {{ planActionLabel(plan) }}
+              </ds-button>
+            </div>
+          </div>
+        </ds-card>
+      }
+    </div>
+
+    <p class="billing-footnote">
+      Alterações de plano só entram em vigor após confirmação assinada do Stripe.
+      Retornos do checkout não concedem acesso antecipado.
+    </p>
+  }
+</section>

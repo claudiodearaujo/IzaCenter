@@ -16,3 +16,4 @@ export { notificationsRoutes } from './notifications';
 export { contactRoutes } from './contact';
 export { tenantRoutes } from './tenant';
 export { onboardingRoutes } from './onboarding';
+export { billingRoutes } from './billing';

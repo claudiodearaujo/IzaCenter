@@ -30,6 +30,17 @@ export const env = {
   // Stripe
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || '',
   STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || '',
+
+  // SaaS billing (tenant subscription)
+  SAAS_BILLING_ENABLED: process.env.SAAS_BILLING_ENABLED === 'true',
+  SAAS_PROFESSIONAL_PRICE_ID: process.env.SAAS_PROFESSIONAL_PRICE_ID || '',
+  SAAS_PROFESSIONAL_MONTHLY_PRICE_CENTS: process.env.SAAS_PROFESSIONAL_MONTHLY_PRICE_CENTS
+    ? parseInt(process.env.SAAS_PROFESSIONAL_MONTHLY_PRICE_CENTS, 10)
+    : null,
+  SAAS_STUDIO_PRICE_ID: process.env.SAAS_STUDIO_PRICE_ID || '',
+  SAAS_STUDIO_MONTHLY_PRICE_CENTS: process.env.SAAS_STUDIO_MONTHLY_PRICE_CENTS
+    ? parseInt(process.env.SAAS_STUDIO_MONTHLY_PRICE_CENTS, 10)
+    : null,
   
   // Email
   SMTP_HOST: process.env.SMTP_HOST || '',
@@ -89,6 +100,19 @@ if (env.isProduction) {
 
   if (missing.length > 0) {
     throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+  }
+
+  if (env.SAAS_BILLING_ENABLED) {
+    const billingRequired = [
+      'SAAS_PROFESSIONAL_PRICE_ID',
+      'SAAS_STUDIO_PRICE_ID',
+    ];
+    const missingBilling = billingRequired.filter((key) => !process.env[key]);
+    if (missingBilling.length > 0) {
+      throw new Error(
+        `SaaS billing is enabled but missing configuration: ${missingBilling.join(', ')}`
+      );
+    }
   }
 }
 

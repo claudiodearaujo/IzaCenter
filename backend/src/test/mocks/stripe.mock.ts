@@ -10,6 +10,14 @@ export const stripeMock = {
       retrieve: jest.fn(),
     },
   },
+  billingPortal: {
+    sessions: {
+      create: jest.fn(),
+    },
+  },
+  subscriptions: {
+    retrieve: jest.fn(),
+  },
   refunds: {
     create: jest.fn(),
   },
