@@ -1,67 +1,70 @@
-<div class="min-h-screen bg-neutral-100">
-  <!-- Mobile Header -->
-  <header class="lg:hidden sticky top-0 z-40 bg-primary-900 text-white shadow-lg">
-    <div class="flex items-center justify-between px-4 py-3">
-      <button (click)="toggleSidebar()" class="p-2">
-        <i class="pi pi-bars text-xl"></i>
+<div class="min-h-screen bg-neutral-50 text-neutral-900">
+  <!-- Mobile header -->
+  <header class="lg:hidden sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur">
+    <div class="flex h-16 items-center justify-between px-4">
+      <button
+        type="button"
+        (click)="toggleSidebar()"
+        class="ds-focus-ring inline-flex h-10 w-10 items-center justify-center rounded-lg text-neutral-700 hover:bg-neutral-100"
+        aria-label="Abrir navegação">
+        <i class="pi pi-bars text-lg"></i>
       </button>
-      <span class="font-semibold">{{ 'admin.dashboard.title' | translate }}</span>
+
+      <a routerLink="/admin" class="flex items-center gap-2.5">
+        <img
+          src="/assets/images/logo.jpeg"
+          alt="Therapist Platform"
+          class="h-9 w-9 rounded-xl border border-primary-100 object-cover" />
+        <span class="font-semibold tracking-tight text-neutral-900">Therapist Platform</span>
+      </a>
+
       <div class="w-10"></div>
     </div>
   </header>
 
-  <div class="flex">
-    <!-- Sidebar Overlay (Mobile) -->
+  <div class="flex min-h-screen">
     @if (isSidebarOpen()) {
-    <div class="lg:hidden fixed inset-0 bg-black/50 z-40" (click)="closeSidebar()"></div>
+      <button
+        type="button"
+        class="lg:hidden fixed inset-0 z-40 bg-neutral-950/35"
+        (click)="closeSidebar()"
+        aria-label="Fechar navegação"></button>
     }
 
-    <!-- Sidebar -->
+    <!-- Application navigation -->
     <aside
-      class="fixed lg:sticky top-0 left-0 z-50 lg:z-0 h-screen w-72 bg-primary-900 text-white transform transition-transform duration-300"
-      [class.-translate-x-full]="!isSidebarOpen()" [class.translate-x-0]="isSidebarOpen()"
+      class="fixed lg:sticky top-0 left-0 z-50 lg:z-30 flex h-screen w-60 shrink-0 flex-col border-r border-neutral-200 bg-[#FCFCFA] transition-transform duration-300"
+      [class.-translate-x-full]="!isSidebarOpen()"
+      [class.translate-x-0]="isSidebarOpen()"
       [class.lg:translate-x-0]="true">
 
-      <!-- Logo -->
-      <div class="p-6 border-b border-primary-800">
-        <a routerLink="/" class="flex items-center gap-2">
-          <span class="rounded-full border-4 border-primary-300 bg-white flex items-center justify-center"
-            style="width:48px;height:64px;overflow:hidden;">
-            <img src="/assets/images/logo.jpeg" alt="Therapist Platform Logo"
-              style="width:100%;height:100%;object-fit:cover;border-radius:16px;" />
-          </span>
-          <div>
-            <span class="text-lg font-serif font-semibold">Therapist Platform</span>
-            <span class="block text-xs text-primary-300">{{ 'nav.adminPanel' | translate }}</span>
+      <div class="flex h-20 items-center border-b border-neutral-200 px-5">
+        <a routerLink="/admin" class="flex min-w-0 items-center gap-3" (click)="closeSidebar()">
+          <img
+            src="/assets/images/logo.jpeg"
+            alt="Therapist Platform"
+            class="h-10 w-10 shrink-0 rounded-xl border border-primary-100 object-cover" />
+          <div class="min-w-0">
+            <p class="truncate font-semibold tracking-tight text-neutral-900">Therapist Platform</p>
+            <p class="truncate text-xs text-neutral-500">{{ 'nav.adminPanel' | translate }}</p>
           </div>
         </a>
       </div>
 
-      <!-- User Info -->
-      <div class="p-4 border-b border-primary-800">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-primary-700 flex items-center justify-center font-semibold">
-            {{ currentUser()?.fullName?.charAt(0) || 'A' }}
-          </div>
-          <div>
-            <p class="font-medium text-sm">{{ currentUser()?.fullName }}</p>
-            <p class="text-xs text-primary-400">Administrador</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Navigation -->
-      <nav class="p-4 overflow-y-auto" style="max-height: calc(100vh - 250px);">
+      <nav class="flex-1 overflow-y-auto p-3" aria-label="Navegação administrativa">
         <ul class="space-y-1">
           @for (item of menuItems; track item.route) {
             @if (isMenuItemEnabled(item)) {
               <li>
-                <a [routerLink]="item.route" routerLinkActive="bg-primary-800 text-white"
-                  [routerLinkActiveOptions]="{exact: item.route === '/admin'}" (click)="closeSidebar()"
-                  class="flex items-center justify-between px-4 py-3 rounded-xl text-primary-200 hover:bg-primary-800 hover:text-white transition-colors">
-                  <span class="flex items-center gap-3">
-                    <i class="pi" [class]="item.icon"></i>
-                    {{ item.labelKey | translate }}
+                <a
+                  [routerLink]="item.route"
+                  routerLinkActive="bg-primary-50 text-primary-800 font-medium"
+                  [routerLinkActiveOptions]="{exact: item.route === '/admin'}"
+                  (click)="closeSidebar()"
+                  class="ds-focus-ring flex min-h-10 items-center justify-between rounded-lg px-3 py-2.5 text-sm text-neutral-600 transition-colors duration-150 hover:bg-neutral-100 hover:text-neutral-900">
+                  <span class="flex min-w-0 items-center gap-3">
+                    <i class="pi w-5 shrink-0 text-center text-base" [class]="item.icon"></i>
+                    <span class="truncate">{{ item.labelKey | translate }}</span>
                   </span>
                   @if (item.badge) {
                     <p-badge value="3" severity="danger" />
@@ -73,23 +76,37 @@
         </ul>
       </nav>
 
-      <!-- Bottom Actions -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-primary-800">
-        <a routerLink="/" class="flex items-center gap-3 px-4 py-2 text-primary-300 hover:text-white text-sm">
-          <i class="pi pi-external-link"></i>
+      <div class="border-t border-neutral-200 p-3">
+        <div class="mb-2 flex items-center gap-3 rounded-xl bg-white px-3 py-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-100 font-semibold text-primary-800">
+            {{ currentUser()?.fullName?.charAt(0) || 'A' }}
+          </div>
+          <div class="min-w-0">
+            <p class="truncate text-sm font-medium text-neutral-800">{{ currentUser()?.fullName }}</p>
+            <p class="truncate text-xs text-neutral-500">Administrador</p>
+          </div>
+        </div>
+
+        <a
+          routerLink="/"
+          class="ds-focus-ring flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
+          <i class="pi pi-external-link w-5 text-center"></i>
           {{ 'common.back' | translate }}
         </a>
-        <button (click)="logout()"
-          class="flex items-center gap-3 px-4 py-2 text-red-400 hover:text-red-300 w-full text-sm">
-          <i class="pi pi-sign-out"></i>
+
+        <button
+          type="button"
+          (click)="logout()"
+          class="ds-focus-ring mt-1 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-red-700 hover:bg-red-50">
+          <i class="pi pi-sign-out w-5 text-center"></i>
           {{ 'nav.logout' | translate }}
         </button>
       </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 min-h-screen">
-      <div class="p-6 lg:p-8">
+    <!-- Main workspace -->
+    <main class="min-w-0 flex-1">
+      <div class="mx-auto w-full max-w-[1440px] p-4 sm:p-6 lg:p-8">
         <router-outlet />
       </div>
     </main>
