@@ -1,7 +1,4 @@
 :host {
   display: block;
-}
-
-.font-serif {
-  font-family: 'Cormorant Garamond', serif;
+  min-height: 100vh;
 }
