@@ -78,6 +78,10 @@ export class AuthService {
 
     return {
       user,
+      membership: {
+        role: 'CLIENT' as const,
+        isActive: true,
+      },
       ...tokens,
     };
   }
@@ -109,7 +113,7 @@ export class AuthService {
           userId: user.id,
         },
       },
-      select: { isActive: true },
+      select: { id: true, role: true, isActive: true },
     });
 
     if (!membership?.isActive) {
@@ -134,6 +138,11 @@ export class AuthService {
 
     return {
       user: userWithoutPassword,
+      membership: {
+        id: membership.id,
+        role: membership.role,
+        isActive: membership.isActive,
+      },
       ...tokens,
     };
   }

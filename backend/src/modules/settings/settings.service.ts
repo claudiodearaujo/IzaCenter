@@ -80,6 +80,18 @@ interface SeoSettings {
   keywords: string[];
 }
 
+interface BrandingSettings {
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  surfaceColor: string;
+  textColor: string;
+  logoUrl?: string;
+  faviconUrl?: string;
+  fontFamily: string;
+  borderRadius: string;
+}
+
 interface AnalyticsSettings {
   googleAnalyticsId?: string;
   facebookPixelId?: string;
@@ -288,6 +300,32 @@ export class SettingsService {
     return { data: updated };
   }
 
+  // Branding Settings
+  async getBranding(tenantId = DEFAULT_TENANT_ID): Promise<{ data: BrandingSettings }> {
+    const settings = await this.getSetting('branding', tenantId);
+
+    return {
+      data: settings || {
+        primaryColor: '#4f46e5',
+        secondaryColor: '#7c3aed',
+        accentColor: '#0ea5e9',
+        surfaceColor: '#ffffff',
+        textColor: '#111827',
+        logoUrl: '',
+        faviconUrl: '',
+        fontFamily: 'Inter, sans-serif',
+        borderRadius: '12px',
+      },
+    };
+  }
+
+  async updateBranding(data: Partial<BrandingSettings>, tenantId = DEFAULT_TENANT_ID): Promise<{ data: BrandingSettings }> {
+    const current = (await this.getBranding(tenantId)).data;
+    const updated = { ...current, ...data };
+    await this.setSetting('branding', updated, tenantId);
+    return { data: updated };
+  }
+
   // Analytics Settings
   async getAnalytics(tenantId = DEFAULT_TENANT_ID): Promise<{ data: AnalyticsSettings }> {
     const settings = await this.getSetting('analytics', tenantId);
@@ -308,7 +346,7 @@ export class SettingsService {
 
   // Get all settings at once
   async getAll(tenantId = DEFAULT_TENANT_ID) {
-    const [general, contact, businessHours, content, professional, specialties, seo, analytics] = await Promise.all([
+    const [general, contact, businessHours, content, professional, specialties, seo, branding, analytics] = await Promise.all([
       this.getGeneral(tenantId),
       this.getContact(tenantId),
       this.getBusinessHours(tenantId),
@@ -316,6 +354,7 @@ export class SettingsService {
       this.getProfessional(tenantId),
       this.getSpecialties(tenantId),
       this.getSeo(tenantId),
+      this.getBranding(tenantId),
       this.getAnalytics(tenantId),
     ]);
 
@@ -329,6 +368,7 @@ export class SettingsService {
         specialties: specialties.data,
         enabledModules: this.resolveEnabledSpecialtyModules(specialties.data),
         seo: seo.data,
+        branding: branding.data,
         analytics: analytics.data,
       },
     };
@@ -336,7 +376,7 @@ export class SettingsService {
 
   // Get public settings (for frontend)
   async getPublic(tenantId = DEFAULT_TENANT_ID) {
-    const [general, contact, businessHours, content, professional, specialties, seo] = await Promise.all([
+    const [general, contact, businessHours, content, professional, specialties, seo, branding] = await Promise.all([
       this.getGeneral(tenantId),
       this.getContact(tenantId),
       this.getBusinessHours(tenantId),
@@ -344,6 +384,7 @@ export class SettingsService {
       this.getProfessional(tenantId),
       this.getSpecialties(tenantId),
       this.getSeo(tenantId),
+      this.getBranding(tenantId),
     ]);
 
     return {
@@ -374,6 +415,7 @@ export class SettingsService {
         specialties: specialties.data.filter((specialty) => specialty.isActive),
         enabledModules: this.resolveEnabledSpecialtyModules(specialties.data),
         seo: seo.data,
+        branding: branding.data,
       },
     };
   }

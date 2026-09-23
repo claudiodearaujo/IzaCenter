@@ -150,6 +150,24 @@ export class SettingsController {
     }
   }
 
+  async getBranding(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await settingsService.getBranding(req.tenant?.id);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateBranding(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await settingsService.updateBranding(req.body, req.tenant?.id);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getAnalytics(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await settingsService.getAnalytics(req.tenant?.id);

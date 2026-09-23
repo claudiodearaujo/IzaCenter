@@ -79,6 +79,7 @@ model Tenant {
   status       TenantStatus @default(ACTIVE)
   planKey      String       @default("starter") @map("plan_key")
   customDomain String?      @unique @map("custom_domain")
+  onboardingCompletedAt DateTime? @map("onboarding_completed_at")
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
 
