@@ -14,9 +14,21 @@ export function validate(schema: ZodSchema, target: ValidationTarget = 'body') {
       const dataToValidate = req[target];
       const validatedData = await schema.parseAsync(dataToValidate);
       
-      // Replace with validated data
-      req[target] = validatedData;
-      
+      // Replace with validated data.
+      // Express 5 exposes req.query through a read-only getter, so assigning
+      // req.query directly throws at runtime. Override it on the request
+      // instance while keeping body/params behavior unchanged.
+      if (target === 'query') {
+        Object.defineProperty(req, 'query', {
+          value: validatedData,
+          writable: true,
+          configurable: true,
+          enumerable: true,
+        });
+      } else {
+        req[target] = validatedData;
+      }
+
       next();
     } catch (error) {
       if (error instanceof z.ZodError) {
