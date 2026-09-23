@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.example.com/api',
-  stripePublishableKey: 'pk_live_...',
+  // Same-origin API. Nginx/Coolify proxies /api to the backend container.
+  apiUrl: '/api',
+  stripePublishableKey: 'pk_test_local',
   sentryDsn: ''
 };
