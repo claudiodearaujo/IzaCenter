@@ -19,7 +19,7 @@ PRDs:
 - [PRD-SERVICE-DOMAIN-V2.md](PRD-SERVICE-DOMAIN-V2.md) — Service Domain v2 ✅
 - [PRD-DELIVERY-DOMAIN-V3.md](PRD-DELIVERY-DOMAIN-V3.md) — Delivery Domain v3 ✅
 - [PRD-CONTENT-WHITELABEL-V4.md](PRD-CONTENT-WHITELABEL-V4.md) — Content / White-label Domain v4 ✅
-- [PRD-SPECIALTY-MODULES-V5.md](PRD-SPECIALTY-MODULES-V5.md) — Specialty Modules v5 🟡
+- [PRD-SPECIALTY-MODULES-V5.md](PRD-SPECIALTY-MODULES-V5.md) — Specialty Modules v5 ✅
 
 O core público está em migração para white-label. Conceitos específicos de especialidade devem permanecer encapsulados em specialty modules opcionais, e não em regras fixas do core.
 
