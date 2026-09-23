@@ -1,6 +1,6 @@
 # PRD — SaaS Foundation v4: Plans & Billing
 
-**Status:** 🟡 Implementação validada — deploy Coolify pendente
+**Status:** ✅ Implementado, validado e implantado
 
 ## Objetivo
 
@@ -271,7 +271,7 @@ Adicionar item "Plano e assinatura" no menu administrativo.
 - migration aplicada no Coolify local;
 - runtime permanece healthy.
 
-## Validação local concluída
+## Validação concluída
 
 - Prisma validate/generate: PASS.
 - Migration DDL: PASS em banco scratch PostgreSQL derivado do schema Coolify.
@@ -282,7 +282,17 @@ Adicionar item "Plano e assinatura" no menu administrativo.
 - Frontend tests: 269/269 PASS em ChromeHeadless.
 - `git diff --check`: PASS.
 - fluxo de comércio `Order` preservado nos testes existentes.
-- billing SaaS permanece explicitamente desabilitado no ambiente local.
-- pendente para encerramento operacional: merge, migration no Coolify e smoke test do runtime.
+- PR #86 mergeado na `main`: SaaS Foundation v4.
+- PR #87 mergeado na `main`: registro da rota ativa `/admin/assinatura` com teste de regressão.
+- migration `20260923200500_add_saas_plans_billing_v4` aplicada com sucesso no PostgreSQL dedicado do Coolify.
+- tabelas `saas_subscriptions` e `stripe_webhook_events` confirmadas no runtime.
+- tenant `default`: `starter | FREE`.
+- contagem pós-backfill: 1 tenant / 1 assinatura.
+- `GET /api/billing/plans`: HTTP 200, três planos e nenhum Price ID exposto.
+- billing SaaS permanece desabilitado no ambiente local; todos os checkouts pagos retornam indisponíveis no catálogo.
+- `GET /api/billing/current` e `POST /api/billing/checkout` sem autenticação: HTTP 401.
+- `/admin/assinatura` anônimo redireciona para `/auth/login`.
+- backend, frontend e PostgreSQL: healthy.
+- CI pós-merge da `main`: PASS.
 
-Próxima fase após o encerramento operacional: SaaS Foundation v5 — LGPD & Operations.
+Próxima fase: SaaS Foundation v5 — LGPD & Operations.
