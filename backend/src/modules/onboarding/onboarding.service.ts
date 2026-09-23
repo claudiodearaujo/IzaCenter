@@ -91,6 +91,15 @@ export class OnboardingService {
         },
       });
 
+      await tx.saasSubscription.create({
+        data: {
+          tenantId: tenant.id,
+          planKey: 'starter',
+          status: 'FREE',
+          provider: 'stripe',
+        },
+      });
+
       await tx.siteSetting.createMany({
         data: this.buildInitialSettings(tenant.id, data),
       });

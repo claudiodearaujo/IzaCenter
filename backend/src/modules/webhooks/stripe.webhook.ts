@@ -1,63 +1,31 @@
-// apps/backend/src/modules/webhooks/stripe.webhook.ts
-
 import { Router, Request, Response } from 'express';
 import express from 'express';
-import { stripe, stripeHelpers } from '../../config/stripe';
+import Stripe from 'stripe';
+import { stripeHelpers } from '../../config/stripe';
 import { ordersService } from '../orders/orders.service';
-import { env } from '../../config/env';
+import { billingService } from '../billing/billing.service';
 
 const router = Router();
 
-// In-memory idempotency store — prevents double-processing on Stripe retries.
-// Entries expire after 24 h. Resets on server restart (acceptable: Stripe
-// retries use unique event IDs, so the window is short).
-const processedEvents = new Map<string, number>();
-const PROCESSED_EVENT_TTL_MS = 24 * 60 * 60 * 1000;
+function invoiceSubscriptionId(invoice: any): string | null {
+  const direct = invoice.subscription;
+  if (typeof direct === 'string') return direct;
+  if (direct?.id) return direct.id;
 
-function isEventProcessed(eventId: string): boolean {
-  const ts = processedEvents.get(eventId);
-  if (!ts) return false;
-  if (Date.now() - ts > PROCESSED_EVENT_TTL_MS) {
-    processedEvents.delete(eventId);
-    return false;
-  }
-  return true;
-}
+  const parentSubscription = invoice.parent?.subscription_details?.subscription;
+  if (typeof parentSubscription === 'string') return parentSubscription;
+  if (parentSubscription?.id) return parentSubscription.id;
 
-function markEventProcessed(eventId: string): void {
-  processedEvents.set(eventId, Date.now());
+  return null;
 }
 
 /**
-/**
- * @openapi
- * /webhooks/stripe:
- *   post:
- *     tags: [Webhooks]
- *     summary: Handle Stripe webhook events
- *     description: >
- *       Receives Stripe events (payment_intent.succeeded, payment_intent.payment_failed, charge.refunded, etc.)
- *       and processes them. Requires the Stripe-Signature header for verification.
- *       Events are idempotent — duplicate events (same event ID) are skipped using Redis.
- *     security: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *     parameters:
- *       - in: header
- *         name: stripe-signature
- *         required: true
- *         schema:
- *           type: string
- *         description: Stripe webhook signature for request verification
- *     responses:
- *       200:
- *         description: Event received and processed
- *       400:
- *         description: Signature verification failed
+ * Stripe webhook shared by two independent domains:
+ * - commerce: clients paying a tenant for services/products;
+ * - SaaS billing: tenant paying the platform subscription.
+ *
+ * The event id is persisted before processing and marked processed only after
+ * successful handling. A failed event remains retryable after process restart.
  */
 router.post(
   '/',
@@ -65,44 +33,56 @@ router.post(
   async (req: Request, res: Response) => {
     const signature = req.headers['stripe-signature'] as string;
 
-    let event;
+    let event: Stripe.Event;
 
     try {
       event = stripeHelpers.constructEvent(req.body, signature);
     } catch (error: any) {
-      console.error('❌ Webhook signature verification failed:', error.message);
+      console.error('Stripe webhook signature verification failed:', error.message);
       res.status(400).send(`Webhook Error: ${error.message}`);
       return;
     }
 
-    console.log(`📥 Stripe webhook received: ${event.type} (${event.id})`);
-
-    // Idempotency check
-    if (isEventProcessed(event.id)) {
-      console.log(`⏭️ Event ${event.id} already processed, skipping`);
-      res.json({ received: true, deduplicated: true });
-      return;
-    }
+    console.log(`Stripe webhook received: ${event.type} (${event.id})`);
 
     try {
+      const shouldProcess = await billingService.beginStripeEvent(event.id, event.type);
+      if (!shouldProcess) {
+        res.json({ received: true, deduplicated: true });
+        return;
+      }
+
+      let tenantId: string | null = null;
+
       switch (event.type) {
         case 'checkout.session.completed': {
-          const session = event.data.object;
-          const orderId = session.metadata?.orderId;
+          const session = event.data.object as Stripe.Checkout.Session;
 
+          if (
+            session.metadata?.billingKind === 'saas' &&
+            session.subscription
+          ) {
+            const subscriptionId =
+              typeof session.subscription === 'string'
+                ? session.subscription
+                : session.subscription.id;
+            const synced = await billingService.syncSubscriptionById(subscriptionId);
+            tenantId = synced?.tenantId || session.metadata?.tenantId || null;
+            break;
+          }
+
+          const orderId = session.metadata?.orderId;
           if (orderId && session.payment_status === 'paid') {
             await ordersService.handlePaymentSuccess(
               orderId,
               session.payment_intent as string
             );
-            console.log(`✅ Order ${orderId} payment successful`);
           }
           break;
         }
 
         case 'checkout.session.async_payment_succeeded': {
-          // Handle async payment methods (boleto, pix)
-          const session = event.data.object;
+          const session = event.data.object as Stripe.Checkout.Session;
           const orderId = session.metadata?.orderId;
 
           if (orderId) {
@@ -110,53 +90,78 @@ router.post(
               orderId,
               session.payment_intent as string
             );
-            console.log(`✅ Order ${orderId} async payment successful`);
           }
           break;
         }
 
         case 'checkout.session.async_payment_failed': {
-          const session = event.data.object;
+          const session = event.data.object as Stripe.Checkout.Session;
           const orderId = session.metadata?.orderId;
 
           if (orderId) {
             await ordersService.handlePaymentFailure(orderId);
-            console.log(`❌ Order ${orderId} async payment failed — status updated`);
+          }
+          break;
+        }
+
+        case 'customer.subscription.created':
+        case 'customer.subscription.updated':
+        case 'customer.subscription.deleted': {
+          const synced = await billingService.syncSubscription(
+            event.data.object as Stripe.Subscription
+          );
+          tenantId = synced?.tenantId || null;
+          break;
+        }
+
+        case 'invoice.paid':
+        case 'invoice.payment_failed': {
+          const subscriptionId = invoiceSubscriptionId(event.data.object);
+          if (subscriptionId) {
+            const synced = await billingService.syncSubscriptionById(subscriptionId);
+            tenantId = synced?.tenantId || null;
           }
           break;
         }
 
         case 'payment_intent.succeeded': {
-          const paymentIntent = event.data.object;
-          console.log(`💰 Payment intent succeeded: ${paymentIntent.id}`);
+          const paymentIntent = event.data.object as Stripe.PaymentIntent;
+          console.log(`Payment intent succeeded: ${paymentIntent.id}`);
           break;
         }
 
         case 'payment_intent.payment_failed': {
-          const paymentIntent = event.data.object;
-          console.log(`❌ Payment intent failed: ${paymentIntent.id}`);
+          const paymentIntent = event.data.object as Stripe.PaymentIntent;
+          console.log(`Payment intent failed: ${paymentIntent.id}`);
           break;
         }
 
         case 'charge.refunded': {
-          const charge = event.data.object;
-          const paymentIntentId = charge.payment_intent as string;
+          const charge = event.data.object as Stripe.Charge;
+          const paymentIntentId =
+            typeof charge.payment_intent === 'string'
+              ? charge.payment_intent
+              : charge.payment_intent?.id;
+
           if (paymentIntentId) {
             await ordersService.handleRefund(paymentIntentId);
-            console.log(`↩️ Charge refunded: ${charge.id} — order status updated`);
           }
           break;
         }
 
         default:
-          console.log(`ℹ️ Unhandled event type: ${event.type}`);
+          console.log(`Unhandled Stripe event type: ${event.type}`);
       }
 
-      markEventProcessed(event.id);
-
+      await billingService.markStripeEventProcessed(event.id, tenantId);
       res.json({ received: true });
     } catch (error) {
-      console.error('❌ Webhook handler error:', error);
+      console.error('Stripe webhook handler error:', error);
+      try {
+        await billingService.markStripeEventFailed(event.id, error);
+      } catch (trackingError) {
+        console.error('Could not persist Stripe webhook failure:', trackingError);
+      }
       res.status(500).json({ error: 'Webhook handler failed' });
     }
   }

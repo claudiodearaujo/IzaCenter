@@ -125,6 +125,11 @@ export const ADMIN_ROUTES: Routes = [
       ),
   },
   {
+    path: 'assinatura',
+    loadComponent: () =>
+      import('./billing/billing.component').then((m) => m.BillingComponent),
+  },
+  {
     path: 'configuracoes',
     loadComponent: () =>
       import('./settings/settings.component').then((m) => m.SettingsComponent),

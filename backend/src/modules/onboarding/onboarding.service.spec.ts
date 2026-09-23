@@ -67,6 +67,12 @@ describe('OnboardingService', () => {
       role: 'OWNER',
       isActive: true,
     } as any);
+    prismaMock.saasSubscription.create.mockResolvedValue({
+      id: 'subscription-1',
+      tenantId: 'tenant-1',
+      planKey: 'starter',
+      status: 'FREE',
+    } as any);
     prismaMock.siteSetting.createMany.mockResolvedValue({ count: 7 });
 
     const result = await service.onboardProfessional(data);
@@ -85,6 +91,15 @@ describe('OnboardingService', () => {
         }),
       })
     );
+
+    expect(prismaMock.saasSubscription.create).toHaveBeenCalledWith({
+      data: {
+        tenantId: 'tenant-1',
+        planKey: 'starter',
+        status: 'FREE',
+        provider: 'stripe',
+      },
+    });
 
     expect(prismaMock.siteSetting.createMany).toHaveBeenCalledWith({
       data: expect.arrayContaining([

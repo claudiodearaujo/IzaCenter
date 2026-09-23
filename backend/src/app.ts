@@ -30,6 +30,7 @@ import {
   contactRoutes,
   tenantRoutes,
   onboardingRoutes,
+  billingRoutes,
 } from './modules';
 
 // Create Express app
@@ -129,6 +130,7 @@ function mountRoutes(prefix: string) {
   app.use(prefix, resolveTenant);
   app.use(prefix, tenantRoutes);
   app.use(prefix, onboardingRoutes);
+  app.use(prefix, billingRoutes);
   app.use(`${prefix}/auth`, authRoutes);
   app.use(`${prefix}/users`, usersRoutes);
   app.use(`${prefix}/products`, productsRoutes);
