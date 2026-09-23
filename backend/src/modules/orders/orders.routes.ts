@@ -235,7 +235,7 @@ router.post(
  * /orders/items/{itemId}/questions:
  *   post:
  *     tags: [Orders]
- *     summary: Add questions to a tarot reading order item
+ *     summary: Add intake information to an order item
  *     security:
  *       - bearerAuth: []
  *     parameters:

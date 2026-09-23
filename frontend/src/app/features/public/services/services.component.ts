@@ -1,90 +1,73 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SkeletonModule } from 'primeng/skeleton';
+import { ProductsService, Product } from '../../../core/services/products.service';
 import { SeoService } from '../../../core/services/seo.service';
+import { DEFAULT_PUBLIC_SETTINGS, PublicSettingsStore } from '../../../core/services/public-settings.store';
 
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [CommonModule, RouterLink, ButtonModule, TranslateModule],
+  imports: [CommonModule, RouterLink, ButtonModule, SkeletonModule],
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
 export class ServicesComponent implements OnInit {
-  private translate = inject(TranslateService);
+  private productsService = inject(ProductsService);
+  private publicSettingsStore = inject(PublicSettingsStore);
   private seoService = inject(SeoService);
 
+  publicSettings = signal(DEFAULT_PUBLIC_SETTINGS);
+  services = signal<Product[]>([]);
+  loading = signal(true);
+
   ngOnInit(): void {
-    this.seoService.setMeta({
-      title: 'Serviços de Tarot',
-      description: 'Conheça os serviços de leitura de tarot e baralho cigano oferecidos por Profissional: leitura por perguntas, sessões ao vivo, leitura mensal e especial.',
-      url: 'https://www.example.com/servicos'
+    this.publicSettingsStore.load().subscribe((settings) => {
+      this.publicSettings.set(settings);
+      this.seoService.configure(settings);
+      this.seoService.setMeta({
+        title: settings.content.servicesTitle || 'Serviços',
+        description: settings.content.servicesSubtitle || settings.siteDescription,
+        keywords: settings.seo.keywords.join(', '),
+        url: window.location.origin + '/servicos',
+      });
     });
 
-    this.seoService.setSchema([
-      this.seoService.getServiceSchema(this.services.map(s => ({
-        name: s.title,
-        description: s.description
-      }))),
-      this.seoService.getBreadcrumbSchema([
-        { name: 'Início', url: '/' },
-        { name: 'Serviços', url: '/servicos' }
-      ])
-    ]);
+    this.productsService.findAll({ page: 1, limit: 50 }).subscribe({
+      next: (response) => {
+        const active = response.data.filter((service) => service.isActive);
+        this.services.set(active);
+        this.loading.set(false);
+        this.seoService.setSchema([
+          this.seoService.getServiceSchema(active.map((service) => ({
+            name: service.name,
+            description: service.shortDescription || service.fullDescription || '',
+          }))),
+          this.seoService.getBreadcrumbSchema([{ name: 'Início', url: '/' }, { name: 'Serviços', url: '/servicos' }])
+        ]);
+      },
+      error: () => {
+        this.services.set([]);
+        this.loading.set(false);
+      }
+    });
   }
 
-  get services() {
-    return [
-      {
-        icon: '🔮',
-        title: this.translate.instant('services.items.readingByQuestions.title'),
-        description: this.translate.instant('services.items.readingByQuestions.description'),
-        features: [
-          this.translate.instant('services.items.readingByQuestions.features.feature1'),
-          this.translate.instant('services.items.readingByQuestions.features.feature2'),
-          this.translate.instant('services.items.readingByQuestions.features.feature3'),
-          this.translate.instant('services.items.readingByQuestions.features.feature4')
-        ],
-        price: this.translate.instant('services.items.readingByQuestions.price')
-      },
-      {
-        icon: '✨',
-        title: this.translate.instant('services.items.liveSession.title'),
-        description: this.translate.instant('services.items.liveSession.description'),
-        features: [
-          this.translate.instant('services.items.liveSession.features.feature1'),
-          this.translate.instant('services.items.liveSession.features.feature2'),
-          this.translate.instant('services.items.liveSession.features.feature3'),
-          this.translate.instant('services.items.liveSession.features.feature4')
-        ],
-        price: this.translate.instant('services.items.liveSession.price')
-      },
-      {
-        icon: '📿',
-        title: this.translate.instant('services.items.monthlyReading.title'),
-        description: this.translate.instant('services.items.monthlyReading.description'),
-        features: [
-          this.translate.instant('services.items.monthlyReading.features.feature1'),
-          this.translate.instant('services.items.monthlyReading.features.feature2'),
-          this.translate.instant('services.items.monthlyReading.features.feature3'),
-          this.translate.instant('services.items.monthlyReading.features.feature4')
-        ],
-        price: this.translate.instant('services.items.monthlyReading.price')
-      },
-      {
-        icon: '🌟',
-        title: this.translate.instant('services.items.specialReading.title'),
-        description: this.translate.instant('services.items.specialReading.description'),
-        features: [
-          this.translate.instant('services.items.specialReading.features.feature1'),
-          this.translate.instant('services.items.specialReading.features.feature2'),
-          this.translate.instant('services.items.specialReading.features.feature3'),
-          this.translate.instant('services.items.specialReading.features.feature4')
-        ],
-        price: this.translate.instant('services.items.specialReading.price')
-      }
-    ];
+  getCapabilityLabels(service: Product): string[] {
+    const labels: string[] = [];
+    if (service.capabilities?.scheduling?.enabled) {
+      const duration = service.capabilities.scheduling.durationMinutes;
+      labels.push(duration ? 'Agendamento · ' + duration + ' min' : 'Agendamento');
+    }
+    if (service.capabilities?.digitalDelivery?.enabled) {
+      labels.push(service.capabilities.digitalDelivery.format ? 'Entrega digital · ' + service.capabilities.digitalDelivery.format : 'Entrega digital');
+    }
+    if (service.capabilities?.recurring?.enabled) {
+      labels.push(service.capabilities.recurring.sessions ? 'Pacote · ' + service.capabilities.recurring.sessions + ' sessões' : 'Acompanhamento recorrente');
+    }
+    if (service.capabilities?.intake?.enabled) labels.push('Preparação prévia');
+    return labels;
   }
 }

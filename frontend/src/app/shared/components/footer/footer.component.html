@@ -1,80 +1,68 @@
 <footer class="bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 text-white">
   <div class="container mx-auto px-4 py-12">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <!-- Brand -->
       <div class="space-y-4">
         <div class="flex items-center gap-2">
-          <img src="assets/images/logo.jpeg" alt="Therapist Platform" class="h-10 w-10 rounded-full object-cover">
-          <span class="text-2xl font-serif font-semibold">Therapist Platform</span>
+          <img [src]="publicSettings().logoUrl || 'assets/images/logo.jpeg'" [alt]="publicSettings().siteName"
+            class="h-10 w-10 rounded-full object-cover">
+          <span class="text-2xl font-serif font-semibold">{{ publicSettings().siteName }}</span>
         </div>
         <p class="text-primary-200 text-sm leading-relaxed">
-          Leituras de tarot terapêutico para orientação em sua jornada de autoconhecimento e crescimento pessoal.
+          {{ publicSettings().content.footerText || publicSettings().siteDescription }}
         </p>
-        <div class="flex gap-4">
-          @for (social of socialLinks; track social.label) {
-          <a [href]="social.url" target="_blank" rel="noopener noreferrer"
-            class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
-            [attr.aria-label]="social.label">
-            <i class="pi" [class]="social.icon"></i>
-          </a>
-          }
-        </div>
+        @if (socialLinks().length) {
+          <div class="flex gap-4">
+            @for (social of socialLinks(); track social.label) {
+              <a [href]="social.url" target="_blank" rel="noopener noreferrer"
+                class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+                [attr.aria-label]="social.label">
+                <i class="pi" [class]="social.icon"></i>
+              </a>
+            }
+          </div>
+        }
       </div>
-
-      <!-- Quick Links -->
       <div>
         <h3 class="text-lg font-serif font-semibold mb-4">{{ 'footer.quickLinks' | translate }}</h3>
         <ul class="space-y-2">
           @for (link of quickLinks; track link.route) {
-          <li>
-            <a [routerLink]="link.route" class="text-primary-200 hover:text-white transition-colors text-sm">
-              {{ link.labelKey | translate }}
-            </a>
-          </li>
+            @if (shouldShowLink(link)) {
+              <li><a [routerLink]="link.route" class="text-primary-200 hover:text-white transition-colors text-sm">{{ link.labelKey | translate }}</a></li>
+            }
           }
         </ul>
       </div>
-
-      <!-- Legal -->
       <div>
         <h3 class="text-lg font-serif font-semibold mb-4">{{ 'footer.legal' | translate }}</h3>
         <ul class="space-y-2">
           @for (link of legalLinks; track link.route) {
-          <li>
-            <a [routerLink]="link.route" class="text-primary-200 hover:text-white transition-colors text-sm">
-              {{ link.labelKey | translate }}
-            </a>
-          </li>
+            <li><a [routerLink]="link.route" class="text-primary-200 hover:text-white transition-colors text-sm">{{ link.labelKey | translate }}</a></li>
           }
         </ul>
       </div>
-
-      <!-- Contact -->
       <div>
         <h3 class="text-lg font-serif font-semibold mb-4">{{ 'footer.contact' | translate }}</h3>
         <div class="space-y-3 text-sm text-primary-200">
-          <p class="flex items-center gap-2">
-            <i class="pi pi-map-marker"></i>
-            Belo Horizonte, MG
-          </p>
-          <p class="flex items-center gap-2">
-            <i class="pi pi-envelope"></i>
-            contato&#64;example.com
-          </p>
-          <p class="flex items-center gap-2">
-            <i class="pi pi-clock"></i>
-            Seg - Sex: 9h às 18h
-          </p>
+          @if (publicSettings().professional.location || publicSettings().contact.address) {
+            <p class="flex items-center gap-2"><i class="pi pi-map-marker"></i>{{ publicSettings().professional.location || publicSettings().contact.address }}</p>
+          }
+          @if (publicSettings().contact.email) {
+            <p class="flex items-center gap-2"><i class="pi pi-envelope"></i>{{ publicSettings().contact.email }}</p>
+          }
+          @if (publicSettings().contact.phone) {
+            <p class="flex items-center gap-2"><i class="pi pi-phone"></i>{{ publicSettings().contact.phone }}</p>
+          }
+          @if (openHoursText) {
+            <p class="flex items-center gap-2"><i class="pi pi-clock"></i>{{ openHoursText }}</p>
+          }
         </div>
       </div>
     </div>
-
-    <!-- Bottom -->
     <div class="border-t border-white/10 mt-10 pt-6 text-center text-sm text-primary-300">
-      <p>&copy; {{ currentYear }} Therapist Platform. {{ 'footer.rightsReserved' | translate }}</p>
-      <p class="mt-2 text-xs">
-        Tarot é uma ferramenta de autoconhecimento e não substitui orientação médica ou psicológica profissional.
-      </p>
+      <p>&copy; {{ currentYear }} {{ publicSettings().siteName }}. {{ 'footer.rightsReserved' | translate }}</p>
+      @if (publicSettings().content.footerDisclaimer) {
+        <p class="mt-2 text-xs">{{ publicSettings().content.footerDisclaimer }}</p>
+      }
     </div>
   </div>
 </footer>

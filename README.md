@@ -19,6 +19,7 @@ A direção arquitetural atual é: `Professional → Specialty → Service → C
 - [PRD — Generic Domain v1](docs/PRD-GENERIC-DOMAIN.md)
 - [PRD — Service Domain v2](docs/PRD-SERVICE-DOMAIN-V2.md)
 - [PRD — Delivery Domain v3](docs/PRD-DELIVERY-DOMAIN-V3.md)
+- [PRD — Content / White-label Domain v4](docs/PRD-CONTENT-WHITELABEL-V4.md)
 - O catálogo usa `serviceKind` + `capabilities`; `ProductType` permanece apenas como compatibilidade transitória.
 - Entregas digitais usam o contrato `Delivery`; a tabela física `readings` e as rotas `/readings` permanecem somente como compatibilidade transitória.
 - `CiganoCard`/`ReadingCard` passam a pertencer ao módulo opcional de especialidade `tarot-cards`, e não ao core de entregas.
@@ -43,10 +44,10 @@ A direção arquitetural atual é: `Professional → Specialty → Service → C
 |--------|--------|
 | Backend API — 13 módulos | ✅ Completo |
 | Banco de Dados — 16 modelos Prisma | ✅ Completo |
-| Admin — Dashboard, Leituras, Agendamentos, Pedidos | ✅ Completo |
+| Admin — Dashboard, Entregas, Agendamentos, Pedidos | ✅ Completo |
 | Admin — Produtos, Categorias, Cartas, Usuários | ✅ Completo |
 | Admin — Depoimentos, Disponibilidade, Relatórios, Configurações | ✅ Completo |
-| Cliente — Dashboard, Leituras, Agendamentos, Pedidos, Perfil | ✅ Completo |
+| Cliente — Dashboard, Entregas, Agendamentos, Pedidos, Perfil | ✅ Completo |
 | Loja — Catálogo, Produto, Carrinho (com cupons), Checkout Stripe | ✅ Completo |
 | Páginas Públicas — Home, Sobre, Serviços, FAQ, Termos, Privacidade | ✅ Completo |
 | Autenticação — Login, Cadastro, Esqueci/Redefinir Senha | ✅ Completo |

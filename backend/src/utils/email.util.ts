@@ -57,7 +57,7 @@ function emailLayout(content: string): string {
       </div>
       
       <div style="text-align: center; margin-top: 30px; font-size: 12px; color: #888;">
-        <p>Therapist Platform - Tarot Cigano Online</p>
+        <p>Therapist Platform - Serviços e Atendimentos Profissionais</p>
         <p>© ${new Date().getFullYear()} Todos os direitos reservados</p>
       </div>
     </div>
@@ -78,7 +78,7 @@ function emailButton(text: string, url: string): string {
 function emailSignature(): string {
   return `
     <p style="line-height: 1.8; color: #f8f5f0;">
-      Com carinho e luz,<br>
+      Atenciosamente,<br>
       <strong style="color: #c9a7eb;">Profissional</strong>
     </p>
   `;
@@ -93,17 +93,16 @@ export const emailTemplates = {
    */
   welcome(name: string): { subject: string; html: string } {
     return {
-      subject: 'Bem-vinda ao Therapist Platform! ✨',
+      subject: 'Boas-vindas ao Therapist Platform! ✨',
       html: emailLayout(`
         <h2 style="color: #c9a7eb; margin-bottom: 20px;">Olá, ${name}!</h2>
         
         <p style="line-height: 1.8; color: #f8f5f0;">
-          Seja muito bem-vinda ao meu universo do Tarot Cigano! 🌙
+          Boas-vindas! Sua conta está pronta para acessar serviços, pedidos, agendamentos e entregas.
         </p>
         
         <p style="line-height: 1.8; color: #f8f5f0;">
-          Fico feliz em ter você aqui. Agora você pode acessar sua área exclusiva, 
-          acompanhar suas leituras e descobrir os segredos que as cartas têm para revelar.
+          Agora você pode acessar sua área de cliente, acompanhar pedidos, agendamentos e entregas vinculadas aos serviços contratados.
         </p>
         
         ${emailButton('Acessar Minha Conta', `${env.FRONTEND_URL}/cliente`)}

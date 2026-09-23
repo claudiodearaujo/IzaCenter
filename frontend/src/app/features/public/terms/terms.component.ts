@@ -1,8 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { SeoService } from '../../../core/services/seo.service';
+import { PublicSettingsStore } from '../../../core/services/public-settings.store';
 
 @Component({
   selector: 'app-terms',
@@ -13,12 +14,17 @@ import { SeoService } from '../../../core/services/seo.service';
 })
 export class TermsComponent implements OnInit {
   private seoService = inject(SeoService);
+  private publicSettingsStore = inject(PublicSettingsStore);
 
   ngOnInit(): void {
-    this.seoService.setMeta({
-      title: 'Termos de Uso',
-      description: 'Termos de Uso da plataforma Therapist Platform — leia os termos e condições para utilização dos nossos serviços.',
-      url: 'https://www.example.com/termos-de-uso'
+    this.publicSettingsStore.load().subscribe((settings) => {
+      this.seoService.configure(settings);
+      this.seoService.setMeta({
+        title: 'Termos de Uso',
+        description: 'Termos e condições para utilização dos serviços oferecidos por ' + settings.siteName + '.',
+        keywords: settings.seo.keywords.join(', '),
+        url: window.location.origin + '/termos-de-uso'
+      });
     });
   }
 }

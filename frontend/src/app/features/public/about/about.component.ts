@@ -1,33 +1,38 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { TranslateModule } from '@ngx-translate/core';
 import { SeoService } from '../../../core/services/seo.service';
+import { DEFAULT_PUBLIC_SETTINGS, PublicSettingsStore } from '../../../core/services/public-settings.store';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, RouterLink, ButtonModule, TranslateModule],
+  imports: [CommonModule, RouterLink, ButtonModule],
   templateUrl: './about.component.html',
   styleUrl: './about.component.css'
 })
 export class AboutComponent implements OnInit {
-  private readonly seoService = inject(SeoService);
+  private seoService = inject(SeoService);
+  private publicSettingsStore = inject(PublicSettingsStore);
+
+  publicSettings = signal(DEFAULT_PUBLIC_SETTINGS);
 
   ngOnInit(): void {
-    this.seoService.setMeta({
-      title: 'Sobre Profissional',
-      description: 'Conheça Profissional, taróloga e estudante de Psicologia Analítica Junguiana, com formação em Administração de Empresas e Terapias Integrativas Naturais.',
-      url: 'https://www.example.com/sobre'
+    this.publicSettingsStore.load().subscribe((settings) => {
+      this.publicSettings.set(settings);
+      this.seoService.configure(settings);
+      this.seoService.setMeta({
+        title: 'Sobre ' + settings.professional.displayName,
+        description: settings.professional.bio || settings.siteDescription,
+        keywords: settings.seo.keywords.join(', '),
+        image: settings.professional.photoUrl || settings.logoUrl,
+        url: window.location.origin + '/sobre'
+      });
+      this.seoService.setSchema([
+        this.seoService.getPersonSchema(),
+        this.seoService.getBreadcrumbSchema([{ name: 'Início', url: '/' }, { name: 'Sobre', url: '/sobre' }])
+      ]);
     });
-
-    this.seoService.setSchema([
-      this.seoService.getPersonSchema(),
-      this.seoService.getBreadcrumbSchema([
-        { name: 'Início', url: '/' },
-        { name: 'Sobre', url: '/sobre' }
-      ])
-    ]);
   }
 }

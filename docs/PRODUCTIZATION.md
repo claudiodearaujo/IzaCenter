@@ -18,8 +18,9 @@ PRDs:
 - [PRD-GENERIC-DOMAIN.md](PRD-GENERIC-DOMAIN.md) — Generic Domain v1 ✅
 - [PRD-SERVICE-DOMAIN-V2.md](PRD-SERVICE-DOMAIN-V2.md) — Service Domain v2 ✅
 - [PRD-DELIVERY-DOMAIN-V3.md](PRD-DELIVERY-DOMAIN-V3.md) — Delivery Domain v3 ✅
+- [PRD-CONTENT-WHITELABEL-V4.md](PRD-CONTENT-WHITELABEL-V4.md) — Content / White-label Domain v4 ✅
 
-O sistema ainda possui conceitos específicos de Tarot/Baralho Cigano. Eles deverão se tornar configuração de especialidade, serviço e conteúdo, e não regras fixas do core.
+O core público está em migração para white-label. Conceitos específicos de especialidade devem permanecer encapsulados em specialty modules opcionais, e não em regras fixas do core.
 
 Prioridades:
 - perfil profissional configurável;

@@ -1,60 +1,54 @@
 <div class="py-16">
   <div class="container mx-auto px-4">
-    <!-- Header -->
     <div class="text-center mb-16">
-      <span class="text-5xl block mb-4">🔮</span>
-      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">
-        {{ 'services.title' | translate }}
-      </h1>
-      <p class="text-xl text-neutral-600 max-w-2xl mx-auto">
-        {{ 'services.subtitle' | translate }}
-      </p>
+      <div class="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center mx-auto mb-4"><i class="pi pi-briefcase text-2xl text-primary-700"></i></div>
+      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">{{ publicSettings().content.servicesTitle || 'Serviços' }}</h1>
+      <p class="text-xl text-neutral-600 max-w-2xl mx-auto">{{ publicSettings().content.servicesSubtitle || publicSettings().siteDescription }}</p>
     </div>
-
-    <!-- Services Grid -->
-    <div class="grid md:grid-cols-2 gap-8 mb-16">
-      @for (service of services; track service.title) {
-        <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-neutral-100">
-          <span class="text-5xl block mb-4">{{ service.icon }}</span>
-          <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-3">
-            {{ service.title }}
-          </h2>
-          <p class="text-neutral-600 mb-6">{{ service.description }}</p>
-          
-          <ul class="space-y-2 mb-6">
-            @for (feature of service.features; track feature) {
-              <li class="flex items-center gap-2 text-neutral-700">
-                <i class="pi pi-check text-primary-600 text-sm"></i>
-                {{ feature }}
-              </li>
+    @if (loading()) {
+      <div class="grid md:grid-cols-2 gap-8 mb-16">
+        @for (_ of [1,2,3,4]; track $index) { <div class="bg-white rounded-3xl p-8 shadow-sm"><p-skeleton height="14rem" /></div> }
+      </div>
+    } @else if (services().length) {
+      <div class="grid md:grid-cols-2 gap-8 mb-16">
+        @for (service of services(); track service.id) {
+          <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-neutral-100">
+            @if (service.coverImageUrl) {
+              <img [src]="service.coverImageUrl" [alt]="service.name" class="w-full aspect-video object-cover rounded-2xl mb-6" />
+            } @else {
+              <div class="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center mb-5"><i class="pi pi-check-circle text-primary-700 text-xl"></i></div>
             }
-          </ul>
-
-          <div class="flex items-center justify-between pt-4 border-t border-neutral-100">
-            <span class="text-lg font-bold text-primary-700">{{ service.price }}</span>
-            <a routerLink="/loja">
-              <p-button [label]="'services.viewOptions' | translate" icon="pi pi-arrow-right" iconPos="right" size="small" />
-            </a>
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <span class="text-xs uppercase tracking-wide text-primary-600">{{ service.serviceKind }}</span>
+                <h2 class="text-2xl font-serif font-bold text-neutral-900 mt-1 mb-3">{{ service.name }}</h2>
+              </div>
+              <span class="text-lg font-bold text-primary-700 whitespace-nowrap">{{ service.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+            </div>
+            <p class="text-neutral-600 mb-6">{{ service.shortDescription || service.fullDescription }}</p>
+            @if (getCapabilityLabels(service).length) {
+              <ul class="space-y-2 mb-6">
+                @for (label of getCapabilityLabels(service); track label) {
+                  <li class="flex items-center gap-2 text-neutral-700"><i class="pi pi-check text-primary-600 text-sm"></i>{{ label }}</li>
+                }
+              </ul>
+            }
+            <a [routerLink]="['/loja', service.slug]"><p-button label="Ver detalhes" icon="pi pi-arrow-right" iconPos="right" size="small" /></a>
           </div>
-        </div>
-      }
-    </div>
-
-    <!-- FAQ Preview -->
+        }
+      </div>
+    } @else {
+      <div class="text-center py-14 bg-neutral-50 rounded-3xl mb-16">
+        <i class="pi pi-info-circle text-3xl text-primary-600 mb-3"></i>
+        <p class="text-neutral-700">Nenhum serviço está publicado neste momento.</p>
+      </div>
+    }
     <div class="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-3xl p-8 md:p-12 text-center">
-      <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-4">
-        {{ 'services.faqPreview.title' | translate }}
-      </h2>
-      <p class="text-neutral-600 mb-6">
-        {{ 'services.faqPreview.subtitle' | translate }}
-      </p>
+      <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-4">Precisa de ajuda para escolher?</h2>
+      <p class="text-neutral-600 mb-6">Entre em contato para entender qual formato de atendimento se encaixa melhor na sua necessidade.</p>
       <div class="flex flex-wrap justify-center gap-4">
-        <a routerLink="/faq">
-          <p-button [label]="'services.faqPreview.faqButton' | translate" [outlined]="true" />
-        </a>
-        <a routerLink="/contato">
-          <p-button [label]="'services.faqPreview.contactButton' | translate" icon="pi pi-envelope" />
-        </a>
+        <a routerLink="/faq"><p-button label="Perguntas frequentes" [outlined]="true" /></a>
+        <a routerLink="/contato"><p-button label="Entrar em contato" icon="pi pi-envelope" /></a>
       </div>
     </div>
   </div>

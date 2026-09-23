@@ -75,8 +75,8 @@
   },
   "home": {
     "hero": {
-      "title": "Descubra seu caminho com o Tarot",
-      "subtitle": "Orientação, clareza e acolhimento através das cartas",
+      "title": "Atendimento profissional para o seu momento",
+      "subtitle": "Clareza, acolhimento e serviços personalizados",
       "cta": "Agendar Consulta",
       "meetAbout": "Conheça a Profissional"
     },
@@ -103,7 +103,7 @@
     },
     "cta": {
       "title": "Pronto para começar sua jornada?",
-      "subtitle": "Agende sua consulta e descubra o que as cartas têm para você",
+      "subtitle": "Conheça os serviços disponíveis e escolha o formato ideal para você.",
       "button": "Agendar Agora"
     }
   },
@@ -1063,12 +1063,12 @@
   },
   "about": {
     "title": "Sobre Profissional",
-    "subtitle": "Taróloga, terapeuta integrativa e estudante de psicologia analítica junguiana.",
+    "subtitle": "Profissional de atendimento com abordagem personalizada.",
     "journey": {
       "title": "Minha Jornada",
-      "paragraph1": "Minha paixão pelo tarot começou como uma busca pessoal por autoconhecimento e se transformou em uma vocação para ajudar outras pessoas em suas jornadas.",
+      "paragraph1": "Minha trajetória profissional é dedicada a oferecer atendimentos claros, acolhedores e alinhados às necessidades de cada pessoa.",
       "paragraph2": "Com formação em Administração de Empresas e especialização em Terapias Integrativas Naturais, uni meu conhecimento analítico à sensibilidade intuitiva para oferecer leituras que vão além do superficial.",
-      "paragraph3": "Atualmente, estudo Psicologia Analítica Junguiana, integrando os arquétipos e símbolos às minhas interpretações do baralho cigano Lenormand."
+      "paragraph3": "Busco integrar formação, experiência e escuta qualificada para construir uma experiência responsável e personalizada."
     },
     "education": {
       "title": "Formações:",
@@ -1088,12 +1088,12 @@
       },
       "empowerment": {
         "title": "Empoderamento",
-        "description": "O tarot é uma ferramenta para você tomar suas próprias decisões."
+        "description": "O objetivo do atendimento é apoiar você na compreensão de possibilidades e na tomada das próprias decisões."
       }
     },
     "cta": {
       "title": "Pronta para sua leitura?",
-      "subtitle": "Agende uma consulta e descubra as mensagens que as cartas têm para você.",
+      "subtitle": "Conheça os serviços disponíveis e escolha o formato mais adequado para você.",
       "button": "Ver Serviços"
     }
   },
@@ -1104,7 +1104,7 @@
     "items": {
       "readingByQuestions": {
         "title": "Leitura por Perguntas",
-        "description": "Faça suas perguntas e receba orientação através das cartas. Ideal para dúvidas específicas.",
+        "description": "Envie as informações necessárias e receba uma entrega personalizada de acordo com o serviço contratado.",
         "features": {
           "feature1": "1, 3 ou 5 perguntas",
           "feature2": "Resposta em até 48h",
@@ -1193,19 +1193,19 @@
   },
   "faq": {
     "title": "Perguntas Frequentes",
-    "subtitle": "Tire suas dúvidas sobre as leituras de tarot.",
+    "subtitle": "Tire suas dúvidas sobre serviços, agendamentos e entregas.",
     "items": {
       "therapeuticTarot": {
-        "question": "O que é o tarot terapêutico?",
-        "answer": "O tarot terapêutico é uma ferramenta de autoconhecimento que utiliza as cartas para reflexão e orientação, não como previsão do futuro, mas como um espelho para compreender melhor situações e possibilidades."
+        "question": "Como funcionam os serviços?",
+        "answer": "Cada serviço informa seu formato, prazo, necessidade de agendamento e possíveis entregas digitais. Consulte os detalhes antes da contratação."
       },
       "readingByQuestions": {
         "question": "Como funciona a leitura por perguntas?",
-        "answer": "Você envia suas perguntas através da plataforma. Eu faço a tiragem das cartas e preparo uma interpretação detalhada em PDF, que fica disponível na sua área de cliente em até 48h."
+        "answer": "Cada serviço informa seu formato, prazo, necessidade de agendamento e possíveis entregas digitais. Consulte os detalhes antes da contratação."
       },
       "experience": {
-        "question": "Preciso de experiência com tarot?",
-        "answer": "Não! As leituras são feitas de forma clara e acessível. Você não precisa ter nenhum conhecimento prévio sobre tarot ou o baralho cigano."
+        "question": "Preciso de alguma experiência prévia?",
+        "answer": "Não. As informações necessárias são apresentadas de forma clara durante a contratação e o atendimento."
       },
       "recording": {
         "question": "As sessões online são gravadas?",
@@ -1253,9 +1253,9 @@
       },
       "services": {
         "title": "2. Descrição dos Serviços",
-        "content": "A Therapist Platform oferece os seguintes serviços de tarot e baralho cigano:",
-        "item1": "Leituras de tarot por perguntas (entrega digital)",
-        "item2": "Sessões ao vivo de tarot e baralho cigano",
+        "content": "A Therapist Platform oferece serviços profissionais cadastrados e configurados pelo responsável pela plataforma.",
+        "item1": "Serviços com entrega digital, quando aplicável",
+        "item2": "Sessões ao vivo ou presenciais, quando disponíveis",
         "item3": "Leituras mensais com acompanhamento",
         "item4": "Agendamento de consultas personalizadas"
       },
@@ -1274,11 +1274,11 @@
       },
       "intellectualProperty": {
         "title": "5. Propriedade Intelectual",
-        "content": "Todo o conteúdo da plataforma, incluindo textos, imagens, logotipos e interpretações de tarot, é protegido por direitos autorais e pertence à Therapist Platform. É proibida a reprodução sem autorização prévia."
+        "content": "Todo o conteúdo da plataforma, incluindo textos, imagens, logotipos e materiais entregues, é protegido por direitos autorais. É proibida a reprodução sem autorização prévia."
       },
       "liability": {
         "title": "6. Limitação de Responsabilidade",
-        "content": "Os serviços de tarot e baralho cigano têm caráter orientativo e não substituem consultas profissionais de saúde, jurídicas ou financeiras. A Therapist Platform não se responsabiliza por decisões tomadas com base nas leituras."
+        "content": "Os serviços oferecidos têm o escopo descrito em cada item e não substituem orientação médica, psicológica, jurídica, financeira ou de outro profissional regulamentado quando aplicável. A plataforma não se responsabiliza por decisões tomadas fora do escopo contratado."
       },
       "modifications": {
         "title": "7. Modificações dos Termos",
@@ -1305,7 +1305,7 @@
         "content": "Coletamos os seguintes dados pessoais:",
         "item1": "Dados de cadastro: nome completo, e-mail, telefone",
         "item2": "Dados de pagamento: processados pela Stripe (não armazenamos dados de cartão)",
-        "item3": "Dados de uso: histórico de pedidos, agendamentos e leituras",
+        "item3": "Dados de uso: histórico de pedidos, agendamentos e entregas",
         "item4": "Dados técnicos: endereço IP, tipo de dispositivo, cookies de sessão"
       },
       "dataUse": {

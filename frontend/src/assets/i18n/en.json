@@ -75,8 +75,8 @@
   },
   "home": {
     "hero": {
-      "title": "Discover your path with Tarot",
-      "subtitle": "Guidance, clarity and support through the cards",
+      "title": "Professional support for your needs",
+      "subtitle": "Clarity, support and personalized services",
       "cta": "Schedule Consultation",
       "meetAbout": "Meet Profissional"
     },
@@ -103,7 +103,7 @@
     },
     "cta": {
       "title": "Ready to start your journey?",
-      "subtitle": "Schedule your consultation and discover what the cards have for you",
+      "subtitle": "Explore the available services and choose the format that best fits your needs.",
       "button": "Schedule Now"
     }
   },
@@ -1063,12 +1063,12 @@
   },
   "about": {
     "title": "About Profissional",
-    "subtitle": "Tarot reader, integrative therapist and student of Jungian analytical psychology.",
+    "subtitle": "Professional services with a personalized approach.",
     "journey": {
       "title": "My Journey",
-      "paragraph1": "My passion for tarot began as a personal quest for self-knowledge and transformed into a vocation to help other people on their journeys.",
+      "paragraph1": "My professional journey is dedicated to providing clear, supportive services aligned with each person's needs.",
       "paragraph2": "With a degree in Business Administration and specialization in Integrative Natural Therapies, I combined my analytical knowledge with intuitive sensitivity to offer readings that go beyond the superficial.",
-      "paragraph3": "Currently, I study Jungian Analytical Psychology, integrating archetypes and symbols into my interpretations of the Lenormand cards."
+      "paragraph3": "I combine training, experience and attentive listening to create a responsible and personalized experience."
     },
     "education": {
       "title": "Education:",
@@ -1088,12 +1088,12 @@
       },
       "empowerment": {
         "title": "Empowerment",
-        "description": "Tarot is a tool for you to make your own decisions."
+        "description": "The goal of the service is to support your understanding of possibilities and your own decision-making."
       }
     },
     "cta": {
       "title": "Ready for your reading?",
-      "subtitle": "Schedule a consultation and discover the messages the cards have for you.",
+      "subtitle": "Explore the available services and choose the format that best fits you.",
       "button": "View Services"
     }
   },
@@ -1104,7 +1104,7 @@
     "items": {
       "readingByQuestions": {
         "title": "Reading by Questions",
-        "description": "Ask your questions and receive guidance through the cards. Ideal for specific doubts.",
+        "description": "Send the required information and receive a personalized delivery according to the contracted service.",
         "features": {
           "feature1": "1, 3 or 5 questions",
           "feature2": "Response within 48h",
@@ -1193,19 +1193,19 @@
   },
   "faq": {
     "title": "Frequently Asked Questions",
-    "subtitle": "Get answers about tarot readings.",
+    "subtitle": "Find answers about services, appointments and deliveries.",
     "items": {
       "therapeuticTarot": {
-        "question": "What is therapeutic tarot?",
-        "answer": "Therapeutic tarot is a self-knowledge tool that uses cards for reflection and guidance, not as a prediction of the future, but as a mirror to better understand situations and possibilities."
+        "question": "How do the services work?",
+        "answer": "Each service describes its format, timeline, scheduling requirements and possible digital deliveries. Review the details before purchasing."
       },
       "readingByQuestions": {
         "question": "How does reading by questions work?",
-        "answer": "You send your questions through the platform. I do the card spread and prepare a detailed interpretation in PDF, which is available in your client area within 48 hours."
+        "answer": "Each service describes its format, timeline, scheduling requirements and possible digital deliveries. Review the details before purchasing."
       },
       "experience": {
-        "question": "Do I need experience with tarot?",
-        "answer": "No! The readings are done in a clear and accessible way. You don't need any prior knowledge about tarot or the Lenormand deck."
+        "question": "Do I need any prior experience?",
+        "answer": "No. Any information you need is presented clearly during purchase and service delivery."
       },
       "recording": {
         "question": "Are online sessions recorded?",
@@ -1253,9 +1253,9 @@
       },
       "services": {
         "title": "2. Services",
-        "content": "Therapist Platform offers the following tarot and gypsy card reading services:",
-        "item1": "Question-based tarot readings (digital delivery)",
-        "item2": "Live tarot and gypsy card sessions",
+        "content": "Therapist Platform offers professional services configured by the platform owner.",
+        "item1": "Services with digital delivery, when applicable",
+        "item2": "Live or in-person sessions, when available",
         "item3": "Monthly readings with follow-up",
         "item4": "Scheduling personalized consultations"
       },
@@ -1274,11 +1274,11 @@
       },
       "intellectualProperty": {
         "title": "5. Intellectual Property",
-        "content": "All content on the platform, including texts, images, logos and tarot interpretations, is copyrighted and belongs to Therapist Platform. Reproduction without prior authorization is prohibited."
+        "content": "All platform content, including texts, images, logos and delivered materials, is protected by copyright. Reproduction without prior authorization is prohibited."
       },
       "liability": {
         "title": "6. Limitation of Liability",
-        "content": "Tarot and gypsy card services are for guidance purposes only and do not replace professional health, legal or financial advice. Therapist Platform is not responsible for decisions made based on readings."
+        "content": "Services are limited to the scope described for each item and do not replace medical, psychological, legal, financial or other regulated professional advice when applicable. The platform is not responsible for decisions made outside the contracted scope."
       },
       "modifications": {
         "title": "7. Modifications",
@@ -1305,7 +1305,7 @@
         "content": "We collect the following personal data:",
         "item1": "Registration data: full name, email, phone",
         "item2": "Payment data: processed by Stripe (we do not store card data)",
-        "item3": "Usage data: order history, appointments and readings",
+        "item3": "Usage data: order, appointment and delivery history",
         "item4": "Technical data: IP address, device type, session cookies"
       },
       "dataUse": {

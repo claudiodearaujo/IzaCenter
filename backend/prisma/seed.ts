@@ -602,7 +602,7 @@ async function main() {
     {
       name: 'Consultas',
       slug: 'consultas',
-      description: 'Consultas personalizadas de Tarot Cigano',
+      description: 'Serviços e atendimentos personalizados',
       icon: 'pi-comments',
       displayOrder: 1,
     },
@@ -828,8 +828,8 @@ async function main() {
     {
       key: 'seo',
       value: {
-        metaTitle: 'Therapist Platform - Leituras de Tarot Cigano Online',
-        metaDescription: 'Consultas e leituras de Tarot Cigano online com o profissional. Orientação espiritual para amor, carreira e vida.',
+        metaTitle: 'Therapist Platform - Serviços e Atendimentos Profissionais',
+        metaDescription: 'Serviços e atendimentos profissionais com agendamento, pedidos e entregas digitais em uma experiência integrada.',
         keywords: ['tarot cigano', 'leitura de tarot', 'consulta online', 'tarot online', 'profissional tarot'],
       },
     },
