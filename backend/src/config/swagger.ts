@@ -9,7 +9,7 @@ const options: swaggerJsdoc.Options = {
       title: 'Therapist Platform — Therapist Platform API',
       version: '1.0.0',
       description:
-        'REST API for the Therapist Platform platform — Tarot readings, appointments, e-commerce and admin management.',
+        'REST API for the Therapist Platform platform — professional services, deliveries, appointments, e-commerce and admin management.',
       contact: {
         name: 'Therapist Platform',
       },
@@ -246,7 +246,7 @@ const options: swaggerJsdoc.Options = {
       { name: 'Auth', description: 'Authentication endpoints' },
       { name: 'Products', description: 'Product catalog management' },
       { name: 'Orders', description: 'Order management' },
-      { name: 'Readings', description: 'Tarot reading sessions' },
+      { name: 'Readings', description: 'Legacy compatibility routes for digital deliveries' },
       { name: 'Appointments', description: 'Appointment scheduling' },
       { name: 'Categories', description: 'Product category management' },
       { name: 'Testimonials', description: 'Client testimonials' },
