@@ -1,153 +1,120 @@
-<!-- Hero Section -->
-<section class="relative min-h-[90vh] flex items-center overflow-hidden px-4 sm:px-6 lg:px-8"
+<section class="relative min-h-[82vh] flex items-center overflow-hidden px-4 sm:px-6 lg:px-8"
   style="background: linear-gradient(to bottom right, var(--primary-50), white, var(--secondary-50));">
-  <!-- Background decorations -->
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute top-20 left-10 w-64 h-64 rounded-full blur-3xl" style="background: rgba(253, 230, 138, 0.3);">
-    </div>
-    <div class="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl"
-      style="background: rgba(251, 207, 232, 0.3);"></div>
-    <img src="assets/images/hero-crystal-ball.svg" alt=""
-      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-md h-112 opacity-10 pointer-events-none" />
+    <div class="absolute top-20 left-10 w-64 h-64 rounded-full blur-3xl bg-primary-200/30"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl bg-secondary-200/30"></div>
   </div>
-
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
     <div class="max-w-3xl mx-auto text-center" @fadeInUp>
-      <img src="assets/images/hero-crystal-ball.svg" alt="Bola de cristal" class="inline-block w-24 h-24 mb-6" />
+      <div class="w-20 h-20 mx-auto mb-6 rounded-3xl bg-primary-100 flex items-center justify-center">
+        <i class="pi pi-star text-3xl text-primary-700"></i>
+      </div>
       <h1 class="text-4xl md:text-6xl font-serif font-bold text-neutral-900 mb-6 leading-tight">
-        {{ 'home.hero.title' | translate }}
+        {{ publicSettings().content.heroTitle || publicSettings().heroTitle }}
       </h1>
       <p class="text-lg md:text-xl text-neutral-600 mb-8 leading-relaxed">
-        {{ 'home.hero.subtitle' | translate }}
+        {{ publicSettings().content.heroSubtitle || publicSettings().heroSubtitle }}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a routerLink="/loja">
-          <p-button [label]="'home.services.viewAll' | translate" icon="pi pi-arrow-right" iconPos="right"
-            size="large" />
+        <a [routerLink]="publicSettings().content.heroPrimaryCtaUrl || '/servicos'">
+          <p-button [label]="publicSettings().content.heroPrimaryCtaLabel || 'Conhecer serviços'" icon="pi pi-arrow-right" iconPos="right" size="large" />
         </a>
-        <a routerLink="/sobre">
-          <p-button [label]="'home.hero.meetAbout' | translate" [outlined]="true" size="large" />
+        <a [routerLink]="publicSettings().content.heroSecondaryCtaUrl || '/sobre'">
+          <p-button [label]="publicSettings().content.heroSecondaryCtaLabel || 'Conhecer o profissional'" [outlined]="true" size="large" />
         </a>
       </div>
     </div>
   </div>
-
-  <!-- Scroll indicator -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-    <i class="pi pi-chevron-down text-2xl text-primary-400"></i>
-  </div>
 </section>
 
-<!-- About Preview -->
-<section class="py-28 px-4 sm:px-6 lg:px-8 bg-white mb-0">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-24 px-4 sm:px-6 lg:px-8 bg-white">
+  <div class="container mx-auto">
     <div class="grid md:grid-cols-2 gap-12 items-center">
       <div class="relative">
-        <div class="aspect-square rounded-3xl overflow-hidden flex items-center justify-center shadow-gold-lg"
-          style="background: linear-gradient(to bottom right, var(--primary-100), var(--secondary-100));">
-          <img src="assets/images/profile5.jpeg" alt="Profissional" class="w-full h-full object-cover" />
+        <div class="aspect-square rounded-3xl overflow-hidden flex items-center justify-center shadow-lg bg-primary-50">
+          <img [src]="professionalImage()" [alt]="publicSettings().professional.displayName" class="w-full h-full object-cover" />
         </div>
       </div>
       <div>
-        <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'nav.about' | translate }}</span>
-        <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2 mb-6">
-          Olá, eu sou a Profissional
+        <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">Sobre</span>
+        <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2 mb-3">
+          {{ publicSettings().content.aboutTitle || publicSettings().professional.displayName }}
         </h2>
-        <p class="text-neutral-600 mb-4 leading-relaxed">
-          Taróloga e estudante de Psicologia Analítica Junguiana, com formação em
-          Administração de Empresas e Terapias Integrativas Naturais.
-        </p>
-        <p class="text-neutral-600 mb-6 leading-relaxed">
-          Utilizo o baralho cigano Lenormand (36 cartas) para oferecer orientação
-          em áreas como profissional, saúde e relacionamentos.
-        </p>
-        <div class="flex flex-wrap gap-3 mb-6">
-          <span class="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm inline-flex items-center gap-2">
-            <img src="assets/images/flags/br.svg" alt="Brasil" class="w-5 h-4 rounded-sm" /> Português
-          </span>
-          <span class="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm inline-flex items-center gap-2">
-            <img src="assets/images/flags/us.svg" alt="USA" class="w-5 h-4 rounded-sm" /> English
-          </span>
-          <span class="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm inline-flex items-center gap-2">
-            <img src="assets/images/flags/fr.svg" alt="France" class="w-5 h-4 rounded-sm" /> Français
-          </span>
-          <span class="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm inline-flex items-center gap-2">
-            <img src="assets/images/flags/es.svg" alt="España" class="w-5 h-4 rounded-sm" /> Español
-          </span>
+        <p class="text-primary-700 font-medium mb-5">{{ publicSettings().professional.professionalTitle }}</p>
+        <div class="text-neutral-600 mb-6 leading-relaxed whitespace-pre-line">
+          {{ publicSettings().content.aboutContent || publicSettings().professional.bio || publicSettings().siteDescription }}
         </div>
-        <a routerLink="/sobre">
-          <p-button [label]="'common.learnMore' | translate" icon="pi pi-arrow-right" iconPos="right" [outlined]="true" />
-        </a>
+        @if (publicSettings().professional.languages.length) {
+          <div class="flex flex-wrap gap-2 mb-6">
+            @for (language of publicSettings().professional.languages; track language) {
+              <span class="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm">{{ language }}</span>
+            }
+          </div>
+        }
+        <a routerLink="/sobre"><p-button label="Saiba mais" icon="pi pi-arrow-right" iconPos="right" [outlined]="true" /></a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Services -->
-<section class="py-28 px-4 sm:px-6 lg:px-8" style="background: linear-gradient(to bottom, #fafafa, white);" mb-0>
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-24 px-4 sm:px-6 lg:px-8 bg-neutral-50">
+  <div class="container mx-auto">
     <div class="text-center mb-12">
-      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'home.services.title' | translate
-        }}</span>
-      <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2">
-        {{ 'home.services.subtitle' | translate }}
-      </h2>
+      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">Serviços</span>
+      <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2">{{ publicSettings().content.servicesTitle || 'Serviços' }}</h2>
+      <p class="text-neutral-600 mt-3 max-w-2xl mx-auto">{{ publicSettings().content.servicesSubtitle }}</p>
     </div>
-
-    <div class="grid md:grid-cols-3 gap-8" @listAnimation>
-      @for (service of services; track service.titleKey) {
-      <a [routerLink]="service.link"
-        class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 text-center">
-        <img [src]="service.icon" [alt]="service.titleKey | translate"
-          class="w-20 h-20 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-        <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-3">{{ service.titleKey | translate }}</h3>
-        <p class="text-neutral-600 mb-4">{{ service.descriptionKey | translate }}</p>
-        <span class="text-primary-600 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-          {{ 'common.view' | translate }} <i class="pi pi-arrow-right text-sm"></i>
-        </span>
-      </a>
-      }
-    </div>
+    @if (loadingServices()) {
+      <div class="grid md:grid-cols-3 gap-8">
+        @for (_ of [1,2,3]; track $index) { <div class="bg-white p-8 rounded-3xl"><p-skeleton height="12rem" /></div> }
+      </div>
+    } @else if (featuredProducts().length) {
+      <div class="grid md:grid-cols-3 gap-8" @listAnimation>
+        @for (service of featuredProducts(); track service.id) {
+          <a [routerLink]="['/loja', service.slug]" class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300">
+            @if (service.coverImageUrl) {
+              <img [src]="service.coverImageUrl" [alt]="service.name" class="w-full aspect-video object-cover rounded-2xl mb-5" />
+            } @else {
+              <div class="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center mb-5"><i class="pi pi-briefcase text-primary-700 text-xl"></i></div>
+            }
+            <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-3">{{ service.name }}</h3>
+            <p class="text-neutral-600 mb-4">{{ service.shortDescription || service.fullDescription }}</p>
+            <span class="text-primary-600 font-medium inline-flex items-center gap-1">Ver serviço <i class="pi pi-arrow-right text-sm"></i></span>
+          </a>
+        }
+      </div>
+    } @else if (publicSettings().specialties.length) {
+      <div class="grid md:grid-cols-3 gap-8">
+        @for (specialty of publicSettings().specialties.slice(0, 3); track specialty.slug) {
+          <div class="bg-white p-8 rounded-3xl shadow-sm">
+            <div class="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center mb-5"><i class="pi pi-check-circle text-primary-700 text-xl"></i></div>
+            <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-3">{{ specialty.name }}</h3>
+            <p class="text-neutral-600">{{ specialty.description }}</p>
+          </div>
+        }
+      </div>
+    }
+    <div class="text-center mt-10"><a routerLink="/servicos"><p-button label="Ver todos os serviços" [outlined]="true" /></a></div>
   </div>
 </section>
 
-<!-- Testimonials -->
-<section class="py-28 px-4 sm:px-6 lg:px-8 bg-white mb-0">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-12">
-      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">{{ 'home.testimonials.title' |
-        translate }}</span>
-      <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2">
-        {{ 'home.testimonials.subtitle' | translate }}
-      </h2>
+@if (publicSettings().enableTestimonials && testimonials().length) {
+  <section class="py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="container mx-auto">
+      <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900">Depoimentos</h2></div>
+      <div class="grid md:grid-cols-3 gap-8">
+        @for (testimonial of testimonials(); track testimonial.id) { <app-testimonial-card [testimonial]="testimonial" /> }
+      </div>
     </div>
+  </section>
+}
 
-    <div class="grid md:grid-cols-3 gap-8">
-      @for (testimonial of testimonials(); track testimonial.id) {
-      <app-testimonial-card [testimonial]="testimonial" />
-      }
-    </div>
-
-    <div class="text-center mt-10">
-      <a routerLink="/depoimentos">
-        <p-button [label]="'nav.testimonials' | translate" [outlined]="true" />
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- CTA Section -->
-<section class="py-28 px-4 sm:px-6 lg:px-8 text-white mb-0" style="background: var(--gradient-gold-rich);">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <img src="assets/images/cta-sparkle.svg" alt="" class="w-16 h-16 mx-auto mb-6" />
-    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">
-      {{ 'home.cta.title' | translate }}
-    </h2>
-    <p class="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-      {{ 'home.cta.subtitle' | translate }}
-    </p>
-    <a routerLink="/loja">
-      <p-button [label]="'home.cta.button' | translate" icon="pi pi-calendar" size="large" severity="secondary" />
+<section class="py-24 px-4 sm:px-6 lg:px-8 text-white" style="background: var(--gradient-gold-rich);">
+  <div class="container mx-auto text-center">
+    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">{{ publicSettings().content.ctaTitle }}</h2>
+    <p class="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">{{ publicSettings().content.ctaSubtitle }}</p>
+    <a [routerLink]="publicSettings().content.ctaButtonUrl || '/servicos'">
+      <p-button [label]="publicSettings().content.ctaButtonLabel || 'Ver serviços'" icon="pi pi-arrow-right" size="large" severity="secondary" />
     </a>
   </div>
 </section>
