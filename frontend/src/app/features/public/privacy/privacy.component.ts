@@ -1,8 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { SeoService } from '../../../core/services/seo.service';
+import { PublicSettingsStore } from '../../../core/services/public-settings.store';
 
 @Component({
   selector: 'app-privacy',
@@ -13,12 +14,17 @@ import { SeoService } from '../../../core/services/seo.service';
 })
 export class PrivacyComponent implements OnInit {
   private seoService = inject(SeoService);
+  private publicSettingsStore = inject(PublicSettingsStore);
 
   ngOnInit(): void {
-    this.seoService.setMeta({
-      title: 'Política de Privacidade',
-      description: 'Política de Privacidade da plataforma Therapist Platform — saiba como coletamos, usamos e protegemos seus dados pessoais conforme a LGPD.',
-      url: 'https://www.example.com/politica-de-privacidade'
+    this.publicSettingsStore.load().subscribe((settings) => {
+      this.seoService.configure(settings);
+      this.seoService.setMeta({
+        title: 'Política de Privacidade',
+        description: 'Política de Privacidade de ' + settings.siteName + ' e informações sobre proteção de dados pessoais conforme a LGPD.',
+        keywords: settings.seo.keywords.join(', '),
+        url: window.location.origin + '/politica-de-privacidade'
+      });
     });
   }
 }
