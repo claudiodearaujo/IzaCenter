@@ -1,11 +1,4 @@
 :host {
   display: block;
-}
-
-.font-serif {
-  font-family: 'Cormorant Garamond', serif;
-}
-
-.font-decorative {
-  font-family: 'Dancing Script', cursive;
+  min-height: 100vh;
 }
