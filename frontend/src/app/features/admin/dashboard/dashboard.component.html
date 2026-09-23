@@ -1,254 +1,280 @@
-<!-- apps/frontend/src/app/features/admin/dashboard/dashboard.component.html -->
-
-<section class="py-8">
-  <div class="container-custom">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="heading-1 text-primary mb-2">{{ 'admin.dashboard.title' | translate }}</h1>
-        <p class="text-secondary">{{ 'admin.dashboard.subtitle' | translate }}</p>
-      </div>
-      <div class="flex gap-4">
-        <a routerLink="/admin/entregas" class="btn-outline">
-          <i class="pi pi-book mr-2"></i>
-          {{ 'admin.layout.pendingReadings' | translate }}
-        </a>
-        <a routerLink="/admin/pedidos" class="btn-primary">
-          <i class="pi pi-shopping-bag mr-2"></i>
-          {{ 'admin.dashboard.viewAll' | translate }}
-        </a>
-      </div>
+<section class="dashboard-page">
+  <ds-page-header
+    [title]="'admin.dashboard.title' | translate"
+    [description]="'admin.dashboard.subtitle' | translate">
+    <div dsPageActions class="dashboard-actions">
+      <a routerLink="/admin/entregas" class="dashboard-action dashboard-action--secondary">
+        <i class="pi pi-book" aria-hidden="true"></i>
+        {{ 'admin.layout.pendingReadings' | translate }}
+      </a>
+      <a routerLink="/admin/pedidos" class="dashboard-action dashboard-action--primary">
+        <i class="pi pi-shopping-bag" aria-hidden="true"></i>
+        {{ 'admin.dashboard.viewAll' | translate }}
+      </a>
     </div>
+  </ds-page-header>
 
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <!-- Total Revenue -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-gradient-mystical rounded-lg flex items-center justify-center">
-            <i class="pi pi-dollar text-xl text-white"></i>
-          </div>
-          @if (stats()?.revenueToday) {
-            <span class="text-green-400 text-sm">
-              +{{ formatCurrency(stats()!.revenueToday!) }} hoje
-            </span>
+  <!-- What needs attention first -->
+  <div class="metrics-grid">
+    <ds-card padding="md">
+      <div class="metric">
+        <div class="metric__icon metric__icon--brand">
+          <i class="pi pi-calendar" aria-hidden="true"></i>
+        </div>
+        <div class="metric__content">
+          @if (loading()) {
+            <p-skeleton height="1.75rem" width="4rem" styleClass="mb-2" />
+            <p-skeleton height=".9rem" width="8rem" />
+          } @else {
+            <p class="metric__value">{{ stats()?.upcomingAppointments || 0 }}</p>
+            <p class="metric__label">{{ 'admin.dashboard.upcomingAppointments' | translate }}</p>
           }
         </div>
-        @if (loading()) {
-          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
-          <p-skeleton height="1rem" width="40%" />
-        } @else {
-          <p class="text-3xl font-bold text-primary mb-1">
-            {{ formatCurrency(stats()?.totalRevenue || 0) }}
-          </p>
-          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalRevenue' | translate }}</p>
-        }
       </div>
+    </ds-card>
 
-      <!-- Total Orders -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-gradient-gold rounded-lg flex items-center justify-center">
-            <i class="pi pi-shopping-bag text-xl text-white"></i>
-          </div>
-          @if (stats()?.ordersToday) {
-            <span class="text-green-400 text-sm">
-              +{{ stats()!.ordersToday }} hoje
-            </span>
+    <ds-card padding="md">
+      <div class="metric">
+        <div class="metric__icon metric__icon--warning">
+          <i class="pi pi-clock" aria-hidden="true"></i>
+        </div>
+        <div class="metric__content">
+          @if (loading()) {
+            <p-skeleton height="1.75rem" width="4rem" styleClass="mb-2" />
+            <p-skeleton height=".9rem" width="8rem" />
+          } @else {
+            <p class="metric__value">{{ stats()?.pendingReadings || 0 }}</p>
+            <p class="metric__label">{{ 'admin.dashboard.pendingReadings' | translate }}</p>
           }
         </div>
-        @if (loading()) {
-          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
-          <p-skeleton height="1rem" width="40%" />
-        } @else {
-          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalOrders || 0 }}</p>
-          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalOrders' | translate }}</p>
-        }
       </div>
+    </ds-card>
 
-      <!-- Total Users -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-400 rounded-lg flex items-center justify-center">
-            <i class="pi pi-users text-xl text-white"></i>
-          </div>
-          @if (stats()?.newUsersToday) {
-            <span class="text-green-400 text-sm">
-              +{{ stats()!.newUsersToday }} hoje
-            </span>
+    <ds-card padding="md">
+      <div class="metric">
+        <div class="metric__icon metric__icon--info">
+          <i class="pi pi-users" aria-hidden="true"></i>
+        </div>
+        <div class="metric__content">
+          @if (loading()) {
+            <p-skeleton height="1.75rem" width="4rem" styleClass="mb-2" />
+            <p-skeleton height=".9rem" width="8rem" />
+          } @else {
+            <p class="metric__value">{{ stats()?.totalUsers || 0 }}</p>
+            <p class="metric__label">{{ 'admin.dashboard.totalClients' | translate }}</p>
+            @if (stats()?.newUsersToday) {
+              <p class="metric__meta">+{{ stats()!.newUsersToday }} hoje</p>
+            }
           }
         </div>
-        @if (loading()) {
-          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
-          <p-skeleton height="1rem" width="40%" />
-        } @else {
-          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.totalUsers || 0 }}</p>
-          <p class="text-secondary text-sm">{{ 'admin.dashboard.totalClients' | translate }}</p>
-        }
       </div>
+    </ds-card>
 
-      <!-- Pending Readings -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-orange-400 rounded-lg flex items-center justify-center">
-            <i class="pi pi-clock text-xl text-white"></i>
-          </div>
-          @if (stats()?.upcomingAppointments) {
-            <span class="text-accent text-sm">
-              {{ stats()!.upcomingAppointments }} agendamentos
-            </span>
+    <ds-card padding="md">
+      <div class="metric">
+        <div class="metric__icon metric__icon--success">
+          <i class="pi pi-wallet" aria-hidden="true"></i>
+        </div>
+        <div class="metric__content">
+          @if (loading()) {
+            <p-skeleton height="1.75rem" width="7rem" styleClass="mb-2" />
+            <p-skeleton height=".9rem" width="8rem" />
+          } @else {
+            <p class="metric__value metric__value--currency">
+              {{ formatCurrency(stats()?.totalRevenue || 0) }}
+            </p>
+            <p class="metric__label">{{ 'admin.dashboard.totalRevenue' | translate }}</p>
+            @if (stats()?.revenueToday) {
+              <p class="metric__meta">+{{ formatCurrency(stats()!.revenueToday!) }} hoje</p>
+            }
           }
         </div>
-        @if (loading()) {
-          <p-skeleton height="2rem" width="60%" styleClass="mb-2" />
-          <p-skeleton height="1rem" width="40%" />
-        } @else {
-          <p class="text-3xl font-bold text-primary mb-1">{{ stats()?.pendingReadings || 0 }}</p>
-          <p class="text-secondary text-sm">{{ 'admin.dashboard.pendingReadings' | translate }}</p>
-        }
       </div>
-    </div>
-
-    <!-- Charts Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-      <!-- Revenue Chart -->
-      <div class="glass-card p-6">
-        <h3 class="heading-3 text-primary mb-6">{{ 'admin.dashboard.totalRevenue' | translate }} (6 {{ 'common.date' | translate }})</h3>
-        <div class="h-64">
-          <p-chart type="line" [data]="revenueChartData" [options]="revenueChartOptions" />
-        </div>
-      </div>
-
-      <!-- Orders by Type Chart -->
-      <div class="glass-card p-6">
-        <h3 class="heading-3 text-primary mb-6">{{ 'admin.dashboard.recentOrders' | translate }}</h3>
-        <div class="h-64">
-          <p-chart type="doughnut" [data]="ordersChartData" [options]="ordersChartOptions" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Tables Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <!-- Recent Orders -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="heading-3 text-primary">{{ 'admin.dashboard.recentOrders' | translate }}</h3>
-          <a routerLink="/admin/pedidos" class="text-accent hover:text-accent-light transition-colors text-sm">
-            {{ 'admin.dashboard.viewAll' | translate }} <i class="pi pi-arrow-right ml-1"></i>
-          </a>
-        </div>
-
-        @if (loading()) {
-          <div class="space-y-4">
-            @for (_ of [1, 2, 3]; track $index) {
-              <p-skeleton height="3rem" />
-            }
-          </div>
-        } @else if (recentOrders().length === 0) {
-          <p class="text-secondary text-center py-8">{{ 'admin.products.noProducts' | translate }}</p>
-        } @else {
-          <div class="space-y-3">
-            @for (order of recentOrders(); track order.id) {
-              <a 
-                [routerLink]="['/admin/pedidos', order.id]"
-                class="flex items-center justify-between p-3 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
-              >
-                <div>
-                  <p class="text-primary font-medium">#{{ order.orderNumber }}</p>
-                  <p class="text-secondary text-xs">{{ order.user.fullName }}</p>
-                </div>
-                <div class="text-right">
-                  <span 
-                    class="inline-block px-2 py-1 rounded text-xs font-medium mb-1"
-                    [class]="getStatusClass(order.status)"
-                  >
-                    {{ getStatusLabel(order.status) }}
-                  </span>
-                  <p class="text-accent text-sm font-bold">{{ order.total | currencyBrl }}</p>
-                </div>
-              </a>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Pending Readings -->
-      <div class="glass-card p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="heading-3 text-primary">{{ 'admin.dashboard.pendingReadings' | translate }}</h3>
-          <a routerLink="/admin/entregas" class="text-accent hover:text-accent-light transition-colors text-sm">
-            {{ 'admin.dashboard.viewAll' | translate }} <i class="pi pi-arrow-right ml-1"></i>
-          </a>
-        </div>
-
-        @if (loading()) {
-          <div class="space-y-4">
-            @for (_ of [1, 2, 3]; track $index) {
-              <p-skeleton height="3rem" />
-            }
-          </div>
-        } @else if (pendingReadings().length === 0) {
-          <div class="text-center py-8">
-            <i class="pi pi-check-circle text-3xl text-green-400 mb-2"></i>
-            <p class="text-secondary">{{ 'admin.readings.noReadings' | translate }}</p>
-          </div>
-        } @else {
-          <div class="space-y-3">
-            @for (reading of pendingReadings(); track reading.id) {
-              <a 
-                [routerLink]="['/admin/entregas', reading.id]"
-                class="flex items-center justify-between p-3 bg-dark/30 rounded-lg hover:bg-dark/50 transition-colors"
-              >
-                <div>
-                  <p class="text-primary font-medium">{{ reading.orderItem?.product?.name || 'Produto N/A' }}</p>
-                  <p class="text-secondary text-xs">{{ reading.client?.fullName || 'Cliente N/A' }}</p>
-                </div>
-                <div class="text-right">
-                  <span 
-                    class="inline-block px-2 py-1 rounded text-xs font-medium mb-1"
-                    [class]="getStatusClass(reading.status)"
-                  >
-                    {{ getStatusLabel(reading.status) }}
-                  </span>
-                  <p class="text-secondary text-xs">{{ formatDate(reading.createdAt) }}</p>
-                </div>
-              </a>
-            }
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="glass-card p-6 mt-8">
-      <h3 class="heading-3 text-primary mb-6">{{ 'admin.dashboard.quickActions' | translate }}</h3>
-      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        <a routerLink="/admin/produtos/novo" class="quick-action-btn">
-          <i class="pi pi-plus-circle text-2xl mb-2"></i>
-          <span class="text-sm">{{ 'admin.dashboard.newProduct' | translate }}</span>
-        </a>
-        <a routerLink="/admin/entregas" class="quick-action-btn">
-          <i class="pi pi-book text-2xl mb-2"></i>
-          <span class="text-sm">{{ 'admin.menu.readings' | translate }}</span>
-        </a>
-        <a routerLink="/admin/agendamentos" class="quick-action-btn">
-          <i class="pi pi-calendar text-2xl mb-2"></i>
-          <span class="text-sm">{{ 'admin.menu.appointments' | translate }}</span>
-        </a>
-        <a routerLink="/admin/usuarios" class="quick-action-btn">
-          <i class="pi pi-users text-2xl mb-2"></i>
-          <span class="text-sm">{{ 'admin.menu.users' | translate }}</span>
-        </a>
-        <a routerLink="/admin/depoimentos" class="quick-action-btn">
-          <i class="pi pi-star text-2xl mb-2"></i>
-          <span class="text-sm">{{ 'admin.menu.testimonials' | translate }}</span>
-        </a>
-        <a routerLink="/admin/configuracoes" class="quick-action-btn">
-          <i class="pi pi-cog text-2xl mb-2"></i>
-          <span class="text-sm">{{ 'admin.menu.settings' | translate }}</span>
-        </a>
-      </div>
-    </div>
+    </ds-card>
   </div>
+
+  <div class="dashboard-grid">
+    <!-- Pending work: intentionally comes before analytics -->
+    <ds-card padding="lg">
+      <div dsCardHeader class="panel-header">
+        <div>
+          <h2 class="panel-title">{{ 'admin.dashboard.pendingReadings' | translate }}</h2>
+        </div>
+        <a routerLink="/admin/entregas" class="panel-link">
+          {{ 'admin.dashboard.viewAll' | translate }}
+          <i class="pi pi-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      @if (loading()) {
+        <div class="skeleton-list">
+          @for (_ of [1, 2, 3]; track $index) {
+            <p-skeleton height="4rem" />
+          }
+        </div>
+      } @else if (pendingReadings().length === 0) {
+        <ds-empty-state
+          [title]="'admin.readings.noReadings' | translate"
+          icon="pi-check-circle">
+        </ds-empty-state>
+      } @else {
+        <div class="record-list">
+          @for (reading of pendingReadings(); track reading.id) {
+            <a [routerLink]="['/admin/entregas', reading.id]" class="record-row">
+              <div class="record-row__identity">
+                <ds-avatar [name]="reading.client?.fullName || 'Cliente'" size="sm" />
+                <div class="record-row__copy">
+                  <p class="record-row__title">
+                    {{ reading.orderItem?.product?.name || 'Produto N/A' }}
+                  </p>
+                  <p class="record-row__subtitle">
+                    {{ reading.client?.fullName || 'Cliente N/A' }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="record-row__meta">
+                <ds-badge [tone]="getStatusTone(reading.status)" [dot]="true">
+                  {{ getStatusLabel(reading.status) }}
+                </ds-badge>
+                <span>{{ formatDate(reading.createdAt) }}</span>
+              </div>
+            </a>
+          }
+        </div>
+      }
+    </ds-card>
+
+    <!-- Operational snapshot -->
+    <ds-card padding="lg">
+      <div dsCardHeader class="panel-header">
+        <h2 class="panel-title">{{ 'admin.dashboard.quickActions' | translate }}</h2>
+      </div>
+
+      <div class="priority-list">
+        <a routerLink="/admin/agendamentos" class="priority-row">
+          <span class="priority-row__icon"><i class="pi pi-calendar"></i></span>
+          <span class="priority-row__label">{{ 'admin.dashboard.upcomingAppointments' | translate }}</span>
+          <strong>{{ stats()?.upcomingAppointments || 0 }}</strong>
+        </a>
+
+        <a routerLink="/admin/entregas" class="priority-row">
+          <span class="priority-row__icon"><i class="pi pi-book"></i></span>
+          <span class="priority-row__label">{{ 'admin.dashboard.pendingReadings' | translate }}</span>
+          <strong>{{ stats()?.pendingReadings || 0 }}</strong>
+        </a>
+
+        <a routerLink="/admin/depoimentos" class="priority-row">
+          <span class="priority-row__icon"><i class="pi pi-comments"></i></span>
+          <span class="priority-row__label">{{ 'admin.dashboard.pendingTestimonials' | translate }}</span>
+          <strong>{{ stats()?.pendingTestimonials || 0 }}</strong>
+        </a>
+
+        <a routerLink="/admin/pedidos" class="priority-row">
+          <span class="priority-row__icon"><i class="pi pi-shopping-bag"></i></span>
+          <span class="priority-row__label">{{ 'admin.dashboard.totalOrders' | translate }}</span>
+          <strong>{{ stats()?.totalOrders || 0 }}</strong>
+        </a>
+      </div>
+    </ds-card>
+  </div>
+
+  <div class="dashboard-grid dashboard-grid--secondary">
+    <!-- Recent orders -->
+    <ds-card padding="lg">
+      <div dsCardHeader class="panel-header">
+        <h2 class="panel-title">{{ 'admin.dashboard.recentOrders' | translate }}</h2>
+        <a routerLink="/admin/pedidos" class="panel-link">
+          {{ 'admin.dashboard.viewAll' | translate }}
+          <i class="pi pi-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      @if (loading()) {
+        <div class="skeleton-list">
+          @for (_ of [1, 2, 3]; track $index) {
+            <p-skeleton height="4rem" />
+          }
+        </div>
+      } @else if (recentOrders().length === 0) {
+        <ds-empty-state
+          [title]="'admin.orders.noOrders' | translate"
+          icon="pi-shopping-bag">
+        </ds-empty-state>
+      } @else {
+        <div class="record-list">
+          @for (order of recentOrders(); track order.id) {
+            <a [routerLink]="['/admin/pedidos', order.id]" class="record-row">
+              <div class="record-row__identity">
+                <ds-avatar [name]="order.user.fullName" size="sm" />
+                <div class="record-row__copy">
+                  <p class="record-row__title">#{{ order.orderNumber }}</p>
+                  <p class="record-row__subtitle">{{ order.user.fullName }}</p>
+                </div>
+              </div>
+
+              <div class="record-row__meta">
+                <ds-badge [tone]="getStatusTone(order.status)" [dot]="true">
+                  {{ getStatusLabel(order.status) }}
+                </ds-badge>
+                <strong class="record-row__amount">{{ order.total | currencyBrl }}</strong>
+              </div>
+            </a>
+          }
+        </div>
+      }
+    </ds-card>
+
+    <!-- Revenue trend -->
+    <ds-card padding="lg">
+      <div dsCardHeader class="panel-header">
+        <h2 class="panel-title">{{ 'admin.dashboard.totalRevenue' | translate }}</h2>
+        <span class="panel-caption">{{ stats()?.totalOrders || 0 }} {{ 'admin.dashboard.totalOrders' | translate }}</span>
+      </div>
+
+      <div class="chart-container">
+        @if (revenueChartData) {
+          <p-chart type="line" [data]="revenueChartData" [options]="revenueChartOptions" />
+        } @else {
+          <div class="chart-loading">
+            <p-skeleton height="14rem" width="100%" />
+          </div>
+        }
+      </div>
+    </ds-card>
+  </div>
+
+  <!-- Quick actions remain available, but visually secondary -->
+  <ds-card padding="lg">
+    <div dsCardHeader class="panel-header">
+      <h2 class="panel-title">{{ 'admin.dashboard.quickActions' | translate }}</h2>
+    </div>
+
+    <div class="quick-actions">
+      <a routerLink="/admin/produtos/novo" class="quick-action">
+        <i class="pi pi-plus-circle" aria-hidden="true"></i>
+        <span>{{ 'admin.dashboard.newProduct' | translate }}</span>
+      </a>
+      <a routerLink="/admin/entregas" class="quick-action">
+        <i class="pi pi-book" aria-hidden="true"></i>
+        <span>{{ 'admin.menu.readings' | translate }}</span>
+      </a>
+      <a routerLink="/admin/agendamentos" class="quick-action">
+        <i class="pi pi-calendar" aria-hidden="true"></i>
+        <span>{{ 'admin.menu.appointments' | translate }}</span>
+      </a>
+      <a routerLink="/admin/usuarios" class="quick-action">
+        <i class="pi pi-users" aria-hidden="true"></i>
+        <span>{{ 'admin.menu.users' | translate }}</span>
+      </a>
+      <a routerLink="/admin/depoimentos" class="quick-action">
+        <i class="pi pi-star" aria-hidden="true"></i>
+        <span>{{ 'admin.menu.testimonials' | translate }}</span>
+      </a>
+      <a routerLink="/admin/configuracoes" class="quick-action">
+        <i class="pi pi-cog" aria-hidden="true"></i>
+        <span>{{ 'admin.menu.settings' | translate }}</span>
+      </a>
+    </div>
+  </ds-card>
 </section>
