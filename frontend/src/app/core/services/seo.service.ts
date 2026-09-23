@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { PublicSettings } from './settings.service';
 
 export interface SeoMetaData {
   title: string;
@@ -25,9 +26,33 @@ export class SeoService {
   private readonly titleService = inject(Title);
   private readonly document = inject(DOCUMENT);
 
-  private readonly baseUrl = 'https://www.example.com';
-  private readonly siteName = 'Therapist Platform';
-  private readonly defaultImage = `${this.baseUrl}/assets/images/og-image.jpg`;
+  private publicSettings?: PublicSettings;
+
+  private get baseUrl(): string {
+    return this.document.location?.origin || 'https://www.example.com';
+  }
+
+  private get siteName(): string {
+    return this.publicSettings?.siteName || 'Therapist Platform';
+  }
+
+  private get defaultImage(): string {
+    return this.publicSettings?.logoUrl || `${this.baseUrl}/assets/images/og-image.jpg`;
+  }
+
+  configure(settings: PublicSettings): void {
+    this.publicSettings = settings;
+
+    if (settings.faviconUrl) {
+      let favicon = this.document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+      if (!favicon) {
+        favicon = this.document.createElement('link');
+        favicon.rel = 'icon';
+        this.document.head.appendChild(favicon);
+      }
+      favicon.href = settings.faviconUrl;
+    }
+  }
 
   /**
    * Set meta tags for a page
@@ -114,20 +139,23 @@ export class SeoService {
    * Generate Organization schema (for home page)
    */
   getOrganizationSchema(): SchemaMarkup {
+    const contact = this.publicSettings?.contact;
+    const sameAs = [contact?.instagram, contact?.facebook, contact?.youtube, contact?.tiktok]
+      .filter((url): url is string => !!url);
+
     return {
       '@type': 'Organization',
       'name': this.siteName,
       'url': this.baseUrl,
-      'logo': `${this.baseUrl}/assets/images/logo.jpeg`,
-      'description': 'Leituras de tarot e baralho cigano Lenormand com Profissional.',
-      'sameAs': [
-        'https://www.instagram.com/profissionaltarot',
-        'https://www.facebook.com/profissionaltarot'
-      ],
+      'logo': this.publicSettings?.logoUrl || this.defaultImage,
+      'description': this.publicSettings?.siteDescription || this.publicSettings?.seo?.metaDescription || '',
+      ...(sameAs.length ? { sameAs } : {}),
       'contactPoint': {
         '@type': 'ContactPoint',
         'contactType': 'customer service',
-        'availableLanguage': ['Portuguese', 'English', 'French', 'Spanish']
+        ...(contact?.email ? { email: contact.email } : {}),
+        ...(contact?.phone ? { telephone: contact.phone } : {}),
+        'availableLanguage': this.publicSettings?.professional?.languages || ['pt-BR']
       }
     };
   }
@@ -136,14 +164,16 @@ export class SeoService {
    * Generate Person schema (for about page)
    */
   getPersonSchema(): SchemaMarkup {
+    const professional = this.publicSettings?.professional;
     return {
       '@type': 'Person',
-      'name': 'Profissional',
-      'jobTitle': 'Taróloga e Terapeuta Integrativa',
-      'description': 'Taróloga e estudante de Psicologia Analítica Junguiana, com formação em Administração de Empresas e Terapias Integrativas Naturais.',
+      'name': professional?.displayName || 'Profissional',
+      'jobTitle': professional?.professionalTitle || 'Profissional de atendimento',
+      'description': professional?.bio || this.publicSettings?.siteDescription || '',
       'url': `${this.baseUrl}/sobre`,
-      'image': `${this.baseUrl}/assets/images/profile2.jpeg`,
-      'knowsLanguage': ['Portuguese', 'English', 'French', 'Spanish']
+      'image': professional?.photoUrl || this.publicSettings?.logoUrl || this.defaultImage,
+      'knowsLanguage': professional?.languages || ['pt-BR'],
+      ...(professional?.location ? { 'homeLocation': professional.location } : {})
     };
   }
 
@@ -155,8 +185,8 @@ export class SeoService {
       '@type': 'WebSite',
       'name': this.siteName,
       'url': this.baseUrl,
-      'description': 'Leituras de tarot e baralho cigano Lenormand com Profissional.',
-      'inLanguage': ['pt-BR', 'en', 'fr', 'es']
+      'description': this.publicSettings?.siteDescription || this.publicSettings?.seo?.metaDescription || '',
+      'inLanguage': this.publicSettings?.professional?.languages || ['pt-BR']
     };
   }
 
@@ -222,17 +252,18 @@ export class SeoService {
    * Generate Service schema
    */
   getServiceSchema(services: Array<{ name: string; description: string }>): SchemaMarkup {
+    const professional = this.publicSettings?.professional;
     return {
       '@type': 'Service',
       'provider': {
         '@type': 'Person',
-        'name': 'Profissional'
+        'name': professional?.displayName || 'Profissional'
       },
-      'serviceType': 'Leitura de Tarot',
-      'areaServed': 'Worldwide',
+      'serviceType': 'Serviços profissionais',
+      'areaServed': professional?.serviceMode === 'ONLINE' ? 'Worldwide' : (professional?.location || 'Local'),
       'hasOfferCatalog': {
         '@type': 'OfferCatalog',
-        'name': 'Serviços de Tarot',
+        'name': `${this.siteName} - Serviços`,
         'itemListElement': services.map(service => ({
           '@type': 'Offer',
           'itemOffered': {
