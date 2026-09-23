@@ -72,6 +72,7 @@ describe('AdminAppointmentListComponent', () => {
       'findAll',
       'updateStatus',
       'reschedule',
+      'update',
     ]);
     notificationSpy = jasmine.createSpyObj('NotificationService', ['success', 'error']);
 
@@ -134,6 +135,13 @@ describe('AdminAppointmentListComponent', () => {
       const options = component.statusOptions;
       expect(options.length).toBe(7);
     });
+  });
+
+  it('should map appointment statuses to semantic tones', () => {
+    expect(component.getStatusTone('CONFIRMED')).toBe('success');
+    expect(component.getStatusTone('IN_PROGRESS')).toBe('brand');
+    expect(component.getStatusTone('CANCELLED')).toBe('error');
+    expect(component.getStatusTone('UNKNOWN')).toBe('neutral');
   });
 
   it('should open reschedule dialog', () => {

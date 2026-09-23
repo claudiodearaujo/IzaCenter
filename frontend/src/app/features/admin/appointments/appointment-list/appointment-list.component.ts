@@ -9,7 +9,6 @@ import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
-import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { DatePicker } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -19,6 +18,17 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { AppointmentsService, Appointment } from '../../../../core/services/appointments.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import {
+  DsAvatarComponent,
+  DsBadgeComponent,
+  DsButtonComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsFormFieldComponent,
+  DsPageHeaderComponent,
+} from '../../../../shared/design-system';
+
+type AppointmentStatusTone = 'neutral' | 'brand' | 'success' | 'warning' | 'error' | 'info';
 
 @Component({
   selector: 'app-admin-appointment-list',
@@ -30,13 +40,19 @@ import { NotificationService } from '../../../../core/services/notification.serv
     TableModule,
     InputTextModule,
     Select,
-    TagModule,
     SkeletonModule,
     DialogModule,
     DatePicker,
     ConfirmDialogModule,
     TooltipModule,
     TranslateModule,
+    DsAvatarComponent,
+    DsBadgeComponent,
+    DsButtonComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsFormFieldComponent,
+    DsPageHeaderComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './appointment-list.component.html',
@@ -52,17 +68,16 @@ export class AdminAppointmentListComponent implements OnInit {
   loading = signal(true);
   totalRecords = signal(0);
 
-  // Computed stats
-  upcomingCount = computed(() => 
+  upcomingCount = computed(() =>
     this.appointments().filter(a => a.status === 'SCHEDULED' || a.status === 'CONFIRMED').length
   );
-  todayCount = computed(() => 
+  todayCount = computed(() =>
     this.appointments().filter(a => this.isToday(a.scheduledDate)).length
   );
-  completedCount = computed(() => 
+  completedCount = computed(() =>
     this.appointments().filter(a => a.status === 'COMPLETED').length
   );
-  cancelledCount = computed(() => 
+  cancelledCount = computed(() =>
     this.appointments().filter(a => a.status === 'CANCELLED' || a.status === 'NO_SHOW').length
   );
 
@@ -81,22 +96,20 @@ export class AdminAppointmentListComponent implements OnInit {
     ];
   }
 
-  // Reschedule Dialog
   rescheduleDialogVisible = signal(false);
   selectedAppointment = signal<Appointment | null>(null);
   newDateTime: Date | null = null;
-  minDate = new Date(); // Current date for date picker
+  minDate = new Date();
   saving = signal(false);
 
-  // Notes Dialog
   notesDialogVisible = signal(false);
   notes = '';
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadAppointments();
   }
 
-  loadAppointments(event?: any) {
+  loadAppointments(event?: any): void {
     this.loading.set(true);
 
     const params: any = {
@@ -125,7 +138,7 @@ export class AdminAppointmentListComponent implements OnInit {
     });
   }
 
-  onSearch() {
+  onSearch(): void {
     this.loadAppointments();
   }
 
@@ -141,16 +154,16 @@ export class AdminAppointmentListComponent implements OnInit {
     return labels[status] || status;
   }
 
-  getStatusSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-    const severities: Record<string, 'success' | 'info' | 'warn' | 'danger' | 'secondary'> = {
+  getStatusTone(status: string): AppointmentStatusTone {
+    const tones: Record<string, AppointmentStatusTone> = {
       SCHEDULED: 'info',
       CONFIRMED: 'success',
-      IN_PROGRESS: 'warn',
+      IN_PROGRESS: 'brand',
       COMPLETED: 'success',
-      CANCELLED: 'danger',
-      NO_SHOW: 'secondary',
+      CANCELLED: 'error',
+      NO_SHOW: 'neutral',
     };
-    return severities[status] || 'info';
+    return tones[status] || 'neutral';
   }
 
   formatDateTime(date: Date | string): string {
@@ -164,19 +177,19 @@ export class AdminAppointmentListComponent implements OnInit {
     });
   }
 
-  confirmAppointment(appointment: Appointment) {
+  confirmAppointment(appointment: Appointment): void {
     this.updateStatus(appointment.id, 'CONFIRMED', this.translate.instant('admin.appointments.confirmedSuccess'));
   }
 
-  startAppointment(appointment: Appointment) {
+  startAppointment(appointment: Appointment): void {
     this.updateStatus(appointment.id, 'IN_PROGRESS', this.translate.instant('admin.appointments.startedSuccess'));
   }
 
-  completeAppointment(appointment: Appointment) {
+  completeAppointment(appointment: Appointment): void {
     this.updateStatus(appointment.id, 'COMPLETED', this.translate.instant('admin.appointments.completedSuccess'));
   }
 
-  markNoShow(appointment: Appointment) {
+  markNoShow(appointment: Appointment): void {
     this.confirmationService.confirm({
       message: this.translate.instant('admin.appointments.noShowConfirm'),
       header: this.translate.instant('common.confirm'),
@@ -189,7 +202,7 @@ export class AdminAppointmentListComponent implements OnInit {
     });
   }
 
-  updateStatus(id: string, status: string, message: string) {
+  updateStatus(id: string, status: string, message: string): void {
     this.appointmentsService.updateStatus(id, status).subscribe({
       next: () => {
         this.notification.success(message);
@@ -201,13 +214,13 @@ export class AdminAppointmentListComponent implements OnInit {
     });
   }
 
-  openRescheduleDialog(appointment: Appointment) {
+  openRescheduleDialog(appointment: Appointment): void {
     this.selectedAppointment.set(appointment);
     this.newDateTime = new Date(appointment.scheduledDate);
     this.rescheduleDialogVisible.set(true);
   }
 
-  reschedule() {
+  reschedule(): void {
     if (!this.newDateTime || !this.selectedAppointment()) {
       return;
     }
@@ -216,7 +229,6 @@ export class AdminAppointmentListComponent implements OnInit {
 
     const appointment = this.selectedAppointment()!;
     const startTime = this.newDateTime.toTimeString().slice(0, 5);
-    // Calculate end time based on duration
     const endDate = new Date(this.newDateTime.getTime() + (appointment.durationMinutes || 60) * 60000);
     const endTime = endDate.toTimeString().slice(0, 5);
 
@@ -237,13 +249,13 @@ export class AdminAppointmentListComponent implements OnInit {
       });
   }
 
-  openNotesDialog(appointment: Appointment) {
+  openNotesDialog(appointment: Appointment): void {
     this.selectedAppointment.set(appointment);
     this.notes = appointment.adminNotes || '';
     this.notesDialogVisible.set(true);
   }
 
-  saveNotes() {
+  saveNotes(): void {
     if (!this.selectedAppointment()) return;
 
     this.saving.set(true);
@@ -264,7 +276,7 @@ export class AdminAppointmentListComponent implements OnInit {
       });
   }
 
-  cancelAppointment(appointment: Appointment) {
+  cancelAppointment(appointment: Appointment): void {
     this.confirmationService.confirm({
       message: this.translate.instant('admin.appointments.cancelConfirm'),
       header: this.translate.instant('admin.appointments.confirmCancellation'),

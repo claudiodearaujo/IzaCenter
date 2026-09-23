@@ -1,267 +1,374 @@
-/* apps/frontend/src/app/features/admin/appointments/appointment-list/appointment-list.component.css */
-
 :host {
   display: block;
 }
 
-/* Table styling */
+.appointments-page {
+  display: grid;
+  gap: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.stat {
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  gap: 14px;
+}
+
+.stat__icon {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 17px;
+}
+
+.stat__icon--info {
+  color: var(--info);
+  background: var(--info-bg);
+}
+
+.stat__icon--warning {
+  color: var(--warning);
+  background: var(--warning-bg);
+}
+
+.stat__icon--success {
+  color: var(--success);
+  background: var(--success-bg);
+}
+
+.stat__icon--error {
+  color: var(--error);
+  background: var(--error-bg);
+}
+
+.stat__value,
+.stat__label,
+.cell-title,
+.cell-subtitle,
+.dialog-note {
+  margin: 0;
+}
+
+.stat__value {
+  color: var(--text-primary);
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 31px;
+  letter-spacing: -.02em;
+}
+
+.stat__label {
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) 220px auto;
+  align-items: end;
+  gap: 14px;
+}
+
+.filters__action {
+  display: flex;
+  min-height: 40px;
+  align-items: flex-end;
+}
+
+.search-control {
+  position: relative;
+  display: block;
+}
+
+.search-control > i {
+  position: absolute;
+  top: 50%;
+  left: 13px;
+  z-index: 1;
+  color: var(--text-muted);
+  transform: translateY(-50%);
+}
+
+.search-control input {
+  padding-left: 38px;
+}
+
+.table-shell {
+  overflow-x: auto;
+}
+
+.client-cell,
+.appointment-summary {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.client-cell__copy {
+  min-width: 0;
+}
+
+.cell-title {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.cell-subtitle {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.date-cell {
+  display: flex;
+  min-width: 180px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.meeting-link {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--brand-700);
+  background: var(--surface);
+  text-decoration: none;
+}
+
+.meeting-link:hover {
+  background: var(--brand-50);
+  border-color: var(--brand-200);
+}
+
+.dialog-content {
+  display: grid;
+  gap: 18px;
+  padding-top: 4px;
+}
+
+.appointment-summary {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-secondary);
+}
+
+.dialog-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 :host ::ng-deep .p-datatable {
+  color: var(--text-primary);
   background: transparent;
 }
 
 :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
-  background: rgba(0, 0, 0, 0.3);
-  color: var(--secondary);
-  border: none;
-  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
-  padding: 1rem;
+  padding: 13px 14px;
+  color: var(--text-muted);
+  background: var(--surface-muted);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-transform: uppercase;
 }
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr {
-  background: transparent;
-  color: var(--primary);
-  transition: background 0.2s;
+  color: var(--text-primary);
+  background: var(--surface);
+  transition: background-color var(--motion-fast) var(--ease-standard);
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
-  background: rgba(201, 167, 235, 0.05);
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover,
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr.is-today {
+  background: var(--brand-50);
 }
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-  border: none;
-  border-bottom: 1px solid rgba(201, 167, 235, 0.05);
-  padding: 1rem;
+  padding: 13px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
 }
 
-:host ::ng-deep .p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-/* Highlight today rows */
-.bg-yellow-500\/5 {
-  background: rgba(245, 158, 11, 0.05) !important;
-}
-
-/* Paginator styling */
 :host ::ng-deep .p-paginator {
-  background: transparent;
-  border: none;
-  padding: 1rem;
+  padding: 14px;
+  background: var(--surface);
+  border: 0;
+  border-top: 1px solid var(--border);
 }
 
-:host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
-  color: var(--primary);
-}
-
-:host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-  background: var(--primary);
-  color: var(--dark);
-}
-
-/* Input styling */
 :host ::ng-deep .p-inputtext,
-:host ::ng-deep .p-inputtextarea {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(201, 167, 235, 0.2);
-  color: var(--primary);
+:host ::ng-deep .p-inputtextarea,
+:host ::ng-deep .p-select {
+  width: 100%;
+  color: var(--text-primary);
+  background: var(--surface);
+  border-color: var(--border-strong);
 }
 
 :host ::ng-deep .p-inputtext:enabled:focus,
-:host ::ng-deep .p-inputtextarea:enabled:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(201, 167, 235, 0.2);
+:host ::ng-deep .p-inputtextarea:enabled:focus,
+:host ::ng-deep .p-select:not(.p-disabled).p-focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(71, 119, 98, .15);
 }
 
-/* Input icon */
-:host ::ng-deep .p-input-icon-left > i {
-  color: var(--secondary);
+:host ::ng-deep .p-skeleton {
+  background: var(--surface-secondary);
 }
 
-/* Dropdown styling */
-:host ::ng-deep .p-dropdown {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(201, 167, 235, 0.2);
-}
-
-:host ::ng-deep .p-dropdown .p-dropdown-label {
-  color: var(--primary);
-}
-
-/* Stats cards colors */
-.bg-blue-500\/20 {
-  background: rgba(59, 130, 246, 0.2);
-}
-
-.bg-yellow-500\/20 {
-  background: rgba(245, 158, 11, 0.2);
-}
-
-.bg-green-500\/20 {
-  background: rgba(34, 197, 94, 0.2);
-}
-
-.bg-red-500\/20 {
-  background: rgba(239, 68, 68, 0.2);
-}
-
-/* Small buttons */
 :host ::ng-deep .p-button-sm {
-  padding: 0.4rem 0.6rem;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--radius-sm);
 }
 
-/* Button variants */
 :host ::ng-deep .p-button-success {
-  background: rgba(34, 197, 94, 0.2);
-  border-color: rgba(34, 197, 94, 0.5);
-  color: #22c55e;
-}
-
-:host ::ng-deep .p-button-success:enabled:hover {
-  background: rgba(34, 197, 94, 0.3);
+  color: var(--success);
+  background: var(--success-bg);
+  border-color: color-mix(in srgb, var(--success), transparent 65%);
 }
 
 :host ::ng-deep .p-button-warning {
-  background: rgba(245, 158, 11, 0.2);
-  border-color: rgba(245, 158, 11, 0.5);
-  color: #f59e0b;
-}
-
-:host ::ng-deep .p-button-warning:enabled:hover {
-  background: rgba(245, 158, 11, 0.3);
+  color: var(--warning);
+  background: var(--warning-bg);
+  border-color: color-mix(in srgb, var(--warning), transparent 65%);
 }
 
 :host ::ng-deep .p-button-danger {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.5);
-  color: #ef4444;
+  color: var(--error);
+  background: var(--error-bg);
+  border-color: color-mix(in srgb, var(--error), transparent 65%);
 }
 
-:host ::ng-deep .p-button-danger:enabled:hover {
-  background: rgba(239, 68, 68, 0.3);
-}
-
-:host ::ng-deep .p-button-secondary {
-  background: rgba(156, 163, 175, 0.2);
-  border-color: rgba(156, 163, 175, 0.5);
-  color: #9ca3af;
-}
-
-:host ::ng-deep .p-button-secondary:enabled:hover {
-  background: rgba(156, 163, 175, 0.3);
-}
-
-:host ::ng-deep .p-button-outlined {
-  background: transparent;
-  border: 1px solid rgba(201, 167, 235, 0.3);
-  color: var(--primary);
-}
-
-:host ::ng-deep .p-button-outlined:enabled:hover {
-  background: rgba(201, 167, 235, 0.1);
+:host ::ng-deep .p-button-secondary,
+:host ::ng-deep .p-button-outlined,
+:host ::ng-deep .p-button-text {
+  color: var(--text-secondary);
+  background: var(--surface);
+  border-color: var(--border-strong);
 }
 
 :host ::ng-deep .p-button-text {
+  border-color: transparent;
   background: transparent;
-  border: none;
-  color: var(--secondary);
 }
 
-:host ::ng-deep .p-button-text:enabled:hover {
-  background: rgba(201, 167, 235, 0.1);
-  color: var(--primary);
+:host ::ng-deep .p-button-sm:hover {
+  filter: brightness(.97);
 }
 
-/* Dialog styling */
 :host ::ng-deep .p-dialog {
-  background: linear-gradient(145deg, 
-    rgba(26, 11, 46, 0.98) 0%, 
-    rgba(13, 5, 24, 0.98) 100%);
-  border: 1px solid rgba(201, 167, 235, 0.1);
+  overflow: hidden;
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+:host ::ng-deep .p-dialog .p-dialog-header,
+:host ::ng-deep .p-dialog .p-dialog-content,
+:host ::ng-deep .p-dialog .p-dialog-footer {
+  color: var(--text-primary);
+  background: var(--surface);
 }
 
 :host ::ng-deep .p-dialog .p-dialog-header {
-  background: transparent;
-  color: var(--primary);
-  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
-}
-
-:host ::ng-deep .p-dialog .p-dialog-content {
-  background: transparent;
+  border-bottom: 1px solid var(--border);
 }
 
 :host ::ng-deep .p-dialog .p-dialog-footer {
-  background: transparent;
-  border-top: 1px solid rgba(201, 167, 235, 0.1);
-}
-
-/* Calendar styling */
-:host ::ng-deep .p-calendar {
-  width: 100%;
-}
-
-:host ::ng-deep .p-calendar .p-inputtext {
-  width: 100%;
+  border-top: 1px solid var(--border);
 }
 
 :host ::ng-deep .p-datepicker {
-  background: linear-gradient(145deg, 
-    rgba(26, 11, 46, 0.98) 0%, 
-    rgba(13, 5, 24, 0.98) 100%);
-  border: 1px solid rgba(201, 167, 235, 0.1);
-}
-
-:host ::ng-deep .p-datepicker .p-datepicker-header {
-  background: transparent;
-  color: var(--primary);
-  border-bottom: 1px solid rgba(201, 167, 235, 0.1);
-}
-
-:host ::ng-deep .p-datepicker table td > span {
-  color: var(--primary);
-}
-
-:host ::ng-deep .p-datepicker table td.p-datepicker-today > span {
-  background: rgba(201, 167, 235, 0.2);
-}
-
-:host ::ng-deep .p-datepicker table td > span.p-highlight {
-  background: var(--primary);
-  color: var(--dark);
-}
-
-/* Confirm dialog */
-:host ::ng-deep .custom-confirm-dialog {
-  background: linear-gradient(145deg, 
-    rgba(26, 11, 46, 0.98) 0%, 
-    rgba(13, 5, 24, 0.98) 100%);
-  border: 1px solid rgba(201, 167, 235, 0.1);
-}
-
-:host ::ng-deep .custom-confirm-dialog .p-dialog-header {
-  background: transparent;
-  color: var(--primary);
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
 }
 
 :host ::ng-deep .custom-confirm-dialog .p-dialog-content {
-  background: transparent;
-  color: var(--secondary);
+  color: var(--text-secondary);
 }
 
-:host ::ng-deep .custom-confirm-dialog .p-dialog-footer {
-  background: transparent;
+@media (max-width: 1023px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters {
+    grid-template-columns: 1fr 220px;
+  }
+
+  .filters__action {
+    grid-column: 1 / -1;
+  }
 }
 
-/* Dark background */
-.bg-dark\/30 {
-  background: rgba(0, 0, 0, 0.3);
-}
+@media (max-width: 639px) {
+  .appointments-page {
+    gap: 16px;
+  }
 
-/* Today badge */
-.bg-yellow-500\/20 {
-  background: rgba(245, 158, 11, 0.2);
-}
+  .stats-grid,
+  .filters {
+    grid-template-columns: 1fr;
+  }
 
-/* Space utilities */
-.space-y-4 > * + * {
-  margin-top: 1rem;
+  .filters__action {
+    grid-column: auto;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .dialog-actions ds-button {
+    width: 100%;
+  }
 }
