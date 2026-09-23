@@ -18,6 +18,18 @@ enum UserRole {
   ADMIN
 }
 
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum TenantMemberRole {
+  OWNER
+  ADMIN
+  CLIENT
+}
+
 enum OrderStatus {
   PENDING
   PAID
@@ -60,6 +72,41 @@ enum PaymentStatus {
 // MODELS
 // =============================================
 
+model Tenant {
+  id           String       @id @default(uuid())
+  name         String
+  slug         String       @unique
+  status       TenantStatus @default(ACTIVE)
+  planKey      String       @default("starter") @map("plan_key")
+  customDomain String?      @unique @map("custom_domain")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  memberships TenantMembership[]
+  settings    SiteSetting[]
+
+  @@index([status])
+  @@map("tenants")
+}
+
+model TenantMembership {
+  id        String           @id @default(uuid())
+  tenantId  String           @map("tenant_id")
+  userId    String           @map("user_id")
+  role      TenantMemberRole @default(CLIENT)
+  isActive  Boolean          @default(true) @map("is_active")
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, userId])
+  @@index([userId])
+  @@index([tenantId, role])
+  @@map("tenant_memberships")
+}
+
 model User {
   id                   String    @id @default(uuid())
   email                String    @unique
@@ -87,6 +134,7 @@ model User {
   appointments         Appointment[]
   notifications        Notification[]
   testimonials         Testimonial[]
+  tenantMemberships     TenantMembership[]
 
   @@map("users")
 }
@@ -447,10 +495,15 @@ model Coupon {
 
 model SiteSetting {
   id        String   @id @default(uuid())
-  key       String   @unique
+  tenantId  String   @map("tenant_id")
+  key       String
   value     Json
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, key])
+  @@index([tenantId])
   @@map("site_settings")
 }
 
