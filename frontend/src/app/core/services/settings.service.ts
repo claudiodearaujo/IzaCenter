@@ -41,9 +41,20 @@ export interface BusinessHour {
 export interface ContentSettings {
   heroTitle?: string;
   heroSubtitle?: string;
+  heroPrimaryCtaLabel?: string;
+  heroPrimaryCtaUrl?: string;
+  heroSecondaryCtaLabel?: string;
+  heroSecondaryCtaUrl?: string;
   aboutTitle?: string;
   aboutContent?: string;
+  servicesTitle?: string;
+  servicesSubtitle?: string;
+  ctaTitle?: string;
+  ctaSubtitle?: string;
+  ctaButtonLabel?: string;
+  ctaButtonUrl?: string;
   footerText?: string;
+  footerDisclaimer?: string;
   // Aliases for backward compatibility
   homeTitle?: string;
   homeSubtitle?: string;
@@ -100,6 +111,7 @@ export interface PublicSettings {
   siteName: string;
   siteDescription: string;
   logoUrl?: string;
+  faviconUrl?: string;
   enableShop: boolean;
   enableAppointments: boolean;
   enableTestimonials: boolean;
@@ -107,10 +119,14 @@ export interface PublicSettings {
     email: string;
     phone?: string;
     whatsapp?: string;
+    address?: string;
     instagram?: string;
     facebook?: string;
     youtube?: string;
+    tiktok?: string;
   };
+  businessHours: BusinessHour[];
+  content: ContentSettings;
   heroTitle: string;
   heroSubtitle: string;
   footerText?: string;
