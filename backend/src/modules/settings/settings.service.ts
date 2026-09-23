@@ -235,8 +235,7 @@ export class SettingsService {
     return { data };
   }
 
-  async getEnabledSpecialtyModules(): Promise<string[]> {
-    const specialties = (await this.getSpecialties()).data;
+  private resolveEnabledSpecialtyModules(specialties: SpecialtySettings[]): string[] {
     const modules = new Set<string>();
 
     for (const specialty of specialties) {
@@ -252,6 +251,11 @@ export class SettingsService {
     }
 
     return [...modules].sort();
+  }
+
+  async getEnabledSpecialtyModules(): Promise<string[]> {
+    const specialties = (await this.getSpecialties()).data;
+    return this.resolveEnabledSpecialtyModules(specialties);
   }
 
   async isSpecialtyModuleEnabled(moduleKey: string): Promise<boolean> {
@@ -362,7 +366,7 @@ export class SettingsService {
         footerText: content.data.footerText,
         professional: professional.data,
         specialties: specialties.data.filter((specialty) => specialty.isActive),
-        enabledModules: await this.getEnabledSpecialtyModules(),
+        enabledModules: this.resolveEnabledSpecialtyModules(specialties.data),
         seo: seo.data,
       },
     };
