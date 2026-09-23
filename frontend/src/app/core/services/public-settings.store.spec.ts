@@ -68,6 +68,26 @@ describe('PublicSettingsStore', () => {
     });
   });
 
+  it('should resolve enabled specialty modules', () => {
+    settingsService.getPublicSettings.and.returnValue(of({
+      data: {
+        ...DEFAULT_PUBLIC_SETTINGS,
+        enabledModules: ['tarot-cards'],
+      },
+      success: true,
+    } as any));
+
+    store.isModuleEnabled('tarot-cards').subscribe((enabled) => {
+      expect(enabled).toBeTrue();
+    });
+
+    store.isModuleEnabled('unknown-module').subscribe((enabled) => {
+      expect(enabled).toBeFalse();
+    });
+
+    expect(settingsService.getPublicSettings).toHaveBeenCalledTimes(1);
+  });
+
   it('should fall back to neutral defaults when the API fails', () => {
     settingsService.getPublicSettings.and.returnValue(
       throwError(() => new Error('network'))
