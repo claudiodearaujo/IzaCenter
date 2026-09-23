@@ -1,12 +1,12 @@
-jest.mock('../modules/settings/settings.service', () => ({
+jest.mock('../settings/settings.service', () => ({
   settingsService: {
     isSpecialtyModuleEnabled: jest.fn(),
   },
 }));
 
 import { NextFunction, Request, Response } from 'express';
-import { requireSpecialtyModule } from './specialty-module.middleware';
-import { settingsService } from '../modules/settings/settings.service';
+import { requireSpecialtyModule } from '../../middlewares/specialty-module.middleware';
+import { settingsService } from '../settings/settings.service';
 
 describe('requireSpecialtyModule', () => {
   const moduleEnabled = settingsService.isSpecialtyModuleEnabled as jest.Mock;
