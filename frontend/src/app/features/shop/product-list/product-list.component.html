@@ -1,38 +1,30 @@
-<!-- apps/frontend/src/app/features/shop/product-list/product-list.component.html -->
-
-<section class="py-12 md:py-20">
-  <div class="container-custom">
-    <!-- Header -->
-    <div class="text-center mb-12">
-      <h1 class="heading-1 text-primary mb-4">
-        <i class="pi pi-shopping-bag mr-3"></i>
-        {{ 'shop.productList.title' | translate }}
-      </h1>
-      <p class="text-body text-secondary max-w-2xl mx-auto">
-        {{ 'shop.productList.subtitle' | translate }}
-      </p>
+<section class="shop-page">
+  <div class="shop-hero">
+    <div class="shop-container">
+      <span class="eyebrow">Serviços</span>
+      <h1>{{ 'shop.productList.title' | translate }}</h1>
+      <p>{{ 'shop.productList.subtitle' | translate }}</p>
     </div>
+  </div>
 
-    <!-- Filters -->
-    <div class="glass-card p-6 mb-8">
-      <div class="flex flex-wrap gap-4 items-center justify-between">
-        <!-- Search -->
-        <div class="flex-1 min-w-[250px]">
-          <span class="p-input-icon-left w-full">
+  <div class="shop-container shop-content">
+    <div class="filters-card">
+      <div class="filters-grid">
+        <label class="field field--search">
+          <span>{{ 'shop.productList.searchPlaceholder' | translate }}</span>
+          <div class="search-input">
             <i class="pi pi-search"></i>
             <input
               type="text"
               pInputText
               [(ngModel)]="searchTerm"
               (keyup.enter)="onSearch()"
-              [placeholder]="'shop.productList.searchPlaceholder' | translate"
-              class="w-full"
-            />
-          </span>
-        </div>
+              [placeholder]="'shop.productList.searchPlaceholder' | translate" />
+          </div>
+        </label>
 
-        <!-- Category Filter -->
-        <div class="min-w-[200px]">
+        <label class="field">
+          <span>{{ 'shop.productList.allCategories' | translate }}</span>
           <p-select
             [options]="categories()"
             [(ngModel)]="selectedCategory"
@@ -41,12 +33,11 @@
             optionValue="id"
             [placeholder]="'shop.productList.allCategories' | translate"
             [showClear]="true"
-            styleClass="w-full"
-          />
-        </div>
+            styleClass="w-full" />
+        </label>
 
-        <!-- Type Filter -->
-        <div class="min-w-[180px]">
+        <label class="field">
+          <span>{{ 'shop.productList.filterByType' | translate }}</span>
           <p-select
             [options]="serviceKindOptions"
             [(ngModel)]="selectedKind"
@@ -55,131 +46,101 @@
             optionValue="value"
             [placeholder]="'shop.productList.filterByType' | translate"
             [showClear]="true"
-            styleClass="w-full"
-          />
-        </div>
+            styleClass="w-full" />
+        </label>
 
-        <!-- Sort -->
-        <div class="min-w-[180px]">
+        <label class="field">
+          <span>Ordenar</span>
           <p-select
             [options]="sortOptions"
             [(ngModel)]="sortOption"
             (onChange)="onSortChange()"
             optionLabel="label"
             optionValue="value"
-            styleClass="w-full"
-          />
-        </div>
+            styleClass="w-full" />
+        </label>
       </div>
 
-      <!-- Price Range Filters -->
-      <div class="flex flex-wrap gap-4 items-center mt-4 pt-4 border-t border-primary/10">
-        <span class="text-secondary text-sm">{{ 'shop.productList.priceRange' | translate }}:</span>
-        <div class="flex items-center gap-2">
-          <p-inputnumber
-            [(ngModel)]="minPrice"
-            [placeholder]="'shop.productList.minPrice' | translate"
-            mode="currency"
-            currency="BRL"
-            locale="pt-BR"
-            [min]="0"
-            (onBlur)="onPriceFilter()"
-            styleClass="w-36"
-          />
-          <span class="text-secondary">—</span>
-          <p-inputnumber
-            [(ngModel)]="maxPrice"
-            [placeholder]="'shop.productList.maxPrice' | translate"
-            mode="currency"
-            currency="BRL"
-            locale="pt-BR"
-            [min]="0"
-            (onBlur)="onPriceFilter()"
-            styleClass="w-36"
-          />
-        </div>
+      <div class="price-row">
+        <span class="price-row__label">{{ 'shop.productList.priceRange' | translate }}</span>
+        <p-inputnumber
+          [(ngModel)]="minPrice"
+          [placeholder]="'shop.productList.minPrice' | translate"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          [min]="0"
+          (onBlur)="onPriceFilter()" />
+        <span class="price-separator">até</span>
+        <p-inputnumber
+          [(ngModel)]="maxPrice"
+          [placeholder]="'shop.productList.maxPrice' | translate"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          [min]="0"
+          (onBlur)="onPriceFilter()" />
       </div>
     </div>
 
-    <!-- Loading State -->
     @if (loading()) {
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="products-grid">
         @for (item of [1,2,3,4,5,6]; track item) {
-          <div class="glass-card p-6">
-            <p-skeleton height="200px" styleClass="mb-4" />
-            <p-skeleton height="24px" styleClass="mb-2" />
-            <p-skeleton height="16px" width="60%" styleClass="mb-4" />
-            <p-skeleton height="32px" width="40%" />
-          </div>
+          <article class="product-skeleton">
+            <p-skeleton height="190px" />
+            <div class="product-skeleton__body">
+              <p-skeleton height="22px" />
+              <p-skeleton height="14px" width="70%" />
+              <p-skeleton height="28px" width="38%" />
+            </div>
+          </article>
         }
       </div>
-    }
-
-    <!-- Products Grid -->
-    @if (!loading() && products().length > 0) {
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    } @else if (products().length > 0) {
+      <div class="products-grid">
         @for (product of products(); track product.id) {
           <app-product-card [product]="product" />
         }
       </div>
-    }
-
-    <!-- Empty State -->
-    @if (!loading() && products().length === 0) {
-      <div class="text-center py-16">
-        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-          <i class="pi pi-search text-4xl text-primary"></i>
-        </div>
-        <h3 class="heading-3 text-primary mb-4">{{ 'shop.productList.noResults' | translate }}</h3>
-        <p class="text-secondary mb-8">
-          {{ 'shop.productList.noResultsDescription' | translate }}
-        </p>
+    } @else {
+      <div class="empty-state">
+        <span><i class="pi pi-search"></i></span>
+        <h2>{{ 'shop.productList.noResults' | translate }}</h2>
+        <p>{{ 'shop.productList.noResultsDescription' | translate }}</p>
         <button
-          class="btn-secondary"
-          (click)="selectedCategory.set(null); selectedKind.set(null); minPrice.set(null); maxPrice.set(null); searchTerm.set(''); loadProducts()"
-        >
+          type="button"
+          class="secondary-button"
+          (click)="selectedCategory.set(null); selectedKind.set(null); minPrice.set(null); maxPrice.set(null); searchTerm.set(''); loadProducts()">
           {{ 'shop.productList.clearFilters' | translate }}
         </button>
       </div>
     }
 
-    <!-- Why Choose Section -->
-    <div class="mt-20">
-      <h2 class="heading-2 text-center text-primary mb-12">
-        {{ 'shop.productList.whyChoose' | translate }}
-      </h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="glass-card p-8 text-center">
-          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-primary flex items-center justify-center">
-            <i class="pi pi-heart text-2xl text-white"></i>
-          </div>
-          <h3 class="heading-4 text-primary mb-4">{{ 'shop.productList.personalizedReading' | translate }}</h3>
-          <p class="text-secondary">
-            {{ 'shop.productList.personalizedDescription' | translate }}
-          </p>
-        </div>
-
-        <div class="glass-card p-8 text-center">
-          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-primary flex items-center justify-center">
-            <i class="pi pi-clock text-2xl text-white"></i>
-          </div>
-          <h3 class="heading-4 text-primary mb-4">{{ 'shop.productList.fastDelivery' | translate }}</h3>
-          <p class="text-secondary">
-            {{ 'shop.productList.fastDeliveryDescription' | translate }}
-          </p>
-        </div>
-
-        <div class="glass-card p-8 text-center">
-          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-primary flex items-center justify-center">
-            <i class="pi pi-lock text-2xl text-white"></i>
-          </div>
-          <h3 class="heading-4 text-primary mb-4">{{ 'shop.productList.confidential' | translate }}</h3>
-          <p class="text-secondary">
-            {{ 'shop.productList.confidentialDescription' | translate }}
-          </p>
-        </div>
+    <section class="benefits-section">
+      <div class="section-heading">
+        <span class="eyebrow">Experiência</span>
+        <h2>{{ 'shop.productList.whyChoose' | translate }}</h2>
       </div>
-    </div>
+
+      <div class="benefits-grid">
+        <article class="benefit">
+          <span><i class="pi pi-user"></i></span>
+          <h3>{{ 'shop.productList.personalizedReading' | translate }}</h3>
+          <p>{{ 'shop.productList.personalizedDescription' | translate }}</p>
+        </article>
+
+        <article class="benefit">
+          <span><i class="pi pi-clock"></i></span>
+          <h3>{{ 'shop.productList.fastDelivery' | translate }}</h3>
+          <p>{{ 'shop.productList.fastDeliveryDescription' | translate }}</p>
+        </article>
+
+        <article class="benefit">
+          <span><i class="pi pi-lock"></i></span>
+          <h3>{{ 'shop.productList.confidential' | translate }}</h3>
+          <p>{{ 'shop.productList.confidentialDescription' | translate }}</p>
+        </article>
+      </div>
+    </section>
   </div>
 </section>
