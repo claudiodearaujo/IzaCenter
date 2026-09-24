@@ -42,7 +42,7 @@
         </div>
 
         @if (loadingSlots()) {
-          <div class="loading-state">
+          <div class="loading-state" role="status" aria-live="polite">
             <i class="pi pi-spinner pi-spin"></i>
             <span>{{ 'client.booking.loadingSlots' | translate }}</span>
           </div>
