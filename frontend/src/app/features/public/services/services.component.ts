@@ -1,7 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ProductsService, Product } from '../../../core/services/products.service';
 import { SeoService } from '../../../core/services/seo.service';
@@ -10,9 +9,9 @@ import { DEFAULT_PUBLIC_SETTINGS, PublicSettingsStore } from '../../../core/serv
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [CommonModule, RouterLink, ButtonModule, SkeletonModule],
+  imports: [CommonModule, RouterLink, SkeletonModule],
   templateUrl: './services.component.html',
-  styleUrl: './services.component.css'
+  styleUrl: './services.component.css',
 })
 export class ServicesComponent implements OnInit {
   private productsService = inject(ProductsService);
@@ -41,33 +40,53 @@ export class ServicesComponent implements OnInit {
         this.services.set(active);
         this.loading.set(false);
         this.seoService.setSchema([
-          this.seoService.getServiceSchema(active.map((service) => ({
-            name: service.name,
-            description: service.shortDescription || service.fullDescription || '',
-          }))),
-          this.seoService.getBreadcrumbSchema([{ name: 'Início', url: '/' }, { name: 'Serviços', url: '/servicos' }])
+          this.seoService.getServiceSchema(
+            active.map((service) => ({
+              name: service.name,
+              description: service.shortDescription || service.fullDescription || '',
+            }))
+          ),
+          this.seoService.getBreadcrumbSchema([
+            { name: 'Início', url: '/' },
+            { name: 'Serviços', url: '/servicos' },
+          ]),
         ]);
       },
       error: () => {
         this.services.set([]);
         this.loading.set(false);
-      }
+      },
     });
   }
 
   getCapabilityLabels(service: Product): string[] {
     const labels: string[] = [];
+
     if (service.capabilities?.scheduling?.enabled) {
       const duration = service.capabilities.scheduling.durationMinutes;
-      labels.push(duration ? 'Agendamento · ' + duration + ' min' : 'Agendamento');
+      labels.push(duration ? `Agendamento · ${duration} min` : 'Agendamento');
     }
+
     if (service.capabilities?.digitalDelivery?.enabled) {
-      labels.push(service.capabilities.digitalDelivery.format ? 'Entrega digital · ' + service.capabilities.digitalDelivery.format : 'Entrega digital');
+      labels.push(
+        service.capabilities.digitalDelivery.format
+          ? `Entrega digital · ${service.capabilities.digitalDelivery.format}`
+          : 'Entrega digital'
+      );
     }
+
     if (service.capabilities?.recurring?.enabled) {
-      labels.push(service.capabilities.recurring.sessions ? 'Pacote · ' + service.capabilities.recurring.sessions + ' sessões' : 'Acompanhamento recorrente');
+      labels.push(
+        service.capabilities.recurring.sessions
+          ? `Pacote · ${service.capabilities.recurring.sessions} sessões`
+          : 'Acompanhamento recorrente'
+      );
     }
-    if (service.capabilities?.intake?.enabled) labels.push('Preparação prévia');
+
+    if (service.capabilities?.intake?.enabled) {
+      labels.push('Preparação prévia');
+    }
+
     return labels;
   }
 }
