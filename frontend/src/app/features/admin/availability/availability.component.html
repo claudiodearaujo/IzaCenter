@@ -1,163 +1,157 @@
-<!-- apps/frontend/src/app/features/admin/availability/availability.component.html -->
-
-<section class="py-8">
-  <div class="container-custom max-w-4xl">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="heading-1 text-primary mb-2">
-          <i class="pi pi-calendar-clock mr-3"></i>
-          {{ 'admin.availability.title' | translate }}
-        </h1>
-        <p class="text-secondary">{{ 'admin.availability.subtitle' | translate }}</p>
-      </div>
-      <button
-        pButton
-        class="btn-primary"
-        [loading]="saving()"
-        (click)="saveSettings()"
-      >
-        <i class="pi pi-save mr-2"></i>
-        {{ 'admin.availability.save' | translate }}
-      </button>
+<section class="availability-page">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">Agenda</span>
+      <h1>{{ 'admin.availability.title' | translate }}</h1>
+      <p>{{ 'admin.availability.subtitle' | translate }}</p>
     </div>
 
-    @if (loading()) {
-      <div class="glass-card p-8">
-        <div class="animate-pulse space-y-4">
-          <div class="h-10 bg-primary/10 rounded w-1/3"></div>
-          <div class="h-32 bg-primary/10 rounded"></div>
-          <div class="h-32 bg-primary/10 rounded"></div>
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="saving()"
+      (click)="saveSettings()">
+      @if (saving()) {
+        <i class="pi pi-spinner pi-spin"></i>
+      } @else {
+        <i class="pi pi-save"></i>
+      }
+      {{ 'admin.availability.save' | translate }}
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-card" role="status" aria-live="polite">
+      <div class="loading-line loading-line--short"></div>
+      <div class="loading-block"></div>
+      <div class="loading-block"></div>
+    </div>
+  } @else {
+    <section class="panel">
+      <div class="panel-heading">
+        <span><i class="pi pi-calendar"></i></span>
+        <div>
+          <h2>{{ 'admin.availability.weeklySchedule' | translate }}</h2>
+          <p>Defina em quais dias e horários novos atendimentos podem ser marcados.</p>
         </div>
       </div>
-    } @else {
-      <!-- Weekly Schedule -->
-      <div class="glass-card p-6 mb-6">
-        <h3 class="heading-3 text-primary mb-4">
-          <i class="pi pi-calendar mr-2"></i>
-          {{ 'admin.availability.weeklySchedule' | translate }}
-        </h3>
 
-        <div class="space-y-3">
-          @for (day of scheduleSettings.weekdays; track day.day) {
-            <div class="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 bg-dark/20 rounded-lg">
-              <div class="w-full md:w-40 flex items-center justify-between md:justify-start">
-                <span class="text-primary font-medium">{{ day.labelKey | translate }}</span>
-              </div>
+      <div class="week-list">
+        @for (day of scheduleSettings.weekdays; track day.day) {
+          <article class="day-row" [class.day-row--closed]="!day.enabled">
+            <div class="day-name">
+              <strong>{{ day.labelKey | translate }}</strong>
+              <span>{{ day.enabled ? ('admin.availability.open' | translate) : ('admin.availability.dayOff' | translate) }}</span>
+            </div>
 
-              <div class="w-full md:w-auto">
-                <p-toggleButton
-                  [(ngModel)]="day.enabled"
-                  onLabel="{{ 'admin.availability.open' | translate }}"
-                  offLabel="{{ 'admin.availability.closed' | translate }}"
-                  onIcon="pi pi-check"
-                  offIcon="pi pi-times"
-                />
-              </div>
+            <p-toggleButton
+              [(ngModel)]="day.enabled"
+              [onLabel]="'admin.availability.open' | translate"
+              [offLabel]="'admin.availability.closed' | translate"
+              onIcon="pi pi-check"
+              offIcon="pi pi-times" />
 
-              @if (day.enabled) {
-                <div class="flex items-center gap-2 flex-1">
-                  <label class="text-secondary text-sm">{{ 'admin.availability.from' | translate }}</label>
+            @if (day.enabled) {
+              <div class="time-range">
+                <label>
+                  <span>{{ 'admin.availability.from' | translate }}</span>
                   <input
                     pInputText
                     [(ngModel)]="day.startTime"
-                    class="w-24 text-center"
-                    placeholder="09:00"
-                  />
-                  <label class="text-secondary text-sm">{{ 'admin.availability.to' | translate }}</label>
+                    inputmode="numeric"
+                    placeholder="09:00" />
+                </label>
+
+                <span class="time-separator">–</span>
+
+                <label>
+                  <span>{{ 'admin.availability.to' | translate }}</span>
                   <input
                     pInputText
                     [(ngModel)]="day.endTime"
-                    class="w-24 text-center"
-                    placeholder="18:00"
-                  />
-                </div>
-              } @else {
-                <div class="flex-1">
-                  <p-tag
-                    [value]="'admin.availability.dayOff' | translate"
-                    severity="secondary"
-                  />
-                </div>
-              }
-            </div>
-          }
+                    inputmode="numeric"
+                    placeholder="18:00" />
+                </label>
+              </div>
+            } @else {
+              <div class="closed-state">
+                <i class="pi pi-minus-circle"></i>
+                <span>{{ 'admin.availability.dayOff' | translate }}</span>
+              </div>
+            }
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <span><i class="pi pi-sliders-h"></i></span>
+        <div>
+          <h2>{{ 'admin.availability.generalSettings' | translate }}</h2>
+          <p>Ajustes usados na composição dos horários oferecidos ao cliente.</p>
         </div>
       </div>
 
-      <!-- General Settings -->
-      <div class="glass-card p-6 mb-6">
-        <h3 class="heading-3 text-primary mb-4">
-          <i class="pi pi-cog mr-2"></i>
-          {{ 'admin.availability.generalSettings' | translate }}
-        </h3>
+      <div class="settings-grid">
+        <label class="setting-field">
+          <span>{{ 'admin.availability.slotDuration' | translate }}</span>
+          <p-inputNumber
+            [(ngModel)]="scheduleSettings.slotDuration"
+            [min]="15"
+            [max]="240"
+            suffix=" min"
+            styleClass="w-full" />
+          <small>Duração padrão de cada horário.</small>
+        </label>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-secondary text-sm mb-2">
-              {{ 'admin.availability.slotDuration' | translate }}
-            </label>
-            <p-inputNumber
-              [(ngModel)]="scheduleSettings.slotDuration"
-              [min]="15"
-              [max]="240"
-              suffix=" min"
-              styleClass="w-full"
-            />
-          </div>
+        <label class="setting-field">
+          <span>{{ 'admin.availability.bufferMinutes' | translate }}</span>
+          <p-inputNumber
+            [(ngModel)]="scheduleSettings.bufferMinutes"
+            [min]="0"
+            [max]="120"
+            suffix=" min"
+            styleClass="w-full" />
+          <small>Intervalo operacional entre atendimentos.</small>
+        </label>
 
-          <div>
-            <label class="block text-secondary text-sm mb-2">
-              {{ 'admin.availability.bufferMinutes' | translate }}
-            </label>
-            <p-inputNumber
-              [(ngModel)]="scheduleSettings.bufferMinutes"
-              [min]="0"
-              [max]="120"
-              suffix=" min"
-              styleClass="w-full"
-            />
-          </div>
+        <label class="setting-field">
+          <span>{{ 'admin.availability.advanceBookingDays' | translate }}</span>
+          <p-inputNumber
+            [(ngModel)]="scheduleSettings.advanceBookingDays"
+            [min]="1"
+            [max]="365"
+            styleClass="w-full" />
+          <small>Janela máxima para agendamentos futuros.</small>
+        </label>
 
-          <div>
-            <label class="block text-secondary text-sm mb-2">
-              {{ 'admin.availability.advanceBookingDays' | translate }}
-            </label>
-            <p-inputNumber
-              [(ngModel)]="scheduleSettings.advanceBookingDays"
-              [min]="1"
-              [max]="365"
-              styleClass="w-full"
-            />
-          </div>
-
-          <div>
-            <label class="block text-secondary text-sm mb-2">
-              {{ 'admin.availability.minNoticeHours' | translate }}
-            </label>
-            <p-inputNumber
-              [(ngModel)]="scheduleSettings.minNoticeHours"
-              [min]="1"
-              [max]="168"
-              suffix=" h"
-              styleClass="w-full"
-            />
-          </div>
-        </div>
+        <label class="setting-field">
+          <span>{{ 'admin.availability.minNoticeHours' | translate }}</span>
+          <p-inputNumber
+            [(ngModel)]="scheduleSettings.minNoticeHours"
+            [min]="1"
+            [max]="168"
+            suffix=" h"
+            styleClass="w-full" />
+          <small>Antecedência mínima exigida para novos horários.</small>
+        </label>
       </div>
+    </section>
 
-      <!-- Save Button (bottom) -->
-      <div class="mt-6 text-center">
-        <button
-          pButton
-          class="btn-primary px-8"
-          [loading]="saving()"
-          (click)="saveSettings()"
-        >
-          <i class="pi pi-save mr-2"></i>
-          {{ 'admin.availability.saveAll' | translate }}
-        </button>
-      </div>
-    }
-  </div>
+    <div class="bottom-actions">
+      <button
+        type="button"
+        class="save-button"
+        [disabled]="saving()"
+        (click)="saveSettings()">
+        @if (saving()) {
+          <i class="pi pi-spinner pi-spin"></i>
+        } @else {
+          <i class="pi pi-save"></i>
+        }
+        {{ 'admin.availability.saveAll' | translate }}
+      </button>
+    </div>
+  }
 </section>
