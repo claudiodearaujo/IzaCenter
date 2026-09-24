@@ -1,14 +1,10 @@
-// apps/frontend/src/app/features/shop/cart/cart.component.ts
-
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { Textarea, TextareaModule } from 'primeng/textarea';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { TextareaModule } from 'primeng/textarea';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { CartService, CartItem } from '../../../core/services/cart.service';
@@ -24,10 +20,8 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
     CommonModule,
     RouterLink,
     FormsModule,
-    ButtonModule,
     InputTextModule,
     TextareaModule,
-    InputNumberModule,
     CurrencyBrlPipe,
     TranslateModule,
   ],
@@ -60,38 +54,30 @@ export class CartComponent {
     Math.max(0, this.cartService.subtotal() - this.discountAmount())
   );
 
-  get items() {
-    return this.cartService.items;
-  }
+  get items() { return this.cartService.items; }
+  get subtotal() { return this.cartService.subtotal; }
+  get isEmpty() { return this.cartService.itemCount() === 0; }
 
-  get subtotal() {
-    return this.cartService.subtotal;
-  }
-
-  get isEmpty() {
-    return this.cartService.itemCount() === 0;
-  }
-
-  updateQuantity(item: CartItem, quantity: number) {
+  updateQuantity(item: CartItem, quantity: number): void {
     if (quantity < 1) return;
     this.cartService.updateQuantity(item.product.id, quantity);
   }
 
-  updateQuestions(item: CartItem, questions: string) {
+  updateQuestions(item: CartItem, questions: string): void {
     this.cartService.updateQuestions(item.product.id, questions ? [questions] : []);
   }
 
-  removeItem(productId: string) {
+  removeItem(productId: string): void {
     this.cartService.removeItem(productId);
     this.notification.info(this.translate.instant('shop.cart.itemRemoved'));
   }
 
-  clearCart() {
+  clearCart(): void {
     this.cartService.clearCart();
     this.notification.info(this.translate.instant('shop.cart.cartCleared'));
   }
 
-  applyCoupon() {
+  applyCoupon(): void {
     if (!this.couponCode()) return;
     if (!this.authService.isAuthenticated()) {
       this.notification.info(this.translate.instant('shop.cart.loginToContinue'));
@@ -116,21 +102,21 @@ export class CartComponent {
     });
   }
 
-  removeCoupon() {
+  removeCoupon(): void {
     this.appliedCoupon.set(null);
     this.couponCode.set('');
   }
 
-  proceedToCheckout() {
+  proceedToCheckout(): void {
     if (!this.authService.isAuthenticated()) {
       this.notification.info(this.translate.instant('shop.cart.loginToContinue'));
       this.router.navigate(['/auth/login'], {
-        queryParams: { redirect: '/loja/checkout' }
+        queryParams: { redirect: '/checkout' },
       });
       return;
     }
 
-    this.router.navigate(['/loja/checkout']);
+    this.router.navigate(['/checkout']);
   }
 
   getServiceKindLabel(kind: string): string {
