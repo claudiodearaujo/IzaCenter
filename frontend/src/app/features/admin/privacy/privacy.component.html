@@ -1,0 +1,230 @@
+<section class="privacy-admin-page">
+  <ds-page-header
+    title="Privacidade & Operações"
+    description="Solicitações LGPD, retenção, incidentes e trilha de auditoria do workspace.">
+  </ds-page-header>
+
+  <div class="regulatory-note">
+    <i class="pi pi-info-circle"></i>
+    <div>
+      <strong>Controles técnicos, não decisão jurídica automática.</strong>
+      <p>
+        A plataforma registra fatos e marcos operacionais. Avaliação de base legal, eliminação
+        efetiva e obrigatoriedade de comunicação de incidente permanecem sob responsabilidade
+        do controlador.
+      </p>
+    </div>
+  </div>
+
+  <ds-card padding="lg">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Titulares</span>
+        <h2>Solicitações de privacidade</h2>
+      </div>
+      <ds-badge tone="brand">{{ requests().length }} registro(s)</ds-badge>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state"><i class="pi pi-spinner pi-spin"></i> Carregando...</div>
+    } @else if (requests().length === 0) {
+      <ds-empty-state
+        icon="pi-inbox"
+        title="Nenhuma solicitação"
+        description="As solicitações enviadas pelos titulares aparecerão aqui." />
+    } @else {
+      <div class="request-table">
+        @for (request of requests(); track request.id) {
+          <article class="request-card">
+            <div class="request-card__heading">
+              <div>
+                <strong>{{ request.requester?.fullName || 'Titular' }}</strong>
+                <small>{{ request.requester?.email }}</small>
+              </div>
+              <ds-badge [tone]="statusTone(request.status)">{{ request.status }}</ds-badge>
+            </div>
+            <p class="request-type">{{ request.type }}</p>
+            @if (request.details) {
+              <p>{{ request.details }}</p>
+            }
+            <div class="request-actions">
+              <select [(ngModel)]="requestStatuses[request.id]">
+                <option value="PENDING">Pendente</option>
+                <option value="IN_REVIEW">Em análise</option>
+                <option value="APPROVED">Aprovada</option>
+                <option value="REJECTED">Recusada</option>
+                <option value="COMPLETED">Concluída</option>
+                <option value="CANCELED">Cancelada</option>
+              </select>
+              <input
+                type="text"
+                [(ngModel)]="responseMessages[request.id]"
+                placeholder="Resposta ao titular" />
+              <ds-button
+                size="sm"
+                [loading]="updatingRequestId() === request.id"
+                (click)="updateRequest(request)">
+                Salvar
+              </ds-button>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </ds-card>
+
+  <div class="two-column">
+    <ds-card padding="lg">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Retenção</span>
+          <h2>Política técnica</h2>
+          <p>Nesta fase a política apenas identifica elegibilidade; limpeza automática está desligada.</p>
+        </div>
+      </div>
+
+      <div class="retention-grid">
+        <ds-form-field label="Auditoria (dias)">
+          <input type="number" [(ngModel)]="retention.auditRetentionDays" min="30" max="3650" />
+        </ds-form-field>
+        <ds-form-field label="Solicitações LGPD (dias)">
+          <input
+            type="number"
+            [(ngModel)]="retention.privacyRequestRetentionDays"
+            min="365"
+            max="3650" />
+        </ds-form-field>
+        <ds-form-field label="Logs operacionais (dias)">
+          <input
+            type="number"
+            [(ngModel)]="retention.operationalLogRetentionDays"
+            min="7"
+            max="365" />
+        </ds-form-field>
+      </div>
+
+      @if (retentionReport(); as report) {
+        <div class="eligibility">
+          <span>Elegíveis hoje</span>
+          <strong>{{ report.eligible?.auditEvents || 0 }} auditorias ·
+            {{ report.eligible?.closedPrivacyRequests || 0 }} solicitações encerradas</strong>
+        </div>
+      }
+
+      <div class="actions">
+        <ds-button
+          icon="pi-save"
+          [loading]="savingRetention()"
+          (click)="saveRetention()">
+          Salvar política
+        </ds-button>
+      </div>
+    </ds-card>
+
+    <ds-card padding="lg">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Incidentes</span>
+          <h2>Registrar incidente</h2>
+          <p>Registre a ciência do controlador e as categorias afetadas para apoiar a resposta.</p>
+        </div>
+      </div>
+
+      <div class="incident-form">
+        <ds-form-field label="Título">
+          <input type="text" [(ngModel)]="incidentForm.title" />
+        </ds-form-field>
+        <ds-form-field label="Severidade">
+          <select [(ngModel)]="incidentForm.severity">
+            <option value="LOW">Baixa</option>
+            <option value="MEDIUM">Média</option>
+            <option value="HIGH">Alta</option>
+            <option value="CRITICAL">Crítica</option>
+          </select>
+        </ds-form-field>
+        <ds-form-field label="Detectado em">
+          <input type="datetime-local" [(ngModel)]="incidentForm.detectedAt" />
+        </ds-form-field>
+        <ds-form-field label="Ciência do controlador">
+          <input type="datetime-local" [(ngModel)]="incidentForm.controllerAwareAt" />
+        </ds-form-field>
+        <ds-form-field label="Categorias afetadas" hint="Separe por vírgulas.">
+          <input type="text" [(ngModel)]="incidentForm.affectedDataCategories" />
+        </ds-form-field>
+        <ds-form-field label="Resumo">
+          <textarea rows="4" [(ngModel)]="incidentForm.summary"></textarea>
+        </ds-form-field>
+      </div>
+
+      <div class="actions">
+        <ds-button
+          icon="pi-plus"
+          [loading]="creatingIncident()"
+          (click)="createIncident()">
+          Registrar incidente
+        </ds-button>
+      </div>
+    </ds-card>
+  </div>
+
+  <ds-card padding="lg">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Resposta a incidentes</span>
+        <h2>Incidentes registrados</h2>
+      </div>
+      <ds-badge tone="neutral">{{ incidents().length }}</ds-badge>
+    </div>
+
+    @if (incidents().length === 0) {
+      <ds-empty-state
+        icon="pi-shield"
+        title="Nenhum incidente registrado"
+        description="Incidentes operacionais aparecerão aqui." />
+    } @else {
+      <div class="incident-list">
+        @for (incident of incidents(); track incident.id) {
+          <article class="incident-item">
+            <div>
+              <strong>{{ incident.title }}</strong>
+              <small>Ciência: {{ formatDate(incident.controllerAwareAt) }}</small>
+            </div>
+            <div class="badges">
+              <ds-badge [tone]="severityTone(incident.severity)">{{ incident.severity }}</ds-badge>
+              <ds-badge [tone]="statusTone(incident.status)">{{ incident.status }}</ds-badge>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </ds-card>
+
+  <ds-card padding="lg">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Prestação de contas</span>
+        <h2>Auditoria recente</h2>
+        <p>Eventos minimizados: sem corpo da requisição, e-mail ou IP bruto.</p>
+      </div>
+    </div>
+
+    @if (auditEvents().length === 0) {
+      <ds-empty-state
+        icon="pi-history"
+        title="Nenhum evento de auditoria"
+        description="Novas operações sensíveis passarão a aparecer aqui." />
+    } @else {
+      <div class="audit-list">
+        @for (event of auditEvents(); track event.id) {
+          <div class="audit-row">
+            <div>
+              <strong>{{ event.action }}</strong>
+              <small>{{ event.method }} · {{ event.path }} · {{ formatDate(event.createdAt) }}</small>
+            </div>
+            <ds-badge [tone]="statusTone(event.outcome)">{{ event.outcome }}</ds-badge>
+          </div>
+        }
+      </div>
+    }
+  </ds-card>
+</section>
