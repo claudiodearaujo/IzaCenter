@@ -1,259 +1,201 @@
-<!-- apps/frontend/src/app/features/client/appointments/appointment-list/appointment-list.component.html -->
-
-<section class="py-8">
-  <div class="container-custom">
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
-      <div class="text-center md:text-left">
-        <h1 class="heading-1 text-primary mb-2">
-          <i class="pi pi-calendar mr-3"></i>
-          Meus Agendamentos
-        </h1>
-        <p class="text-secondary">
-          Gerencie suas sessões ao vivo e acompanhe seu histórico de atendimentos
-        </p>
-      </div>
-      <!-- Sprint 1.3 — Botão Novo Agendamento -->
-      <a routerLink="/cliente/agendamentos/novo" class="btn-primary inline-flex items-center gap-2 flex-shrink-0">
+<section class="client-appointments">
+  <ds-page-header
+    title="Meus Agendamentos"
+    description="Gerencie suas sessões ao vivo e acompanhe o histórico de atendimentos.">
+    <div dsPageActions>
+      <a routerLink="/cliente/agendamentos/novo" class="primary-link">
         <i class="pi pi-calendar-plus"></i>
-        Novo Agendamento
+        Novo agendamento
       </a>
     </div>
+  </ds-page-header>
 
-    @if (loading()) {
-      <!-- Loading State -->
-      <div class="space-y-4">
-        @for (_ of [1, 2, 3]; track $index) {
-          <div class="glass-card p-6">
-            <p-skeleton height="6rem" />
-          </div>
-        }
-      </div>
-    } @else {
+  @if (loading()) {
+    <div class="loading-list">
+      @for (_ of [1,2,3]; track $index) {
+        <ds-card padding="md">
+          <p-skeleton height="6rem" />
+        </ds-card>
+      }
+    </div>
+  } @else {
+    <ds-card padding="lg">
       <p-tabs value="0">
         <p-tablist>
-          <p-tab value="0">Próximos</p-tab>
+          <p-tab value="0">
+            Próximos
+            @if (upcomingAppointments().length) {
+              <span class="tab-count">{{ upcomingAppointments().length }}</span>
+            }
+          </p-tab>
           <p-tab value="1">Histórico</p-tab>
         </p-tablist>
+
         <p-tabpanels>
-        <!-- Upcoming Tab -->
-        <p-tabpanel value="0">
-          @if (upcomingAppointments().length === 0) {
-            <div class="glass-card p-12 text-center">
-              <div class="w-24 h-24 bg-gradient-mystical rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="pi pi-calendar text-4xl text-white"></i>
+          <p-tabpanel value="0">
+            @if (upcomingAppointments().length === 0) {
+              <ds-empty-state
+                title="Nenhum agendamento próximo"
+                description="Você não possui sessões agendadas. Quando precisar, escolha um serviço com horário disponível."
+                icon="pi-calendar">
+                <div dsEmptyActions>
+                  <a routerLink="/loja" class="primary-link">Ver serviços</a>
+                </div>
+              </ds-empty-state>
+            } @else {
+              <div class="appointment-list">
+                @for (appointment of upcomingAppointments(); track appointment.id) {
+                  <article class="appointment-row">
+                    <div class="date-block">
+                      <strong>{{ appointment.scheduledDate | date:'dd' }}</strong>
+                      <span>{{ appointment.scheduledDate | date:'MMM' }}</span>
+                    </div>
+
+                    <div class="appointment-row__content">
+                      <div class="appointment-row__heading">
+                        <div>
+                          <h2>{{ appointment.orderItem?.product?.name || 'Atendimento' }}</h2>
+                          <p>{{ formatDate(appointment.scheduledDate) }}</p>
+                        </div>
+                        <ds-badge [tone]="getStatusTone(appointment.status)" [dot]="true">
+                          {{ getStatusLabel(appointment.status) }}
+                        </ds-badge>
+                      </div>
+
+                      <div class="appointment-row__details">
+                        <span>
+                          <i class="pi pi-clock"></i>
+                          {{ formatTime(appointment.startTime) }}–{{ formatTime(appointment.endTime) }}
+                        </span>
+
+                        @if (appointment.clientNotes) {
+                          <span>
+                            <i class="pi pi-info-circle"></i>
+                            {{ appointment.clientNotes }}
+                          </span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="appointment-row__actions">
+                      @if (appointment.meetingUrl && appointment.status !== 'CANCELLED') {
+                        <ds-button
+                          icon="pi-video"
+                          (click)="joinMeeting(appointment.meetingUrl)">
+                          Entrar
+                        </ds-button>
+                      }
+
+                      @if (canCancel(appointment)) {
+                        <ds-button
+                          variant="secondary"
+                          (click)="openCancelDialog(appointment)">
+                          Cancelar
+                        </ds-button>
+                      }
+                    </div>
+                  </article>
+                }
               </div>
-              <h2 class="heading-2 text-primary mb-4">Nenhum agendamento</h2>
-              <p class="text-secondary mb-6">
-                Você não possui nenhum agendamento próximo. Explore nossas 
-                consultas ao vivo para agendar uma sessão.
-              </p>
-              <a routerLink="/loja" class="btn-primary inline-block">
-                <i class="pi pi-shopping-cart mr-2"></i>
-                Ver Consultas
-              </a>
-            </div>
-          } @else {
-            <div class="space-y-4">
-              @for (appointment of upcomingAppointments(); track appointment.id) {
-                <div class="glass-card p-6">
-                  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <!-- Date/Time -->
-                    <div class="flex items-center gap-4">
-                      <div class="w-16 h-16 bg-gradient-mystical rounded-lg flex flex-col items-center justify-center text-white">
-                        <span class="text-2xl font-bold">
-                          {{ appointment.scheduledDate | date:'dd' }}
-                        </span>
-                        <span class="text-xs uppercase">
-                          {{ appointment.scheduledDate | date:'MMM' }}
-                        </span>
-                      </div>
-                      <div>
-                        <h3 class="text-primary font-bold text-lg">{{ appointment.orderItem?.product?.name }}</h3>
-                        <p class="text-secondary">
-                          {{ formatDate(appointment.scheduledDate) }}
-                        </p>
-                        <p class="text-accent font-medium">
-                          {{ formatTime(appointment.startTime) }} - {{ formatTime(appointment.endTime) }}
-                        </p>
-                      </div>
-                    </div>
+            }
+          </p-tabpanel>
 
-                    <!-- Status & Actions -->
-                    <div class="flex flex-col md:flex-row items-start md:items-center gap-3">
-                      <span 
-                        class="inline-block px-3 py-1 rounded-full text-xs font-medium"
-                        [class]="getStatusClass(appointment.status)"
-                      >
-                        {{ getStatusLabel(appointment.status) }}
-                      </span>
-
-                      <div class="flex gap-2">
-                        @if (appointment.meetingUrl && appointment.status !== 'CANCELLED') {
-                          <button 
-                            class="btn-primary text-sm"
-                            (click)="joinMeeting(appointment.meetingUrl)"
-                          >
-                            <i class="pi pi-video mr-2"></i>
-                            Entrar
-                          </button>
-                        }
-                        @if (canCancel(appointment)) {
-                          <button 
-                            class="btn-outline text-sm"
-                            (click)="openCancelDialog(appointment)"
-                          >
-                            <i class="pi pi-times mr-2"></i>
-                            Cancelar
-                          </button>
-                        }
-                      </div>
-                    </div>
-                  </div>
-
-                  @if (appointment.clientNotes) {
-                    <div class="mt-4 p-3 bg-dark/30 rounded-lg">
-                      <p class="text-secondary text-sm">
-                        <i class="pi pi-info-circle mr-2"></i>
-                        {{ appointment.clientNotes }}
+          <p-tabpanel value="1">
+            @if (pastAppointments().length === 0) {
+              <ds-empty-state
+                title="Nenhum histórico"
+                description="Seus atendimentos realizados ou cancelados aparecerão aqui."
+                icon="pi-history">
+              </ds-empty-state>
+            } @else {
+              <div class="history-list">
+                @for (appointment of pastAppointments(); track appointment.id) {
+                  <article class="history-row">
+                    <div>
+                      <h2>{{ appointment.orderItem?.product?.name || 'Atendimento' }}</h2>
+                      <p>
+                        {{ formatDate(appointment.scheduledDate) }} ·
+                        {{ formatTime(appointment.startTime) }}–{{ formatTime(appointment.endTime) }}
                       </p>
                     </div>
-                  }
-                </div>
-              }
-            </div>
-          }
-        </p-tabpanel>
-
-        <!-- Past Tab -->
-        <p-tabpanel value="1">
-          @if (pastAppointments().length === 0) {
-            <div class="glass-card p-12 text-center">
-              <i class="pi pi-history text-5xl text-secondary/30 mb-4"></i>
-              <h2 class="heading-3 text-primary mb-2">Nenhum histórico</h2>
-              <p class="text-secondary">
-                Seus agendamentos realizados aparecerão aqui
-              </p>
-            </div>
-          } @else {
-            <div class="space-y-4">
-              @for (appointment of pastAppointments(); track appointment.id) {
-                <div class="glass-card p-6 opacity-80">
-                  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <!-- Date/Time -->
-                    <div class="flex items-center gap-4">
-                      <div class="w-16 h-16 bg-dark/50 rounded-lg flex flex-col items-center justify-center text-secondary">
-                        <span class="text-2xl font-bold">
-                          {{ appointment.scheduledDate | date:'dd' }}
-                        </span>
-                        <span class="text-xs uppercase">
-                          {{ appointment.scheduledDate | date:'MMM' }}
-                        </span>
-                      </div>
-                      <div>
-                        <h3 class="text-primary font-medium">{{ appointment.orderItem?.product?.name }}</h3>
-                        <p class="text-secondary text-sm">
-                          {{ formatDate(appointment.scheduledDate) }}
-                        </p>
-                        <p class="text-secondary text-sm">
-                          {{ formatTime(appointment.startTime) }} - {{ formatTime(appointment.endTime) }}
-                        </p>
-                      </div>
-                    </div>
-
-                    <!-- Status -->
-                    <span 
-                      class="inline-block px-3 py-1 rounded-full text-xs font-medium"
-                      [class]="getStatusClass(appointment.status)"
-                    >
+                    <ds-badge [tone]="getStatusTone(appointment.status)" [dot]="true">
                       {{ getStatusLabel(appointment.status) }}
-                    </span>
-                  </div>
-                </div>
-              }
-            </div>
-          }
-        </p-tabpanel>
+                    </ds-badge>
+                  </article>
+                }
+              </div>
+            }
+          </p-tabpanel>
         </p-tabpanels>
       </p-tabs>
-    }
+    </ds-card>
+  }
 
-    <!-- Info Section -->
-    <div class="glass-card p-8 mt-12">
-      <h3 class="heading-3 text-primary mb-6 text-center">Informações Importantes</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="text-center">
-          <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
-            <i class="pi pi-clock text-xl text-primary"></i>
-          </div>
-          <h4 class="text-primary font-medium mb-2">Pontualidade</h4>
-          <p class="text-secondary text-sm">
-            Esteja online 5 minutos antes do horário marcado
-          </p>
+  <ds-card padding="lg">
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-item__icon"><i class="pi pi-clock"></i></span>
+        <div>
+          <h3>Pontualidade</h3>
+          <p>Esteja disponível alguns minutos antes do horário marcado.</p>
         </div>
-        <div class="text-center">
-          <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
-            <i class="pi pi-ban text-xl text-primary"></i>
-          </div>
-          <h4 class="text-primary font-medium mb-2">Cancelamento</h4>
-          <p class="text-secondary text-sm">
-            Cancele com até 24 horas de antecedência
-          </p>
+      </div>
+
+      <div class="info-item">
+        <span class="info-item__icon"><i class="pi pi-calendar-times"></i></span>
+        <div>
+          <h3>Cancelamento</h3>
+          <p>O cancelamento pela plataforma fica disponível até 24 horas antes.</p>
         </div>
-        <div class="text-center">
-          <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
-            <i class="pi pi-video text-xl text-primary"></i>
-          </div>
-          <h4 class="text-primary font-medium mb-2">Conexão</h4>
-          <p class="text-secondary text-sm">
-            Tenha uma boa conexão de internet e ambiente tranquilo
-          </p>
+      </div>
+
+      <div class="info-item">
+        <span class="info-item__icon"><i class="pi pi-video"></i></span>
+        <div>
+          <h3>Sessão online</h3>
+          <p>Verifique sua conexão e escolha um ambiente adequado para o atendimento.</p>
         </div>
       </div>
     </div>
-  </div>
+  </ds-card>
 </section>
 
-<!-- Cancel Dialog -->
-<p-dialog 
+<p-dialog
   [(visible)]="cancelDialogVisible"
   [modal]="true"
   [closable]="true"
-  [style]="{width: '400px'}"
-  header="Cancelar Agendamento"
->
-  <div class="text-center py-4">
-    <i class="pi pi-exclamation-triangle text-5xl text-yellow-400 mb-4"></i>
-    <p class="text-secondary mb-4">
-      Tem certeza que deseja cancelar este agendamento?
-    </p>
+  [style]="{width:'420px',maxWidth:'calc(100vw - 32px)'}"
+  header="Cancelar agendamento">
+
+  <div class="cancel-dialog">
+    <span class="cancel-dialog__icon"><i class="pi pi-exclamation-triangle"></i></span>
+    <div>
+      <h2>Confirmar cancelamento?</h2>
+      <p>O horário será liberado e esta ação não poderá ser desfeita.</p>
+    </div>
+
     @if (selectedAppointment()) {
-      <div class="p-4 bg-dark/30 rounded-lg mb-4">
-        <p class="text-primary font-medium">{{ selectedAppointment()?.orderItem?.product?.name }}</p>
-        <p class="text-secondary text-sm">
-          {{ formatDate(selectedAppointment()!.scheduledDate) }} às 
+      <div class="cancel-summary">
+        <strong>{{ selectedAppointment()?.orderItem?.product?.name || 'Atendimento' }}</strong>
+        <span>
+          {{ formatDate(selectedAppointment()!.scheduledDate) }} às
           {{ formatTime(selectedAppointment()!.startTime) }}
-        </p>
+        </span>
       </div>
     }
-    <p class="text-secondary text-sm">
-      Esta ação não pode ser desfeita.
-    </p>
   </div>
+
   <ng-template pTemplate="footer">
-    <button 
-      class="btn-outline mr-2" 
-      (click)="cancelDialogVisible.set(false)"
-    >
-      Manter Agendamento
-    </button>
-    <button 
-      pButton 
-      class="btn-primary bg-red-600 hover:bg-red-700"
-      [loading]="cancelling()"
-      (click)="confirmCancel()"
-    >
-      Confirmar Cancelamento
-    </button>
+    <div class="dialog-actions">
+      <ds-button variant="secondary" (click)="cancelDialogVisible.set(false)">
+        Manter agendamento
+      </ds-button>
+      <ds-button
+        variant="danger"
+        [loading]="cancelling()"
+        (click)="confirmCancel()">
+        Confirmar cancelamento
+      </ds-button>
+    </div>
   </ng-template>
 </p-dialog>
