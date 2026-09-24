@@ -1,69 +1,103 @@
-<div class="py-16">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-16">
-      <img [src]="publicSettings().professional.photoUrl || publicSettings().logoUrl || 'assets/images/professional-profile.svg'"
-        [alt]="publicSettings().professional.displayName" class="h-40 w-40 mx-auto mb-6 rounded-full object-cover shadow-lg">
-      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-3">{{ publicSettings().professional.displayName }}</h1>
-      <p class="text-xl text-primary-700 font-medium">{{ publicSettings().professional.professionalTitle }}</p>
+<section class="about-hero">
+  <div class="public-container about-hero__grid">
+    <div class="about-hero__copy">
+      <span class="eyebrow">Sobre</span>
+      <h1>{{ publicSettings().professional.displayName }}</h1>
+      <p class="professional-title">{{ publicSettings().professional.professionalTitle }}</p>
+      <p class="about-intro">
+        {{ publicSettings().content.aboutContent || publicSettings().professional.bio || publicSettings().siteDescription }}
+      </p>
     </div>
-    <div class="grid lg:grid-cols-2 gap-16 items-start mb-16">
-      <div class="relative">
-        <div class="aspect-4/5 rounded-3xl bg-linear-to-br from-primary-100 to-secondary-100 overflow-hidden">
-          <img [src]="publicSettings().professional.photoUrl || publicSettings().logoUrl || 'assets/images/professional-profile.svg'"
-            [alt]="publicSettings().professional.displayName" class="w-full h-full object-cover">
-        </div>
-      </div>
-      <div class="space-y-8">
-        <div>
-          <h2 class="text-3xl font-serif font-bold text-neutral-900 mb-4">{{ publicSettings().content.aboutTitle || 'Sobre o profissional' }}</h2>
-          <div class="text-neutral-600 leading-relaxed whitespace-pre-line">{{ publicSettings().content.aboutContent || publicSettings().professional.bio || publicSettings().siteDescription }}</div>
-        </div>
-        @if (publicSettings().professional.credentials.length) {
-          <div>
-            <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-4">Credenciais</h3>
-            <ul class="space-y-3">
-              @for (credential of publicSettings().professional.credentials; track credential) {
-                <li class="flex items-start gap-3"><i class="pi pi-check-circle text-primary-600 mt-1"></i><span class="text-neutral-700">{{ credential }}</span></li>
-              }
-            </ul>
-          </div>
-        }
-        <div class="grid sm:grid-cols-2 gap-4">
-          <div class="bg-primary-50 rounded-2xl p-5"><p class="text-sm text-neutral-500 mb-1">Modalidade</p><p class="font-medium text-neutral-800">{{ publicSettings().professional.serviceMode }}</p></div>
-          @if (publicSettings().professional.location) {
-            <div class="bg-primary-50 rounded-2xl p-5"><p class="text-sm text-neutral-500 mb-1">Localização</p><p class="font-medium text-neutral-800">{{ publicSettings().professional.location }}</p></div>
-          }
-        </div>
-        @if (publicSettings().professional.languages.length) {
-          <div>
-            <h3 class="text-lg font-semibold text-neutral-800 mb-3">Idiomas</h3>
-            <div class="flex flex-wrap gap-2">
-              @for (language of publicSettings().professional.languages; track language) {
-                <span class="px-3 py-1 bg-neutral-100 text-neutral-700 rounded-full text-sm">{{ language }}</span>
-              }
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-    @if (publicSettings().specialties.length) {
-      <div class="bg-linear-to-br from-primary-50 to-secondary-50 rounded-3xl p-8 md:p-12 mb-16">
-        <h2 class="text-3xl font-serif font-bold text-neutral-900 text-center mb-10">Especialidades</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          @for (specialty of publicSettings().specialties; track specialty.slug) {
-            <div class="bg-white/70 rounded-2xl p-6 text-center">
-              <i class="pi pi-check-circle text-3xl text-primary-600 mb-4"></i>
-              <h3 class="text-xl font-semibold text-neutral-800 mb-2">{{ specialty.name }}</h3>
-              <p class="text-neutral-600">{{ specialty.description }}</p>
-            </div>
-          }
-        </div>
-      </div>
-    }
-    <div class="text-center">
-      <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-4">Conheça os serviços disponíveis</h2>
-      <p class="text-neutral-600 mb-6">Veja formatos de atendimento, entregas e condições disponíveis.</p>
-      <a routerLink="/servicos"><p-button label="Ver serviços" icon="pi pi-arrow-right" iconPos="right" size="large" /></a>
+
+    <div class="about-hero__media">
+      <img
+        [src]="publicSettings().professional.photoUrl || publicSettings().logoUrl || 'assets/images/professional-profile.svg'"
+        [alt]="publicSettings().professional.displayName" />
     </div>
   </div>
-</div>
+</section>
+
+<section class="about-section">
+  <div class="public-container about-content">
+    <div class="about-story">
+      <span class="eyebrow">Trajetória</span>
+      <h2>{{ publicSettings().content.aboutTitle || 'Sobre o profissional' }}</h2>
+      <div class="about-story__body">
+        {{ publicSettings().content.aboutContent || publicSettings().professional.bio || publicSettings().siteDescription }}
+      </div>
+
+      @if (publicSettings().professional.credentials.length) {
+        <div class="credentials">
+          <h3>Credenciais</h3>
+          @for (credential of publicSettings().professional.credentials; track credential) {
+            <div class="credential">
+              <i class="pi pi-check-circle"></i>
+              <span>{{ credential }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <aside class="profile-facts">
+      <div class="fact">
+        <span>Modalidade</span>
+        <strong>{{ publicSettings().professional.serviceMode }}</strong>
+      </div>
+
+      @if (publicSettings().professional.location) {
+        <div class="fact">
+          <span>Localização</span>
+          <strong>{{ publicSettings().professional.location }}</strong>
+        </div>
+      }
+
+      @if (publicSettings().professional.languages.length) {
+        <div class="fact">
+          <span>Idiomas</span>
+          <div class="chip-list">
+            @for (language of publicSettings().professional.languages; track language) {
+              <small>{{ language }}</small>
+            }
+          </div>
+        </div>
+      }
+    </aside>
+  </div>
+</section>
+
+@if (publicSettings().specialties.length) {
+  <section class="specialties-section">
+    <div class="public-container">
+      <div class="section-heading">
+        <span class="eyebrow">Especialidades</span>
+        <h2>Áreas de atuação</h2>
+        <p>Conheça os contextos e formatos disponíveis neste espaço profissional.</p>
+      </div>
+
+      <div class="specialties-grid">
+        @for (specialty of publicSettings().specialties; track specialty.slug) {
+          <article class="specialty-card">
+            <span class="specialty-card__icon"><i class="pi pi-check-circle"></i></span>
+            <h3>{{ specialty.name }}</h3>
+            <p>{{ specialty.description }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+}
+
+<section class="about-cta">
+  <div class="public-container about-cta__inner">
+    <div>
+      <span class="eyebrow">Próximo passo</span>
+      <h2>Conheça os serviços disponíveis</h2>
+      <p>Veja formatos de atendimento, entregas e condições oferecidas.</p>
+    </div>
+    <a routerLink="/servicos" class="public-button">
+      Ver serviços
+      <i class="pi pi-arrow-right"></i>
+    </a>
+  </div>
+</section>

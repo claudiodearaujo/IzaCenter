@@ -1,7 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -13,9 +12,9 @@ import { DEFAULT_PUBLIC_SETTINGS, PublicSettingsStore } from '../../../core/serv
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule, TranslateModule],
+  imports: [CommonModule, FormsModule, InputTextModule, TextareaModule, TranslateModule],
   templateUrl: './contact.component.html',
-  styleUrl: './contact.component.css'
+  styleUrl: './contact.component.css',
 })
 export class ContactComponent implements OnInit {
   private notificationService = inject(NotificationService);
@@ -30,11 +29,17 @@ export class ContactComponent implements OnInit {
   contactInfo = computed(() => {
     const settings = this.publicSettings();
     const items = [
-      settings.contact.email ? { icon: 'pi-envelope', label: this.translate.instant('contact.info.email.label'), value: settings.contact.email } : null,
+      settings.contact.email
+        ? { icon: 'pi-envelope', label: this.translate.instant('contact.info.email.label'), value: settings.contact.email }
+        : null,
       settings.contact.phone ? { icon: 'pi-phone', label: 'Telefone', value: settings.contact.phone } : null,
       settings.contact.whatsapp ? { icon: 'pi-whatsapp', label: 'WhatsApp', value: settings.contact.whatsapp } : null,
-      (settings.professional.location || settings.contact.address)
-        ? { icon: 'pi-map-marker', label: this.translate.instant('contact.info.location.label'), value: settings.professional.location || settings.contact.address || '' }
+      settings.professional.location || settings.contact.address
+        ? {
+            icon: 'pi-map-marker',
+            label: this.translate.instant('contact.info.location.label'),
+            value: settings.professional.location || settings.contact.address || '',
+          }
         : null,
     ];
     return items.filter((item): item is NonNullable<typeof item> => !!item);
@@ -59,14 +64,19 @@ export class ContactComponent implements OnInit {
       this.seoService.configure(settings);
       this.seoService.setMeta({
         title: 'Contato',
-        description: 'Entre em contato com ' + settings.professional.displayName + ' para tirar dúvidas sobre serviços e atendimentos.',
+        description:
+          'Entre em contato com ' +
+          settings.professional.displayName +
+          ' para tirar dúvidas sobre serviços e atendimentos.',
         keywords: settings.seo.keywords.join(', '),
-        url: window.location.origin + '/contato'
+        url: window.location.origin + '/contato',
       });
-      this.seoService.setSchema(this.seoService.getBreadcrumbSchema([
-        { name: 'Início', url: '/' },
-        { name: 'Contato', url: '/contato' }
-      ]));
+      this.seoService.setSchema(
+        this.seoService.getBreadcrumbSchema([
+          { name: 'Início', url: '/' },
+          { name: 'Contato', url: '/contato' },
+        ])
+      );
     });
   }
 
@@ -74,12 +84,16 @@ export class ContactComponent implements OnInit {
     this.isLoading.set(true);
     this.api.post<{ message: string }>('/contact', this.form).subscribe({
       next: () => {
-        this.notificationService.showSuccess(this.translate.instant('contact.form.successMessage'));
+        this.notificationService.showSuccess(
+          this.translate.instant('contact.form.successMessage')
+        );
         this.form = { name: '', email: '', subject: '', message: '' };
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.notificationService.showError(err.error?.message || this.translate.instant('contact.form.errorMessage'));
+        this.notificationService.showError(
+          err.error?.message || this.translate.instant('contact.form.errorMessage')
+        );
         this.isLoading.set(false);
       },
     });

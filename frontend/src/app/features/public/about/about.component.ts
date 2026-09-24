@@ -1,16 +1,15 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { SeoService } from '../../../core/services/seo.service';
 import { DEFAULT_PUBLIC_SETTINGS, PublicSettingsStore } from '../../../core/services/public-settings.store';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, RouterLink, ButtonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './about.component.html',
-  styleUrl: './about.component.css'
+  styleUrl: './about.component.css',
 })
 export class AboutComponent implements OnInit {
   private seoService = inject(SeoService);
@@ -27,11 +26,14 @@ export class AboutComponent implements OnInit {
         description: settings.professional.bio || settings.siteDescription,
         keywords: settings.seo.keywords.join(', '),
         image: settings.professional.photoUrl || settings.logoUrl,
-        url: window.location.origin + '/sobre'
+        url: window.location.origin + '/sobre',
       });
       this.seoService.setSchema([
         this.seoService.getPersonSchema(),
-        this.seoService.getBreadcrumbSchema([{ name: 'Início', url: '/' }, { name: 'Sobre', url: '/sobre' }])
+        this.seoService.getBreadcrumbSchema([
+          { name: 'Início', url: '/' },
+          { name: 'Sobre', url: '/sobre' },
+        ]),
       ]);
     });
   }
