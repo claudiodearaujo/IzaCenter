@@ -22,5 +22,8 @@
     "@types/sqlite3": "^3.1.11",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.0"
+  },
+  "overrides": {
+    "tar": "7.5.19"
   }
 }
