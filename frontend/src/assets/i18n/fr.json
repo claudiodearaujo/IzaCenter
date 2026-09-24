@@ -318,7 +318,8 @@
       "appointments": "Rendez-vous",
       "orders": "Commandes",
       "profile": "Profil",
-      "schedule": "Réserver Séance"
+      "schedule": "Réserver Séance",
+      "privacy": "Confidentialité"
     },
     "booking": {
       "title": "Réserver une Nouvelle Séance",
@@ -719,7 +720,8 @@
       "cards": "Cartes",
       "testimonials": "Témoignages",
       "billing": "Forfait et abonnement",
-      "settings": "Paramètres"
+      "settings": "Paramètres",
+      "privacy": "Confidentialité et opérations"
     },
     "orders": {
       "title": "Commandes",
