@@ -1,13 +1,9 @@
-// apps/frontend/src/app/features/shop/checkout/checkout.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { CartService } from '../../../core/services/cart.service';
@@ -23,9 +19,7 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
     CommonModule,
     RouterLink,
     FormsModule,
-    ButtonModule,
     CheckboxModule,
-    ProgressSpinnerModule,
     CurrencyBrlPipe,
     TranslateModule,
   ],
@@ -46,45 +40,34 @@ export class CheckoutComponent implements OnInit {
   acceptTerms = signal(false);
   showCancelledBanner = signal(false);
 
-  get items() {
-    return this.cartService.items;
-  }
+  get items() { return this.cartService.items; }
+  get subtotal() { return this.cartService.subtotal; }
+  get total() { return this.cartService.total; }
+  get isEmpty() { return this.cartService.itemCount() === 0; }
 
-  get subtotal() {
-    return this.cartService.subtotal;
-  }
-
-  get total() {
-    return this.cartService.total;
-  }
-
-  get isEmpty() {
-    return this.cartService.itemCount() === 0;
-  }
-
-  ngOnInit() {
-    // Sprint 1.1 — Feedback pós-pagamento cancelado
+  ngOnInit(): void {
     const cancelled = this.route.snapshot.queryParamMap.get('cancelled');
     if (cancelled === 'true') {
       this.showCancelledBanner.set(true);
     }
 
-    // Redirect if cart is empty
     if (this.isEmpty) {
       this.router.navigate(['/loja']);
+      return;
     }
 
-    // Redirect if not authenticated
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/auth/login'], {
-        queryParams: { redirect: '/loja/checkout' },
+        queryParams: { redirect: '/checkout' },
       });
     }
   }
 
-  async processPayment() {
+  processPayment(): void {
     if (!this.acceptTerms()) {
-      this.notification.warning(this.translate.instant('shop.checkout.acceptTermsWarning'));
+      this.notification.warning(
+        this.translate.instant('shop.checkout.acceptTermsWarning')
+      );
       return;
     }
 
@@ -99,21 +82,23 @@ export class CheckoutComponent implements OnInit {
       items: this.cartService.getItemsForCheckout(),
     };
 
-    this.api.post<{ data: { checkoutUrl: string } }>('/orders', orderData).subscribe({
-      next: (response) => {
-        // Redirect to Stripe checkout
-        if (response.data.checkoutUrl) {
-          this.cartService.clearCart();
-          window.location.href = response.data.checkoutUrl;
-        }
-      },
-      error: (error) => {
-        this.processing.set(false);
-        this.notification.error(
-          error.error?.message || this.translate.instant('shop.checkout.processingError')
-        );
-      },
-    });
+    this.api
+      .post<{ data: { checkoutUrl: string } }>('/orders', orderData)
+      .subscribe({
+        next: (response) => {
+          if (response.data.checkoutUrl) {
+            this.cartService.clearCart();
+            window.location.href = response.data.checkoutUrl;
+          }
+        },
+        error: (error) => {
+          this.processing.set(false);
+          this.notification.error(
+            error.error?.message ||
+              this.translate.instant('shop.checkout.processingError')
+          );
+        },
+      });
   }
 
   getServiceKindLabel(kind: string): string {
