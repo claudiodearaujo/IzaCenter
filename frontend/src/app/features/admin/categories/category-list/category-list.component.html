@@ -1,196 +1,168 @@
-<!-- apps/frontend/src/app/features/admin/categories/category-list/category-list.component.html -->
-
-<section class="py-8">
-  <div class="container-custom">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="heading-1 text-primary mb-2">
-          <i class="pi pi-folder mr-3"></i>
-          {{ 'admin.categories.title' | translate }}
-        </h1>
-        <p class="text-secondary">{{ 'admin.categories.subtitle' | translate }}</p>
-      </div>
-      <button pButton class="btn-primary" (click)="openDialog()">
-        <i class="pi pi-plus mr-2"></i>
-        {{ 'admin.categories.newCategory' | translate }}
-      </button>
+<section class="admin-page">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">Organização do catálogo</span>
+      <h1>{{ 'admin.categories.title' | translate }}</h1>
+      <p>{{ 'admin.categories.subtitle' | translate }}</p>
     </div>
 
-    <!-- Table -->
-    <div class="glass-card overflow-hidden">
-      <p-table
-        [value]="categories()"
-        [loading]="loading()"
-        [rowHover]="true"
-        styleClass="p-datatable-striped"
-      >
-        <ng-template pTemplate="header">
-          <tr>
-            <th style="width: 80px">{{ 'admin.categories.order' | translate }}</th>
-            <th>{{ 'admin.categories.name' | translate }}</th>
-            <th>{{ 'admin.categories.description' | translate }}</th>
-            <th style="width: 100px">{{ 'admin.categories.products' | translate }}</th>
-            <th style="width: 100px">{{ 'common.status' | translate }}</th>
-            <th style="width: 180px">{{ 'common.actions' | translate }}</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-category let-rowIndex="rowIndex">
-          <tr>
-            <td class="text-center">
-              <div class="flex flex-col gap-1">
-                <button
-                  pButton
-                  class="p-button-text p-button-sm"
-                  [disabled]="rowIndex === 0"
-                  (click)="moveUp(category)"
-                >
-                  <i class="pi pi-chevron-up"></i>
-                </button>
-                <span class="text-secondary font-medium">{{ category.displayOrder + 1 }}</span>
-                <button
-                  pButton
-                  class="p-button-text p-button-sm"
-                  [disabled]="rowIndex === categories().length - 1"
-                  (click)="moveDown(category)"
-                >
-                  <i class="pi pi-chevron-down"></i>
-                </button>
-              </div>
-            </td>
-            <td>
-              <span class="text-primary font-medium">{{ category.name }}</span>
-              <p class="text-secondary/60 text-xs">{{ category.slug }}</p>
-            </td>
-            <td class="text-secondary">
-              {{ category.description || '-' }}
-            </td>
-            <td class="text-center">
-              <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                {{ category._count?.products || 0 }}
-              </span>
-            </td>
-            <td class="text-center">
+    <button type="button" class="primary-button" (click)="openDialog()">
+      <i class="pi pi-plus"></i>
+      {{ 'admin.categories.newCategory' | translate }}
+    </button>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="categories()"
+      [loading]="loading()"
+      [rowHover]="true">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="col-order">{{ 'admin.categories.order' | translate }}</th>
+          <th>{{ 'admin.categories.name' | translate }}</th>
+          <th>{{ 'admin.categories.description' | translate }}</th>
+          <th class="col-count">{{ 'admin.categories.products' | translate }}</th>
+          <th class="col-status">{{ 'common.status' | translate }}</th>
+          <th class="col-actions">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-category let-rowIndex="rowIndex">
+        <tr>
+          <td>
+            <div class="order-control">
               <button
-                pButton
-                [class]="category.isActive ? 'p-button-success p-button-sm' : 'p-button-secondary p-button-sm'"
-                (click)="toggleActive(category)"
-              >
-                {{ category.isActive ? ('admin.categories.active' | translate) : ('admin.categories.inactive' | translate) }}
+                type="button"
+                [disabled]="rowIndex === 0"
+                (click)="moveUp(category)"
+                aria-label="Mover para cima">
+                <i class="pi pi-chevron-up"></i>
               </button>
-            </td>
-            <td>
-              <div class="flex justify-center gap-2">
-                <button
-                  pButton
-                  class="p-button-outlined p-button-sm"
-                  (click)="openDialog(category)"
-                >
-                  <i class="pi pi-pencil"></i>
-                </button>
-                <button
-                  pButton
-                  class="p-button-outlined p-button-danger p-button-sm"
-                  (click)="confirmDelete(category)"
-                >
-                  <i class="pi pi-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="6" class="text-center py-8">
-              <i class="pi pi-folder text-4xl text-secondary/30 mb-4"></i>
-              <p class="text-secondary">{{ 'admin.categories.noCategories' | translate }}</p>
-              <button pButton class="btn-outline mt-4" (click)="openDialog()">
-                <i class="pi pi-plus mr-2"></i>
+              <strong>{{ category.displayOrder + 1 }}</strong>
+              <button
+                type="button"
+                [disabled]="rowIndex === categories().length - 1"
+                (click)="moveDown(category)"
+                aria-label="Mover para baixo">
+                <i class="pi pi-chevron-down"></i>
+              </button>
+            </div>
+          </td>
+
+          <td>
+            <div class="category-name">
+              <strong>{{ category.name }}</strong>
+              <small>{{ category.slug }}</small>
+            </div>
+          </td>
+
+          <td><span class="description">{{ category.description || '-' }}</span></td>
+          <td><span class="count-badge">{{ category._count?.products || 0 }}</span></td>
+
+          <td>
+            <button
+              type="button"
+              class="status-pill"
+              [class.status-pill--active]="category.isActive"
+              (click)="toggleActive(category)">
+              <span></span>
+              {{ category.isActive ? ('admin.categories.active' | translate) : ('admin.categories.inactive' | translate) }}
+            </button>
+          </td>
+
+          <td>
+            <div class="row-actions">
+              <button type="button" class="icon-action" (click)="openDialog(category)">
+                <i class="pi pi-pencil"></i>
+              </button>
+              <button type="button" class="icon-action icon-action--danger" (click)="confirmDelete(category)">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6">
+            <div class="empty-state">
+              <span><i class="pi pi-folder"></i></span>
+              <h2>{{ 'admin.categories.noCategories' | translate }}</h2>
+              <button type="button" class="secondary-button" (click)="openDialog()">
+                <i class="pi pi-plus"></i>
                 {{ 'admin.categories.createFirst' | translate }}
               </button>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 </section>
 
-<!-- Edit/Create Dialog -->
 <p-dialog
   [(visible)]="dialogVisible"
   [modal]="true"
   [closable]="true"
-  [style]="{width: '90vw', maxWidth: '500px'}"
+  [style]="{width:'500px',maxWidth:'calc(100vw - 32px)'}"
   [header]="editingCategory() ? ('admin.categories.editCategory' | translate) : ('admin.categories.newCategory' | translate)"
-  (onHide)="closeDialog()"
->
-  <div class="space-y-4 p-2">
-    <div>
-      <label class="block text-secondary text-sm mb-1">{{ 'admin.categories.nameLabel' | translate }}</label>
+  (onHide)="closeDialog()">
+
+  <div class="dialog-form">
+    <label>
+      <span>{{ 'admin.categories.nameLabel' | translate }}</span>
       <input
         pInputText
         [(ngModel)]="form.name"
-        class="w-full"
-        [placeholder]="'admin.categories.namePlaceholder' | translate"
-      />
-    </div>
+        [placeholder]="'admin.categories.namePlaceholder' | translate" />
+    </label>
 
-    <div>
-      <label class="block text-secondary text-sm mb-1">{{ 'admin.categories.descriptionLabel' | translate }}</label>
+    <label>
+      <span>{{ 'admin.categories.descriptionLabel' | translate }}</span>
       <textarea
         pInputTextarea
         [(ngModel)]="form.description"
-        [rows]="3"
-        class="w-full"
-        [placeholder]="'admin.categories.descriptionPlaceholder' | translate"
-      ></textarea>
-    </div>
+        [rows]="4"
+        [placeholder]="'admin.categories.descriptionPlaceholder' | translate">
+      </textarea>
+    </label>
 
-    <div>
-      <label class="block text-secondary text-sm mb-1">{{ 'admin.categories.orderLabel' | translate }}</label>
+    <label>
+      <span>{{ 'admin.categories.orderLabel' | translate }}</span>
       <input
         pInputText
         type="number"
         [(ngModel)]="form.displayOrder"
-        class="w-full"
-        min="0"
-      />
-    </div>
+        min="0" />
+    </label>
 
-    <div class="flex items-center gap-3">
+    <div class="visibility-row">
       <p-toggleButton
         [(ngModel)]="form.isActive"
         [onLabel]="'admin.categories.active' | translate"
         [offLabel]="'admin.categories.inactive' | translate"
         onIcon="pi pi-check"
-        offIcon="pi pi-times"
-      />
-      <span class="text-secondary text-sm">
+        offIcon="pi pi-times" />
+      <span>
         {{ form.isActive ? ('admin.categories.visibleOnSite' | translate) : ('admin.categories.hiddenOnSite' | translate) }}
       </span>
     </div>
   </div>
 
   <ng-template pTemplate="footer">
-    <div class="flex justify-end gap-3 pt-4">
-      <button pButton class="btn-outline" (click)="closeDialog()">
+    <div class="dialog-actions">
+      <button type="button" class="secondary-button" (click)="closeDialog()">
         {{ 'common.cancel' | translate }}
       </button>
-      <button
-        pButton
-        class="btn-primary"
-        [loading]="saving()"
-        (click)="saveCategory()"
-      >
-        <i class="pi pi-save mr-2"></i>
+      <button type="button" class="primary-button" [disabled]="saving()" (click)="saveCategory()">
+        @if (saving()) { <i class="pi pi-spinner pi-spin"></i> } @else { <i class="pi pi-save"></i> }
         {{ editingCategory() ? ('common.update' | translate) : ('common.create' | translate) }}
       </button>
     </div>
   </ng-template>
 </p-dialog>
 
-<p-confirmDialog
-  styleClass="custom-confirm-dialog"
-  [style]="{width: '400px'}"
-/>
+<p-confirmDialog [style]="{width:'400px',maxWidth:'calc(100vw - 32px)'}" />
