@@ -19,6 +19,37 @@
   <ds-card padding="lg">
     <div class="section-heading">
       <div>
+        <span class="eyebrow">Encarregado / contato</span>
+        <h2>Canal de privacidade do workspace</h2>
+        <p>Este contato é mostrado ao titular na área de privacidade.</p>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <ds-form-field label="Nome do contato">
+        <input type="text" [(ngModel)]="privacyContact.name" />
+      </ds-form-field>
+      <ds-form-field label="E-mail">
+        <input type="email" [(ngModel)]="privacyContact.email" />
+      </ds-form-field>
+      <ds-form-field label="URL externa (opcional)">
+        <input type="url" [(ngModel)]="privacyContact.url" />
+      </ds-form-field>
+    </div>
+
+    <div class="actions">
+      <ds-button
+        icon="pi-save"
+        [loading]="savingContact()"
+        (click)="saveContact()">
+        Salvar canal
+      </ds-button>
+    </div>
+  </ds-card>
+
+  <ds-card padding="lg">
+    <div class="section-heading">
+      <div>
         <span class="eyebrow">Titulares</span>
         <h2>Solicitações de privacidade</h2>
       </div>
@@ -193,9 +224,25 @@
               <strong>{{ incident.title }}</strong>
               <small>Ciência: {{ formatDate(incident.controllerAwareAt) }}</small>
             </div>
-            <div class="badges">
-              <ds-badge [tone]="severityTone(incident.severity)">{{ incident.severity }}</ds-badge>
-              <ds-badge [tone]="statusTone(incident.status)">{{ incident.status }}</ds-badge>
+            <div class="incident-controls">
+              <div class="badges">
+                <ds-badge [tone]="severityTone(incident.severity)">{{ incident.severity }}</ds-badge>
+                <ds-badge [tone]="statusTone(incident.status)">{{ incident.status }}</ds-badge>
+              </div>
+              <select [(ngModel)]="incidentStatuses[incident.id]">
+                <option value="OPEN">Aberto</option>
+                <option value="INVESTIGATING">Investigando</option>
+                <option value="CONTAINED">Contido</option>
+                <option value="RESOLVED">Resolvido</option>
+                <option value="CLOSED">Encerrado</option>
+              </select>
+              <ds-button
+                size="sm"
+                variant="secondary"
+                [loading]="updatingIncidentId() === incident.id"
+                (click)="updateIncident(incident)">
+                Atualizar
+              </ds-button>
             </div>
           </article>
         }
