@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import { stripeHelpers } from '../../config/stripe';
 import { ordersService } from '../orders/orders.service';
 import { billingService } from '../billing/billing.service';
+import { auditService } from '../privacy/audit.service';
 
 const router = Router();
 
@@ -151,6 +152,31 @@ router.post(
 
         default:
           console.log(`Unhandled Stripe event type: ${event.type}`);
+      }
+
+      if (
+        tenantId &&
+        (
+          event.type.startsWith('customer.subscription.') ||
+          event.type.startsWith('invoice.') ||
+          (
+            event.type === 'checkout.session.completed' &&
+            (event.data.object as Stripe.Checkout.Session).metadata?.billingKind === 'saas'
+          )
+        )
+      ) {
+        await auditService.record({
+          tenantId,
+          actorUserId: null,
+          action: `billing.webhook.${event.type}`,
+          resourceType: 'SaasSubscription',
+          method: 'POST',
+          path: '/webhooks/stripe',
+          statusCode: 200,
+          outcome: 'SUCCESS',
+          requestId: event.id,
+          metadata: { eventType: event.type },
+        });
       }
 
       await billingService.markStripeEventProcessed(event.id, tenantId);
