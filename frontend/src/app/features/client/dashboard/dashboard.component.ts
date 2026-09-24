@@ -1,17 +1,18 @@
-// apps/frontend/src/app/features/client/dashboard/dashboard.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
 import { SkeletonModule } from 'primeng/skeleton';
 
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
+import {
+  DsBadgeComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsPageHeaderComponent,
+} from '../../../shared/design-system';
 
 interface DashboardStats {
   totalOrders: number;
@@ -33,10 +34,10 @@ interface RecentReading {
   title: string;
   status: string;
   publishedAt?: string;
-  product?: {
-    name: string;
-  };
+  product?: { name: string };
 }
+
+type DashboardTone = 'neutral' | 'brand' | 'success' | 'warning' | 'error' | 'info';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,10 +46,12 @@ interface RecentReading {
     CommonModule,
     RouterLink,
     TranslateModule,
-    ButtonModule,
-    CardModule,
     SkeletonModule,
     CurrencyBrlPipe,
+    DsBadgeComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsPageHeaderComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
@@ -64,42 +67,30 @@ export class DashboardComponent implements OnInit {
   recentReadings = signal<RecentReading[]>([]);
   loading = signal(true);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadDashboard();
   }
 
-  loadDashboard() {
+  loadDashboard(): void {
     this.loading.set(true);
 
-    // Load stats
     this.api.get<{ data: DashboardStats }>('/users/me/stats').subscribe({
-      next: (response) => {
-        this.stats.set(response.data);
-      },
-      error: () => {
-        // Use default values
-        this.stats.set({
-          totalOrders: 0,
-          pendingReadings: 0,
-          completedReadings: 0,
-          upcomingAppointments: 0,
-        });
-      },
+      next: (response) => this.stats.set(response.data),
+      error: () => this.stats.set({
+        totalOrders: 0,
+        pendingReadings: 0,
+        completedReadings: 0,
+        upcomingAppointments: 0,
+      }),
     });
 
-    // Load recent orders
     this.api
       .get<{ data: RecentOrder[] }>('/users/me/orders', { params: { limit: 5 } })
       .subscribe({
-        next: (response) => {
-          this.recentOrders.set(response.data);
-        },
-        error: () => {
-          this.recentOrders.set([]);
-        },
+        next: (response) => this.recentOrders.set(response.data),
+        error: () => this.recentOrders.set([]),
       });
 
-    // Load recent readings
     this.api
       .get<{ data: RecentReading[] }>('/users/me/readings', { params: { limit: 5 } })
       .subscribe({
@@ -116,14 +107,12 @@ export class DashboardComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     const labels: Record<string, string> = {
-      // Order status
       PENDING: this.translate.instant('client.orders.statusPending'),
       PAID: this.translate.instant('client.orders.statusPaid'),
       PROCESSING: this.translate.instant('client.orders.statusProcessing'),
       COMPLETED: this.translate.instant('client.orders.statusCompleted'),
       CANCELLED: this.translate.instant('client.orders.statusCancelled'),
       REFUNDED: this.translate.instant('client.orders.statusRefunded'),
-      // Reading status
       WAITING: this.translate.instant('client.readings.statusWaiting'),
       IN_PROGRESS: this.translate.instant('client.readings.statusInProgress'),
       PUBLISHED: this.translate.instant('client.readings.statusPublished'),
@@ -131,19 +120,19 @@ export class DashboardComponent implements OnInit {
     return labels[status] || status;
   }
 
-  getStatusClass(status: string): string {
-    const classes: Record<string, string> = {
-      PENDING: 'bg-yellow-500/20 text-yellow-400',
-      WAITING: 'bg-yellow-500/20 text-yellow-400',
-      PAID: 'bg-primary-500/20 text-primary-400',
-      PROCESSING: 'bg-primary-500/20 text-primary-400',
-      IN_PROGRESS: 'bg-primary-500/20 text-primary-400',
-      COMPLETED: 'bg-green-500/20 text-green-400',
-      PUBLISHED: 'bg-green-500/20 text-green-400',
-      CANCELLED: 'bg-red-500/20 text-red-400',
-      REFUNDED: 'bg-red-500/20 text-red-400',
+  getStatusTone(status: string): DashboardTone {
+    const tones: Record<string, DashboardTone> = {
+      PENDING: 'warning',
+      WAITING: 'warning',
+      PAID: 'info',
+      PROCESSING: 'brand',
+      IN_PROGRESS: 'brand',
+      COMPLETED: 'success',
+      PUBLISHED: 'success',
+      CANCELLED: 'error',
+      REFUNDED: 'neutral',
     };
-    return classes[status] || 'bg-gray-500/20 text-gray-400';
+    return tones[status] || 'neutral';
   }
 
   formatDate(dateString: string): string {
