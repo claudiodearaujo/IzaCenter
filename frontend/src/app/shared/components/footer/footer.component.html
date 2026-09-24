@@ -1,20 +1,23 @@
-<footer class="bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 text-white">
-  <div class="container mx-auto px-4 py-12">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <div class="space-y-4">
-        <div class="flex items-center gap-2">
-          <img [src]="publicSettings().logoUrl || 'assets/images/logo.jpeg'" [alt]="publicSettings().siteName"
-            class="h-10 w-10 rounded-full object-cover">
-          <span class="text-2xl font-serif font-semibold">{{ publicSettings().siteName }}</span>
+<footer class="public-footer">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand__identity">
+          <img
+            [src]="publicSettings().logoUrl || 'assets/images/logo.jpeg'"
+            [alt]="publicSettings().siteName" />
+          <span>{{ publicSettings().siteName }}</span>
         </div>
-        <p class="text-primary-200 text-sm leading-relaxed">
-          {{ publicSettings().content.footerText || publicSettings().siteDescription }}
-        </p>
+
+        <p>{{ publicSettings().content.footerText || publicSettings().siteDescription }}</p>
+
         @if (socialLinks().length) {
-          <div class="flex gap-4">
+          <div class="social-links">
             @for (social of socialLinks(); track social.label) {
-              <a [href]="social.url" target="_blank" rel="noopener noreferrer"
-                class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+              <a
+                [href]="social.url"
+                target="_blank"
+                rel="noopener noreferrer"
                 [attr.aria-label]="social.label">
                 <i class="pi" [class]="social.icon"></i>
               </a>
@@ -22,46 +25,62 @@
           </div>
         }
       </div>
-      <div>
-        <h3 class="text-lg font-serif font-semibold mb-4">{{ 'footer.quickLinks' | translate }}</h3>
-        <ul class="space-y-2">
+
+      <div class="footer-column">
+        <h2>{{ 'footer.quickLinks' | translate }}</h2>
+        <nav>
           @for (link of quickLinks; track link.route) {
             @if (shouldShowLink(link)) {
-              <li><a [routerLink]="link.route" class="text-primary-200 hover:text-white transition-colors text-sm">{{ link.labelKey | translate }}</a></li>
+              <a [routerLink]="link.route">{{ link.labelKey | translate }}</a>
             }
           }
-        </ul>
+        </nav>
       </div>
-      <div>
-        <h3 class="text-lg font-serif font-semibold mb-4">{{ 'footer.legal' | translate }}</h3>
-        <ul class="space-y-2">
+
+      <div class="footer-column">
+        <h2>{{ 'footer.legal' | translate }}</h2>
+        <nav>
           @for (link of legalLinks; track link.route) {
-            <li><a [routerLink]="link.route" class="text-primary-200 hover:text-white transition-colors text-sm">{{ link.labelKey | translate }}</a></li>
+            <a [routerLink]="link.route">{{ link.labelKey | translate }}</a>
           }
-        </ul>
+        </nav>
       </div>
-      <div>
-        <h3 class="text-lg font-serif font-semibold mb-4">{{ 'footer.contact' | translate }}</h3>
-        <div class="space-y-3 text-sm text-primary-200">
+
+      <div class="footer-column">
+        <h2>{{ 'footer.contact' | translate }}</h2>
+        <div class="contact-list">
           @if (publicSettings().professional.location || publicSettings().contact.address) {
-            <p class="flex items-center gap-2"><i class="pi pi-map-marker"></i>{{ publicSettings().professional.location || publicSettings().contact.address }}</p>
+            <span>
+              <i class="pi pi-map-marker"></i>
+              {{ publicSettings().professional.location || publicSettings().contact.address }}
+            </span>
           }
           @if (publicSettings().contact.email) {
-            <p class="flex items-center gap-2"><i class="pi pi-envelope"></i>{{ publicSettings().contact.email }}</p>
+            <a [href]="'mailto:' + publicSettings().contact.email">
+              <i class="pi pi-envelope"></i>
+              {{ publicSettings().contact.email }}
+            </a>
           }
           @if (publicSettings().contact.phone) {
-            <p class="flex items-center gap-2"><i class="pi pi-phone"></i>{{ publicSettings().contact.phone }}</p>
+            <span>
+              <i class="pi pi-phone"></i>
+              {{ publicSettings().contact.phone }}
+            </span>
           }
           @if (openHoursText) {
-            <p class="flex items-center gap-2"><i class="pi pi-clock"></i>{{ openHoursText }}</p>
+            <span>
+              <i class="pi pi-clock"></i>
+              {{ openHoursText }}
+            </span>
           }
         </div>
       </div>
     </div>
-    <div class="border-t border-white/10 mt-10 pt-6 text-center text-sm text-primary-300">
+
+    <div class="footer-bottom">
       <p>&copy; {{ currentYear }} {{ publicSettings().siteName }}. {{ 'footer.rightsReserved' | translate }}</p>
       @if (publicSettings().content.footerDisclaimer) {
-        <p class="mt-2 text-xs">{{ publicSettings().content.footerDisclaimer }}</p>
+        <p class="footer-disclaimer">{{ publicSettings().content.footerDisclaimer }}</p>
       }
     </div>
   </div>
