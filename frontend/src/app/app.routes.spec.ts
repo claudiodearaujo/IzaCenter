@@ -38,4 +38,24 @@ describe('public root route', () => {
     expect(billing).toBeDefined();
     expect(billing?.loadComponent).toBeDefined();
   });
+
+  it('should expose client privacy inside the client route protected by the client guard', () => {
+    const client = routes.find((route) => route.path === 'cliente');
+    const privacy = client?.children?.find((route) => route.path === 'privacidade');
+
+    expect(client).toBeDefined();
+    expect(client?.canActivate).toBeDefined();
+    expect(privacy).toBeDefined();
+    expect(privacy?.loadComponent).toBeDefined();
+  });
+
+  it('should expose admin privacy inside the admin route protected by the admin guard', () => {
+    const admin = routes.find((route) => route.path === 'admin');
+    const privacy = admin?.children?.find((route) => route.path === 'privacidade');
+
+    expect(admin).toBeDefined();
+    expect(admin?.canActivate).toBeDefined();
+    expect(privacy).toBeDefined();
+    expect(privacy?.loadComponent).toBeDefined();
+  });
 });
