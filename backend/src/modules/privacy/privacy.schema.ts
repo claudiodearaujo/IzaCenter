@@ -76,3 +76,9 @@ export const listAuditSchema = z.object({
 export const privacyIdParamsSchema = z.object({
   id: z.string().uuid(),
 });
+
+export const updatePrivacyContactSchema = z.object({
+  name: z.string().trim().min(2).max(200),
+  email: z.string().trim().email().max(320),
+  url: z.union([z.string().trim().url().max(500), z.literal('')]).optional(),
+});
