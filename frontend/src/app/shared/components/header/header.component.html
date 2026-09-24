@@ -1,187 +1,140 @@
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
-  <nav class="container mx-auto px-4 py-3">
-    <div class="flex items-center justify-between">
-      <!-- Logo -->
-      <a routerLink="/" class="flex items-center gap-2" (click)="closeMenu()">
-        <img [src]="publicSettings().logoUrl || 'assets/images/logo.jpeg'" [alt]="publicSettings().siteName" class="h-10 w-10 rounded-full object-cover">
-        <span class="text-xl font-serif font-semibold text-primary-800">{{ publicSettings().siteName }}</span>
-      </a>
+<header class="public-header">
+  <nav class="public-nav">
+    <a routerLink="/" class="brand" (click)="closeMenu()">
+      <img
+        [src]="publicSettings().logoUrl || 'assets/images/logo.jpeg'"
+        [alt]="publicSettings().siteName" />
+      <span>{{ publicSettings().siteName }}</span>
+    </a>
 
-      <!-- Desktop Navigation -->
-      <div class="hidden lg:flex items-center gap-6">
-        <a routerLink="/" routerLinkActive="text-primary-700" [routerLinkActiveOptions]="{exact: true}"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium">
-          {{ 'nav.home' | translate }}
-        </a>
-        <a routerLink="/sobre" routerLinkActive="text-primary-700"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium">
-          {{ 'nav.about' | translate }}
-        </a>
-        <a routerLink="/servicos" routerLinkActive="text-primary-700"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium">
-          {{ 'nav.services' | translate }}
-        </a>
-        <a routerLink="/loja" routerLinkActive="text-primary-700"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium">
+    <div class="desktop-nav">
+      <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}">
+        {{ 'nav.home' | translate }}
+      </a>
+      <a routerLink="/sobre" routerLinkActive="is-active">
+        {{ 'nav.about' | translate }}
+      </a>
+      <a routerLink="/servicos" routerLinkActive="is-active">
+        {{ 'nav.services' | translate }}
+      </a>
+      @if (publicSettings().enableShop) {
+        <a routerLink="/loja" routerLinkActive="is-active">
           {{ 'nav.shop' | translate }}
         </a>
-        <a routerLink="/depoimentos" routerLinkActive="text-primary-700"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium">
-          {{ 'nav.testimonials' | translate }}
-        </a>
-        <a routerLink="/contato" routerLinkActive="text-primary-700"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium">
-          {{ 'nav.contact' | translate }}
-        </a>
+      }
+      <a routerLink="/depoimentos" routerLinkActive="is-active">
+        {{ 'nav.testimonials' | translate }}
+      </a>
+      <a routerLink="/contato" routerLinkActive="is-active">
+        {{ 'nav.contact' | translate }}
+      </a>
+    </div>
+
+    <div class="desktop-actions">
+      <app-language-selector />
+
+      <div class="search-shell">
+        @if (isSearchOpen()) {
+          <input
+            type="search"
+            [(ngModel)]="globalSearchTerm"
+            [placeholder]="'shop.productList.searchPlaceholder' | translate"
+            (keyup.enter)="onGlobalSearch()"
+            (keyup.escape)="toggleSearch()"
+            autofocus />
+        }
+        <button
+          type="button"
+          class="icon-button"
+          (click)="isSearchOpen() ? onGlobalSearch() : toggleSearch()"
+          [attr.aria-label]="'nav.search' | translate">
+          <i class="pi pi-search"></i>
+        </button>
       </div>
 
-      <!-- Desktop Actions -->
-      <div class="hidden lg:flex items-center gap-4">
-        <!-- Language Selector -->
+      @if (publicSettings().enableShop) {
+        <a routerLink="/carrinho" class="icon-button cart-button" [attr.aria-label]="'nav.cart' | translate">
+          <i class="pi pi-shopping-bag"></i>
+          @if (cartItemCount() > 0) {
+            <span class="cart-count">{{ cartItemCount() }}</span>
+          }
+        </a>
+      }
+
+      @if (isAuthenticated()) {
+        <app-notification-bell />
+
+        <a [routerLink]="isAdmin() ? '/admin' : '/cliente'" class="account-link">
+          <i class="pi pi-user"></i>
+          {{ isAdmin() ? ('nav.adminPanel' | translate) : ('nav.myArea' | translate) }}
+        </a>
+
+        <button type="button" class="logout-button" (click)="logout()">
+          {{ 'nav.logout' | translate }}
+        </button>
+      } @else {
+        <a routerLink="/auth/login" class="auth-link auth-link--secondary">
+          {{ 'nav.login' | translate }}
+        </a>
+        <a routerLink="/auth/cadastro" class="auth-link auth-link--primary">
+          {{ 'nav.register' | translate }}
+        </a>
+      }
+    </div>
+
+    <button
+      type="button"
+      class="mobile-toggle"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="isMenuOpen()"
+      aria-label="Abrir menu">
+      <i class="pi" [class]="isMenuOpen() ? 'pi-times' : 'pi-bars'"></i>
+    </button>
+  </nav>
+
+  @if (isMenuOpen()) {
+    <div class="mobile-nav">
+      <div class="mobile-nav__links">
+        <a routerLink="/" (click)="closeMenu()">{{ 'nav.home' | translate }}</a>
+        <a routerLink="/sobre" (click)="closeMenu()">{{ 'nav.about' | translate }}</a>
+        <a routerLink="/servicos" (click)="closeMenu()">{{ 'nav.services' | translate }}</a>
+        @if (publicSettings().enableShop) {
+          <a routerLink="/loja" (click)="closeMenu()">{{ 'nav.shop' | translate }}</a>
+        }
+        <a routerLink="/depoimentos" (click)="closeMenu()">{{ 'nav.testimonials' | translate }}</a>
+        <a routerLink="/contato" (click)="closeMenu()">{{ 'nav.contact' | translate }}</a>
+      </div>
+
+      <div class="mobile-nav__tools">
         <app-language-selector />
 
-        <!-- Global Search -->
-        <div class="relative flex items-center">
-          @if (isSearchOpen()) {
-            <input
-              type="text"
-              class="border border-neutral-200 rounded-full px-4 py-1.5 text-sm w-52 outline-none focus:border-primary-400"
-              [placeholder]="'shop.productList.searchPlaceholder' | translate"
-              [(ngModel)]="globalSearchTerm"
-              (keyup.enter)="onGlobalSearch()"
-              (keyup.escape)="toggleSearch()"
-              autofocus
-            />
-          }
-          <button
-            (click)="isSearchOpen() ? onGlobalSearch() : toggleSearch()"
-            class="p-2 text-neutral-700 hover:text-primary-700 transition-colors"
-            [attr.aria-label]="'nav.search' | translate"
-            type="button"
-          >
-            <i class="pi pi-search text-lg"></i>
-          </button>
-        </div>
-
-        <!-- Cart -->
-        <a routerLink="/carrinho"
-          class="relative p-2 text-neutral-700 hover:text-primary-700 transition-colors text-xl">
-          🛒
-          @if (cartItemCount() > 0) {
-          <span
-            class="absolute -top-1 -right-1 bg-primary-700 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-            {{ cartItemCount() }}
-          </span>
-          }
-        </a>
-
-        @if (isAuthenticated()) {
-        <!-- User Menu -->
-        <div class="flex items-center gap-3">
-          <!-- In-App Notifications -->
-          <app-notification-bell />
-          @if (isAdmin()) {
-          <a routerLink="/admin" class="text-sm font-medium text-primary-700 hover:text-primary-800">
-            {{ 'nav.adminPanel' | translate }}
+        @if (publicSettings().enableShop) {
+          <a routerLink="/carrinho" (click)="closeMenu()">
+            <i class="pi pi-shopping-bag"></i>
+            {{ 'nav.cart' | translate }}
+            @if (cartItemCount() > 0) {
+              <span class="inline-count">{{ cartItemCount() }}</span>
+            }
           </a>
-          } @else {
-          <a routerLink="/cliente" class="text-sm font-medium text-primary-700 hover:text-primary-800">
-            {{ 'nav.myArea' | translate }}
-          </a>
-          }
-          <button (click)="logout()" class="text-sm text-neutral-600 hover:text-neutral-800">
-            {{ 'nav.logout' | translate }}
-          </button>
-        </div>
-        } @else {
-        <a routerLink="/auth/login">
-          <p-button [label]="'nav.login' | translate" [outlined]="true" size="small" />
-        </a>
-        <a routerLink="/auth/cadastro">
-          <p-button [label]="'nav.register' | translate" size="small" />
-        </a>
         }
       </div>
 
-      <!-- Mobile Menu Button -->
-      <button class="lg:hidden p-2 text-neutral-700 text-xl" (click)="toggleMenu()">
-        <span *ngIf="!isMenuOpen()">☰</span>
-        <span *ngIf="isMenuOpen()">✕</span>
-      </button>
-    </div>
-
-    <!-- Mobile Navigation -->
-    @if (isMenuOpen()) {
-    <div class="lg:hidden mt-4 pb-4 border-t border-neutral-200 pt-4">
-      <div class="flex flex-col gap-3">
-        <a routerLink="/" (click)="closeMenu()"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium py-2">
-          {{ 'nav.home' | translate }}
-        </a>
-        <a routerLink="/sobre" (click)="closeMenu()"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium py-2">
-          {{ 'nav.about' | translate }}
-        </a>
-        <a routerLink="/servicos" (click)="closeMenu()"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium py-2">
-          {{ 'nav.services' | translate }}
-        </a>
-        <a routerLink="/loja" (click)="closeMenu()"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium py-2">
-          {{ 'nav.shop' | translate }}
-        </a>
-        <a routerLink="/depoimentos" (click)="closeMenu()"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium py-2">
-          {{ 'nav.testimonials' | translate }}
-        </a>
-        <a routerLink="/contato" (click)="closeMenu()"
-          class="text-neutral-700 hover:text-primary-700 transition-colors font-medium py-2">
-          {{ 'nav.contact' | translate }}
-        </a>
-
-        <div class="border-t border-neutral-200 pt-3 mt-2">
-          <!-- Language Selector Mobile -->
-          <div class="py-2">
-            <app-language-selector />
-          </div>
-
-          <a routerLink="/carrinho" (click)="closeMenu()"
-            class="flex items-center gap-2 text-neutral-700 hover:text-primary-700 transition-colors font-medium py-2">
-            🛒
-            {{ 'nav.cart' | translate }}
-            @if (cartItemCount() > 0) {
-            <span class="bg-primary-700 text-white text-xs px-2 py-0.5 rounded-full">
-              {{ cartItemCount() }}
-            </span>
-            }
+      <div class="mobile-nav__account">
+        @if (isAuthenticated()) {
+          <a [routerLink]="isAdmin() ? '/admin' : '/cliente'" (click)="closeMenu()">
+            <i class="pi pi-user"></i>
+            {{ isAdmin() ? ('nav.adminPanel' | translate) : ('nav.myArea' | translate) }}
           </a>
-        </div>
-
-        <div class="border-t border-neutral-200 pt-3 mt-2 flex flex-col gap-2">
-          @if (isAuthenticated()) {
-          @if (isAdmin()) {
-          <a routerLink="/admin" (click)="closeMenu()" class="text-primary-700 font-medium py-2">
-            {{ 'nav.adminPanel' | translate }}
+          <button type="button" (click)="logout()">{{ 'nav.logout' | translate }}</button>
+        } @else {
+          <a routerLink="/auth/login" class="auth-link auth-link--secondary" (click)="closeMenu()">
+            {{ 'nav.login' | translate }}
           </a>
-          } @else {
-          <a routerLink="/cliente" (click)="closeMenu()" class="text-primary-700 font-medium py-2">
-            {{ 'nav.myArea' | translate }}
+          <a routerLink="/auth/cadastro" class="auth-link auth-link--primary" (click)="closeMenu()">
+            {{ 'nav.register' | translate }}
           </a>
-          }
-          <button (click)="logout()" class="text-left text-neutral-600 py-2">
-            {{ 'nav.logout' | translate }}
-          </button>
-          } @else {
-          <a routerLink="/auth/login" (click)="closeMenu()">
-            <p-button [label]="'nav.login' | translate" [outlined]="true" styleClass="w-full" />
-          </a>
-          <a routerLink="/auth/cadastro" (click)="closeMenu()">
-            <p-button [label]="'nav.register' | translate" styleClass="w-full" />
-          </a>
-          }
-        </div>
+        }
       </div>
     </div>
-    }
-  </nav>
+  }
 </header>

@@ -2,9 +2,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { BadgeModule } from 'primeng/badge';
-import { MenubarModule } from 'primeng/menubar';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
@@ -20,15 +17,12 @@ import { DEFAULT_PUBLIC_SETTINGS, PublicSettingsStore } from '../../../core/serv
     FormsModule,
     RouterLink,
     RouterLinkActive,
-    ButtonModule,
-    BadgeModule,
-    MenubarModule,
     TranslateModule,
     LanguageSelectorComponent,
-    NotificationBellComponent
+    NotificationBellComponent,
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
 })
 export class HeaderComponent implements OnInit {
   private authService = inject(AuthService);
@@ -51,7 +45,7 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleMenu(): void {
-    this.isMenuOpen.update(value => !value);
+    this.isMenuOpen.update((value) => !value);
   }
 
   closeMenu(): void {
@@ -59,7 +53,7 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleSearch(): void {
-    this.isSearchOpen.update(v => !v);
+    this.isSearchOpen.update((value) => !value);
     if (!this.isSearchOpen()) {
       this.globalSearchTerm.set('');
     }
