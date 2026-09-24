@@ -4,7 +4,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
-import morgan from 'morgan';
+import { httpLogger } from './middlewares/http-logger.middleware';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 
@@ -78,12 +78,8 @@ app.use(cookieParser());
 // Compression
 app.use(compression());
 
-// Logging
-if (env.isDevelopment) {
-  app.use(morgan('dev'));
-} else {
-  app.use(morgan('combined'));
-}
+// Allowlisted operational metadata only, in every environment.
+app.use(httpLogger);
 
 // Rate limiting
 app.use(generalLimiter);

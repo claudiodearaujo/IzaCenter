@@ -65,4 +65,4 @@ O arquivo local de ambiente do backend não deve ser versionado. Credenciais que
 
 Roadmap: [ROADMAP-POST-SAAS-FOUNDATION.md](ROADMAP-POST-SAAS-FOUNDATION.md)
 
-Próxima prioridade: **Security Hardening v1**.
+Prioridade em andamento: [Security Hardening v1](PRD-SECURITY-HARDENING-V1.md) — baseline e minimização dos access logs implementados; demais gates pendentes.

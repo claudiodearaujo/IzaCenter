@@ -20,6 +20,8 @@ Levar o Therapist Platform de uma fundação SaaS funcional para um produto oper
 
 ### P0 — Security Hardening v1
 
+Status: 🟡 em andamento. [PRD](PRD-SECURITY-HARDENING-V1.md) e [baseline inicial](SECURITY-BASELINE-V1.md).
+
 Objetivo: reduzir risco técnico antes de abrir produção ou cobrança real.
 
 Escopo:
