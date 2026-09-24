@@ -9,6 +9,7 @@ import {
   listPrivacyRequestsSchema,
   privacyIdParamsSchema,
   updateIncidentSchema,
+  updatePrivacyContactSchema,
   updatePrivacyRequestSchema,
   updateRetentionPolicySchema,
 } from './privacy.schema';
@@ -25,6 +26,13 @@ router.post(
   privacyController.createRequest.bind(privacyController)
 );
 router.get('/privacy/requests/me', privacyController.listMine.bind(privacyController));
+
+router.patch(
+  '/admin/privacy/contact',
+  requireAdmin,
+  validate(updatePrivacyContactSchema),
+  privacyController.updateContact.bind(privacyController)
+);
 
 router.get(
   '/admin/privacy/requests',
