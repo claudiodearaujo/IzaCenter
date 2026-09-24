@@ -154,7 +154,6 @@ export class AuthService {
       next: (response) => {
         if (response.data) {
           this.currentUserSignal.set(response.data);
-          this.storage.set('user', response.data);
         }
       },
       error: () => {

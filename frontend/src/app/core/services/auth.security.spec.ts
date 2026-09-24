@@ -25,6 +25,12 @@ describe('Auth security contract', () => {
     expect(storage.set).not.toHaveBeenCalled();
     expect(storage.remove).toHaveBeenCalledWith('accessToken');
   });
+  it('refreshes the profile without persisting personal data', () => {
+    api.get.and.returnValue(of({ data: data.user }));
+    service.refreshProfile();
+    expect(service.currentUser()).toEqual(data.user);
+    expect(storage.set).not.toHaveBeenCalled();
+  });
   it('uses canonical refresh endpoint and coalesces concurrent refreshes', async () => {
     api.post.and.returnValue(of({ success: true, data }));
     const first = firstValueFrom(service.refreshToken());
