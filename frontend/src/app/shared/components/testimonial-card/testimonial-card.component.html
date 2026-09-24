@@ -1,39 +1,30 @@
-<div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-  <!-- Quote Icon -->
-  <div class="text-primary-300 mb-4">
-    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-    </svg>
-  </div>
+<article class="testimonial-card">
+  <span class="quote-icon" aria-hidden="true">
+    <i class="pi pi-quote-left"></i>
+  </span>
 
-  <!-- Content -->
-  <p class="text-neutral-700 leading-relaxed mb-6 italic">
-    "{{ testimonial.content }}"
-  </p>
+  <p class="testimonial-content">“{{ testimonial.content }}”</p>
 
-  <!-- Rating -->
   @if (testimonial.rating) {
-    <div class="flex gap-1 mb-4">
+    <div class="rating" [attr.aria-label]="testimonial.rating + ' de 5 estrelas'">
       @for (star of stars; track $index) {
-        <i class="pi pi-star-fill text-accent-gold text-sm"></i>
+        <i class="pi pi-star-fill"></i>
       }
     </div>
   }
 
-  <!-- Author -->
-  <div class="flex items-center gap-3">
+  <footer class="testimonial-author">
     @if (testimonial.clientAvatarUrl) {
-      <img [src]="testimonial.clientAvatarUrl" 
-           [alt]="testimonial.clientName"
-           class="w-12 h-12 rounded-full object-cover">
+      <img
+        [src]="testimonial.clientAvatarUrl"
+        [alt]="testimonial.clientName" />
     } @else {
-      <div class="w-12 h-12 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-semibold">
-        {{ initials }}
-      </div>
+      <span class="avatar-placeholder">{{ initials }}</span>
     }
+
     <div>
-      <p class="font-semibold text-neutral-800">{{ testimonial.clientName }}</p>
-      <p class="text-sm text-neutral-500">Cliente</p>
+      <strong>{{ testimonial.clientName }}</strong>
+      <small>Cliente</small>
     </div>
-  </div>
-</div>
+  </footer>
+</article>
