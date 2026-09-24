@@ -33,7 +33,8 @@ export class ClientLayoutComponent {
     { labelKey: 'client.menu.schedule', icon: 'pi-calendar-plus', route: '/cliente/agendar' },
     { labelKey: 'client.menu.appointments', icon: 'pi-calendar', route: '/cliente/agendamentos' },
     { labelKey: 'client.menu.orders', icon: 'pi-shopping-bag', route: '/cliente/pedidos' },
-    { labelKey: 'client.menu.profile', icon: 'pi-user', route: '/cliente/perfil' }
+    { labelKey: 'client.menu.profile', icon: 'pi-user', route: '/cliente/perfil' },
+    { labelKey: 'client.menu.privacy', icon: 'pi-shield', route: '/cliente/privacidade' }
   ];
 
   toggleSidebar(): void {
