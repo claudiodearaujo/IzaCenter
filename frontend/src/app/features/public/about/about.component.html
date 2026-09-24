@@ -10,9 +10,16 @@
     </div>
 
     <div class="about-hero__media">
-      <img
-        [src]="publicSettings().professional.photoUrl || publicSettings().logoUrl || 'assets/images/professional-profile.svg'"
-        [alt]="publicSettings().professional.displayName" />
+      @if (publicSettings().professional.photoUrl || publicSettings().logoUrl; as professionalImage) {
+        <img
+          [src]="professionalImage"
+          [alt]="publicSettings().professional.displayName" />
+      } @else {
+        <div class="professional-placeholder" aria-hidden="true">
+          <span><i class="pi pi-user"></i></span>
+          <small>{{ publicSettings().professional.professionalTitle || 'Profissional' }}</small>
+        </div>
+      }
     </div>
   </div>
 </section>

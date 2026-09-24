@@ -50,9 +50,16 @@
 
     <div class="hero__visual">
       <div class="hero__image-frame">
-        <img
-          [src]="professionalImage()"
-          [alt]="publicSettings().professional.displayName || publicSettings().siteName" />
+        @if (professionalImage()) {
+          <img
+            [src]="professionalImage()"
+            [alt]="publicSettings().professional.displayName || publicSettings().siteName" />
+        } @else {
+          <div class="professional-placeholder" aria-hidden="true">
+            <span><i class="pi pi-user"></i></span>
+            <small>{{ publicSettings().professional.professionalTitle || 'Profissional' }}</small>
+          </div>
+        }
       </div>
 
       <div class="hero__profile-card">
@@ -69,9 +76,16 @@
 <section class="public-section public-section--surface">
   <div class="public-container about-grid">
     <div class="about-media">
-      <img
-        [src]="professionalImage()"
-        [alt]="publicSettings().professional.displayName" />
+      @if (professionalImage()) {
+        <img
+          [src]="professionalImage()"
+          [alt]="publicSettings().professional.displayName" />
+      } @else {
+        <div class="professional-placeholder professional-placeholder--compact" aria-hidden="true">
+          <span><i class="pi pi-user"></i></span>
+          <small>{{ publicSettings().professional.professionalTitle || 'Profissional' }}</small>
+        </div>
+      }
     </div>
 
     <div class="section-copy">

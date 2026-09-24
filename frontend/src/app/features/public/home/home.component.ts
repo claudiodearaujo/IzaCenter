@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
   professionalImage = computed(() =>
     this.publicSettings().professional.photoUrl ||
     this.publicSettings().logoUrl ||
-    'assets/images/professional-profile.svg'
+    null
   );
 
   primarySpecialties = computed(() =>
