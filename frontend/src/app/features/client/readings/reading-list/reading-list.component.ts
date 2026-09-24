@@ -1,17 +1,21 @@
-// Compatibility component: UI is now Delivery-oriented while the file/class
-// names remain Reading-based until the final rename cleanup.
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 
 import { Delivery } from '../../../../core/models/delivery.model';
 import { ReadingsService } from '../../../../core/services/readings.service';
+import {
+  DsBadgeComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsPageHeaderComponent,
+} from '../../../../shared/design-system';
+
+type DeliveryTone = 'neutral' | 'brand' | 'success' | 'warning' | 'error' | 'info';
 
 @Component({
   selector: 'app-reading-list',
@@ -21,9 +25,12 @@ import { ReadingsService } from '../../../../core/services/readings.service';
     RouterLink,
     FormsModule,
     TranslateModule,
-    ButtonModule,
     SkeletonModule,
     SelectButtonModule,
+    DsBadgeComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsPageHeaderComponent,
   ],
   templateUrl: './reading-list.component.html',
   styleUrl: './reading-list.component.css',
@@ -43,11 +50,11 @@ export class ReadingListComponent implements OnInit {
     { label: this.translate.instant('client.readings.filterPublished'), value: 'PUBLISHED' },
   ];
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadReadings();
   }
 
-  loadReadings() {
+  loadReadings(): void {
     this.loading.set(true);
 
     this.deliveriesService.getMyReadings().subscribe({
@@ -67,7 +74,7 @@ export class ReadingListComponent implements OnInit {
     });
   }
 
-  onFilterChange() {
+  onFilterChange(): void {
     this.loadReadings();
   }
 
@@ -76,26 +83,19 @@ export class ReadingListComponent implements OnInit {
       PENDING: this.translate.instant('client.readings.statusWaiting'),
       IN_PROGRESS: this.translate.instant('client.readings.statusInProgress'),
       PUBLISHED: this.translate.instant('client.readings.statusPublished'),
+      ARCHIVED: 'Arquivada',
     };
     return labels[status] || status;
   }
 
-  getStatusClass(status: string): string {
-    const classes: Record<string, string> = {
-      PENDING: 'bg-yellow-500/20 text-yellow-400',
-      IN_PROGRESS: 'bg-blue-500/20 text-blue-400',
-      PUBLISHED: 'bg-green-500/20 text-green-400',
+  getStatusTone(status: string): DeliveryTone {
+    const tones: Record<string, DeliveryTone> = {
+      PENDING: 'warning',
+      IN_PROGRESS: 'brand',
+      PUBLISHED: 'success',
+      ARCHIVED: 'neutral',
     };
-    return classes[status] || 'bg-gray-500/20 text-gray-400';
-  }
-
-  getStatusIcon(status: string): string {
-    const icons: Record<string, string> = {
-      PENDING: 'pi-clock',
-      IN_PROGRESS: 'pi-spin pi-spinner',
-      PUBLISHED: 'pi-check-circle',
-    };
-    return icons[status] || 'pi-circle';
+    return tones[status] || 'neutral';
   }
 
   formatDate(date: string | Date): string {
@@ -104,5 +104,13 @@ export class ReadingListComponent implements OnInit {
       month: 'long',
       year: 'numeric',
     });
+  }
+
+  getDeliveryTitle(reading: Delivery): string {
+    return reading.title || reading.product?.name || reading.orderItem?.product?.name || 'Entrega';
+  }
+
+  getProductName(reading: Delivery): string {
+    return reading.product?.name || reading.orderItem?.product?.name || '';
   }
 }
