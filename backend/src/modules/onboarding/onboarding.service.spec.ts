@@ -73,6 +73,13 @@ describe('OnboardingService', () => {
       planKey: 'starter',
       status: 'FREE',
     } as any);
+    prismaMock.dataRetentionPolicy.create.mockResolvedValue({
+      id: 'retention-1',
+      tenantId: 'tenant-1',
+      auditRetentionDays: 730,
+      privacyRequestRetentionDays: 1825,
+      operationalLogRetentionDays: 90,
+    } as any);
     prismaMock.siteSetting.createMany.mockResolvedValue({ count: 7 });
 
     const result = await service.onboardProfessional(data);
@@ -98,6 +105,12 @@ describe('OnboardingService', () => {
         planKey: 'starter',
         status: 'FREE',
         provider: 'stripe',
+      },
+    });
+
+    expect(prismaMock.dataRetentionPolicy.create).toHaveBeenCalledWith({
+      data: {
+        tenantId: 'tenant-1',
       },
     });
 
