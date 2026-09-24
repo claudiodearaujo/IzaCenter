@@ -1,16 +1,19 @@
-// apps/frontend/src/app/features/client/orders/order-list/order-list.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 
 import { ApiService } from '../../../../core/services/api.service';
 import { CurrencyBrlPipe } from '../../../../shared/pipes/currency-brl.pipe';
+import {
+  DsBadgeComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsPageHeaderComponent,
+} from '../../../../shared/design-system';
 
 interface Order {
   id: string;
@@ -33,6 +36,8 @@ interface OrdersResponse {
   };
 }
 
+type OrderTone = 'neutral' | 'brand' | 'success' | 'warning' | 'error' | 'info';
+
 @Component({
   selector: 'app-order-list',
   standalone: true,
@@ -40,10 +45,13 @@ interface OrdersResponse {
     CommonModule,
     RouterLink,
     TranslateModule,
-    ButtonModule,
     SkeletonModule,
     PaginatorModule,
     CurrencyBrlPipe,
+    DsBadgeComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsPageHeaderComponent,
   ],
   templateUrl: './order-list.component.html',
   styleUrl: './order-list.component.css',
@@ -58,11 +66,11 @@ export class OrderListComponent implements OnInit {
   currentPage = signal(1);
   pageSize = 10;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadOrders();
   }
 
-  loadOrders() {
+  loadOrders(): void {
     this.loading.set(true);
 
     this.api
@@ -70,7 +78,7 @@ export class OrderListComponent implements OnInit {
         params: {
           page: this.currentPage(),
           limit: this.pageSize,
-        }
+        },
       })
       .subscribe({
         next: (response) => {
@@ -85,7 +93,7 @@ export class OrderListComponent implements OnInit {
       });
   }
 
-  onPageChange(event: PaginatorState) {
+  onPageChange(event: PaginatorState): void {
     this.currentPage.set((event.page || 0) + 1);
     this.loadOrders();
   }
@@ -102,16 +110,16 @@ export class OrderListComponent implements OnInit {
     return labels[status] || status;
   }
 
-  getStatusClass(status: string): string {
-    const classes: Record<string, string> = {
-      PENDING: 'bg-yellow-500/20 text-yellow-400',
-      PAID: 'bg-blue-500/20 text-blue-400',
-      PROCESSING: 'bg-primary-500/20 text-primary-400',
-      COMPLETED: 'bg-green-500/20 text-green-400',
-      CANCELLED: 'bg-red-500/20 text-red-400',
-      REFUNDED: 'bg-red-500/20 text-red-400',
+  getStatusTone(status: string): OrderTone {
+    const tones: Record<string, OrderTone> = {
+      PENDING: 'warning',
+      PAID: 'info',
+      PROCESSING: 'brand',
+      COMPLETED: 'success',
+      CANCELLED: 'error',
+      REFUNDED: 'neutral',
     };
-    return classes[status] || 'bg-gray-500/20 text-gray-400';
+    return tones[status] || 'neutral';
   }
 
   formatDate(dateString: string): string {
