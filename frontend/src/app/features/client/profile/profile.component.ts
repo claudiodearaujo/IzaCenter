@@ -1,21 +1,24 @@
-// apps/frontend/src/app/features/client/profile/profile.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { FileUploadModule, FileUploadHandlerEvent } from 'primeng/fileupload';
-import { DividerModule } from 'primeng/divider';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import {
+  DsAvatarComponent,
+  DsButtonComponent,
+  DsCardComponent,
+  DsFormFieldComponent,
+  DsPageHeaderComponent,
+} from '../../../shared/design-system';
 
 @Component({
   selector: 'app-profile',
@@ -25,12 +28,15 @@ import { NotificationService } from '../../../core/services/notification.service
     FormsModule,
     RouterLink,
     TranslateModule,
-    ButtonModule,
     InputTextModule,
     PasswordModule,
     FileUploadModule,
-    DividerModule,
     ToggleSwitchModule,
+    DsAvatarComponent,
+    DsButtonComponent,
+    DsCardComponent,
+    DsFormFieldComponent,
+    DsPageHeaderComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
@@ -43,7 +49,6 @@ export class ProfileComponent implements OnInit {
 
   user = this.authService.user;
 
-  // Profile form
   profileForm = {
     fullName: '',
     phone: '',
@@ -53,22 +58,19 @@ export class ProfileComponent implements OnInit {
   };
   savingProfile = signal(false);
 
-  // Password form
   passwordForm = {
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   };
   savingPassword = signal(false);
-
-  // Avatar
   uploadingAvatar = signal(false);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadProfile();
   }
 
-  loadProfile() {
+  loadProfile(): void {
     const currentUser = this.user();
     if (currentUser) {
       this.profileForm = {
@@ -83,9 +85,13 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  saveProfile() {
+  saveProfile(): void {
     if (!this.profileForm.fullName.trim()) {
-      this.notification.warning(this.translate.instant('client.profile.fullName') + ' ' + this.translate.instant('client.profile.required'));
+      this.notification.warning(
+        this.translate.instant('client.profile.fullName') +
+          ' ' +
+          this.translate.instant('client.profile.required')
+      );
       return;
     }
 
@@ -98,13 +104,15 @@ export class ProfileComponent implements OnInit {
         this.savingProfile.set(false);
       },
       error: (err) => {
-        this.notification.error(err.error?.message || this.translate.instant('client.profile.profileError'));
+        this.notification.error(
+          err.error?.message || this.translate.instant('client.profile.profileError')
+        );
         this.savingProfile.set(false);
       },
     });
   }
 
-  changePassword() {
+  changePassword(): void {
     if (
       !this.passwordForm.currentPassword ||
       !this.passwordForm.newPassword ||
@@ -142,14 +150,16 @@ export class ProfileComponent implements OnInit {
           this.savingPassword.set(false);
         },
         error: (err) => {
-          this.notification.error(err.error?.message || this.translate.instant('client.profile.passwordError'));
+          this.notification.error(
+            err.error?.message || this.translate.instant('client.profile.passwordError')
+          );
           this.savingPassword.set(false);
         },
       });
   }
 
-  onAvatarUpload(event: FileUploadHandlerEvent) {
-    if (event.files && event.files.length > 0) {
+  onAvatarUpload(event: FileUploadHandlerEvent): void {
+    if (event.files?.length) {
       const file = event.files[0];
       const formData = new FormData();
       formData.append('avatar', file);
@@ -163,7 +173,9 @@ export class ProfileComponent implements OnInit {
           this.uploadingAvatar.set(false);
         },
         error: (err) => {
-          this.notification.error(err.error?.message || this.translate.instant('client.profile.avatarError'));
+          this.notification.error(
+            err.error?.message || this.translate.instant('client.profile.avatarError')
+          );
           this.uploadingAvatar.set(false);
         },
       });
