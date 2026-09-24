@@ -1,15 +1,10 @@
-// apps/frontend/src/app/features/admin/availability/availability.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { Select } from 'primeng/select';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { TagModule } from 'primeng/tag';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import {
@@ -50,12 +45,9 @@ const DEFAULT_WEEKDAYS: WeekdayConfig[] = [
   imports: [
     CommonModule,
     FormsModule,
-    ButtonModule,
     InputTextModule,
     InputNumberModule,
-    Select,
     ToggleButtonModule,
-    TagModule,
     TranslateModule,
   ],
   templateUrl: './availability.component.html',
@@ -77,11 +69,11 @@ export class AdminAvailabilityComponent implements OnInit {
     minNoticeHours: 24,
   };
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadSettings();
   }
 
-  loadSettings() {
+  loadSettings(): void {
     this.loading.set(true);
 
     this.settingsService.getBusinessHours().subscribe({
@@ -109,7 +101,7 @@ export class AdminAvailabilityComponent implements OnInit {
     });
   }
 
-  saveSettings() {
+  saveSettings(): void {
     this.saving.set(true);
 
     const businessHours: BusinessHour[] = this.scheduleSettings.weekdays.map((wd) => ({
