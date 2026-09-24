@@ -1,18 +1,25 @@
-<section class="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 px-4 py-10">
-  <div class="mx-auto w-full max-w-3xl">
-    <div class="mb-8 flex items-center justify-between">
-      <a routerLink="/" class="text-sm font-medium text-primary-700">
-        <i class="pi pi-arrow-left mr-2"></i>Voltar
+<section class="onboarding-page">
+  <div class="onboarding-shell">
+    <header class="onboarding-topbar">
+      <a routerLink="/" class="back-link">
+        <i class="pi pi-arrow-left"></i>
+        Voltar
       </a>
-      <span class="text-sm text-neutral-500">Etapa {{ step() }} de 4</span>
-    </div>
 
-    <div class="overflow-hidden rounded-3xl bg-white shadow-xl">
-      <div class="border-b border-neutral-100 px-8 py-7">
-        <p class="mb-2 text-sm font-semibold uppercase tracking-wider text-primary-600">
-          Crie seu espaço profissional
-        </p>
-        <h1 class="text-3xl font-serif font-bold text-neutral-900">
+      <div class="step-counter">
+        <span>Etapa {{ step() }} de 4</span>
+        <div class="progress-track" aria-hidden="true">
+          @for (item of [1,2,3,4]; track item) {
+            <span [class.is-active]="item <= step()"></span>
+          }
+        </div>
+      </div>
+    </header>
+
+    <div class="onboarding-card">
+      <div class="onboarding-intro">
+        <span class="eyebrow">Crie seu espaço profissional</span>
+        <h1>
           @switch (step()) {
             @case (1) { Sua conta }
             @case (2) { Seu workspace }
@@ -20,118 +27,198 @@
             @default { Sua identidade visual }
           }
         </h1>
-        <p class="mt-2 text-neutral-600">
-          Tudo será criado em um tenant próprio, isolado dos demais profissionais.
+        <p>
+          Tudo será criado em um tenant próprio e isolado, pronto para receber seus serviços,
+          clientes e configurações.
         </p>
       </div>
 
-      <div class="grid grid-cols-4 gap-2 px-8 pt-6">
-        @for (item of [1, 2, 3, 4]; track item) {
-          <div class="h-2 rounded-full" [class.bg-primary-500]="item <= step()" [class.bg-neutral-200]="item > step()"></div>
-        }
-      </div>
-
-      <form (ngSubmit)="step() === 4 ? submit() : next()" class="p-8">
+      <form (ngSubmit)="step() === 4 ? submit() : next()" class="onboarding-form">
         @if (step() === 1) {
-          <div class="grid gap-5 md:grid-cols-2">
-            <div class="md:col-span-2">
-              <label class="mb-2 block text-sm font-medium text-neutral-700">Nome completo</label>
-              <input pInputText [(ngModel)]="form.fullName" name="fullName" class="w-full" required />
+          <div class="form-section">
+            <div class="section-note">
+              <i class="pi pi-user"></i>
+              <span>Comece pelos dados usados para acessar e administrar seu workspace.</span>
             </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium text-neutral-700">E-mail</label>
-              <input pInputText [(ngModel)]="form.email" name="email" type="email" class="w-full" required />
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium text-neutral-700">Telefone</label>
-              <input pInputText [(ngModel)]="form.phone" name="phone" class="w-full" placeholder="+5511999999999" />
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium text-neutral-700">Senha</label>
-              <p-password [(ngModel)]="form.password" name="password" [toggleMask]="true"
-                styleClass="w-full" inputStyleClass="w-full" required />
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium text-neutral-700">Confirmar senha</label>
-              <p-password [(ngModel)]="form.confirmPassword" name="confirmPassword" [toggleMask]="true"
-                [feedback]="false" styleClass="w-full" inputStyleClass="w-full" required />
+
+            <div class="two-columns">
+              <label class="field field--full">
+                <span>Nome completo *</span>
+                <input
+                  pInputText
+                  [(ngModel)]="form.fullName"
+                  name="fullName"
+                  autocomplete="name"
+                  required />
+              </label>
+
+              <label class="field">
+                <span>E-mail *</span>
+                <input
+                  pInputText
+                  [(ngModel)]="form.email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  required />
+              </label>
+
+              <label class="field">
+                <span>Telefone</span>
+                <input
+                  pInputText
+                  [(ngModel)]="form.phone"
+                  name="phone"
+                  autocomplete="tel"
+                  placeholder="+5511999999999" />
+              </label>
+
+              <label class="field">
+                <span>Senha *</span>
+                <p-password
+                  [(ngModel)]="form.password"
+                  name="password"
+                  [toggleMask]="true"
+                  styleClass="w-full"
+                  inputStyleClass="w-full"
+                  autocomplete="new-password"
+                  required />
+              </label>
+
+              <label class="field">
+                <span>Confirmar senha *</span>
+                <p-password
+                  [(ngModel)]="form.confirmPassword"
+                  name="confirmPassword"
+                  [toggleMask]="true"
+                  [feedback]="false"
+                  styleClass="w-full"
+                  inputStyleClass="w-full"
+                  autocomplete="new-password"
+                  required />
+              </label>
             </div>
           </div>
         }
 
         @if (step() === 2) {
-          <div class="space-y-5">
-            <div>
-              <label class="mb-2 block text-sm font-medium text-neutral-700">Nome do espaço</label>
-              <input pInputText [(ngModel)]="form.tenantName" name="tenantName" (ngModelChange)="onTenantNameChange()"
-                class="w-full" placeholder="Ex.: Espaço Serena" required />
+          <div class="form-section">
+            <div class="section-note">
+              <i class="pi pi-building"></i>
+              <span>O workspace é o ambiente isolado onde sua operação será administrada.</span>
             </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium text-neutral-700">Identificador do workspace</label>
-              <div class="flex items-center rounded-lg border border-neutral-200 bg-neutral-50 px-3">
-                <span class="text-sm text-neutral-400">workspace/</span>
-                <input pInputText [(ngModel)]="form.tenantSlug" name="tenantSlug" (ngModelChange)="onSlugChange()"
-                  class="w-full border-0 bg-transparent shadow-none" placeholder="espaco-serena" required />
+
+            <label class="field">
+              <span>Nome do espaço *</span>
+              <input
+                pInputText
+                [(ngModel)]="form.tenantName"
+                name="tenantName"
+                (ngModelChange)="onTenantNameChange()"
+                placeholder="Ex.: Espaço Serena"
+                required />
+            </label>
+
+            <label class="field">
+              <span>Identificador do workspace *</span>
+              <div class="slug-control">
+                <span>workspace/</span>
+                <input
+                  pInputText
+                  [(ngModel)]="form.tenantSlug"
+                  name="tenantSlug"
+                  (ngModelChange)="onSlugChange()"
+                  placeholder="espaco-serena"
+                  required />
               </div>
-              <p class="mt-2 text-xs text-neutral-500">
+              <small>
                 Use letras minúsculas, números e hífen. Esse identificador também poderá compor seu subdomínio.
-              </p>
-            </div>
+              </small>
+            </label>
           </div>
         }
 
         @if (step() === 3) {
-          <div class="grid gap-5 md:grid-cols-2">
-            <div class="md:col-span-2">
-              <label class="mb-2 block text-sm font-medium text-neutral-700">Título profissional</label>
-              <input pInputText [(ngModel)]="form.professionalTitle" name="professionalTitle" class="w-full"
-                placeholder="Terapeuta, psicólogo, facilitador, consultor..." required />
+          <div class="form-section">
+            <div class="section-note">
+              <i class="pi pi-id-card"></i>
+              <span>Essas informações serão usadas na apresentação pública do profissional.</span>
             </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium text-neutral-700">Modalidade</label>
-              <select [(ngModel)]="form.serviceMode" name="serviceMode"
-                class="w-full rounded-lg border border-neutral-300 bg-white p-3 text-neutral-800">
-                <option value="ONLINE">Online</option>
-                <option value="IN_PERSON">Presencial</option>
-                <option value="HYBRID">Híbrido</option>
-              </select>
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium text-neutral-700">E-mail público</label>
-              <input pInputText [(ngModel)]="form.contactEmail" name="contactEmail" type="email"
-                class="w-full" [placeholder]="form.email || 'contato@exemplo.com'" />
+
+            <div class="two-columns">
+              <label class="field field--full">
+                <span>Título profissional *</span>
+                <input
+                  pInputText
+                  [(ngModel)]="form.professionalTitle"
+                  name="professionalTitle"
+                  placeholder="Terapeuta, psicólogo, facilitador, consultor..."
+                  required />
+              </label>
+
+              <label class="field">
+                <span>Modalidade</span>
+                <select [(ngModel)]="form.serviceMode" name="serviceMode">
+                  <option value="ONLINE">Online</option>
+                  <option value="IN_PERSON">Presencial</option>
+                  <option value="HYBRID">Híbrido</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>E-mail público</span>
+                <input
+                  pInputText
+                  [(ngModel)]="form.contactEmail"
+                  name="contactEmail"
+                  type="email"
+                  [placeholder]="form.email || 'contato@exemplo.com'" />
+              </label>
             </div>
           </div>
         }
 
         @if (step() === 4) {
-          <div class="space-y-6">
-            <div class="grid gap-5 md:grid-cols-3">
-              <label class="block">
-                <span class="mb-2 block text-sm font-medium text-neutral-700">Primária</span>
-                <input type="color" [(ngModel)]="form.primaryColor" name="primaryColor"
-                  class="h-14 w-full cursor-pointer rounded-lg border border-neutral-200 bg-white p-1" />
+          <div class="form-section">
+            <div class="section-note">
+              <i class="pi pi-palette"></i>
+              <span>
+                Partimos de uma identidade calma e profissional. Você poderá refinar o branding depois em Configurações.
+              </span>
+            </div>
+
+            <div class="color-grid">
+              <label class="color-field">
+                <span>Primária</span>
+                <input type="color" [(ngModel)]="form.primaryColor" name="primaryColor" />
+                <strong>{{ form.primaryColor }}</strong>
               </label>
-              <label class="block">
-                <span class="mb-2 block text-sm font-medium text-neutral-700">Secundária</span>
-                <input type="color" [(ngModel)]="form.secondaryColor" name="secondaryColor"
-                  class="h-14 w-full cursor-pointer rounded-lg border border-neutral-200 bg-white p-1" />
+
+              <label class="color-field">
+                <span>Secundária</span>
+                <input type="color" [(ngModel)]="form.secondaryColor" name="secondaryColor" />
+                <strong>{{ form.secondaryColor }}</strong>
               </label>
-              <label class="block">
-                <span class="mb-2 block text-sm font-medium text-neutral-700">Destaque</span>
-                <input type="color" [(ngModel)]="form.accentColor" name="accentColor"
-                  class="h-14 w-full cursor-pointer rounded-lg border border-neutral-200 bg-white p-1" />
+
+              <label class="color-field">
+                <span>Destaque</span>
+                <input type="color" [(ngModel)]="form.accentColor" name="accentColor" />
+                <strong>{{ form.accentColor }}</strong>
               </label>
             </div>
 
-            <div class="rounded-2xl border border-neutral-200 p-5">
-              <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-500">Prévia</p>
-              <div class="rounded-2xl p-6 text-white"
+            <div class="brand-preview">
+              <div class="brand-preview__top">
+                <span class="preview-dot" [style.backgroundColor]="form.accentColor"></span>
+                <small>Prévia do workspace</small>
+              </div>
+
+              <div
+                class="brand-preview__hero"
                 [style.background]="'linear-gradient(135deg,' + form.primaryColor + ',' + form.secondaryColor + ')'">
-                <p class="text-sm opacity-80">{{ form.professionalTitle || 'Seu título profissional' }}</p>
-                <h2 class="mt-1 text-2xl font-bold">{{ form.tenantName || 'Seu espaço' }}</h2>
-                <button type="button" class="mt-5 rounded-xl px-4 py-2 font-semibold text-neutral-900"
-                  [style.backgroundColor]="form.accentColor">
+                <p>{{ form.professionalTitle || 'Seu título profissional' }}</p>
+                <h2>{{ form.tenantName || 'Seu espaço' }}</h2>
+                <button type="button" [style.color]="form.primaryColor">
                   Conhecer serviços
                 </button>
               </div>
@@ -139,23 +226,36 @@
           </div>
         }
 
-        <div class="mt-8 flex items-center justify-between border-t border-neutral-100 pt-6">
-          <button type="button" class="text-sm font-medium text-neutral-600 disabled:opacity-30"
-            [disabled]="step() === 1 || isLoading()" (click)="previous()">
-            <i class="pi pi-arrow-left mr-2"></i>Anterior
+        <footer class="form-actions">
+          <button
+            type="button"
+            class="previous-button"
+            [disabled]="step() === 1 || isLoading()"
+            (click)="previous()">
+            <i class="pi pi-arrow-left"></i>
+            Anterior
           </button>
 
           @if (step() < 4) {
-            <p-button type="submit" label="Continuar" icon="pi pi-arrow-right" iconPos="right" />
+            <button type="submit" class="next-button">
+              Continuar
+              <i class="pi pi-arrow-right"></i>
+            </button>
           } @else {
-            <p-button type="submit" label="Criar meu espaço" icon="pi pi-check"
-              [loading]="isLoading()" />
+            <button type="submit" class="next-button" [disabled]="isLoading()">
+              @if (isLoading()) {
+                <i class="pi pi-spinner pi-spin"></i>
+              } @else {
+                <i class="pi pi-check"></i>
+              }
+              Criar meu espaço
+            </button>
           }
-        </div>
+        </footer>
       </form>
     </div>
 
-    <p class="mt-6 text-center text-sm text-neutral-500">
+    <p class="onboarding-footnote">
       Já possui uma conta de cliente? O onboarding profissional cria um workspace novo e isolado.
     </p>
   </div>
