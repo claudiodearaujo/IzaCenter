@@ -1,125 +1,101 @@
-<!-- apps/frontend/src/app/features/shop/product-detail/product-detail.component.html -->
-
-<section class="py-12 md:py-20">
-  <div class="container-custom">
-    <!-- Breadcrumb -->
-    <nav class="mb-8">
-      <ol class="flex items-center gap-2 text-sm">
-        <li>
-          <a routerLink="/" class="text-secondary hover:text-primary transition-colors">{{ 'shop.productDetail.home' | translate }}</a>
-        </li>
-        <li class="text-secondary">/</li>
-        <li>
-          <a routerLink="/loja" class="text-secondary hover:text-primary transition-colors">{{ 'shop.productDetail.shop' | translate }}</a>
-        </li>
-        @if (product()) {
-          <li class="text-secondary">/</li>
-          <li class="text-primary">{{ product()?.name }}</li>
-        }
-      </ol>
+<section class="product-page">
+  <div class="product-container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a routerLink="/">{{ 'shop.productDetail.home' | translate }}</a>
+      <i class="pi pi-chevron-right"></i>
+      <a routerLink="/loja">{{ 'shop.productDetail.shop' | translate }}</a>
+      @if (product()) {
+        <i class="pi pi-chevron-right"></i>
+        <span>{{ product()?.name }}</span>
+      }
     </nav>
 
-    <!-- Loading State -->
     @if (loading()) {
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <p-skeleton height="400px" styleClass="rounded-2xl" />
-        <div>
-          <p-skeleton height="40px" styleClass="mb-4" />
-          <p-skeleton height="24px" width="60%" styleClass="mb-6" />
-          <p-skeleton height="100px" styleClass="mb-6" />
-          <p-skeleton height="48px" width="40%" />
+      <div class="product-layout">
+        <p-skeleton height="520px" />
+        <div class="loading-copy">
+          <p-skeleton height="40px" />
+          <p-skeleton height="20px" width="60%" />
+          <p-skeleton height="120px" />
+          <p-skeleton height="46px" width="50%" />
         </div>
       </div>
-    }
-
-    <!-- Product Content -->
-    @if (!loading() && product()) {
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <!-- Product Image -->
-        <div class="relative">
+    } @else if (product()) {
+      <div class="product-layout">
+        <div class="product-visual">
           @if (product()?.coverImageUrl) {
-            <img 
-              [src]="product()?.coverImageUrl" 
-              [alt]="product()?.name"
-              class="w-full rounded-2xl shadow-mystical object-cover aspect-square"
-            />
+            <img [src]="product()?.coverImageUrl" [alt]="product()?.name" />
           } @else {
-            <div class="w-full aspect-square rounded-2xl bg-gradient-mystical flex items-center justify-center">
-              <i class="pi pi-star text-6xl text-white/50"></i>
+            <div class="product-placeholder">
+              <i class="pi pi-briefcase"></i>
             </div>
           }
 
-          <!-- Discount Badge -->
-          @if (getDiscountPercentage() > 0) {
-            <div class="absolute top-4 right-4 badge-discount">
-              -{{ getDiscountPercentage() }}%
-            </div>
-          }
-
-          <!-- Product Type Badge -->
-          <div class="absolute top-4 left-4 badge-featured">
-            {{ getServiceKindLabel(product()?.serviceKind || 'SERVICE') }}
+          <div class="visual-badges">
+            <span class="kind-badge">
+              {{ getServiceKindLabel(product()?.serviceKind || 'SERVICE') }}
+            </span>
+            @if (getDiscountPercentage() > 0) {
+              <span class="discount-badge">-{{ getDiscountPercentage() }}%</span>
+            }
           </div>
         </div>
 
-        <!-- Product Info -->
-        <div>
-          <h1 class="heading-1 text-primary mb-4">{{ product()?.name }}</h1>
-          
-          <p class="text-body text-secondary mb-6">
-            {{ product()?.shortDescription }}
-          </p>
+        <div class="product-info">
+          <span class="eyebrow">
+            {{ getServiceKindLabel(product()?.serviceKind || 'SERVICE') }}
+          </span>
+          <h1>{{ product()?.name }}</h1>
+          <p class="lead">{{ product()?.shortDescription }}</p>
 
-          <!-- Price -->
-          <div class="flex items-baseline gap-4 mb-8">
-            <span class="text-4xl font-bold text-accent">
-              {{ product()?.price | currencyBrl }}
-            </span>
+          <div class="price">
+            <strong>{{ product()?.price | currencyBrl }}</strong>
             @if (product()?.originalPrice) {
-              <span class="text-xl text-secondary line-through">
-                {{ product()?.originalPrice | currencyBrl }}
-              </span>
+              <span>{{ product()?.originalPrice | currencyBrl }}</span>
             }
           </div>
 
-          <!-- Features -->
-          <div class="glass-card p-6 mb-8">
-            <h3 class="heading-4 text-primary mb-4">{{ 'shop.productDetail.included' | translate }}</h3>
-            <ul class="space-y-3">
+          <div class="included-card">
+            <h2>{{ 'shop.productDetail.included' | translate }}</h2>
+            <div class="capabilities">
               @if (product()?.capabilities?.scheduling?.enabled) {
-                <li class="flex items-center gap-3">
-                  <i class="pi pi-calendar text-accent"></i>
-                  <span class="text-secondary">
+                <div>
+                  <i class="pi pi-calendar"></i>
+                  <span>
                     Atendimento com agendamento
                     @if (product()?.capabilities?.scheduling?.durationMinutes) {
                       · {{ product()?.capabilities?.scheduling?.durationMinutes }} min
                     }
                   </span>
-                </li>
+                </div>
               }
+
               @if (product()?.capabilities?.intake?.enabled) {
-                <li class="flex items-center gap-3">
-                  <i class="pi pi-list text-accent"></i>
-                  <span class="text-secondary">
+                <div>
+                  <i class="pi pi-list"></i>
+                  <span>
                     Coleta de informações antes do atendimento
                     @if (product()?.capabilities?.intake?.maxQuestions) {
                       · até {{ product()?.capabilities?.intake?.maxQuestions }} campos/perguntas
                     }
                   </span>
-                </li>
+                </div>
               }
+
               @if (product()?.capabilities?.digitalDelivery?.enabled) {
-                <li class="flex items-center gap-3">
-                  <i class="pi pi-download text-accent"></i>
-                  <span class="text-secondary">
-                    Entrega digital · {{ getDeliveryFormatLabel(product()?.capabilities?.digitalDelivery?.format) }}
+                <div>
+                  <i class="pi pi-file"></i>
+                  <span>
+                    Entrega digital ·
+                    {{ getDeliveryFormatLabel(product()?.capabilities?.digitalDelivery?.format) }}
                   </span>
-                </li>
+                </div>
               }
+
               @if (product()?.capabilities?.recurring?.enabled) {
-                <li class="flex items-center gap-3">
-                  <i class="pi pi-sync text-accent"></i>
-                  <span class="text-secondary">
+                <div>
+                  <i class="pi pi-sync"></i>
+                  <span>
                     Acompanhamento recorrente
                     @if (product()?.capabilities?.recurring?.sessions) {
                       · {{ product()?.capabilities?.recurring?.sessions }} sessões
@@ -128,156 +104,129 @@
                       · {{ product()?.capabilities?.recurring?.cadence }}
                     }
                   </span>
-                </li>
+                </div>
               }
-              <li class="flex items-center gap-3">
-                <i class="pi pi-check-circle text-accent"></i>
-                <span class="text-secondary">Acesso por {{ product()?.validityDays }} dias</span>
-              </li>
-            </ul>
+
+              <div>
+                <i class="pi pi-check-circle"></i>
+                <span>Acesso por {{ product()?.validityDays }} dias</span>
+              </div>
+            </div>
           </div>
 
-          <!-- Intake Input -->
           @if (product()?.capabilities?.intake?.enabled) {
-            <div class="mb-8">
-              <label class="block text-primary font-medium mb-2">
-                Informações para o atendimento
-              </label>
+            <label class="intake-field">
+              <span>Informações para o atendimento</span>
               <textarea
                 pInputTextarea
                 [(ngModel)]="question"
-                [rows]="3"
-                placeholder="Informe o que o profissional precisa saber antes do atendimento."
-                class="w-full"
-              ></textarea>
-              <p class="text-sm text-secondary mt-2">
+                [rows]="4"
+                placeholder="Informe o que o profissional precisa saber antes do atendimento.">
+              </textarea>
+              <small>
                 Essas informações serão vinculadas ao pedido para preparação do serviço.
-              </p>
-            </div>
+              </small>
+            </label>
           }
 
-          <!-- Action Buttons -->
-          <div class="flex flex-wrap gap-4">
+          <div class="actions">
             <button
-              pButton
-              class="btn-primary flex-1"
-              [loading]="addingToCart()"
-              (click)="buyNow()"
-            >
-              <i class="pi pi-shopping-cart mr-2"></i>
+              type="button"
+              class="primary-button"
+              [disabled]="addingToCart()"
+              (click)="buyNow()">
+              @if (addingToCart()) {
+                <i class="pi pi-spinner pi-spin"></i>
+              } @else {
+                <i class="pi pi-shopping-bag"></i>
+              }
               {{ 'shop.productDetail.buyNow' | translate }}
             </button>
+
             <button
-              pButton
-              class="btn-secondary"
-              [loading]="addingToCart()"
-              (click)="addToCart()"
-            >
-              <i class="pi pi-plus mr-2"></i>
+              type="button"
+              class="secondary-button"
+              [disabled]="addingToCart()"
+              (click)="addToCart()">
+              <i class="pi pi-plus"></i>
               {{ 'shop.productDetail.addToCart' | translate }}
             </button>
           </div>
 
-          <!-- Trust Badges -->
-          <div class="flex flex-wrap gap-6 mt-8 pt-8 border-t border-primary/10">
-            <div class="flex items-center gap-2 text-secondary">
-              <i class="pi pi-lock text-accent"></i>
-              <span class="text-sm">{{ 'shop.productDetail.securePayment' | translate }}</span>
-            </div>
-            <div class="flex items-center gap-2 text-secondary">
-              <i class="pi pi-shield text-accent"></i>
-              <span class="text-sm">{{ 'shop.productDetail.confidential' | translate }}</span>
-            </div>
-            <div class="flex items-center gap-2 text-secondary">
-              <i class="pi pi-clock text-accent"></i>
-              <span class="text-sm">{{ 'shop.productDetail.delivery48h' | translate }}</span>
-            </div>
+          <div class="trust-row">
+            <span>
+              <i class="pi pi-lock"></i>
+              {{ 'shop.productDetail.securePayment' | translate }}
+            </span>
+            <span>
+              <i class="pi pi-shield"></i>
+              {{ 'shop.productDetail.confidential' | translate }}
+            </span>
           </div>
         </div>
       </div>
 
-      <!-- Tabs with Description -->
-      <div class="mt-16">
+      <div class="details-tabs">
         <p-tabs value="0">
           <p-tablist>
             <p-tab value="0">{{ 'shop.productDetail.fullDescription' | translate }}</p-tab>
             <p-tab value="1">{{ 'shop.productDetail.howItWorks' | translate }}</p-tab>
           </p-tablist>
+
           <p-tabpanels>
-          <p-tabpanel value="0">
-            <div class="prose prose-invert max-w-none py-6">
-              @if (product()?.fullDescription) {
-                <div [innerHTML]="product()?.fullDescription"></div>
-              } @else {
-                <p class="text-secondary">{{ product()?.shortDescription }}</p>
-              }
-            </div>
-          </p-tabpanel>
-          <p-tabpanel value="1">
-            <div class="py-6">
-              <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="text-center">
-                  <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
-                    <span class="text-primary font-bold">1</span>
-                  </div>
-                  <h4 class="text-primary font-medium mb-2">{{ 'shop.productDetail.step1Title' | translate }}</h4>
-                  <p class="text-secondary text-sm">{{ 'shop.productDetail.step1Description' | translate }}</p>
-                </div>
-                <div class="text-center">
-                  <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
-                    <span class="text-primary font-bold">2</span>
-                  </div>
-                  <h4 class="text-primary font-medium mb-2">{{ 'shop.productDetail.step2Title' | translate }}</h4>
-                  <p class="text-secondary text-sm">{{ 'shop.productDetail.step2Description' | translate }}</p>
-                </div>
-                <div class="text-center">
-                  <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
-                    <span class="text-primary font-bold">3</span>
-                  </div>
-                  <h4 class="text-primary font-medium mb-2">{{ 'shop.productDetail.step3Title' | translate }}</h4>
-                  <p class="text-secondary text-sm">{{ 'shop.productDetail.step3Description' | translate }}</p>
-                </div>
-                <div class="text-center">
-                  <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
-                    <span class="text-primary font-bold">4</span>
-                  </div>
-                  <h4 class="text-primary font-medium mb-2">{{ 'shop.productDetail.step4Title' | translate }}</h4>
-                  <p class="text-secondary text-sm">{{ 'shop.productDetail.step4Description' | translate }}</p>
-                </div>
+            <p-tabpanel value="0">
+              <div class="description-content">
+                @if (product()?.fullDescription) {
+                  <div [innerHTML]="product()?.fullDescription"></div>
+                } @else {
+                  <p>{{ product()?.shortDescription }}</p>
+                }
               </div>
-            </div>
-          </p-tabpanel>
+            </p-tabpanel>
+
+            <p-tabpanel value="1">
+              <div class="steps-grid">
+                @for (step of [
+                  {n:'1', title:'shop.productDetail.step1Title', desc:'shop.productDetail.step1Description'},
+                  {n:'2', title:'shop.productDetail.step2Title', desc:'shop.productDetail.step2Description'},
+                  {n:'3', title:'shop.productDetail.step3Title', desc:'shop.productDetail.step3Description'},
+                  {n:'4', title:'shop.productDetail.step4Title', desc:'shop.productDetail.step4Description'}
+                ]; track step.n) {
+                  <div class="step">
+                    <span>{{ step.n }}</span>
+                    <h3>{{ step.title | translate }}</h3>
+                    <p>{{ step.desc | translate }}</p>
+                  </div>
+                }
+              </div>
+            </p-tabpanel>
           </p-tabpanels>
         </p-tabs>
       </div>
 
-      <!-- Related Products -->
       @if (relatedProducts().length > 0) {
-        <div class="mt-16">
-          <h2 class="heading-2 text-center text-primary mb-8">
-            {{ 'shop.productDetail.youMayLike' | translate }}
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <section class="related-section">
+          <div class="section-heading">
+            <span class="eyebrow">Outras opções</span>
+            <h2>{{ 'shop.productDetail.youMayLike' | translate }}</h2>
+          </div>
+
+          <div class="related-grid">
             @for (related of relatedProducts(); track related.id) {
-              <div class="glass-card p-6 text-center cursor-pointer hover-lift" 
-                   [routerLink]="['/loja', related.slug]">
+              <a [routerLink]="['/loja', related.slug]" class="related-card">
                 @if (related.coverImageUrl) {
-                  <img 
-                    [src]="related.coverImageUrl" 
-                    [alt]="related.name"
-                    class="w-full h-48 object-cover rounded-lg mb-4"
-                  />
+                  <img [src]="related.coverImageUrl" [alt]="related.name" />
                 } @else {
-                  <div class="w-full h-48 bg-gradient-mystical rounded-lg mb-4 flex items-center justify-center">
-                    <i class="pi pi-star text-4xl text-white/50"></i>
-                  </div>
+                  <div class="related-placeholder"><i class="pi pi-briefcase"></i></div>
                 }
-                <h3 class="heading-4 text-primary mb-2">{{ related.name }}</h3>
-                <p class="text-accent font-bold">{{ related.price | currencyBrl }}</p>
-              </div>
+                <div>
+                  <h3>{{ related.name }}</h3>
+                  <strong>{{ related.price | currencyBrl }}</strong>
+                </div>
+              </a>
             }
           </div>
-        </div>
+        </section>
       }
     }
   </div>

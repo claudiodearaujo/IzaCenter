@@ -1,16 +1,15 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { Product } from '../../../core/models/product.model';
 import { CurrencyBrlPipe } from '../../pipes/currency-brl.pipe';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, ButtonModule, CurrencyBrlPipe],
+  imports: [CommonModule, RouterLink, CurrencyBrlPipe],
   templateUrl: './product-card.component.html',
-  styleUrl: './product-card.component.css'
+  styleUrl: './product-card.component.css',
 })
 export class ProductCardComponent {
   @Input({ required: true }) product!: Product;
