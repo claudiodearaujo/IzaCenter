@@ -11,9 +11,8 @@ const adapter = new PrismaPg({ connectionString });
 // Create Prisma client with Prisma 7 adapter configuration
 export const prisma = new PrismaClient({
   adapter,
-  log: env.isDevelopment
-    ? ['query', 'info', 'warn', 'error']
-    : ['error'],
+  log: [], // SQL errors may contain sensitive values; handlers emit stable event codes.
+
 });
 
 // Connect to database
@@ -22,7 +21,7 @@ export async function connectDatabase(): Promise<void> {
     await prisma.$connect();
     console.log('✅ Database connected successfully');
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
+    console.error('❌ Database connection failed:');
     process.exit(1);
   }
 }

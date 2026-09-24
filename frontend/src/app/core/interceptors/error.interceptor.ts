@@ -12,6 +12,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      if (req.url.endsWith('/auth/refresh')) return throwError(() => error);
       let errorMessage = 'Ocorreu um erro inesperado';
 
       // Network/offline errors (status 0 = no connection)

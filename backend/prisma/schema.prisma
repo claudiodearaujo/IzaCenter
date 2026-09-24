@@ -222,6 +222,8 @@ model User {
   id                   String    @id @default(uuid())
   email                String    @unique
   passwordHash         String    @map("password_hash")
+  authVersion          Int       @default(0) @map("auth_version")
+  authSessions         AuthSession[]
   fullName             String    @map("full_name")
   phone                String?
   birthDate            DateTime? @map("birth_date")
@@ -252,6 +254,21 @@ model User {
   createdSecurityIncidents SecurityIncident[] @relation("IncidentCreator")
 
   @@map("users")
+}
+
+model AuthSession {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  authVersion Int      @map("auth_version")
+  refreshHash String   @map("refresh_hash")
+  expiresAt   DateTime @map("expires_at")
+  revokedAt   DateTime? @map("revoked_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("auth_sessions")
 }
 
 model PrivacyRequest {

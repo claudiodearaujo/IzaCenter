@@ -47,7 +47,7 @@ async function bootstrap() {
           console.log('✅ Graceful shutdown completed');
           process.exit(0);
         } catch (error) {
-          console.error('❌ Error during shutdown:', error);
+          console.error('❌ Error during shutdown:');
           process.exit(1);
         }
       });
@@ -65,16 +65,16 @@ async function bootstrap() {
 
     // Handle uncaught exceptions
     process.on('uncaughtException', (error) => {
-      console.error('❌ Uncaught Exception:', error);
+      console.error('❌ Uncaught Exception:');
       process.exit(1);
     });
 
     process.on('unhandledRejection', (reason, promise) => {
-      console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+      console.error('UNHANDLED_REJECTION');
     });
 
   } catch (error) {
-    console.error('❌ Failed to start server:', error);
+    console.error('❌ Failed to start server:');
     process.exit(1);
   }
 }

@@ -77,13 +77,7 @@ export function errorHandler(
   next: NextFunction
 ): void {
   // Log error
-  console.error('Error:', {
-    name: error.name,
-    message: error.message,
-    stack: env.isDevelopment ? error.stack : undefined,
-    path: req.path,
-    method: req.method,
-  });
+  console.error('HTTP_REQUEST_ERROR', { operational: error instanceof AppError });
 
   // Handle known AppError
   if (error instanceof AppError) {

@@ -1,0 +1,41 @@
+{
+  "status": "ci-validated-runtime-pending",
+  "baselineCommit": "846211f2dde2aade14f548ece0f194655a05aae2",
+  "localBackendTests": {
+    "suites": 28,
+    "tests": 374,
+    "result": "PASS"
+  },
+  "localIntegration": {
+    "engine": "PGlite PostgreSQL WASM + wire socket",
+    "migrations": 10,
+    "httpAssertions": 25,
+    "replayConcurrencyRevocation": "PASS",
+    "nativePostgreSQL": "PASS — PostgreSQL 16, CI run 36002303490"
+  },
+  "operationalBlockers": [
+    "Coolify host offline",
+    "branch protection read denied (403)",
+    "private bucket provisioning and legacy media migration require runtime access"
+  ],
+  "dependencyAudit": {
+    "backend": "0 alerts",
+    "frontend": "0 alerts",
+    "e2e": "0 alerts",
+    "root": "1 low (Quill), no high/critical"
+  },
+  "securityCI": {
+    "run": 36002303490,
+    "integration": "PASS",
+    "SAST": "PASS",
+    "SCA": "PASS — all 4 manifests",
+    "frontend": "PASS — 265 tests, build, CSP login smoke"
+  },
+  "validatedCodeCommit": "f155150e37b1ff489e1250ef8c58e33530a8dd86",
+  "frontendCI": {
+    "run": 36003115298,
+    "tests": 265,
+    "CSPLoginSmoke": "PASS",
+    "result": "PASS"
+  }
+}

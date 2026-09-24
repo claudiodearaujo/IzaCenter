@@ -39,7 +39,7 @@ router.post(
     try {
       event = stripeHelpers.constructEvent(req.body, signature);
     } catch (error: any) {
-      console.error('Stripe webhook signature verification failed:', error.message);
+      console.error('Stripe webhook signature verification failed:');
       res.status(400).send(`Webhook Error: ${error.message}`);
       return;
     }
@@ -182,11 +182,11 @@ router.post(
       await billingService.markStripeEventProcessed(event.id, tenantId);
       res.json({ received: true });
     } catch (error) {
-      console.error('Stripe webhook handler error:', error);
+      console.error('Stripe webhook handler error:');
       try {
         await billingService.markStripeEventFailed(event.id, error);
       } catch (trackingError) {
-        console.error('Could not persist Stripe webhook failure:', trackingError);
+        console.error('Could not persist Stripe webhook failure:');
       }
       res.status(500).json({ error: 'Webhook handler failed' });
     }

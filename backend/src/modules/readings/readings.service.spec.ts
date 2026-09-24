@@ -1,4 +1,5 @@
 jest.mock('../../config/supabase', () => ({
+  privateMedia: { resolve: jest.fn(async (value: string) => value), upload: jest.fn().mockResolvedValue('private://tenant/id/audio/file.mp3') },
   storage: {
     upload: jest.fn().mockResolvedValue({ path: 'deliveries/test/audio/test.mp3' }),
     getPublicUrl: jest.fn().mockReturnValue('https://example.com/audio/test.mp3'),

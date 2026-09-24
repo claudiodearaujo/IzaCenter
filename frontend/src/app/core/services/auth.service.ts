@@ -1,6 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Observable, tap, catchError, of, firstValueFrom, shareReplay, finalize, defer, from } from 'rxjs';
 import { ApiService } from './api.service';
 import { StorageService } from './storage.service';
 import { User } from '../models/user.model';
@@ -54,15 +54,14 @@ export class AuthService {
   }
 
   private loadStoredUser(): void {
-    const user = this.storage.get<User>('user');
-    const membership = this.storage.get<TenantMembership>('tenantMembership');
-    const token = this.storage.get<string>('accessToken');
-    
-    if (user && token) {
-      this.currentUserSignal.set(user);
-      this.currentMembershipSignal.set(membership);
-      this.accessTokenSignal.set(token);
-    }
+    // Remove legacy bearer credentials. Refresh is now HttpOnly; access stays in memory.
+    this.storage.remove('accessToken');
+    this.storage.remove('user');
+    this.storage.remove('tenantMembership');
+  }
+
+  async restoreSession(): Promise<void> {
+    await firstValueFrom(this.refreshToken());
   }
 
   getAccessToken(): string | null {
@@ -77,9 +76,7 @@ export class AuthService {
     this.currentUserSignal.set(data.user);
     this.currentMembershipSignal.set(data.membership);
     this.accessTokenSignal.set(data.accessToken);
-    this.storage.set('user', data.user);
-    this.storage.set('tenantMembership', data.membership);
-    this.storage.set('accessToken', data.accessToken);
+
   }
 
   login(data: LoginData): Observable<AuthResponse> {
@@ -106,23 +103,34 @@ export class AuthService {
     return this.api.post('/auth/reset-password', { token, password });
   }
 
-  refreshToken(): Observable<{ data: { accessToken: string } } | null> {
-    return this.api.post<{ data: { accessToken: string } }>('/auth/refresh-token', {}).pipe(
-      tap(response => {
-        if (response?.data?.accessToken) {
-          this.accessTokenSignal.set(response.data.accessToken);
-          this.storage.set('accessToken', response.data.accessToken);
-        }
-      }),
-      catchError(() => {
-        this.logout();
-        return of(null);
-      })
-    );
+  private refreshing?: Observable<AuthResponse | null>;
+
+  refreshToken(): Observable<AuthResponse | null> {
+    if (!this.refreshing) {
+      const request = () => firstValueFrom(this.api.post<AuthResponse>('/auth/refresh', {}));
+      this.refreshing = defer(() => from(
+        typeof navigator !== 'undefined' && navigator.locks
+          ? navigator.locks.request('therapist-session-refresh', request)
+          : request()
+      )).pipe(
+        tap(response => this.establishSession(response.data)),
+        catchError(() => { this.clearSession(); return of(null); }),
+        finalize(() => { this.refreshing = undefined; }),
+        shareReplay({ bufferSize: 1, refCount: false }),
+      );
+    }
+    return this.refreshing;
+  }
+
+  clearSession(): void {
+    this.currentUserSignal.set(null);
+    this.currentMembershipSignal.set(null);
+    this.accessTokenSignal.set(null);
+    this.loadStoredUser();
   }
 
   logout(): void {
-    this.api.post('/auth/logout', {}).subscribe();
+    this.api.post('/auth/logout', {}).subscribe({ error: () => {} });
     this.currentUserSignal.set(null);
     this.currentMembershipSignal.set(null);
     this.accessTokenSignal.set(null);
@@ -137,7 +145,7 @@ export class AuthService {
     if (currentUser) {
       const updatedUser = { ...currentUser, ...user };
       this.currentUserSignal.set(updatedUser);
-      this.storage.set('user', updatedUser);
+
     }
   }
 
@@ -146,7 +154,6 @@ export class AuthService {
       next: (response) => {
         if (response.data) {
           this.currentUserSignal.set(response.data);
-          this.storage.set('user', response.data);
         }
       },
       error: () => {

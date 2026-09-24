@@ -1,0 +1,9 @@
+name: Therapist source security
+paths:
+  - backend/src
+  - frontend/src
+paths-ignore:
+  - '**/*.spec.ts'
+  - '**/test/**'
+queries:
+  - uses: security-extended

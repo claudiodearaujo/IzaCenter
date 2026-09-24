@@ -1,3 +1,4 @@
+import { minimizeSentryEvent } from '../utils/privacy-log.util';
 // apps/backend/src/config/sentry.ts
 
 import * as Sentry from '@sentry/node';
@@ -19,21 +20,9 @@ export function initSentry(): void {
       Sentry.expressIntegration(),
     ],
     sendDefaultPii: false,
-    beforeSend(event) {
-      if (event.request) {
-        if (event.request.headers) {
-          delete event.request.headers.authorization;
-          delete event.request.headers.cookie;
-          delete event.request.headers['set-cookie'];
-          delete event.request.headers['x-api-key'];
-        }
-        event.request.data = undefined;
-        event.request.cookies = undefined;
-      }
-      return event;
-    },
+    beforeSend: minimizeSentryEvent,
     // Capture 100% of transactions in development, 10% in production
-    tracesSampleRate: env.isProduction ? 0.1 : 1.0,
+    tracesSampleRate: 0,
   });
 }
 

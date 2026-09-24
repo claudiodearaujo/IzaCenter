@@ -457,7 +457,7 @@ export class OrdersService {
       to: order.client.email,
       subject: emailContent.subject,
       html: emailContent.html,
-    }).catch(console.error);
+    }).catch(() => console.error('BACKGROUND_OPERATION_FAILED'));
 
     return order;
   }
@@ -502,7 +502,7 @@ export class OrdersService {
       to: order.client.email,
       subject: emailContent.subject,
       html: emailContent.html,
-    }).catch(console.error);
+    }).catch(() => console.error('BACKGROUND_OPERATION_FAILED'));
 
     return updated;
   }

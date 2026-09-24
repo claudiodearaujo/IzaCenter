@@ -1,3 +1,5 @@
+import { validateUploadContent } from '../../middlewares/upload.middleware';
+import { uploadLimiter } from '../../middlewares/rateLimiter.middleware';
 // apps/backend/src/modules/readings/readings.routes.ts
 
 import { Router } from 'express';
@@ -295,7 +297,9 @@ router.post(
   '/admin/readings/:id/upload-audio',
   authenticate,
   requireAdmin,
+  uploadLimiter,
   uploadAudioFile.single('file'),
+  validateUploadContent('audio'),
   readingsController.uploadAudio.bind(readingsController)
 );
 
@@ -470,7 +474,9 @@ router.post(
   '/admin/deliveries/:id/upload-audio',
   authenticate,
   requireAdmin,
+  uploadLimiter,
   uploadAudioFile.single('file'),
+  validateUploadContent('audio'),
   readingsController.uploadAudio.bind(readingsController)
 );
 

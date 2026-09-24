@@ -16,6 +16,11 @@ describe('AuthService', () => {
     email: 'test@example.com',
     fullName: 'Test User',
     role: 'CLIENT' as const,
+    preferredLanguage: 'pt-BR',
+    notificationEmail: true,
+    notificationWhatsapp: false,
+    createdAt: '2026-09-24T00:00:00Z',
+    updatedAt: '2026-09-24T00:00:00Z',
   };
 
   const mockAuthResponse = {
@@ -56,7 +61,7 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('should login user and store tokens', () => {
+    it('should login user and keep authentication only in memory', () => {
       const loginData = { email: 'test@example.com', password: 'Password123!' };
 
       service.login(loginData).subscribe((response) => {
@@ -69,13 +74,15 @@ describe('AuthService', () => {
       expect(req.request.body).toEqual(loginData);
       req.flush(mockAuthResponse);
 
-      expect(storageServiceSpy.set).toHaveBeenCalledWith('user', mockUser);
-      expect(storageServiceSpy.set).toHaveBeenCalledWith('accessToken', 'mock-access-token');
+      expect(service.currentUser()).toEqual(mockUser);
+      expect(service.getAccessToken()).toBe('mock-access-token');
+      expect(service.isAuthenticated()).toBeTrue();
+      expect(storageServiceSpy.set).not.toHaveBeenCalled();
     });
   });
 
   describe('register', () => {
-    it('should register user and store tokens', () => {
+    it('should register user and keep authentication only in memory', () => {
       const registerData = {
         email: 'new@example.com',
         password: 'Password123!',
@@ -91,8 +98,10 @@ describe('AuthService', () => {
       expect(req.request.method).toBe('POST');
       req.flush(mockAuthResponse);
 
-      expect(storageServiceSpy.set).toHaveBeenCalledWith('user', jasmine.any(Object));
-      expect(storageServiceSpy.set).toHaveBeenCalledWith('accessToken', jasmine.any(String));
+      expect(service.currentUser()).toEqual(mockUser);
+      expect(service.getAccessToken()).toBe('mock-access-token');
+      expect(service.isAuthenticated()).toBeTrue();
+      expect(storageServiceSpy.set).not.toHaveBeenCalled();
     });
   });
 

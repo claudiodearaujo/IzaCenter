@@ -1,3 +1,4 @@
+import { env } from '../../config/env';
 import { Tenant, TenantMemberRole } from '@prisma/client';
 import { prisma } from '../../config/database';
 import { DEFAULT_TENANT_ID, DEFAULT_TENANT_SLUG } from './tenant.constants';
@@ -49,6 +50,10 @@ export class TenantService {
       }
     }
 
+    const sharedHosts = [new URL(env.FRONTEND_URL).hostname, new URL(env.BACKEND_URL).hostname];
+    const developmentHost = !env.isProduction && isLocalHost;
+    if (normalizedHost && !sharedHosts.includes(normalizedHost) && !developmentHost) return null;
+
     if (explicitSlug) {
       return this.findActiveBySlug(explicitSlug);
     }
@@ -83,10 +88,13 @@ export class TenantService {
       return null;
     }
 
+    if (!env.TENANT_BASE_DOMAIN || !hostname.endsWith(`.${env.TENANT_BASE_DOMAIN}`)) return null;
     const parts = hostname.split('.');
     if (parts.length < 3) return null;
 
-    const candidate = parts[0];
+    const prefix = hostname.slice(0, -(env.TENANT_BASE_DOMAIN.length + 1));
+    if (prefix.includes('.')) return null;
+    const candidate = prefix;
     if (!candidate || ['www', 'api'].includes(candidate)) return null;
     return candidate;
   }

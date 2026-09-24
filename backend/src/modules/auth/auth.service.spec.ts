@@ -1,3 +1,4 @@
+jest.mock('../../utils/jwt.util', () => ({ verifyAccessToken: jest.fn().mockReturnValue({ sub: 'user-123' }) }));
 import { AuthService } from './auth.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 
@@ -17,7 +18,8 @@ jest.mock('../../utils', () => ({
     accessToken: 'access_token_123',
     refreshToken: 'refresh_token_123',
   }),
-  verifyRefreshToken: jest.fn().mockReturnValue({ sub: 'user-123' }),
+  rotateRefreshToken: jest.fn().mockResolvedValue({ accessToken: 'access_token_123', refreshToken: 'refresh_token_123' }),
+  revokeAccessSession: jest.fn().mockResolvedValue(undefined),
 }));
 
 jest.mock('../../utils/email.util', () => ({
@@ -34,6 +36,7 @@ describe('AuthService', () => {
   beforeEach(() => {
     authService = new AuthService();
     jest.clearAllMocks();
+    prismaMock.user.updateMany.mockResolvedValue({ count: 1 });
     prismaMock.tenantMembership.findUnique.mockResolvedValue({
       id: 'membership-1',
       role: 'CLIENT',
@@ -331,8 +334,8 @@ describe('AuthService', () => {
 
     it('should throw error if refresh token is invalid', async () => {
       // Arrange
-      const { verifyRefreshToken } = require('../../utils');
-      verifyRefreshToken.mockImplementationOnce(() => {
+      const { rotateRefreshToken } = require('../../utils');
+      rotateRefreshToken.mockImplementationOnce(() => {
         throw new Error('Invalid token');
       });
 

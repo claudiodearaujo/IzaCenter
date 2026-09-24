@@ -1,3 +1,5 @@
+import { validateUploadContent } from '../../middlewares/upload.middleware';
+import { uploadLimiter } from '../../middlewares/rateLimiter.middleware';
 // apps/backend/src/modules/products/products.routes.ts
 
 import { Router } from 'express';
@@ -363,7 +365,9 @@ router.post(
   authenticate,
   requireAdmin,
   validate(idParamsSchema, 'params'),
+  uploadLimiter,
   uploadImage.single('cover'),
+  validateUploadContent('image'),
   compressImageMiddleware({ maxWidthOrHeight: 1200, quality: 85, format: 'webp' }),
   productsController.updateCover.bind(productsController)
 );

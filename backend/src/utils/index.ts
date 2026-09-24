@@ -1,6 +1,6 @@
 // apps/backend/src/utils/index.ts
 
-export { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, generateTokenPair } from './jwt.util';
+export { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken, generateTokenPair, rotateRefreshToken, revokeAccessSession } from './jwt.util';
 export { hashPassword, comparePassword, generateToken, generateResetToken, hashToken } from './password.util';
 export { 
   generateFileName,

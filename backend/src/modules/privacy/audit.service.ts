@@ -1,3 +1,4 @@
+import { safeLogPath } from '../../utils/privacy-log.util';
 import crypto from 'crypto';
 import { AuditOutcome, Prisma } from '@prisma/client';
 import { prisma } from '../../config/database';
@@ -36,7 +37,7 @@ export class AuditService {
         resourceType: input.resourceType || null,
         resourceId: input.resourceId || null,
         method: input.method,
-        path: input.path,
+        path: safeLogPath(input.path),
         statusCode: input.statusCode ?? null,
         outcome: input.outcome,
         requestId: input.requestId,

@@ -1,3 +1,4 @@
+import { safeLogPath } from '../utils/privacy-log.util';
 import { randomUUID } from 'crypto';
 import { NextFunction, Request, Response } from 'express';
 import { auditService } from '../modules/privacy/audit.service';
@@ -10,7 +11,7 @@ function shouldAudit(req: Request): boolean {
 }
 
 function actionFor(req: Request): string {
-  const path = req.path
+  const path = safeLogPath(req.path)
     .replace(/\/[0-9a-f]{8}-[0-9a-f-]{27,36}(?=\/|$)/gi, '/:id')
     .replace(/\/+$/, '');
 
@@ -30,7 +31,7 @@ function actionFor(req: Request): string {
   ];
 
   return known.find(([pattern]) => pattern.test(path))?.[1] ||
-    `http.${req.method.toLowerCase()}.${path || '/'}`;
+    `http.${path || '/'}`;
 }
 
 export function auditLogger(req: Request, res: Response, next: NextFunction): void {
@@ -62,7 +63,7 @@ export function auditLogger(req: Request, res: Response, next: NextFunction): vo
       console.error('[AUDIT_PERSISTENCE_ERROR]', {
         requestId: auditRequestId,
         action: actionFor(req),
-        message: error instanceof Error ? error.message : String(error),
+
       });
     });
   });

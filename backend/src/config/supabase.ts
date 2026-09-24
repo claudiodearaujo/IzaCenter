@@ -106,3 +106,30 @@ export const storage = {
 };
 
 export default supabaseAdmin;
+
+// Sensitive delivery media must never fall back to the public branding bucket.
+export const privateMedia = {
+  async bucket(): Promise<ReturnType<SupabaseClient['storage']['from']>> {
+    const name = env.SUPABASE_PRIVATE_STORAGE_BUCKET;
+    const { data, error } = await supabaseAdmin.storage.getBucket(name);
+    if (error || !data || data.public) throw new Error('Private media storage unavailable');
+    return supabaseAdmin.storage.from(name);
+  },
+  async upload(path: string, bytes: Buffer, contentType: string) {
+    const bucket = await this.bucket();
+    const { error } = await bucket.upload(path, bytes, { contentType, upsert: false });
+    if (error) throw new Error('Private media upload failed');
+    return `private://${path}`;
+  },
+  async resolve(value: string | null | undefined, tenantId: string, deliveryId: string) {
+    if (!value?.startsWith('private://')) return value;
+    const path = value.slice('private://'.length);
+    if (!path.startsWith(`${tenantId}/${deliveryId}/audio/`) || path.includes('..')) {
+      throw new Error('Invalid private media scope');
+    }
+    const bucket = await this.bucket();
+    const { data, error } = await bucket.createSignedUrl(path, 300);
+    if (error || !data) throw new Error('Private media unavailable');
+    return data.signedUrl;
+  },
+};

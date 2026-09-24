@@ -30,6 +30,9 @@ const mockResponse = (): Partial<Response> => {
   const res: Partial<Response> = {};
   res.status = jest.fn().mockReturnValue(res);
   res.json = jest.fn().mockReturnValue(res);
+  res.cookie = jest.fn().mockReturnValue(res);
+  res.clearCookie = jest.fn().mockReturnValue(res);
+  res.setHeader = jest.fn().mockReturnValue(res);
   return res;
 };
 
@@ -72,7 +75,7 @@ describe('AuthController', () => {
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Cadastro realizado com sucesso',
-        data: serviceResult,
+        data: expect.objectContaining({ accessToken: serviceResult.accessToken }),
       });
     });
 
@@ -107,7 +110,7 @@ describe('AuthController', () => {
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Login realizado com sucesso',
-        data: serviceResult,
+        data: expect.objectContaining({ accessToken: serviceResult.accessToken }),
       });
     });
 
@@ -224,7 +227,7 @@ describe('AuthController', () => {
   // =============================================
   describe('refreshToken', () => {
     it('should return new token pair', async () => {
-      req.body = { refreshToken: 'valid_refresh_token' };
+      req.cookies = { therapist_refresh: 'valid_refresh_token' };
       (authService.refreshToken as jest.Mock).mockResolvedValue({
         accessToken: 'new_access_token',
         refreshToken: 'new_refresh_token',
@@ -237,7 +240,6 @@ describe('AuthController', () => {
         message: 'Token atualizado com sucesso',
         data: {
           accessToken: 'new_access_token',
-          refreshToken: 'new_refresh_token',
         },
       });
     });

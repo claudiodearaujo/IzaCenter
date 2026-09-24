@@ -77,8 +77,14 @@ jobs:
       - name: TypeScript check
         run: npx tsc --noEmit
 
+      - name: Frontend unit tests
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
       - name: Build
         run: npm run build
+
+      - name: CSP login smoke
+        run: node ../scripts/security/frontend-smoke.cjs
 
   e2e:
     name: E2E Tests
