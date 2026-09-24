@@ -203,14 +203,14 @@ export class SettingsComponent implements OnInit {
     keywords: ['atendimento', 'serviços', 'profissional'],
   };
   brandingSettings: BrandingSettings = {
-    primaryColor: '#F59E0B',
-    secondaryColor: '#EC4899',
-    accentColor: '#D4AF37',
-    surfaceColor: '#FEFDFB',
-    textColor: '#2D2A24',
+    primaryColor: '#477762',
+    secondaryColor: '#D56546',
+    accentColor: '#52718C',
+    surfaceColor: '#F8F8F5',
+    textColor: '#1E1E1B',
     logoUrl: '',
     faviconUrl: '',
-    fontFamily: 'Nunito, Open Sans, sans-serif',
+    fontFamily: 'Inter, system-ui, sans-serif',
     borderRadius: '12px',
   };
 
