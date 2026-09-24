@@ -1,250 +1,174 @@
-<!-- apps/frontend/src/app/features/shop/cart/cart.component.html -->
-
-<section class="py-12 md:py-20">
-  <div class="container-custom">
-    <!-- Header -->
-    <div class="text-center mb-12">
-      <h1 class="heading-1 text-primary mb-4">
-        <i class="pi pi-shopping-cart mr-3"></i>
-        {{ 'shop.cart.title' | translate }}
-      </h1>
-      <p class="text-body text-secondary">
-        {{ 'shop.cart.subtitle' | translate }}
-      </p>
+<section class="cart-page">
+  <div class="cart-container">
+    <div class="page-heading">
+      <span class="eyebrow">Contratação</span>
+      <h1>{{ 'shop.cart.title' | translate }}</h1>
+      <p>{{ 'shop.cart.subtitle' | translate }}</p>
     </div>
 
-    <!-- Empty Cart -->
     @if (isEmpty) {
-      <div class="text-center py-16">
-        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-          <i class="pi pi-shopping-cart text-4xl text-primary"></i>
-        </div>
-        <h2 class="heading-3 text-primary mb-4">{{ 'shop.cart.empty' | translate }}</h2>
-        <p class="text-secondary mb-8 max-w-md mx-auto">
-          {{ 'shop.cart.emptyDescription' | translate }}
-        </p>
-        <a routerLink="/loja" class="btn-primary inline-flex items-center gap-2">
-          <i class="pi pi-shopping-bag"></i>
+      <div class="empty-cart">
+        <span><i class="pi pi-shopping-bag"></i></span>
+        <h2>{{ 'shop.cart.empty' | translate }}</h2>
+        <p>{{ 'shop.cart.emptyDescription' | translate }}</p>
+        <a routerLink="/loja" class="primary-link">
+          <i class="pi pi-arrow-left"></i>
           {{ 'shop.cart.viewProducts' | translate }}
         </a>
       </div>
-    }
-
-    <!-- Cart Content -->
-    @if (!isEmpty) {
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Cart Items -->
-        <div class="lg:col-span-2 space-y-6">
+    } @else {
+      <div class="cart-layout">
+        <div class="cart-items">
           @for (item of items(); track item.product.id) {
-            <div class="glass-card p-6">
-              <div class="flex gap-6">
-                <!-- Product Image -->
-                <div class="flex-shrink-0 w-24 h-24 md:w-32 md:h-32">
-                  @if (item.product.coverImageUrl) {
-                    <img 
-                      [src]="item.product.coverImageUrl" 
-                      [alt]="item.product.name"
-                      class="w-full h-full object-cover rounded-lg"
-                    />
-                  } @else {
-                    <div class="w-full h-full bg-gradient-mystical rounded-lg flex items-center justify-center">
-                      <i class="pi pi-star text-2xl text-white/50"></i>
-                    </div>
+            <article class="cart-item">
+              <div class="cart-item__media">
+                @if (item.product.coverImageUrl) {
+                  <img [src]="item.product.coverImageUrl" [alt]="item.product.name" />
+                } @else {
+                  <div class="cart-item__placeholder"><i class="pi pi-briefcase"></i></div>
+                }
+              </div>
+
+              <div class="cart-item__body">
+                <div class="cart-item__heading">
+                  <div>
+                    <a [routerLink]="['/loja', item.product.slug]">{{ item.product.name }}</a>
+                    <span>{{ getServiceKindLabel(item.product.serviceKind) }}</span>
+                  </div>
+                  <button
+                    type="button"
+                    class="icon-danger"
+                    (click)="removeItem(item.product.id)"
+                    [title]="'shop.cart.removeItemTitle' | translate">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+
+                <div class="cart-item__price">
+                  <strong>{{ item.product.price | currencyBrl }}</strong>
+                  @if (item.product.originalPrice) {
+                    <span>{{ item.product.originalPrice | currencyBrl }}</span>
                   }
                 </div>
 
-                <!-- Product Info -->
-                <div class="flex-1">
-                  <div class="flex justify-between items-start mb-2">
-                    <div>
-                      <a 
-                        [routerLink]="['/loja', item.product.slug]"
-                        class="heading-4 text-primary hover:text-primary-light transition-colors"
-                      >
-                        {{ item.product.name }}
-                      </a>
-                      <span class="ml-2 text-sm text-secondary">
-                        ({{ getServiceKindLabel(item.product.serviceKind) }})
-                      </span>
-                    </div>
+                <div class="quantity-row">
+                  <span>{{ 'shop.cart.quantity' | translate }}</span>
+                  <div class="quantity-control">
                     <button
-                      class="text-secondary hover:text-red-500 transition-colors p-2"
-                      (click)="removeItem(item.product.id)"
-                      [title]="'shop.cart.removeItemTitle' | translate"
-                    >
-                      <i class="pi pi-trash"></i>
+                      type="button"
+                      (click)="updateQuantity(item, item.quantity - 1)"
+                      [disabled]="item.quantity <= 1"
+                      aria-label="Diminuir quantidade">
+                      <i class="pi pi-minus"></i>
+                    </button>
+                    <strong>{{ item.quantity }}</strong>
+                    <button
+                      type="button"
+                      (click)="updateQuantity(item, item.quantity + 1)"
+                      aria-label="Aumentar quantidade">
+                      <i class="pi pi-plus"></i>
                     </button>
                   </div>
-
-                  <!-- Price -->
-                  <div class="flex items-baseline gap-2 mb-4">
-                    <span class="text-xl font-bold text-accent">
-                      {{ item.product.price | currencyBrl }}
-                    </span>
-                    @if (item.product.originalPrice) {
-                      <span class="text-sm text-secondary line-through">
-                        {{ item.product.originalPrice | currencyBrl }}
-                      </span>
-                    }
-                  </div>
-
-                  <!-- Quantity -->
-                  <div class="flex items-center gap-4 mb-4">
-                    <label class="text-secondary text-sm">{{ 'shop.cart.quantity' | translate }}</label>
-                    <div class="flex items-center gap-2">
-                      <button 
-                        class="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center justify-center"
-                        (click)="updateQuantity(item, item.quantity - 1)"
-                        [disabled]="item.quantity <= 1"
-                      >
-                        <i class="pi pi-minus text-sm"></i>
-                      </button>
-                      <span class="w-8 text-center text-primary font-medium">
-                        {{ item.quantity }}
-                      </span>
-                      <button 
-                        class="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex items-center justify-center"
-                        (click)="updateQuantity(item, item.quantity + 1)"
-                      >
-                        <i class="pi pi-plus text-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Intake Input -->
-                  @if (item.product.capabilities.intake?.enabled) {
-                    <div>
-                      <label class="text-secondary text-sm block mb-2">
-                        Informações para o atendimento
-                      </label>
-                      <textarea
-                        pInputTextarea
-                        [rows]="2"
-                        [ngModel]="item.questions?.[0] || ''"
-                        (ngModelChange)="updateQuestions(item, $event)"
-                        placeholder="Informe o que o profissional precisa saber antes do atendimento."
-                        class="w-full text-sm"
-                      ></textarea>
-                    </div>
-                  }
                 </div>
+
+                @if (item.product.capabilities.intake?.enabled) {
+                  <label class="intake-field">
+                    <span>Informações para o atendimento</span>
+                    <textarea
+                      pInputTextarea
+                      [rows]="3"
+                      [ngModel]="item.questions?.[0] || ''"
+                      (ngModelChange)="updateQuestions(item, $event)"
+                      placeholder="Informe o que o profissional precisa saber antes do atendimento.">
+                    </textarea>
+                  </label>
+                }
               </div>
-            </div>
+            </article>
           }
 
-          <!-- Clear Cart -->
-          <div class="text-right">
-            <button
-              class="text-secondary hover:text-red-500 transition-colors text-sm"
-              (click)="clearCart()"
-            >
-              <i class="pi pi-trash mr-2"></i>
-              {{ 'shop.cart.clearCart' | translate }}
-            </button>
-          </div>
+          <button type="button" class="clear-cart" (click)="clearCart()">
+            <i class="pi pi-trash"></i>
+            {{ 'shop.cart.clearCart' | translate }}
+          </button>
         </div>
 
-        <!-- Order Summary -->
-        <div class="lg:col-span-1">
-          <div class="glass-card p-6 sticky top-24">
-            <h3 class="heading-3 text-primary mb-6">{{ 'shop.cart.orderSummary' | translate }}</h3>
+        <aside class="summary-card">
+          <h2>{{ 'shop.cart.orderSummary' | translate }}</h2>
 
-            <!-- Coupon -->
-            <div class="mb-6">
-              @if (!appliedCoupon()) {
-                <label class="text-secondary text-sm block mb-2">{{ 'shop.cart.couponLabel' | translate }}</label>
-                <div class="flex gap-2">
+          <div class="coupon">
+            @if (!appliedCoupon()) {
+              <label>
+                <span>{{ 'shop.cart.couponLabel' | translate }}</span>
+                <div class="coupon__input">
                   <input
                     type="text"
                     pInputText
                     [(ngModel)]="couponCode"
-                    [placeholder]="'shop.cart.couponPlaceholder' | translate"
-                    class="flex-1"
-                  />
+                    [placeholder]="'shop.cart.couponPlaceholder' | translate" />
                   <button
-                    pButton
-                    class="btn-secondary"
-                    [loading]="applyingCoupon()"
-                    (click)="applyCoupon()"
-                    [disabled]="!couponCode()"
-                  >
+                    type="button"
+                    class="secondary-button"
+                    [disabled]="!couponCode() || applyingCoupon()"
+                    (click)="applyCoupon()">
+                    @if (applyingCoupon()) {
+                      <i class="pi pi-spinner pi-spin"></i>
+                    }
                     {{ 'shop.cart.applyCoupon' | translate }}
                   </button>
                 </div>
-              } @else {
-                <div class="flex items-center justify-between p-3 rounded-lg bg-accent/10 border border-accent/20">
-                  <div class="flex items-center gap-2">
-                    <i class="pi pi-tag text-accent"></i>
-                    <span class="text-accent font-medium">{{ appliedCoupon()!.code }}</span>
-                    @if (appliedCoupon()!.discountType === 'PERCENTAGE') {
-                      <span class="text-secondary text-sm">(-{{ appliedCoupon()!.discountValue }}%)</span>
-                    } @else {
-                      <span class="text-secondary text-sm">(-{{ appliedCoupon()!.discountValue | currencyBrl }})</span>
-                    }
-                  </div>
-                  <button pButton class="btn-text text-sm text-error" (click)="removeCoupon()">
-                    <i class="pi pi-times"></i>
-                  </button>
+              </label>
+            } @else {
+              <div class="coupon-applied">
+                <div>
+                  <i class="pi pi-tag"></i>
+                  <strong>{{ appliedCoupon()!.code }}</strong>
+                  @if (appliedCoupon()!.discountType === 'PERCENTAGE') {
+                    <span>-{{ appliedCoupon()!.discountValue }}%</span>
+                  } @else {
+                    <span>-{{ appliedCoupon()!.discountValue | currencyBrl }}</span>
+                  }
                 </div>
-              }
-            </div>
-
-            <!-- Totals -->
-            <div class="space-y-4 py-6 border-y border-primary/10">
-              <div class="flex justify-between">
-                <span class="text-secondary">{{ 'shop.cart.subtotal' | translate }}</span>
-                <span class="text-primary">{{ subtotal() | currencyBrl }}</span>
+                <button type="button" (click)="removeCoupon()" aria-label="Remover cupom">
+                  <i class="pi pi-times"></i>
+                </button>
               </div>
-              @if (discountAmount() > 0) {
-                <div class="flex justify-between">
-                  <span class="text-secondary">{{ 'shop.cart.discount' | translate }}</span>
-                  <span class="text-accent">-{{ discountAmount() | currencyBrl }}</span>
-                </div>
-              }
-            </div>
-
-            <div class="flex justify-between py-6">
-              <span class="text-primary font-bold text-lg">{{ 'shop.cart.total' | translate }}</span>
-              <span class="text-accent font-bold text-2xl">{{ total() | currencyBrl }}</span>
-            </div>
-
-            <!-- Checkout Button -->
-            <button
-              pButton
-              class="btn-primary w-full mb-4"
-              (click)="proceedToCheckout()"
-            >
-              <i class="pi pi-credit-card mr-2"></i>
-              {{ 'shop.cart.checkout' | translate }}
-            </button>
-
-            <a
-              routerLink="/loja"
-              class="btn-outline w-full text-center flex items-center justify-center gap-2"
-            >
-              <i class="pi pi-arrow-left"></i>
-              {{ 'shop.cart.continueShopping' | translate }}
-            </a>
-
-            <!-- Trust Badges -->
-            <div class="mt-6 pt-6 border-t border-primary/10">
-              <div class="flex flex-wrap justify-center gap-4 text-secondary text-sm">
-                <div class="flex items-center gap-1">
-                  <i class="pi pi-lock text-accent"></i>
-                  <span>{{ 'shop.cart.secure' | translate }}</span>
-                </div>
-                <div class="flex items-center gap-1">
-                  <i class="pi pi-shield text-accent"></i>
-                  <span>{{ 'shop.cart.private' | translate }}</span>
-                </div>
-                <div class="flex items-center gap-1">
-                  <i class="pi pi-check-circle text-accent"></i>
-                  <span>{{ 'shop.cart.guaranteed' | translate }}</span>
-                </div>
-              </div>
-            </div>
+            }
           </div>
-        </div>
+
+          <dl class="totals">
+            <div>
+              <dt>{{ 'shop.cart.subtotal' | translate }}</dt>
+              <dd>{{ subtotal() | currencyBrl }}</dd>
+            </div>
+            @if (discountAmount() > 0) {
+              <div>
+                <dt>{{ 'shop.cart.discount' | translate }}</dt>
+                <dd class="discount">-{{ discountAmount() | currencyBrl }}</dd>
+              </div>
+            }
+          </dl>
+
+          <div class="grand-total">
+            <span>{{ 'shop.cart.total' | translate }}</span>
+            <strong>{{ total() | currencyBrl }}</strong>
+          </div>
+
+          <button type="button" class="checkout-button" (click)="proceedToCheckout()">
+            <i class="pi pi-lock"></i>
+            {{ 'shop.cart.checkout' | translate }}
+          </button>
+
+          <a routerLink="/loja" class="continue-link">
+            <i class="pi pi-arrow-left"></i>
+            {{ 'shop.cart.continueShopping' | translate }}
+          </a>
+
+          <div class="trust-list">
+            <span><i class="pi pi-lock"></i>{{ 'shop.cart.secure' | translate }}</span>
+            <span><i class="pi pi-shield"></i>{{ 'shop.cart.private' | translate }}</span>
+          </div>
+        </aside>
       </div>
     }
   </div>
