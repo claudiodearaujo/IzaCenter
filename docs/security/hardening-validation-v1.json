@@ -11,7 +11,7 @@
     "migrations": 10,
     "httpAssertions": 25,
     "replayConcurrencyRevocation": "PASS",
-    "nativePostgreSQL": "pending CI"
+    "nativePostgreSQL": "PASS — PostgreSQL 16, CI run 36002303490"
   },
   "operationalBlockers": [
     "Coolify host offline",
@@ -19,9 +19,16 @@
     "private bucket provisioning and legacy media migration require runtime access"
   ],
   "dependencyAudit": {
-    "backend": "no high/critical",
+    "backend": "0 alerts",
     "frontend": "0 alerts",
     "e2e": "0 alerts",
     "root": "1 low (Quill), no high/critical"
+  },
+  "securityCI": {
+    "run": 36002303490,
+    "integration": "PASS",
+    "SAST": "PASS",
+    "SCA": "PASS — all 4 manifests",
+    "frontend": "pending updated memory-only assertions"
   }
 }
