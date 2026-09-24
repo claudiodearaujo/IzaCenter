@@ -364,6 +364,29 @@ export class PrivacyService {
     return prisma.securityIncident.update({ where: { id }, data });
   }
 
+  async updatePrivacyContact(
+    tenantId: string,
+    data: { name: string; email: string; url?: string }
+  ) {
+    await prisma.$transaction(async (tx) => {
+      const values = [
+        ['privacyContactName', data.name],
+        ['privacyContactEmail', data.email],
+        ['privacyContactUrl', data.url || ''],
+      ] as const;
+
+      for (const [key, value] of values) {
+        await tx.siteSetting.upsert({
+          where: { tenantId_key: { tenantId, key } },
+          create: { tenantId, key, value },
+          update: { value },
+        });
+      }
+    });
+
+    return this.getPrivacyContact(tenantId);
+  }
+
   async getPrivacyContact(tenantId: string) {
     const rows = await prisma.siteSetting.findMany({
       where: {
