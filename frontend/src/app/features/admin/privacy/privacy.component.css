@@ -124,10 +124,15 @@
   gap: 16px;
 }
 
+.contact-form,
 .retention-grid,
 .incident-form {
   display: grid;
   gap: 12px;
+}
+
+.contact-form {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .retention-grid {
@@ -185,6 +190,7 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .contact-form,
   .retention-grid {
     grid-template-columns: 1fr;
   }
@@ -192,4 +198,15 @@ textarea {
   .request-actions {
     grid-template-columns: 1fr;
   }
+}
+
+.incident-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.incident-controls select {
+  min-width: 150px;
 }
