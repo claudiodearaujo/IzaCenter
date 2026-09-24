@@ -49,6 +49,13 @@ export class PrivacyController {
     } catch (error) { next(error); }
   }
 
+  async updateContact(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await privacyService.updatePrivacyContact(req.tenant!.id, req.body);
+      res.json({ success: true, data });
+    } catch (error) { next(error); }
+  }
+
   async listRequests(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await privacyService.listRequests(req.tenant!.id, req.query as any);
