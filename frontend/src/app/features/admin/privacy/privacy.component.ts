@@ -46,8 +46,10 @@ export class AdminPrivacyComponent implements OnInit {
   retentionReport = signal<any>(null);
   loading = signal(true);
   savingRetention = signal(false);
+  savingContact = signal(false);
   creatingIncident = signal(false);
   updatingRequestId = signal<string | null>(null);
+  updatingIncidentId = signal<string | null>(null);
 
   retention: Pick<
     RetentionPolicy,
@@ -60,6 +62,13 @@ export class AdminPrivacyComponent implements OnInit {
 
   requestStatuses: Record<string, string> = {};
   responseMessages: Record<string, string> = {};
+  incidentStatuses: Record<string, string> = {};
+
+  privacyContact = {
+    name: '',
+    email: '',
+    url: '',
+  };
 
   incidentForm = {
     title: '',
@@ -76,11 +85,23 @@ export class AdminPrivacyComponent implements OnInit {
 
   load(): void {
     this.loading.set(true);
-    let pending = 5;
+    let pending = 6;
     const done = () => {
       pending -= 1;
       if (pending === 0) this.loading.set(false);
     };
+
+    this.privacy.contact().subscribe({
+      next: (response) => {
+        this.privacyContact = {
+          name: typeof response.data.name === 'string' ? response.data.name : '',
+          email: typeof response.data.email === 'string' ? response.data.email : '',
+          url: typeof response.data.url === 'string' ? response.data.url : '',
+        };
+        done();
+      },
+      error: () => done(),
+    });
 
     this.privacy.adminRequests().subscribe({
       next: (response) => {
@@ -125,9 +146,37 @@ export class AdminPrivacyComponent implements OnInit {
     this.privacy.incidents().subscribe({
       next: (response) => {
         this.incidents.set(response.data);
+        for (const incident of response.data) {
+          this.incidentStatuses[incident.id] = incident.status;
+        }
         done();
       },
       error: () => done(),
+    });
+  }
+
+  saveContact(): void {
+    if (!this.privacyContact.name.trim() || !this.privacyContact.email.trim()) {
+      this.notification.showWarning('Informe nome e e-mail do canal de privacidade.');
+      return;
+    }
+
+    this.savingContact.set(true);
+    this.privacy.updateContact({
+      name: this.privacyContact.name.trim(),
+      email: this.privacyContact.email.trim(),
+      url: this.privacyContact.url.trim() || undefined,
+    }).subscribe({
+      next: () => {
+        this.savingContact.set(false);
+        this.notification.showSuccess('Canal de privacidade atualizado.');
+      },
+      error: (error) => {
+        this.savingContact.set(false);
+        this.notification.showError(
+          error.error?.message || 'Não foi possível atualizar o canal de privacidade.'
+        );
+      },
     });
   }
 
@@ -219,6 +268,25 @@ export class AdminPrivacyComponent implements OnInit {
           );
         },
       });
+  }
+
+  updateIncident(incident: SecurityIncident): void {
+    this.updatingIncidentId.set(incident.id);
+    this.privacy.updateIncident(incident.id, {
+      status: this.incidentStatuses[incident.id],
+    }).subscribe({
+      next: () => {
+        this.updatingIncidentId.set(null);
+        this.notification.showSuccess('Incidente atualizado.');
+        this.load();
+      },
+      error: (error) => {
+        this.updatingIncidentId.set(null);
+        this.notification.showError(
+          error.error?.message || 'Não foi possível atualizar o incidente.'
+        );
+      },
+    });
   }
 
   statusTone(status: string): Tone {
