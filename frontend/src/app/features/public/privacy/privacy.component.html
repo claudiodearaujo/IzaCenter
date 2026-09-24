@@ -1,37 +1,21 @@
-<div class="py-16">
-  <div class="container mx-auto px-4 max-w-4xl">
-    <!-- Header -->
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">
-        {{ 'privacy.title' | translate }}
-      </h1>
-      <p class="text-neutral-500 text-sm">
-        {{ 'privacy.lastUpdated' | translate }}: {{ 'privacy.lastUpdatedDate' | translate }}
-      </p>
-    </div>
+<section class="legal-page">
+  <div class="legal-container">
+    <header class="legal-header">
+      <span class="eyebrow">Privacidade</span>
+      <h1>{{ 'privacy.title' | translate }}</h1>
+      <p>{{ 'privacy.lastUpdated' | translate }}: {{ 'privacy.lastUpdatedDate' | translate }}</p>
+    </header>
 
-    <!-- Content -->
-    <div class="prose prose-neutral max-w-none space-y-10">
-
-      <!-- Introduction -->
-      <section>
-        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
-          {{ 'privacy.sections.introduction.title' | translate }}
-        </h2>
-        <p class="text-neutral-600 leading-relaxed">
-          {{ 'privacy.sections.introduction.content' | translate }}
-        </p>
+    <article class="legal-document">
+      <section class="legal-section">
+        <h2>{{ 'privacy.sections.introduction.title' | translate }}</h2>
+        <p>{{ 'privacy.sections.introduction.content' | translate }}</p>
       </section>
 
-      <!-- Data Collected -->
-      <section>
-        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
-          {{ 'privacy.sections.dataCollected.title' | translate }}
-        </h2>
-        <p class="text-neutral-600 leading-relaxed mb-4">
-          {{ 'privacy.sections.dataCollected.content' | translate }}
-        </p>
-        <ul class="list-disc list-inside space-y-2 text-neutral-600">
+      <section class="legal-section">
+        <h2>{{ 'privacy.sections.dataCollected.title' | translate }}</h2>
+        <p>{{ 'privacy.sections.dataCollected.content' | translate }}</p>
+        <ul>
           <li>{{ 'privacy.sections.dataCollected.item1' | translate }}</li>
           <li>{{ 'privacy.sections.dataCollected.item2' | translate }}</li>
           <li>{{ 'privacy.sections.dataCollected.item3' | translate }}</li>
@@ -39,15 +23,10 @@
         </ul>
       </section>
 
-      <!-- Data Use -->
-      <section>
-        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
-          {{ 'privacy.sections.dataUse.title' | translate }}
-        </h2>
-        <p class="text-neutral-600 leading-relaxed mb-4">
-          {{ 'privacy.sections.dataUse.content' | translate }}
-        </p>
-        <ul class="list-disc list-inside space-y-2 text-neutral-600">
+      <section class="legal-section">
+        <h2>{{ 'privacy.sections.dataUse.title' | translate }}</h2>
+        <p>{{ 'privacy.sections.dataUse.content' | translate }}</p>
+        <ul>
           <li>{{ 'privacy.sections.dataUse.item1' | translate }}</li>
           <li>{{ 'privacy.sections.dataUse.item2' | translate }}</li>
           <li>{{ 'privacy.sections.dataUse.item3' | translate }}</li>
@@ -55,30 +34,20 @@
         </ul>
       </section>
 
-      <!-- Data Sharing -->
-      <section>
-        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
-          {{ 'privacy.sections.dataSharing.title' | translate }}
-        </h2>
-        <p class="text-neutral-600 leading-relaxed mb-4">
-          {{ 'privacy.sections.dataSharing.content' | translate }}
-        </p>
-        <ul class="list-disc list-inside space-y-2 text-neutral-600">
+      <section class="legal-section">
+        <h2>{{ 'privacy.sections.dataSharing.title' | translate }}</h2>
+        <p>{{ 'privacy.sections.dataSharing.content' | translate }}</p>
+        <ul>
           <li>{{ 'privacy.sections.dataSharing.item1' | translate }}</li>
           <li>{{ 'privacy.sections.dataSharing.item2' | translate }}</li>
           <li>{{ 'privacy.sections.dataSharing.item3' | translate }}</li>
         </ul>
       </section>
 
-      <!-- User Rights (LGPD) -->
-      <section class="bg-primary-50 rounded-2xl p-6">
-        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
-          {{ 'privacy.sections.userRights.title' | translate }}
-        </h2>
-        <p class="text-neutral-600 leading-relaxed mb-4">
-          {{ 'privacy.sections.userRights.content' | translate }}
-        </p>
-        <ul class="list-disc list-inside space-y-2 text-neutral-600">
+      <section class="legal-section legal-section--highlight">
+        <h2>{{ 'privacy.sections.userRights.title' | translate }}</h2>
+        <p>{{ 'privacy.sections.userRights.content' | translate }}</p>
+        <ul>
           <li>{{ 'privacy.sections.userRights.item1' | translate }}</li>
           <li>{{ 'privacy.sections.userRights.item2' | translate }}</li>
           <li>{{ 'privacy.sections.userRights.item3' | translate }}</li>
@@ -88,55 +57,33 @@
         </ul>
       </section>
 
-      <!-- Cookies -->
-      <section>
-        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
-          {{ 'privacy.sections.cookies.title' | translate }}
-        </h2>
-        <p class="text-neutral-600 leading-relaxed">
-          {{ 'privacy.sections.cookies.content' | translate }}
-        </p>
+      <section class="legal-section">
+        <h2>{{ 'privacy.sections.cookies.title' | translate }}</h2>
+        <p>{{ 'privacy.sections.cookies.content' | translate }}</p>
       </section>
 
-      <!-- Data Security -->
-      <section>
-        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
-          {{ 'privacy.sections.security.title' | translate }}
-        </h2>
-        <p class="text-neutral-600 leading-relaxed">
-          {{ 'privacy.sections.security.content' | translate }}
-        </p>
+      <section class="legal-section">
+        <h2>{{ 'privacy.sections.security.title' | translate }}</h2>
+        <p>{{ 'privacy.sections.security.content' | translate }}</p>
       </section>
 
-      <!-- Data Retention -->
-      <section>
-        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
-          {{ 'privacy.sections.retention.title' | translate }}
-        </h2>
-        <p class="text-neutral-600 leading-relaxed">
-          {{ 'privacy.sections.retention.content' | translate }}
-        </p>
+      <section class="legal-section">
+        <h2>{{ 'privacy.sections.retention.title' | translate }}</h2>
+        <p>{{ 'privacy.sections.retention.content' | translate }}</p>
       </section>
 
-      <!-- DPO Contact -->
-      <section>
-        <h2 class="text-2xl font-serif font-bold text-neutral-800 mb-4">
-          {{ 'privacy.sections.dpo.title' | translate }}
-        </h2>
-        <p class="text-neutral-600 leading-relaxed mb-4">
-          {{ 'privacy.sections.dpo.content' | translate }}
-        </p>
-        <a routerLink="/contato" class="text-primary-600 hover:text-primary-700 font-medium underline">
-          {{ 'privacy.sections.dpo.link' | translate }}
-        </a>
+      <section class="legal-section">
+        <h2>{{ 'privacy.sections.dpo.title' | translate }}</h2>
+        <p>{{ 'privacy.sections.dpo.content' | translate }}</p>
+        <a routerLink="/contato">{{ 'privacy.sections.dpo.link' | translate }}</a>
       </section>
-    </div>
+    </article>
 
-    <!-- Back to Home -->
-    <div class="mt-12 text-center">
-      <a routerLink="/" class="text-primary-600 hover:text-primary-700 font-medium">
-        ← {{ 'common.backToHome' | translate }}
+    <footer class="legal-footer">
+      <a routerLink="/" class="back-link">
+        <i class="pi pi-arrow-left"></i>
+        {{ 'common.backToHome' | translate }}
       </a>
-    </div>
+    </footer>
   </div>
-</div>
+</section>
