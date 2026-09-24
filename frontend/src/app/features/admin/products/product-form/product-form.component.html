@@ -1,340 +1,333 @@
-<!-- apps/frontend/src/app/features/admin/products/product-form/product-form.component.html -->
+<section class="product-form-page">
+  <a routerLink="/admin/produtos" class="back-link">
+    <i class="pi pi-arrow-left"></i>
+    {{ 'common.back' | translate }}
+  </a>
 
-<section class="py-8">
-  <div class="container-custom max-w-4xl">
-    <!-- Back Button -->
-    <a routerLink="/admin/produtos" class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6">
-      <i class="pi pi-arrow-left mr-2"></i>
-      {{ 'common.back' | translate }}
-    </a>
-
-    <!-- Header -->
-    <div class="mb-8">
-      <h1 class="heading-1 text-primary mb-2">
-        {{ isEditing() ? ('admin.products.editProduct' | translate) : ('admin.products.newProduct' | translate) }}
-      </h1>
-      <p class="text-secondary">
-        {{ isEditing() ? ('admin.products.subtitle' | translate) : ('admin.products.subtitle' | translate) }}
-      </p>
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">Catálogo</span>
+      <h1>{{ isEditing() ? ('admin.products.editProduct' | translate) : ('admin.products.newProduct' | translate) }}</h1>
+      <p>{{ 'admin.products.subtitle' | translate }}</p>
     </div>
+  </div>
 
-    @if (loading()) {
-      <div class="glass-card p-8">
-        <div class="animate-pulse space-y-4">
-          <div class="h-10 bg-primary/10 rounded"></div>
-          <div class="h-32 bg-primary/10 rounded"></div>
-          <div class="h-10 bg-primary/10 rounded"></div>
-        </div>
-      </div>
-    } @else {
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Main Form -->
-        <div class="lg:col-span-2 space-y-6">
-          <!-- Basic Info -->
-          <div class="glass-card p-6">
-            <h3 class="heading-3 text-primary mb-6">{{ 'admin.products.productDetails' | translate }}</h3>
-
-            <div class="space-y-4">
-              <div>
-                <label for="name" class="block text-secondary text-sm mb-2">
-                  {{ 'admin.products.name' | translate }} *
-                </label>
-                <input
-                  pInputText
-                  id="name"
-                  [(ngModel)]="form.name"
-                  class="w-full"
-                  [placeholder]="'admin.products.namePlaceholder' | translate"
-                />
-              </div>
-
-              <div>
-                <label for="shortDescription" class="block text-secondary text-sm mb-2">
-                  {{ 'admin.products.shortDescription' | translate }}
-                </label>
-                <input
-                  pInputText
-                  id="shortDescription"
-                  [(ngModel)]="form.shortDescription"
-                  class="w-full"
-                  [placeholder]="'admin.products.descriptionPlaceholder' | translate"
-                />
-              </div>
-
-              <div>
-                <label for="description" class="block text-secondary text-sm mb-2">
-                  {{ 'admin.products.longDescription' | translate }}
-                </label>
-                <p-editor
-                  [(ngModel)]="form.fullDescription"
-                  [style]="{'height':'200px'}"
-                />
-              </div>
+  @if (loading()) {
+    <div class="loading-card">
+      <div class="loading-line loading-line--lg"></div>
+      <div class="loading-block"></div>
+      <div class="loading-line"></div>
+    </div>
+  } @else {
+    <div class="form-layout">
+      <main class="form-main">
+        <section class="form-card">
+          <div class="section-heading">
+            <span><i class="pi pi-file-edit"></i></span>
+            <div>
+              <h2>{{ 'admin.products.productDetails' | translate }}</h2>
+              <p>Defina nome e descrição apresentados ao cliente.</p>
             </div>
           </div>
 
-          <!-- Type & Category -->
-          <div class="glass-card p-6">
-            <h3 class="heading-3 text-primary mb-6">{{ 'admin.products.type' | translate }}</h3>
+          <div class="field-stack">
+            <label class="field">
+              <span>{{ 'admin.products.name' | translate }} *</span>
+              <input
+                pInputText
+                id="name"
+                [(ngModel)]="form.name"
+                [placeholder]="'admin.products.namePlaceholder' | translate" />
+            </label>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label for="serviceKind" class="block text-secondary text-sm mb-2">
-                  Tipo de serviço *
-                </label>
-                <p-select
-                  id="serviceKind"
-                  [options]="serviceKindOptions"
-                  [(ngModel)]="form.serviceKind"
-                  optionLabel="label"
-                  optionValue="value"
-                  styleClass="w-full"
-                />
+            <label class="field">
+              <span>{{ 'admin.products.shortDescription' | translate }}</span>
+              <input
+                pInputText
+                id="shortDescription"
+                [(ngModel)]="form.shortDescription"
+                [placeholder]="'admin.products.descriptionPlaceholder' | translate" />
+            </label>
+
+            <label class="field">
+              <span>{{ 'admin.products.longDescription' | translate }}</span>
+              <p-editor
+                [(ngModel)]="form.fullDescription"
+                [style]="{'height':'220px'}" />
+            </label>
+          </div>
+        </section>
+
+        <section class="form-card">
+          <div class="section-heading">
+            <span><i class="pi pi-sliders-h"></i></span>
+            <div>
+              <h2>Estrutura do serviço</h2>
+              <p>Classifique o item e habilite apenas as capacidades que ele realmente oferece.</p>
+            </div>
+          </div>
+
+          <div class="two-columns">
+            <label class="field">
+              <span>Tipo de serviço *</span>
+              <p-select
+                id="serviceKind"
+                [options]="serviceKindOptions"
+                [(ngModel)]="form.serviceKind"
+                optionLabel="label"
+                optionValue="value"
+                styleClass="w-full" />
+            </label>
+
+            <label class="field">
+              <span>{{ 'admin.products.category' | translate }}</span>
+              <p-select
+                id="category"
+                [options]="categories()"
+                [(ngModel)]="form.categoryId"
+                optionLabel="name"
+                optionValue="id"
+                [placeholder]="'admin.products.selectCategory' | translate"
+                [showClear]="true"
+                styleClass="w-full" />
+            </label>
+          </div>
+
+          <div class="capabilities">
+            <div class="capability">
+              <div class="capability__header">
+                <div>
+                  <strong>Agendamento</strong>
+                  <span>O serviço exige escolha de data e horário.</span>
+                </div>
+                <p-checkbox
+                  [(ngModel)]="form.capabilities.scheduling.enabled"
+                  [binary]="true"
+                  inputId="capScheduling" />
               </div>
 
-              <div>
-                <label for="category" class="block text-secondary text-sm mb-2">
-                  {{ 'admin.products.category' | translate }}
+              @if (form.capabilities.scheduling.enabled) {
+                <label class="field capability__detail">
+                  <span>Duração da sessão</span>
+                  <p-inputNumber
+                    [(ngModel)]="form.capabilities.scheduling.durationMinutes"
+                    [min]="15"
+                    [step]="15"
+                    suffix=" min"
+                    styleClass="w-full" />
                 </label>
-                <p-select
-                  id="category"
-                  [options]="categories()"
-                  [(ngModel)]="form.categoryId"
-                  optionLabel="name"
-                  optionValue="id"
-                  [placeholder]="'admin.products.selectCategory' | translate"
-                  [showClear]="true"
-                  styleClass="w-full"
-                />
+              }
+            </div>
+
+            <div class="capability">
+              <div class="capability__header">
+                <div>
+                  <strong>Preparação prévia</strong>
+                  <span>Coleta informações antes do atendimento.</span>
+                </div>
+                <p-checkbox
+                  [(ngModel)]="form.capabilities.intake.enabled"
+                  [binary]="true"
+                  inputId="capIntake" />
               </div>
 
-              <div class="md:col-span-2 rounded-lg border border-white/10 p-4 space-y-4">
-                <h4 class="text-primary font-medium">Capacidades do serviço</h4>
+              @if (form.capabilities.intake.enabled) {
+                <label class="field capability__detail">
+                  <span>Limite de perguntas/campos</span>
+                  <p-inputNumber
+                    [(ngModel)]="form.capabilities.intake.maxQuestions"
+                    [min]="1"
+                    styleClass="w-full" />
+                </label>
+              }
+            </div>
 
-                <div class="flex items-center gap-3">
-                  <p-checkbox
-                    [(ngModel)]="form.capabilities.scheduling.enabled"
-                    [binary]="true"
-                    inputId="capScheduling"
-                  />
-                  <label for="capScheduling" class="text-primary">Requer agendamento</label>
+            <div class="capability">
+              <div class="capability__header">
+                <div>
+                  <strong>Entrega digital</strong>
+                  <span>Disponibiliza material após a contratação ou atendimento.</span>
                 </div>
+                <p-checkbox
+                  [(ngModel)]="form.capabilities.digitalDelivery.enabled"
+                  [binary]="true"
+                  inputId="capDigital" />
+              </div>
 
-                @if (form.capabilities.scheduling.enabled) {
-                  <div>
-                    <label for="duration" class="block text-secondary text-sm mb-2">Duração da sessão</label>
-                    <p-inputNumber
-                      id="duration"
-                      [(ngModel)]="form.capabilities.scheduling.durationMinutes"
-                      [min]="15"
-                      [step]="15"
-                      suffix=" min"
-                      styleClass="w-full"
-                    />
-                  </div>
-                }
-
-                <div class="flex items-center gap-3">
-                  <p-checkbox
-                    [(ngModel)]="form.capabilities.intake.enabled"
-                    [binary]="true"
-                    inputId="capIntake"
-                  />
-                  <label for="capIntake" class="text-primary">Coleta informações/perguntas antes do atendimento</label>
-                </div>
-
-                @if (form.capabilities.intake.enabled) {
-                  <div>
-                    <label for="maxQuestions" class="block text-secondary text-sm mb-2">Limite de perguntas/campos</label>
-                    <p-inputNumber
-                      id="maxQuestions"
-                      [(ngModel)]="form.capabilities.intake.maxQuestions"
-                      [min]="1"
-                      styleClass="w-full"
-                    />
-                  </div>
-                }
-
-                <div class="flex items-center gap-3">
-                  <p-checkbox
-                    [(ngModel)]="form.capabilities.digitalDelivery.enabled"
-                    [binary]="true"
-                    inputId="capDigital"
-                  />
-                  <label for="capDigital" class="text-primary">Possui entrega digital</label>
-                </div>
-
-                @if (form.capabilities.digitalDelivery.enabled) {
+              @if (form.capabilities.digitalDelivery.enabled) {
+                <label class="field capability__detail">
+                  <span>Formato</span>
                   <p-select
                     [options]="deliveryFormatOptions"
                     [(ngModel)]="form.capabilities.digitalDelivery.format"
                     optionLabel="label"
                     optionValue="value"
                     placeholder="Formato de entrega"
-                    styleClass="w-full"
-                  />
-                }
+                    styleClass="w-full" />
+                </label>
+              }
+            </div>
 
-                <div class="flex items-center gap-3">
-                  <p-checkbox
-                    [(ngModel)]="form.capabilities.recurring.enabled"
-                    [binary]="true"
-                    inputId="capRecurring"
-                  />
-                  <label for="capRecurring" class="text-primary">Serviço recorrente / pacote</label>
+            <div class="capability">
+              <div class="capability__header">
+                <div>
+                  <strong>Recorrência / pacote</strong>
+                  <span>Representa uma sequência de sessões ou acompanhamento.</span>
                 </div>
+                <p-checkbox
+                  [(ngModel)]="form.capabilities.recurring.enabled"
+                  [binary]="true"
+                  inputId="capRecurring" />
+              </div>
 
-                @if (form.capabilities.recurring.enabled) {
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              @if (form.capabilities.recurring.enabled) {
+                <div class="two-columns capability__detail">
+                  <label class="field">
+                    <span>Quantidade de sessões</span>
                     <p-inputNumber
                       [(ngModel)]="form.capabilities.recurring.sessions"
                       [min]="1"
-                      placeholder="Quantidade de sessões"
-                      styleClass="w-full"
-                    />
+                      placeholder="Sessões"
+                      styleClass="w-full" />
+                  </label>
+
+                  <label class="field">
+                    <span>Cadência</span>
                     <input
                       pInputText
                       [(ngModel)]="form.capabilities.recurring.cadence"
-                      class="w-full"
-                      placeholder="Cadência, ex.: semanal"
-                    />
-                  </div>
-                }
-              </div>
-
-              <div>
-                <label for="deliveryTime" class="block text-secondary text-sm mb-2">
-                  {{ 'admin.products.createdAt' | translate }}
-                </label>
-                <input
-                  pInputText
-                  id="deliveryTime"
-                  [(ngModel)]="form.validityDays"
-                  class="w-full"
-                  placeholder="Ex: 48 horas"
-                />
-              </div>
+                      placeholder="Ex.: semanal" />
+                  </label>
+                </div>
+              }
             </div>
           </div>
 
-          <!-- Metadata will go here in future -->
-        </div>
+          <label class="field validity-field">
+            <span>Validade de acesso</span>
+            <input
+              pInputText
+              id="deliveryTime"
+              [(ngModel)]="form.validityDays"
+              placeholder="Ex.: 30" />
+            <small>Quantidade de dias em que o conteúdo ou serviço permanece disponível, quando aplicável.</small>
+          </label>
+        </section>
+      </main>
 
-        <!-- Sidebar -->
-        <div class="space-y-6">
-          <!-- Pricing -->
-          <div class="glass-card p-6">
-            <h3 class="heading-3 text-primary mb-6">{{ 'admin.products.price' | translate }}</h3>
-
-            <div class="space-y-4">
-              <div>
-                <label for="price" class="block text-secondary text-sm mb-2">
-                  {{ 'admin.products.price' | translate }} *
-                </label>
-                <p-inputNumber
-                  id="price"
-                  [(ngModel)]="form.price"
-                  mode="currency"
-                  currency="BRL"
-                  locale="pt-BR"
-                  styleClass="w-full"
-                />
-              </div>
-
-              <div>
-                <label for="originalPrice" class="block text-secondary text-sm mb-2">
-                  {{ 'admin.products.price' | translate }} ({{ 'common.info' | translate }})
-                </label>
-                <p-inputNumber
-                  id="originalPrice"
-                  [(ngModel)]="form.originalPrice"
-                  mode="currency"
-                  currency="BRL"
-                  locale="pt-BR"
-                  styleClass="w-full"
-                />
-                <p class="text-secondary/60 text-xs mt-1">
-                  {{ 'common.info' | translate }}
-                </p>
-              </div>
-            </div>
+      <aside class="form-aside">
+        <section class="form-card">
+          <div class="aside-heading">
+            <span><i class="pi pi-wallet"></i></span>
+            <h2>{{ 'admin.products.price' | translate }}</h2>
           </div>
 
-          <!-- Image -->
-          <div class="glass-card p-6">
-            <h3 class="heading-3 text-primary mb-6">{{ 'admin.products.image' | translate }}</h3>
+          <div class="field-stack">
+            <label class="field">
+              <span>{{ 'admin.products.price' | translate }} *</span>
+              <p-inputNumber
+                [(ngModel)]="form.price"
+                mode="currency"
+                currency="BRL"
+                locale="pt-BR"
+                styleClass="w-full" />
+            </label>
 
-            @if (coverImageUrl()) {
-              <div class="mb-4">
-                <img 
-                  [src]="coverImageUrl()" 
-                  alt="Cover"
-                  class="w-full rounded-lg"
-                />
-              </div>
+            <label class="field">
+              <span>Preço anterior</span>
+              <p-inputNumber
+                [(ngModel)]="form.originalPrice"
+                mode="currency"
+                currency="BRL"
+                locale="pt-BR"
+                styleClass="w-full" />
+              <small>Opcional. Use apenas quando houver um preço de referência legítimo.</small>
+            </label>
+          </div>
+        </section>
+
+        <section class="form-card">
+          <div class="aside-heading">
+            <span><i class="pi pi-image"></i></span>
+            <h2>{{ 'admin.products.image' | translate }}</h2>
+          </div>
+
+          @if (coverImageUrl()) {
+            <div class="cover-preview">
+              <img [src]="coverImageUrl()" alt="Imagem de capa do serviço" />
+            </div>
+          } @else {
+            <div class="cover-empty">
+              <i class="pi pi-image"></i>
+              <span>Nenhuma imagem definida</span>
+            </div>
+          }
+
+          <p-fileUpload
+            mode="basic"
+            name="cover"
+            accept="image/*"
+            [maxFileSize]="5000000"
+            [auto]="true"
+            [chooseLabel]="'admin.products.uploadImage' | translate"
+            [customUpload]="true"
+            (uploadHandler)="onImageUpload($event)"
+            [disabled]="!isEditing()"
+            styleClass="w-full" />
+
+          @if (!isEditing()) {
+            <p class="helper-text">Salve o produto primeiro para habilitar o upload da imagem.</p>
+          }
+        </section>
+
+        <section class="form-card">
+          <div class="aside-heading">
+            <span><i class="pi pi-eye"></i></span>
+            <h2>Publicação</h2>
+          </div>
+
+          <label class="option-row">
+            <div>
+              <strong>{{ 'admin.products.active' | translate }}</strong>
+              <span>Disponibiliza o item no catálogo público.</span>
+            </div>
+            <p-checkbox
+              [(ngModel)]="form.isActive"
+              [binary]="true"
+              inputId="isActive" />
+          </label>
+
+          <label class="option-row">
+            <div>
+              <strong>Destaque</strong>
+              <span>Prioriza este item nas áreas que exibem serviços em destaque.</span>
+            </div>
+            <p-checkbox
+              [(ngModel)]="form.isFeatured"
+              [binary]="true"
+              inputId="isFeatured" />
+          </label>
+        </section>
+
+        <section class="actions-card">
+          <button
+            type="button"
+            class="save-button"
+            [disabled]="saving()"
+            (click)="save()">
+            @if (saving()) {
+              <i class="pi pi-spinner pi-spin"></i>
+            } @else {
+              <i class="pi pi-check"></i>
             }
+            {{ isEditing() ? ('common.save' | translate) : ('admin.products.newProduct' | translate) }}
+          </button>
 
-            <p-fileUpload
-              mode="basic"
-              name="cover"
-              accept="image/*"
-              [maxFileSize]="5000000"
-              [auto]="true"
-              [chooseLabel]="'admin.products.uploadImage' | translate"
-              [customUpload]="true"
-              (uploadHandler)="onImageUpload($event)"
-              [disabled]="!isEditing()"
-              styleClass="w-full"
-            />
-            @if (!isEditing()) {
-              <p class="text-secondary/60 text-xs mt-2">
-                {{ 'common.info' | translate }}
-              </p>
-            }
-          </div>
-
-          <!-- Status -->
-          <div class="glass-card p-6">
-            <h3 class="heading-3 text-primary mb-6">{{ 'admin.products.status' | translate }}</h3>
-
-            <div class="space-y-4">
-              <div class="flex items-center gap-3">
-                <p-checkbox
-                  [(ngModel)]="form.isActive"
-                  [binary]="true"
-                  inputId="isActive"
-                />
-                <label for="isActive" class="text-primary">{{ 'admin.products.active' | translate }}</label>
-              </div>
-
-              <div class="flex items-center gap-3">
-                <p-checkbox
-                  [(ngModel)]="form.isFeatured"
-                  [binary]="true"
-                  inputId="isFeatured"
-                />
-                <label for="isFeatured" class="text-primary">{{ 'admin.products.active' | translate }}</label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div class="glass-card p-6">
-            <button
-              pButton
-              class="btn-primary w-full mb-3"
-              [loading]="saving()"
-              (click)="save()"
-            >
-              <i class="pi pi-check mr-2"></i>
-              {{ isEditing() ? ('common.save' | translate) : ('admin.products.newProduct' | translate) }}
-            </button>
-            <a routerLink="/admin/produtos" class="btn-outline w-full block text-center">
-              {{ 'common.cancel' | translate }}
-            </a>
-          </div>
-        </div>
-      </div>
-    }
-  </div>
+          <a routerLink="/admin/produtos" class="cancel-link">
+            {{ 'common.cancel' | translate }}
+          </a>
+        </section>
+      </aside>
+    </div>
+  }
 </section>
