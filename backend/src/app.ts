@@ -31,6 +31,7 @@ import {
   tenantRoutes,
   onboardingRoutes,
   billingRoutes,
+  privacyRoutes,
 } from './modules';
 
 // Create Express app
@@ -87,9 +88,6 @@ if (env.isDevelopment) {
 // Rate limiting
 app.use(generalLimiter);
 
-// Audit logging for sensitive operations
-app.use(auditLogger);
-
 // =============================================
 // HEALTH CHECK
 // =============================================
@@ -128,9 +126,11 @@ const apiV1Prefix = `${apiPrefix}/v1`;
 
 function mountRoutes(prefix: string) {
   app.use(prefix, resolveTenant);
+  app.use(prefix, auditLogger);
   app.use(prefix, tenantRoutes);
   app.use(prefix, onboardingRoutes);
   app.use(prefix, billingRoutes);
+  app.use(prefix, privacyRoutes);
   app.use(`${prefix}/auth`, authRoutes);
   app.use(`${prefix}/users`, usersRoutes);
   app.use(`${prefix}/products`, productsRoutes);
