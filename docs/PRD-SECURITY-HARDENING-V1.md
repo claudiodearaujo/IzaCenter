@@ -1,6 +1,6 @@
 # PRD — Security Hardening v1
 
-**Status:** 🟡 Em andamento — SH-01 integrado; SH-02 a SH-05 implementados em validação; gates operacionais pendentes.
+**Status:** 🟡 Em andamento — SH-01 integrado; SH-02 a SH-05 implementados e validados no CI; gates operacionais pendentes.
 **Base inspecionada:** `972cd42fe41ee6ba93198a1a1b2c6986c7f97711`.
 **Data:** 2026-09-24.
 

@@ -1,5 +1,5 @@
 {
-  "status": "implementation-in-validation",
+  "status": "ci-validated-runtime-pending",
   "baselineCommit": "846211f2dde2aade14f548ece0f194655a05aae2",
   "localBackendTests": {
     "suites": 28,
@@ -29,6 +29,13 @@
     "integration": "PASS",
     "SAST": "PASS",
     "SCA": "PASS — all 4 manifests",
-    "frontend": "pending updated memory-only assertions"
+    "frontend": "PASS — 265 tests, build, CSP login smoke"
+  },
+  "validatedCodeCommit": "f155150e37b1ff489e1250ef8c58e33530a8dd86",
+  "frontendCI": {
+    "run": 36003115298,
+    "tests": 265,
+    "CSPLoginSmoke": "PASS",
+    "result": "PASS"
   }
 }

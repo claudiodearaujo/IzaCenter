@@ -2,7 +2,7 @@
 
 ## Estado
 
-Implementação em validação. Não declarar a trilha encerrada antes do smoke no Coolify, validação do armazenamento privado e confirmação dos checks obrigatórios na main.
+Implementação validada no CI; implantação operacional pendente. Não declarar a trilha encerrada antes do smoke no Coolify, validação do armazenamento privado e confirmação dos checks obrigatórios na main.
 
 ## Mudanças de comportamento
 
@@ -83,3 +83,7 @@ A migration é aditiva. Em falha, preferir correção para frente; preservar bac
 - Bucket privado e migração de mídias legadas dependem de acesso/configuração reais.
 
 Esses itens impedem marcar todos os gates de saída como concluídos, mesmo com código e CI verdes.
+
+## Evidência do PR #118
+
+Código `f155150e37b1ff489e1250ef8c58e33530a8dd86`: backend 28 suites/374 testes; frontend 265 testes, build e smoke de login no Chrome com CSP; integração PostgreSQL 16 com 10 migrations e 25 verificações HTTP, além de concorrência/revogação; SAST e quatro auditorias de dependências aprovados. CI frontend/backend: execução `36003115298`. Zero alertas altos/críticos; permanece um alerta baixo Quill na raiz. A execução de E2E contra o Coolify continua desabilitada no runner externo por ser tailnet-only.
