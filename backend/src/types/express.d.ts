@@ -29,6 +29,7 @@ declare global {
 }
 
 export interface JwtPayload {
+  sid: string;
   sub: string;
   email: string;
   role: 'CLIENT' | 'ADMIN';

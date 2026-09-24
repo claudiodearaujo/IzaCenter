@@ -87,7 +87,7 @@ export class UsersService {
     if (user.avatarUrl) {
       const oldPath = user.avatarUrl.split('/').pop();
       if (oldPath) {
-        await storage.delete(`avatars/${oldPath}`).catch(console.error);
+        await storage.delete(`avatars/${oldPath}`).catch(() => console.error('BACKGROUND_OPERATION_FAILED'));
       }
     }
 
@@ -130,7 +130,7 @@ export class UsersService {
 
     if (user.avatarUrl) {
       const path = user.avatarUrl.split('/').slice(-2).join('/');
-      await storage.delete(`avatars/${path}`).catch(console.error);
+      await storage.delete(`avatars/${path}`).catch(() => console.error('BACKGROUND_OPERATION_FAILED'));
     }
 
     await prisma.user.update({

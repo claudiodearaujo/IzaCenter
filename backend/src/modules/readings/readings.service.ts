@@ -2,7 +2,7 @@
 
 import { Prisma } from '@prisma/client';
 import { prisma } from '../../config/database';
-import { storage } from '../../config/supabase';
+import { privateMedia } from '../../config/supabase';
 import { NotFoundException, BadRequestException } from '../../utils/errors';
 import { generateFileName } from '../../utils';
 import { sendEmail } from '../../utils/email.util';
@@ -80,7 +80,7 @@ export class ReadingsService {
     return 'CONTENT';
   }
 
-  private toDelivery(reading: any) {
+  private async toDelivery(reading: any) {
     const content = this.normalizeContent(reading);
     const orderItem = reading.orderItem
       ? {
@@ -91,6 +91,7 @@ export class ReadingsService {
 
     return {
       ...reading,
+      audioUrl: await privateMedia.resolve(reading.audioUrl, reading.tenantId, reading.id),
       deliveryType: this.inferDeliveryType(reading),
       content,
       specialtyModule: reading.specialtyModule || null,
@@ -214,7 +215,7 @@ export class ReadingsService {
     ]);
 
     return {
-      data: readings.map((reading) => this.toDelivery(reading)),
+      data: await Promise.all(readings.map((reading) => this.toDelivery(reading))),
       meta: {
         total,
         page,
@@ -252,7 +253,7 @@ export class ReadingsService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return { data: readings.map((reading) => this.toDelivery(reading)) };
+    return { data: await Promise.all(readings.map((reading) => this.toDelivery(reading))) };
   }
 
   async findById(id: string, userId?: string, tenantId = DEFAULT_TENANT_ID) {
@@ -289,7 +290,7 @@ export class ReadingsService {
       throw new NotFoundException('Entrega não encontrada');
     }
 
-    return { data: this.toDelivery(reading) };
+    return { data: await this.toDelivery(reading) };
   }
 
   async update(id: string, data: UpdateReadingDTO, tenantId = DEFAULT_TENANT_ID) {
@@ -331,7 +332,7 @@ export class ReadingsService {
       return updatedReading;
     });
 
-    return { data: this.toDelivery(updated) };
+    return { data: await this.toDelivery(updated) };
   }
 
   async updateStatus(id: string, status: string, tenantId = DEFAULT_TENANT_ID) {
@@ -372,7 +373,7 @@ export class ReadingsService {
       data: updateData,
     });
 
-    return { data: this.toDelivery(updated) };
+    return { data: await this.toDelivery(updated) };
   }
 
   async uploadAudio(id: string, file: Express.Multer.File, tenantId = DEFAULT_TENANT_ID) {
@@ -386,24 +387,20 @@ export class ReadingsService {
     }
 
     const fileName = generateFileName(file.originalname);
-    const filePath = `deliveries/${id}/audio/${fileName}`;
+    const filePath = `${tenantId}/${id}/audio/${fileName}`;
 
-    await storage.upload(filePath, file.buffer, {
-      contentType: file.mimetype,
-      upsert: true,
-    });
-
-    const audioUrl = storage.getPublicUrl(filePath);
+    const audioUrl = await privateMedia.upload(filePath, file.buffer, file.mimetype);
 
     const updated = await prisma.reading.update({
       where: { id },
       data: { audioUrl },
     });
 
-    return { data: this.toDelivery(updated) };
+    return { data: await this.toDelivery(updated) };
   }
 
   async updateAudio(id: string, audioUrl: string, tenantId = DEFAULT_TENANT_ID) {
+    if (audioUrl && !/^https:\/\//i.test(audioUrl)) throw new BadRequestException('Use URL HTTPS ou upload privado');
     const reading = await prisma.reading.findFirst({ where: { id, tenantId } });
 
     if (!reading) {
@@ -415,7 +412,7 @@ export class ReadingsService {
       data: { audioUrl },
     });
 
-    return { data: this.toDelivery(updated) };
+    return { data: await this.toDelivery(updated) };
   }
 
   async delete(id: string, tenantId = DEFAULT_TENANT_ID) {

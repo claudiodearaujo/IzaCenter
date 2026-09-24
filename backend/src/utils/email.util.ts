@@ -5,6 +5,8 @@ import { env } from '../config/env';
 
 // Create transporter
 const transporter = nodemailer.createTransport({
+  disableFileAccess: true,
+  disableUrlAccess: true,
   host: env.SMTP_HOST,
   port: env.SMTP_PORT,
   secure: env.SMTP_PORT === 465,
@@ -35,9 +37,9 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
       html: options.html,
     });
     
-    console.log(`📧 Email sent to ${options.to}`);
+    console.log('EMAIL_SENT');
   } catch (error) {
-    console.error('❌ Email sending failed:', error);
+    console.error('EMAIL_SEND_FAILED');
     throw error;
   }
 }

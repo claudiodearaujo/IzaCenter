@@ -1,3 +1,5 @@
+import { validateUploadContent } from '../../middlewares/upload.middleware';
+import { uploadLimiter } from '../../middlewares/rateLimiter.middleware';
 // apps/backend/src/modules/users/users.routes.ts
 
 import { Router } from 'express';
@@ -81,7 +83,7 @@ router.patch('/profile', validate(updateProfileSchema), usersController.updatePr
  *       200:
  *         description: Avatar uploaded
  */
-router.post('/avatar', uploadImage.single('avatar'), usersController.uploadAvatar.bind(usersController));
+router.post('/avatar', uploadLimiter, uploadImage.single('avatar'), validateUploadContent('image'), usersController.uploadAvatar.bind(usersController));
 
 /**
  * @openapi

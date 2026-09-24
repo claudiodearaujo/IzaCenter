@@ -1,3 +1,4 @@
+import { REFRESH_COOKIE, sessionResponse, clearSessionCookie } from '../../middlewares/session-cookie.middleware';
 // apps/backend/src/modules/auth/auth.controller.ts
 
 import { Request, Response, NextFunction } from 'express';
@@ -24,7 +25,7 @@ export class AuthController {
       res.status(201).json({
         success: true,
         message: 'Cadastro realizado com sucesso',
-        data: result,
+        data: sessionResponse(res, result),
       });
     } catch (error) {
       next(error);
@@ -43,7 +44,7 @@ export class AuthController {
       res.json({
         success: true,
         message: 'Login realizado com sucesso',
-        data: result,
+        data: sessionResponse(res, result),
       });
     } catch (error) {
       next(error);
@@ -111,13 +112,13 @@ export class AuthController {
    */
   async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
-      const { refreshToken } = req.body as RefreshTokenDto;
+      const refreshToken = req.cookies?.[REFRESH_COOKIE] || "";
       const result = await authService.refreshToken(refreshToken, req.tenant?.id);
 
       res.json({
         success: true,
         message: 'Token atualizado com sucesso',
-        data: result,
+        data: sessionResponse(res, result),
       });
     } catch (error) {
       next(error);
@@ -162,6 +163,7 @@ export class AuthController {
 
       // Blacklist the token
       const result = await authService.logout(token);
+      clearSessionCookie(res);
 
       res.json({
         success: true,

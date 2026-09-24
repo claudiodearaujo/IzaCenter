@@ -10,7 +10,8 @@ import {
   generateResetToken,
   hashToken,
   generateTokenPair,
-  verifyRefreshToken,
+  rotateRefreshToken,
+  revokeAccessSession,
 } from '../../utils';
 import { sendEmail, emailTemplates } from '../../utils/email.util';
 import {
@@ -67,14 +68,14 @@ export class AuthService {
     });
 
     // Generate tokens
-    const tokens = generateTokenPair({
+    const tokens = await generateTokenPair({
       id: user.id,
       email: user.email,
       role: user.role,
     });
 
     // Send welcome email (non-blocking)
-    this.sendWelcomeEmail(user.fullName, user.email).catch(console.error);
+    this.sendWelcomeEmail(user.fullName, user.email).catch(() => console.error('BACKGROUND_OPERATION_FAILED'));
 
     return {
       user,
@@ -127,14 +128,15 @@ export class AuthService {
     });
 
     // Generate tokens
-    const tokens = generateTokenPair({
+    const tokens = await generateTokenPair({
       id: user.id,
       email: user.email,
       role: user.role,
+      authVersion: user.authVersion,
     });
 
     // Return user without password
-    const { passwordHash, resetToken, resetTokenExpiry, ...userWithoutPassword } = user;
+    const { passwordHash, resetToken, resetTokenExpiry, authVersion, ...userWithoutPassword } = user;
 
     return {
       user: userWithoutPassword,
@@ -195,7 +197,7 @@ export class AuthService {
       to: user.email,
       subject: emailContent.subject,
       html: emailContent.html,
-    }).catch(console.error);
+    }).catch(() => console.error('BACKGROUND_OPERATION_FAILED'));
 
     return { message: 'Se o email existir, você receberá um link de redefinição' };
   }
@@ -224,15 +226,11 @@ export class AuthService {
     // Hash new password
     const passwordHash = await hashPassword(data.password);
 
-    // Update password and clear reset token
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        passwordHash,
-        resetToken: null,
-        resetTokenExpiry: null,
-      },
+    const changed = await prisma.user.updateMany({
+      where: { id: user.id, resetToken: hashedToken, resetTokenExpiry: { gt: new Date() } },
+      data: { passwordHash, resetToken: null, resetTokenExpiry: null, authVersion: { increment: 1 } },
     });
+    if (changed.count !== 1) throw Errors.BadRequest('Token inválido ou expirado');
 
     return { message: 'Senha redefinida com sucesso' };
   }
@@ -262,7 +260,7 @@ export class AuthService {
     // Update password
     await prisma.user.update({
       where: { id: userId },
-      data: { passwordHash },
+      data: { passwordHash, authVersion: { increment: 1 }, resetToken: null, resetTokenExpiry: null },
     });
 
     return { message: 'Senha alterada com sucesso' };
@@ -273,40 +271,15 @@ export class AuthService {
    */
   async refreshToken(refreshToken: string, tenantId = DEFAULT_TENANT_ID) {
     try {
-      const decoded = verifyRefreshToken(refreshToken);
-
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.sub },
-        select: { id: true, email: true, role: true },
-      });
-
-      if (!user) {
-        throw Errors.Unauthorized('Usuário não encontrado');
-      }
-
+      const tokens = await rotateRefreshToken(refreshToken, tenantId);
+      const { sub } = (await import('../../utils/jwt.util')).verifyAccessToken(tokens.accessToken);
+      const user = await this.getProfile(sub);
       const membership = await prisma.tenantMembership.findUnique({
-        where: {
-          tenantId_userId: {
-            tenantId,
-            userId: user.id,
-          },
-        },
-        select: { isActive: true },
+        where: { tenantId_userId: { tenantId, userId: sub } },
+        select: { id: true, role: true, isActive: true },
       });
-
-      if (!membership?.isActive) {
-        throw Errors.Unauthorized('Usuário sem acesso ao tenant atual');
-      }
-
-      // Generate new tokens
-      const tokens = generateTokenPair({
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      });
-
-      return tokens;
-    } catch (error) {
+      return { ...tokens, user, membership };
+    } catch {
       throw Errors.Unauthorized('Refresh token inválido');
     }
   }
@@ -343,7 +316,8 @@ export class AuthService {
   /**
    * Logout user (client should discard the token)
    */
-  async logout(_token: string) {
+  async logout(token: string) {
+    await revokeAccessSession(token);
     return { message: 'Logout realizado com sucesso' };
   }
 

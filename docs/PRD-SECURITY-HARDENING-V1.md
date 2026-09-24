@@ -1,6 +1,6 @@
 # PRD — Security Hardening v1
 
-**Status:** 🟡 Em andamento — baseline e primeiro incremento implementados; gates finais pendentes.
+**Status:** 🟡 Em andamento — SH-01 integrado; SH-02 a SH-05 implementados em validação; gates operacionais pendentes.
 **Base inspecionada:** `972cd42fe41ee6ba93198a1a1b2c6986c7f97711`.
 **Data:** 2026-09-24.
 
@@ -97,3 +97,7 @@ Só então marcar Security Hardening v1 concluído. Production Operations manté
 - npm audit backend/frontend: concluído com alertas; não é PASS de segurança.
 - Nenhuma migration, mudança de credenciais ou alteração no runtime neste incremento.
 - PR/CI e deploy: verificar no fechamento deste incremento; SH-02 a SH-05 continuam pendentes.
+
+## Continuidade autorizada
+
+Implementação e evidências: [runbook de implantação](SECURITY-HARDENING-V1-RUNBOOK.md). O PR #117 foi integrado. Código de sessões, dependências/gates, borda e integração foi implementado; o fechamento depende de CI e das pendências externas listadas no runbook.

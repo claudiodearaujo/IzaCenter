@@ -4,6 +4,7 @@ import multer, { FileFilterCallback } from 'multer';
 import { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import sharp from 'sharp';
+import { randomUUID } from 'crypto';
 import { AppError } from './error.middleware';
 
 // Allowed MIME types
@@ -70,7 +71,7 @@ function createFileFilter(allowedTypes: string[]) {
  */
 export const uploadImage = multer({
   storage: memoryStorage,
-  limits: { fileSize: MAX_IMAGE_SIZE },
+  limits: { files: 1, fields: 10, parts: 12, fieldSize: 64 * 1024, fileSize: MAX_IMAGE_SIZE },
   fileFilter: createFileFilter(ALLOWED_IMAGE_TYPES),
 });
 
@@ -79,7 +80,7 @@ export const uploadImage = multer({
  */
 export const uploadDocument = multer({
   storage: memoryStorage,
-  limits: { fileSize: MAX_DOCUMENT_SIZE },
+  limits: { files: 1, fields: 10, parts: 12, fieldSize: 64 * 1024, fileSize: MAX_DOCUMENT_SIZE },
   fileFilter: createFileFilter([...ALLOWED_IMAGE_TYPES, ...ALLOWED_DOCUMENT_TYPES]),
 });
 
@@ -88,7 +89,7 @@ export const uploadDocument = multer({
  */
 export const uploadAudio = multer({
   storage: memoryStorage,
-  limits: { fileSize: MAX_AUDIO_SIZE },
+  limits: { files: 1, fields: 10, parts: 12, fieldSize: 64 * 1024, fileSize: MAX_AUDIO_SIZE },
   fileFilter: createFileFilter(ALLOWED_AUDIO_TYPES),
 });
 
@@ -97,7 +98,7 @@ export const uploadAudio = multer({
  */
 export const uploadVideo = multer({
   storage: memoryStorage,
-  limits: { fileSize: MAX_VIDEO_SIZE },
+  limits: { files: 1, fields: 10, parts: 12, fieldSize: 64 * 1024, fileSize: MAX_VIDEO_SIZE },
   fileFilter: createFileFilter(ALLOWED_VIDEO_TYPES),
 });
 
@@ -106,7 +107,7 @@ export const uploadVideo = multer({
  */
 export const uploadFile = multer({
   storage: memoryStorage,
-  limits: { fileSize: MAX_VIDEO_SIZE },
+  limits: { files: 1, fields: 10, parts: 12, fieldSize: 64 * 1024, fileSize: MAX_VIDEO_SIZE },
 });
 
 /**
@@ -114,9 +115,7 @@ export const uploadFile = multer({
  */
 export function generateFileName(originalName: string): string {
   const ext = path.extname(originalName);
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 8);
-  return `${timestamp}-${random}${ext}`;
+  return `${randomUUID()}${ext}`;
 }
 
 /**
@@ -166,7 +165,7 @@ export async function compressImage(
     return file;
   }
 
-  let pipeline = sharp(file.buffer).resize(maxWidthOrHeight, maxWidthOrHeight, {
+  let pipeline = sharp(file.buffer, { limitInputPixels: 25_000_000 }).resize(maxWidthOrHeight, maxWidthOrHeight, {
     fit: 'inside',
     withoutEnlargement: true,
   });
@@ -217,5 +216,42 @@ export function compressImageMiddleware(options: CompressImageOptions = {}) {
     } catch (err) {
       next(err);
     }
+  };
+}
+
+// Bounded signatures for the supported formats only. No generic container parser.
+function detectUpload(bytes: Buffer): { mime: string; ext: string } | undefined {
+  const starts = (signature: number[]) => bytes.length >= signature.length && signature.every((value, i) => bytes[i] === value);
+  if (starts([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) return { mime: 'image/png', ext: 'png' };
+  if (starts([0xff, 0xd8, 0xff])) return { mime: 'image/jpeg', ext: 'jpg' };
+  if (['GIF87a', 'GIF89a'].includes(bytes.subarray(0, 6).toString('ascii'))) return { mime: 'image/gif', ext: 'gif' };
+  if (bytes.length >= 12 && bytes.subarray(0, 4).toString('ascii') === 'RIFF') {
+    const kind = bytes.subarray(8, 12).toString('ascii');
+    if (kind === 'WEBP') return { mime: 'image/webp', ext: 'webp' };
+    if (kind === 'WAVE') return { mime: 'audio/wav', ext: 'wav' };
+  }
+  if (bytes.length >= 27 && bytes.subarray(0, 4).toString('ascii') === 'OggS') return { mime: 'audio/ogg', ext: 'ogg' };
+  if (bytes.length >= 10 && (bytes.subarray(0, 3).toString('ascii') === 'ID3' || (bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0))) return { mime: 'audio/mpeg', ext: 'mp3' };
+  if (starts([0x1a, 0x45, 0xdf, 0xa3]) && bytes.subarray(0, 256).includes(Buffer.from('webm'))) return { mime: 'audio/webm', ext: 'webm' };
+  return undefined;
+}
+
+/** Detect file signatures, reject spoofed MIME, and normalize filename before storage. */
+export function validateUploadContent(kind: 'image' | 'audio') {
+  return async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
+    try {
+      if (!req.file) throw new AppError('Arquivo obrigatório', 400, 'FILE_REQUIRED');
+      const detected = detectUpload(req.file.buffer);
+      const allowed = kind === 'image' ? ALLOWED_IMAGE_TYPES : ALLOWED_AUDIO_TYPES;
+      const supplied = req.file.mimetype.replace('image/jpg', 'image/jpeg').replace('audio/mp3', 'audio/mpeg');
+      const detectedMime = detected?.mime;
+      if (!detected || !detectedMime || !allowed.includes(detectedMime) || supplied !== detectedMime) {
+        throw new AppError('Conteúdo do arquivo inválido', 400, 'INVALID_FILE_CONTENT');
+      }
+      req.file.mimetype = detectedMime;
+      req.file.originalname = `${randomUUID()}.${detected.ext}`;
+      if (kind === 'image') req.file = await compressImage(req.file);
+      next();
+    } catch { next(new AppError('Conteúdo do arquivo inválido', 400, 'INVALID_FILE_CONTENT')); }
   };
 }

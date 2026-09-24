@@ -1,0 +1,27 @@
+{
+  "status": "implementation-in-validation",
+  "baselineCommit": "846211f2dde2aade14f548ece0f194655a05aae2",
+  "localBackendTests": {
+    "suites": 28,
+    "tests": 374,
+    "result": "PASS"
+  },
+  "localIntegration": {
+    "engine": "PGlite PostgreSQL WASM + wire socket",
+    "migrations": 10,
+    "httpAssertions": 25,
+    "replayConcurrencyRevocation": "PASS",
+    "nativePostgreSQL": "pending CI"
+  },
+  "operationalBlockers": [
+    "Coolify host offline",
+    "branch protection read denied (403)",
+    "private bucket provisioning and legacy media migration require runtime access"
+  ],
+  "dependencyAudit": {
+    "backend": "no high/critical",
+    "frontend": "0 alerts",
+    "e2e": "0 alerts",
+    "root": "1 low (Quill), no high/critical"
+  }
+}

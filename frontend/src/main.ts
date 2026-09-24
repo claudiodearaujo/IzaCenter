@@ -8,7 +8,18 @@ if (environment.sentryDsn && environment.sentryDsn.trim()) {
   Sentry.init({
     dsn: environment.sentryDsn,
     environment: environment.production ? 'production' : 'development',
-    tracesSampleRate: environment.production ? 0.1 : 1.0,
+    sendDefaultPii: false,
+    tracesSampleRate: 0,
+    beforeSend(event) {
+      event.request = undefined;
+      event.user = undefined;
+      event.breadcrumbs = undefined;
+      event.extra = undefined;
+      event.transaction = undefined;
+      if (event.message) event.message = 'Application error';
+      event.exception?.values?.forEach(value => { value.value = 'Error details omitted'; });
+      return event;
+    },
     integrations: [
       Sentry.browserTracingIntegration(),
     ],

@@ -36,6 +36,7 @@ import {
 
 // Create Express app
 const app: Application = express();
+app.set('trust proxy', env.TRUST_PROXY_CIDRS.length ? env.TRUST_PROXY_CIDRS : false);
 
 // =============================================
 // SECURITY MIDDLEWARES
@@ -150,6 +151,7 @@ mountRoutes(apiV1Prefix);
 // API DOCUMENTATION
 // =============================================
 
+if (env.isDevelopment || env.ENABLE_API_DOCS) {
 // Swagger UI — served in all environments for discoverability
 app.use(
   `${apiPrefix}/docs`,
@@ -165,6 +167,8 @@ app.get(`${apiPrefix}/docs.json`, (req: Request, res: Response) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(swaggerSpec);
 });
+
+}
 
 if (env.isDevelopment) {
   app.get(`${apiPrefix}`, (req: Request, res: Response) => {

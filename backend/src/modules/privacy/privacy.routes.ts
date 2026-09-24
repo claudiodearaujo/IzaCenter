@@ -16,7 +16,7 @@ import {
 
 const router = Router();
 
-router.use(authenticate);
+router.use(['/privacy', '/admin/privacy'], authenticate);
 
 router.get('/privacy/export', privacyController.export.bind(privacyController));
 router.get('/privacy/contact', privacyController.contact.bind(privacyController));

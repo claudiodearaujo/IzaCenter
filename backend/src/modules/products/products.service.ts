@@ -401,7 +401,7 @@ export class ProductsService {
     // Delete old cover if exists
     if (product.coverImageUrl) {
       const oldPath = product.coverImageUrl.split('/').slice(-2).join('/');
-      await storage.delete(`products/${oldPath}`).catch(console.error);
+      await storage.delete(`products/${oldPath}`).catch(() => console.error('BACKGROUND_OPERATION_FAILED'));
     }
 
     // Upload new cover

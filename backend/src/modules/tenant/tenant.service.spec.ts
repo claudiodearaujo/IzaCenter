@@ -1,3 +1,4 @@
+import { env } from '../../config/env';
 import { TenantService } from './tenant.service';
 import { prismaMock } from '../../test/mocks/prisma.mock';
 import { DEFAULT_TENANT_ID } from './tenant.constants';
@@ -78,7 +79,6 @@ describe('TenantService', () => {
 
   it('should fall back to the deterministic default tenant', async () => {
     prismaMock.tenant.findFirst
-      .mockResolvedValueOnce(null)
       .mockResolvedValueOnce({
         id: DEFAULT_TENANT_ID,
         name: 'Default Tenant',
@@ -88,7 +88,7 @@ describe('TenantService', () => {
         customDomain: null,
       } as any);
 
-    const tenant = await service.resolve(undefined, 'example.com');
+    const tenant = await service.resolve(undefined, new URL(env.FRONTEND_URL).hostname);
 
     expect(tenant?.id).toBe(DEFAULT_TENANT_ID);
   });

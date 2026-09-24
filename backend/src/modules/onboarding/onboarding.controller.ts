@@ -1,3 +1,4 @@
+import { sessionResponse } from '../../middlewares/session-cookie.middleware';
 import { NextFunction, Request, Response } from 'express';
 import { ProfessionalOnboardingDto } from './onboarding.schema';
 import { onboardingService } from './onboarding.service';
@@ -12,7 +13,7 @@ export class OnboardingController {
       res.status(201).json({
         success: true,
         message: 'Workspace criado com sucesso',
-        data: result,
+        data: sessionResponse(res, result),
       });
     } catch (error) {
       next(error);

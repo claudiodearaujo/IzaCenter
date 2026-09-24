@@ -1,4 +1,5 @@
-import { ApplicationConfig, ErrorHandler, importProvidersFrom, isDevMode, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { AuthService } from './core/services/auth.service';
+import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, importProvidersFrom, isDevMode, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
@@ -24,6 +25,7 @@ export function createTranslateLoader(http: HttpClient) {
 export const appConfig: ApplicationConfig = {
   providers: [
     MessageService,
+    provideAppInitializer(() => inject(AuthService).restoreSession()),
     // Use Sentry's error handler when DSN is configured, otherwise fall back to default
     ...(environment.sentryDsn
       ? [{ provide: ErrorHandler, useValue: Sentry.createErrorHandler({ showDialog: false }) }]
@@ -32,7 +34,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([tenantInterceptor, authInterceptor, errorInterceptor])),
+    provideHttpClient(withInterceptors([errorInterceptor, tenantInterceptor, authInterceptor])),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',

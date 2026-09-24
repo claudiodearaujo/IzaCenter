@@ -2,7 +2,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { env } from '../config/env';
+import { verifyAccessToken, assertActiveSession } from '../utils/jwt.util';
 import { JwtPayload } from '../types';
 import { prisma } from '../config/database';
 
@@ -28,7 +28,8 @@ export async function authenticate(
     const token = authHeader.split(' ')[1];
 
     try {
-      const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+      const decoded = verifyAccessToken(token);
+      await assertActiveSession(decoded);
       
       // Verify user still exists and is active
       const user = await prisma.user.findUnique({
@@ -167,7 +168,8 @@ export async function optionalAuth(
     const token = authHeader.split(' ')[1];
 
     try {
-      const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+      const decoded = verifyAccessToken(token);
+      await assertActiveSession(decoded);
       
       const user = await prisma.user.findUnique({
         where: { id: decoded.sub },

@@ -1,3 +1,4 @@
+import { protectSession } from '../../middlewares/session-cookie.middleware';
 // apps/backend/src/modules/auth/auth.routes.ts
 
 import { Router } from 'express';
@@ -43,6 +44,7 @@ const router = Router();
  */
 router.post(
   '/register',
+  protectSession,
   authLimiter,
   validate(registerSchema),
   authController.register.bind(authController)
@@ -73,6 +75,7 @@ router.post(
  */
 router.post(
   '/login',
+  protectSession,
   authLimiter,
   validate(loginSchema),
   authController.login.bind(authController)
@@ -165,7 +168,8 @@ router.post(
  */
 router.post(
   '/refresh',
-  validate(refreshTokenSchema),
+  protectSession,
+  authLimiter,
   authController.refreshToken.bind(authController)
 );
 
@@ -241,6 +245,7 @@ router.post(
  */
 router.post(
   '/logout',
+  protectSession,
   authenticate,
   authController.logout.bind(authController)
 );

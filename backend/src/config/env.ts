@@ -2,6 +2,7 @@
 
 import dotenv from 'dotenv';
 import path from 'path';
+import { isIP } from 'net';
 
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
@@ -12,6 +13,10 @@ export const env = {
   PORT: parseInt(process.env.PORT || '3000', 10),
   API_PREFIX: process.env.API_PREFIX || '/api',
   
+  TRUST_PROXY_CIDRS: (process.env.TRUST_PROXY_CIDRS || '').split(',').map(v => v.trim()).filter(Boolean),
+  TENANT_BASE_DOMAIN: process.env.TENANT_BASE_DOMAIN || '',
+  ENABLE_API_DOCS: process.env.ENABLE_API_DOCS === 'true',
+
   // Database
   DATABASE_URL: process.env.DATABASE_URL || '',
   
@@ -21,10 +26,13 @@ export const env = {
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || '',
   JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   
+  SESSION_TTL_DAYS: 7,
+
   // Supabase
   SUPABASE_URL: process.env.SUPABASE_URL || '',
   SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || '',
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+  SUPABASE_PRIVATE_STORAGE_BUCKET: process.env.SUPABASE_PRIVATE_STORAGE_BUCKET || 'therapist-private',
   SUPABASE_STORAGE_BUCKET: process.env.SUPABASE_STORAGE_BUCKET || 'therapist-platform',
   
   // Stripe
@@ -83,6 +91,17 @@ if (missingSecrets.length > 0) {
     `These must be set in all environments for security. ` +
     `Generate strong secrets using: openssl rand -base64 32`
   );
+}
+
+for (const cidr of env.TRUST_PROXY_CIDRS) {
+  const [ip, bits, extra] = cidr.split('/');
+  const version = isIP(ip);
+  if (!version || extra || (bits !== undefined && (!/^\d+$/.test(bits) || +bits < 0 || +bits > (version === 4 ? 32 : 128)))) {
+    throw new Error('Invalid TRUST_PROXY_CIDRS; use explicit IPs/CIDRs');
+  }
+}
+if (env.isProduction && (env.JWT_SECRET.length < 32 || env.JWT_REFRESH_SECRET.length < 32 || env.JWT_SECRET === env.JWT_REFRESH_SECRET)) {
+  throw new Error('JWT secrets must be distinct and at least 32 characters in production');
 }
 
 // Validate additional required variables in production

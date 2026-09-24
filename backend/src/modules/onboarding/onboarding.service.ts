@@ -113,7 +113,7 @@ export class OnboardingService {
       return { tenant, user, membership };
     });
 
-    const tokens = generateTokenPair({
+    const tokens = await generateTokenPair({
       id: result.user.id,
       email: result.user.email,
       role: result.user.role,
