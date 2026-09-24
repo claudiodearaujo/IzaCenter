@@ -1,226 +1,183 @@
-<!-- apps/frontend/src/app/features/shop/checkout/checkout.component.html -->
-
-<section class="py-12 md:py-20">
-  <div class="container-custom max-w-4xl">
-    <!-- Header -->
-    <div class="text-center mb-12">
-      <h1 class="heading-1 text-primary mb-4">
-        <i class="pi pi-credit-card mr-3"></i>
-        {{ 'shop.checkout.title' | translate }}
-      </h1>
-      <p class="text-body text-secondary">
-        {{ 'shop.checkout.subtitle' | translate }}
-      </p>
+<section class="checkout-page">
+  <div class="checkout-container">
+    <div class="page-heading">
+      <span class="eyebrow">Pagamento</span>
+      <h1>{{ 'shop.checkout.title' | translate }}</h1>
+      <p>{{ 'shop.checkout.subtitle' | translate }}</p>
     </div>
 
-    <!-- Sprint 1.1 — Banner de pagamento cancelado -->
     @if (showCancelledBanner()) {
-      <div class="flex items-center gap-4 p-5 mb-8 rounded-xl border border-yellow-500/40 bg-yellow-500/10 text-yellow-300">
-        <i class="pi pi-exclamation-triangle text-3xl flex-shrink-0"></i>
+      <div class="cancelled-banner">
+        <span><i class="pi pi-exclamation-triangle"></i></span>
         <div>
-          <p class="font-bold text-lg">Pagamento não concluído</p>
-          <p class="text-sm opacity-80">Você cancelou o pagamento no Stripe. Seus itens ainda estão no carrinho — pode tentar novamente quando quiser.</p>
+          <strong>Pagamento não concluído</strong>
+          <p>O pagamento foi cancelado. Seus itens continuam disponíveis para uma nova tentativa.</p>
         </div>
       </div>
     }
 
-    <!-- Processing Overlay -->
     @if (processing()) {
-      <div class="fixed inset-0 bg-dark/80 z-50 flex items-center justify-center">
-        <div class="text-center">
-          <p-progressSpinner strokeWidth="3" />
-          <p class="text-primary mt-4">{{ 'shop.checkout.processing' | translate }}</p>
-          <p class="text-secondary text-sm mt-2">{{ 'shop.checkout.redirecting' | translate }}</p>
+      <div class="processing-overlay">
+        <div class="processing-card">
+          <i class="pi pi-spinner pi-spin"></i>
+          <strong>{{ 'shop.checkout.processing' | translate }}</strong>
+          <span>{{ 'shop.checkout.redirecting' | translate }}</span>
         </div>
       </div>
     }
 
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
-      <!-- Customer Info -->
-      <div class="lg:col-span-3 space-y-8">
-        <!-- Account Info -->
-        <div class="glass-card p-6">
-          <h2 class="heading-3 text-primary mb-6 flex items-center gap-2">
-            <i class="pi pi-user"></i>
-            {{ 'shop.checkout.customerData' | translate }}
-          </h2>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="checkout-layout">
+      <div class="checkout-main">
+        <section class="checkout-card">
+          <div class="card-heading">
+            <span><i class="pi pi-user"></i></span>
             <div>
-              <label class="text-secondary text-sm">{{ 'shop.checkout.name' | translate }}</label>
-              <p class="text-primary font-medium">{{ user()?.fullName }}</p>
+              <h2>{{ 'shop.checkout.customerData' | translate }}</h2>
+              <p>Confira os dados vinculados à sua conta.</p>
+            </div>
+          </div>
+
+          <div class="customer-grid">
+            <div>
+              <span>{{ 'shop.checkout.name' | translate }}</span>
+              <strong>{{ user()?.fullName }}</strong>
             </div>
             <div>
-              <label class="text-secondary text-sm">{{ 'shop.checkout.email' | translate }}</label>
-              <p class="text-primary font-medium">{{ user()?.email }}</p>
+              <span>{{ 'shop.checkout.email' | translate }}</span>
+              <strong>{{ user()?.email }}</strong>
             </div>
             @if (user()?.phone) {
               <div>
-                <label class="text-secondary text-sm">{{ 'shop.checkout.phone' | translate }}</label>
-                <p class="text-primary font-medium">{{ user()?.phone }}</p>
+                <span>{{ 'shop.checkout.phone' | translate }}</span>
+                <strong>{{ user()?.phone }}</strong>
               </div>
             }
           </div>
 
-          <a routerLink="/cliente/perfil" class="inline-block mt-4 text-accent hover:text-accent-light transition-colors text-sm">
-            <i class="pi pi-pencil mr-1"></i>
+          <a routerLink="/cliente/perfil" class="text-link">
+            <i class="pi pi-pencil"></i>
             {{ 'shop.checkout.editData' | translate }}
           </a>
-        </div>
+        </section>
 
-        <!-- Order Items -->
-        <div class="glass-card p-6">
-          <h2 class="heading-3 text-primary mb-6 flex items-center gap-2">
-            <i class="pi pi-list"></i>
-            {{ 'shop.checkout.orderItems' | translate }}
-          </h2>
+        <section class="checkout-card">
+          <div class="card-heading">
+            <span><i class="pi pi-list"></i></span>
+            <div>
+              <h2>{{ 'shop.checkout.orderItems' | translate }}</h2>
+              <p>Revise os serviços antes de seguir para o pagamento.</p>
+            </div>
+          </div>
 
-          <div class="space-y-4">
+          <div class="order-items">
             @for (item of items(); track item.product.id) {
-              <div class="flex gap-4 p-4 bg-dark/30 rounded-lg">
-                <!-- Image -->
-                <div class="flex-shrink-0 w-16 h-16">
+              <article class="order-item">
+                <div class="order-item__media">
                   @if (item.product.coverImageUrl) {
-                    <img
-                      [src]="item.product.coverImageUrl"
-                      [alt]="item.product.name"
-                      class="w-full h-full object-cover rounded"
-                    />
+                    <img [src]="item.product.coverImageUrl" [alt]="item.product.name" />
                   } @else {
-                    <div class="w-full h-full bg-gradient-mystical rounded flex items-center justify-center">
-                      <i class="pi pi-star text-white/50"></i>
-                    </div>
+                    <div><i class="pi pi-briefcase"></i></div>
                   }
                 </div>
 
-                <!-- Info -->
-                <div class="flex-1">
-                  <h4 class="text-primary font-medium">{{ item.product.name }}</h4>
-                  <p class="text-secondary text-sm">
-                    {{ getServiceKindLabel(item.product.serviceKind) }} • {{ 'shop.checkout.qty' | translate }} {{ item.quantity }}
-                  </p>
-                  @if (item.questions && item.questions[0]) {
-                    <p class="text-secondary text-xs mt-1 italic truncate">
-                      "{{ item.questions[0] }}"
-                    </p>
+                <div class="order-item__copy">
+                  <strong>{{ item.product.name }}</strong>
+                  <span>
+                    {{ getServiceKindLabel(item.product.serviceKind) }} ·
+                    {{ 'shop.checkout.qty' | translate }} {{ item.quantity }}
+                  </span>
+                  @if (item.questions?.[0]) {
+                    <small>{{ item.questions?.[0] }}</small>
                   }
                 </div>
 
-                <!-- Price -->
-                <div class="text-right">
-                  <p class="text-accent font-bold">{{ item.product.price * item.quantity | currencyBrl }}</p>
-                </div>
-              </div>
+                <strong class="order-item__price">
+                  {{ item.product.price * item.quantity | currencyBrl }}
+                </strong>
+              </article>
             }
           </div>
 
-          <a routerLink="/loja/carrinho" class="inline-block mt-4 text-accent hover:text-accent-light transition-colors text-sm">
-            <i class="pi pi-arrow-left mr-1"></i>
+          <a routerLink="/carrinho" class="text-link">
+            <i class="pi pi-arrow-left"></i>
             {{ 'shop.checkout.backToCart' | translate }}
           </a>
-        </div>
+        </section>
 
-        <!-- Payment Info -->
-        <div class="glass-card p-6">
-          <h2 class="heading-3 text-primary mb-4 flex items-center gap-2">
-            <i class="pi pi-shield"></i>
-            {{ 'shop.checkout.securePayment' | translate }}
-          </h2>
+        <section class="checkout-card">
+          <div class="card-heading">
+            <span><i class="pi pi-shield"></i></span>
+            <div>
+              <h2>{{ 'shop.checkout.securePayment' | translate }}</h2>
+              <p>{{ 'shop.checkout.paymentDescription' | translate }}</p>
+            </div>
+          </div>
 
-          <p class="text-secondary mb-4">
-            {{ 'shop.checkout.paymentDescription' | translate }}
+          <div class="payment-methods">
+            <div><i class="pi pi-credit-card"></i><span>{{ 'shop.checkout.creditCard' | translate }}</span></div>
+            <div><i class="pi pi-qrcode"></i><span>{{ 'shop.checkout.pix' | translate }}</span></div>
+            <div><i class="pi pi-file"></i><span>{{ 'shop.checkout.bankSlip' | translate }}</span></div>
+          </div>
+
+          <p class="security-copy">
+            <i class="pi pi-lock"></i>
+            {{ 'shop.checkout.dataProtected' | translate }}
           </p>
-
-          <div class="grid grid-cols-3 gap-4 mb-6">
-            <div class="p-4 bg-dark/30 rounded-lg text-center">
-              <i class="pi pi-credit-card text-2xl text-primary mb-2"></i>
-              <p class="text-secondary text-sm">{{ 'shop.checkout.creditCard' | translate }}</p>
-            </div>
-            <div class="p-4 bg-dark/30 rounded-lg text-center">
-              <i class="pi pi-qrcode text-2xl text-primary mb-2"></i>
-              <p class="text-secondary text-sm">{{ 'shop.checkout.pix' | translate }}</p>
-            </div>
-            <div class="p-4 bg-dark/30 rounded-lg text-center">
-              <i class="pi pi-file text-2xl text-primary mb-2"></i>
-              <p class="text-secondary text-sm">{{ 'shop.checkout.bankSlip' | translate }}</p>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-4 text-secondary text-sm">
-            <i class="pi pi-lock text-accent"></i>
-            <span>{{ 'shop.checkout.dataProtected' | translate }}</span>
-          </div>
-        </div>
+        </section>
       </div>
 
-      <!-- Order Summary -->
-      <div class="lg:col-span-2">
-        <div class="glass-card p-6 sticky top-24">
-          <h2 class="heading-3 text-primary mb-6">{{ 'shop.checkout.summary' | translate }}</h2>
+      <aside class="summary-card">
+        <h2>{{ 'shop.checkout.summary' | translate }}</h2>
 
-          <!-- Items Summary -->
-          <div class="space-y-3 pb-6 border-b border-primary/10">
-            @for (item of items(); track item.product.id) {
-              <div class="flex justify-between text-secondary text-sm">
-                <span>{{ item.product.name }} (x{{ item.quantity }})</span>
-                <span>{{ item.product.price * item.quantity | currencyBrl }}</span>
-              </div>
-            }
-          </div>
-
-          <!-- Totals -->
-          <div class="space-y-3 py-6 border-b border-primary/10">
-            <div class="flex justify-between">
-              <span class="text-secondary">{{ 'shop.checkout.subtotal' | translate }}</span>
-              <span class="text-primary">{{ subtotal() | currencyBrl }}</span>
+        <div class="summary-items">
+          @for (item of items(); track item.product.id) {
+            <div>
+              <span>{{ item.product.name }} × {{ item.quantity }}</span>
+              <strong>{{ item.product.price * item.quantity | currencyBrl }}</strong>
             </div>
-            <div class="flex justify-between">
-              <span class="text-secondary">{{ 'shop.checkout.discount' | translate }}</span>
-              <span class="text-accent">R$ 0,00</span>
-            </div>
-          </div>
-
-          <div class="flex justify-between py-6">
-            <span class="text-primary font-bold text-lg">{{ 'shop.checkout.total' | translate }}</span>
-            <span class="text-accent font-bold text-2xl">{{ total() | currencyBrl }}</span>
-          </div>
-
-          <!-- Terms -->
-          <div class="mb-6">
-            <p-checkbox
-              [(ngModel)]="acceptTerms"
-              [binary]="true"
-              inputId="terms"
-            />
-            <label for="terms" class="ml-2 text-secondary text-sm">
-              {{ 'shop.checkout.acceptTerms' | translate }}
-              <a routerLink="/termos" class="text-accent hover:underline">{{ 'shop.checkout.termsOfUse' | translate }}</a>
-              {{ 'shop.checkout.and' | translate }}
-              <a routerLink="/privacidade" class="text-accent hover:underline">{{ 'shop.checkout.privacyPolicy' | translate }}</a>
-            </label>
-          </div>
-
-          <!-- Pay Button -->
-          <button
-            pButton
-            class="btn-primary w-full"
-            [loading]="processing()"
-            [disabled]="!acceptTerms() || isEmpty"
-            (click)="processPayment()"
-          >
-            <i class="pi pi-lock mr-2"></i>
-            {{ 'shop.checkout.pay' | translate }} {{ total() | currencyBrl }}
-          </button>
-
-          <!-- Security Info -->
-          <div class="mt-6 text-center">
-            <p class="text-secondary text-xs">
-              <i class="pi pi-shield mr-1"></i>
-              {{ 'shop.checkout.securePaymentInfo' | translate }}
-            </p>
-          </div>
+          }
         </div>
-      </div>
+
+        <dl class="totals">
+          <div>
+            <dt>{{ 'shop.checkout.subtotal' | translate }}</dt>
+            <dd>{{ subtotal() | currencyBrl }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'shop.checkout.discount' | translate }}</dt>
+            <dd>R$ 0,00</dd>
+          </div>
+        </dl>
+
+        <div class="grand-total">
+          <span>{{ 'shop.checkout.total' | translate }}</span>
+          <strong>{{ total() | currencyBrl }}</strong>
+        </div>
+
+        <div class="terms">
+          <p-checkbox [(ngModel)]="acceptTerms" [binary]="true" inputId="terms" />
+          <label for="terms">
+            {{ 'shop.checkout.acceptTerms' | translate }}
+            <a routerLink="/termos-de-uso">{{ 'shop.checkout.termsOfUse' | translate }}</a>
+            {{ 'shop.checkout.and' | translate }}
+            <a routerLink="/politica-de-privacidade">{{ 'shop.checkout.privacyPolicy' | translate }}</a>
+          </label>
+        </div>
+
+        <button
+          type="button"
+          class="pay-button"
+          [disabled]="!acceptTerms() || isEmpty || processing()"
+          (click)="processPayment()">
+          <i class="pi pi-lock"></i>
+          {{ 'shop.checkout.pay' | translate }} {{ total() | currencyBrl }}
+        </button>
+
+        <p class="summary-security">
+          <i class="pi pi-shield"></i>
+          {{ 'shop.checkout.securePaymentInfo' | translate }}
+        </p>
+      </aside>
     </div>
   </div>
 </section>
