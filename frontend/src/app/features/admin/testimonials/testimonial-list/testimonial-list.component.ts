@@ -4,11 +4,10 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { InputTextModule } from 'primeng/inputtext';
-import { Select, SelectModule } from 'primeng/select';
+import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { RatingModule } from 'primeng/rating';
@@ -27,7 +26,6 @@ import { NotificationService } from '../../../../core/services/notification.serv
   imports: [
     CommonModule,
     FormsModule,
-    ButtonModule,
     TableModule,
     InputTextModule,
     SelectModule,
@@ -61,7 +59,6 @@ export class TestimonialListComponent implements OnInit {
 
   selectedFilter: string | null = null;
   searchTerm = '';
-  selectedStatus: string | null = null;
 
   get statusOptions() {
     return [
