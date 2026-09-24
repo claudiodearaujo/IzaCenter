@@ -369,15 +369,30 @@ export class PrivacyService {
       where: {
         tenantId,
         key: {
-          in: ['privacyContactName', 'privacyContactEmail', 'privacyContactUrl'],
+          in: [
+            'privacyContactName',
+            'privacyContactEmail',
+            'privacyContactUrl',
+            'contact',
+            'professional',
+          ],
         },
       },
       select: { key: true, value: true },
     });
     const values = Object.fromEntries(rows.map((row) => [row.key, row.value]));
+    const contact = (values.contact || {}) as Record<string, unknown>;
+    const professional = (values.professional || {}) as Record<string, unknown>;
+
     return {
-      name: values.privacyContactName || null,
-      email: values.privacyContactEmail || null,
+      name:
+        values.privacyContactName ||
+        professional.displayName ||
+        null,
+      email:
+        values.privacyContactEmail ||
+        contact.email ||
+        null,
       url: values.privacyContactUrl || null,
     };
   }
