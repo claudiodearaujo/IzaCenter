@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { AuthService } from '../../../core/services/auth.service';
@@ -22,7 +21,6 @@ import { TenantContextService } from '../../../core/services/tenant-context.serv
     CommonModule,
     FormsModule,
     RouterLink,
-    ButtonModule,
     InputTextModule,
     PasswordModule,
   ],
@@ -53,9 +51,9 @@ export class ProfessionalOnboardingComponent {
     professionalTitle: '',
     serviceMode: 'ONLINE',
     contactEmail: '',
-    primaryColor: '#4F46E5',
-    secondaryColor: '#7C3AED',
-    accentColor: '#0EA5E9',
+    primaryColor: '#477762',
+    secondaryColor: '#D56546',
+    accentColor: '#52718C',
   };
 
   next(): void {
