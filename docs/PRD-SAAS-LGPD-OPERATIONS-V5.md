@@ -1,6 +1,6 @@
 # PRD — SaaS Foundation v5: LGPD & Operations
 
-**Status:** 🟡 Em implementação
+**Status:** 🟡 Implementação concluída — CI/deploy pendentes
 
 ## Objetivo
 
@@ -288,3 +288,28 @@ Após v5, a Fase 3 — SaaS Foundation estará tecnicamente concluída. O próxi
 - Tenant Team & Invitations;
 - Custom Domain Automation;
 - Production Operations.
+
+
+## Validação local
+
+- Prisma validate/generate: PASS.
+- Backend build: PASS.
+- Backend baseline + privacy tests: 23/23 suites, 357/357 testes PASS antes do hardening final.
+- PrivacyService específico: 6/6 testes PASS.
+- Migration v5 aplicada em banco scratch derivado do schema real do Coolify: PASS.
+- Backfill sintético: `v5-existing | 730 | 1825 | 90` — PASS.
+- Tabelas confirmadas no scratch: `privacy_requests`, `audit_events`, `data_retention_policies`, `security_incidents`.
+- Frontend unit tests: 262/262 PASS.
+- Frontend production build: PASS após correção do contrato legado de `OrderDetailComponent`.
+- Exportação usa selects explícitos e não inclui passwordHash, resetToken ou Stripe IDs internos.
+- Auditoria persiste somente IP hasheado quando `AUDIT_IP_HASH_SALT` está configurado; sem salt, nenhum fingerprint de IP é salvo.
+- Limpeza destrutiva automática permanece desabilitada.
+- Billing SaaS permanece desligado no runtime local.
+
+### Gate ainda pendente
+
+- CI remoto final da branch;
+- merge;
+- migration no Coolify;
+- smoke tests autenticados/anônimos do runtime;
+- encerramento formal do roadmap SaaS Foundation.
