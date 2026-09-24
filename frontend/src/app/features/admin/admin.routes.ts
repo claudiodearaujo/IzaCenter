@@ -130,6 +130,11 @@ export const ADMIN_ROUTES: Routes = [
       import('./billing/billing.component').then((m) => m.BillingComponent),
   },
   {
+    path: 'privacidade',
+    loadComponent: () =>
+      import('./privacy/privacy.component').then((m) => m.AdminPrivacyComponent),
+  },
+  {
     path: 'configuracoes',
     loadComponent: () =>
       import('./settings/settings.component').then((m) => m.SettingsComponent),

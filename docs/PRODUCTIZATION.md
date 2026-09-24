@@ -38,9 +38,9 @@ PRDs:
 - [PRD-SAAS-DATA-ISOLATION-V2.md](PRD-SAAS-DATA-ISOLATION-V2.md) — SaaS Foundation v2 — Data Isolation ✅
 - [PRD-SAAS-ONBOARDING-BRANDING-V3.md](PRD-SAAS-ONBOARDING-BRANDING-V3.md) — SaaS Foundation v3 — Onboarding & Branding ✅
 - [PRD-SAAS-PLANS-BILLING-V4.md](PRD-SAAS-PLANS-BILLING-V4.md) — SaaS Foundation v4 — Plans & Billing ✅
-- SaaS Foundation v5 — LGPD & Operations ⏳
+- [PRD-SAAS-LGPD-OPERATIONS-V5.md](PRD-SAAS-LGPD-OPERATIONS-V5.md) — SaaS Foundation v5 — LGPD & Operations 🟡
 
-A v1 instalou o contexto de tenant, memberships e settings tenant-scoped. A v2 concluiu o isolamento lógico dos agregados de negócio com backfill seguro do tenant legado. A v3 adicionou onboarding self-service do profissional, ownership tenant-scoped, seleção explícita de workspace e branding dinâmico. A v4 adicionou catálogo de planos, entitlements, lifecycle de assinatura, idempotência persistente de webhooks e cobrança SaaS isolada do comércio dos clientes. A próxima etapa é a v5 — LGPD & Operations.
+A v1 instalou o contexto de tenant, memberships e settings tenant-scoped. A v2 concluiu o isolamento lógico dos agregados de negócio com backfill seguro do tenant legado. A v3 adicionou onboarding self-service do profissional, ownership tenant-scoped, seleção explícita de workspace e branding dinâmico. A v4 adicionou catálogo de planos, entitlements, lifecycle de assinatura, idempotência persistente de webhooks e cobrança SaaS isolada do comércio dos clientes. A v5 está implementando direitos do titular, auditoria persistente, retenção controlada e operação de incidentes.
 
 Prioridades:
 - isolamento de dados por tenant;

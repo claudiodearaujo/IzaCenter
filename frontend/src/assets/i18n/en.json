@@ -318,7 +318,8 @@
       "appointments": "Appointments",
       "orders": "Orders",
       "profile": "Profile",
-      "schedule": "Book Session"
+      "schedule": "Book Session",
+      "privacy": "Privacy"
     },
     "booking": {
       "title": "Book a New Session",
@@ -719,7 +720,8 @@
       "cards": "Cards",
       "testimonials": "Testimonials",
       "billing": "Plan & subscription",
-      "settings": "Settings"
+      "settings": "Settings",
+      "privacy": "Privacy & operations"
     },
     "orders": {
       "title": "Orders",

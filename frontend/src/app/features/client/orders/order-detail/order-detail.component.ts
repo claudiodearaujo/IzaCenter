@@ -162,6 +162,23 @@ export class OrderDetailComponent implements OnInit {
     return tones[status] || 'neutral';
   }
 
+  // Compatibility for the legacy order-detail template while this screen
+  // finishes its migration to DsBadgeComponent.
+  getStatusClass(status: string): string {
+    const classes: Record<string, string> = {
+      PENDING: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10',
+      WAITING: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10',
+      PAID: 'text-blue-400 border-blue-500/30 bg-blue-500/10',
+      PROCESSING: 'text-amber-300 border-amber-500/30 bg-amber-500/10',
+      IN_PROGRESS: 'text-amber-300 border-amber-500/30 bg-amber-500/10',
+      COMPLETED: 'text-green-400 border-green-500/30 bg-green-500/10',
+      PUBLISHED: 'text-green-400 border-green-500/30 bg-green-500/10',
+      CANCELLED: 'text-red-400 border-red-500/30 bg-red-500/10',
+      REFUNDED: 'text-secondary border-primary/10',
+    };
+    return classes[status] || 'text-secondary border-primary/10';
+  }
+
   getPaymentLabel(method?: string): string {
     const labels: Record<string, string> = {
       card: this.translate.instant('client.orders.detail.paymentCard'),

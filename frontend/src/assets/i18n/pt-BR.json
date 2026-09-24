@@ -318,7 +318,8 @@
       "appointments": "Agendamentos",
       "orders": "Pedidos",
       "profile": "Perfil",
-      "schedule": "Agendar Sessão"
+      "schedule": "Agendar Sessão",
+      "privacy": "Privacidade"
     },
     "booking": {
       "title": "Agendar Nova Sessão",
@@ -719,7 +720,8 @@
       "cards": "Cartas",
       "testimonials": "Depoimentos",
       "billing": "Plano e assinatura",
-      "settings": "Configurações"
+      "settings": "Configurações",
+      "privacy": "Privacidade"
     },
     "orders": {
       "title": "Pedidos",

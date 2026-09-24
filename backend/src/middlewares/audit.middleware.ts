@@ -1,68 +1,71 @@
-// apps/backend/src/middlewares/audit.middleware.ts
+import { randomUUID } from 'crypto';
+import { NextFunction, Request, Response } from 'express';
+import { auditService } from '../modules/privacy/audit.service';
 
-import { Request, Response, NextFunction } from 'express';
-import { env } from '../config/env';
+const WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
-interface AuditEntry {
-  timestamp: string;
-  action: string;
-  method: string;
-  path: string;
-  userId?: string;
-  userEmail?: string;
-  ip: string;
-  statusCode?: number;
-  duration?: number;
+function shouldAudit(req: Request): boolean {
+  if (WRITE_METHODS.has(req.method)) return true;
+  return req.method === 'GET' && req.path === '/privacy/export';
 }
 
-/**
- * Sensitive paths that should be audit-logged
- */
-const SENSITIVE_PATTERNS = [
-  { pattern: /^\/api\/auth\/login$/, action: 'auth.login' },
-  { pattern: /^\/api\/auth\/register$/, action: 'auth.register' },
-  { pattern: /^\/api\/auth\/logout$/, action: 'auth.logout' },
-  { pattern: /^\/api\/auth\/reset-password$/, action: 'auth.resetPassword' },
-  { pattern: /^\/api\/orders/, action: 'orders' },
-  { pattern: /^\/api\/admin\//, action: 'admin' },
-  { pattern: /^\/webhooks\/stripe/, action: 'webhook.stripe' },
-];
+function actionFor(req: Request): string {
+  const path = req.path
+    .replace(/\/[0-9a-f]{8}-[0-9a-f-]{27,36}(?=\/|$)/gi, '/:id')
+    .replace(/\/+$/, '');
 
-/**
- * Audit logging middleware for sensitive operations
- */
+  const known: Array<[RegExp, string]> = [
+    [/^\/auth\/login$/, 'auth.login'],
+    [/^\/auth\/register$/, 'auth.register'],
+    [/^\/auth\/logout$/, 'auth.logout'],
+    [/^\/auth\/reset-password$/, 'auth.reset_password'],
+    [/^\/privacy\/export$/, 'privacy.export'],
+    [/^\/privacy\/requests$/, 'privacy.request'],
+    [/^\/admin\/privacy\/requests/, 'privacy.admin_request'],
+    [/^\/admin\/privacy\/incidents/, 'privacy.incident'],
+    [/^\/admin\/privacy\/retention/, 'privacy.retention'],
+    [/^\/billing\//, 'billing'],
+    [/^\/orders/, 'orders'],
+    [/^\/settings|^\/admin\/settings/, 'settings'],
+  ];
+
+  return known.find(([pattern]) => pattern.test(path))?.[1] ||
+    `http.${req.method.toLowerCase()}.${path || '/'}`;
+}
+
 export function auditLogger(req: Request, res: Response, next: NextFunction): void {
-  const match = SENSITIVE_PATTERNS.find(p => p.pattern.test(req.path));
-
-  if (!match) {
+  if (!shouldAudit(req)) {
     next();
     return;
   }
 
-  const startTime = Date.now();
+  const auditRequestId = randomUUID();
+  (req as any).auditRequestId = auditRequestId;
+  res.setHeader('X-Request-Id', auditRequestId);
 
-  const originalEnd = res.end;
-  res.end = function (this: Response, ...args: any[]) {
-    const duration = Date.now() - startTime;
+  res.once('finish', () => {
     const user = (req as any).user;
+    const tenant = (req as any).tenant;
+    const tenantId = req.path.startsWith('/onboarding') ? null : tenant?.id || null;
 
-    const entry: AuditEntry = {
-      timestamp: new Date().toISOString(),
-      action: match.action,
+    void auditService.record({
+      tenantId,
+      actorUserId: user?.id || null,
+      action: actionFor(req),
       method: req.method,
       path: req.path,
-      userId: user?.id,
-      userEmail: user?.email,
-      ip: req.ip || req.socket.remoteAddress || 'unknown',
       statusCode: res.statusCode,
-      duration,
-    };
-
-    // Log to stdout in structured format
-    console.log(`[AUDIT] ${JSON.stringify(entry)}`);
-
-    return (originalEnd as Function).apply(this, args);
-  } as any;
+      outcome: res.statusCode >= 400 ? 'FAILURE' : 'SUCCESS',
+      requestId: auditRequestId,
+      ip: req.ip || req.socket.remoteAddress || null,
+    }).catch((error) => {
+      console.error('[AUDIT_PERSISTENCE_ERROR]', {
+        requestId: auditRequestId,
+        action: actionFor(req),
+        message: error instanceof Error ? error.message : String(error),
+      });
+    });
+  });
 
   next();
 }

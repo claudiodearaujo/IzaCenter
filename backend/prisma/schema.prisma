@@ -79,6 +79,46 @@ enum SaasSubscriptionStatus {
   UNPAID
 }
 
+enum PrivacyRequestType {
+  ACCESS
+  CONFIRMATION
+  CORRECTION
+  PORTABILITY
+  ANONYMIZATION
+  DELETION
+  INFORMATION
+  CONSENT_WITHDRAWAL
+}
+
+enum PrivacyRequestStatus {
+  PENDING
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  COMPLETED
+  CANCELED
+}
+
+enum AuditOutcome {
+  SUCCESS
+  FAILURE
+}
+
+enum SecurityIncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum SecurityIncidentStatus {
+  OPEN
+  INVESTIGATING
+  CONTAINED
+  RESOLVED
+  CLOSED
+}
+
 // =============================================
 // MODELS
 // =============================================
@@ -109,6 +149,10 @@ model Tenant {
   notifications   Notification[]
   saasSubscription SaasSubscription?
   stripeWebhookEvents StripeWebhookEvent[]
+  privacyRequests     PrivacyRequest[]
+  auditEvents         AuditEvent[]
+  retentionPolicy     DataRetentionPolicy?
+  securityIncidents   SecurityIncident[]
 
   @@index([status])
   @@map("tenants")
@@ -202,8 +246,104 @@ model User {
   notifications        Notification[]
   testimonials         Testimonial[]
   tenantMemberships     TenantMembership[]
+  privacyRequests        PrivacyRequest[] @relation("PrivacyRequester")
+  reviewedPrivacyRequests PrivacyRequest[] @relation("PrivacyReviewer")
+  auditEvents            AuditEvent[] @relation("AuditActor")
+  createdSecurityIncidents SecurityIncident[] @relation("IncidentCreator")
 
   @@map("users")
+}
+
+model PrivacyRequest {
+  id               String               @id @default(uuid())
+  tenantId         String               @map("tenant_id")
+  requesterUserId  String               @map("requester_user_id")
+  type             PrivacyRequestType
+  status           PrivacyRequestStatus @default(PENDING)
+  details          String?
+  responseMessage  String?              @map("response_message")
+  reviewedByUserId String?              @map("reviewed_by_user_id")
+  completedAt      DateTime?            @map("completed_at")
+  createdAt        DateTime             @default(now()) @map("created_at")
+  updatedAt        DateTime             @updatedAt @map("updated_at")
+
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  requester   User   @relation("PrivacyRequester", fields: [requesterUserId], references: [id], onDelete: Cascade)
+  reviewedBy  User?  @relation("PrivacyReviewer", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status])
+  @@index([requesterUserId])
+  @@index([createdAt])
+  @@map("privacy_requests")
+}
+
+model AuditEvent {
+  id           String       @id @default(uuid())
+  tenantId     String?      @map("tenant_id")
+  actorUserId  String?      @map("actor_user_id")
+  action       String
+  resourceType String?      @map("resource_type")
+  resourceId   String?      @map("resource_id")
+  method       String
+  path         String
+  statusCode   Int?         @map("status_code")
+  outcome      AuditOutcome
+  requestId    String       @map("request_id")
+  ipHash       String?      @map("ip_hash")
+  metadata     Json?
+  createdAt    DateTime     @default(now()) @map("created_at")
+
+  tenant Tenant? @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  actor  User?   @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, createdAt])
+  @@index([actorUserId])
+  @@index([action])
+  @@index([resourceType, resourceId])
+  @@index([requestId])
+  @@map("audit_events")
+}
+
+model DataRetentionPolicy {
+  id                          String   @id @default(uuid())
+  tenantId                    String   @unique @map("tenant_id")
+  auditRetentionDays          Int      @default(730) @map("audit_retention_days")
+  privacyRequestRetentionDays Int      @default(1825) @map("privacy_request_retention_days")
+  operationalLogRetentionDays Int      @default(90) @map("operational_log_retention_days")
+  createdAt                   DateTime @default(now()) @map("created_at")
+  updatedAt                   DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("data_retention_policies")
+}
+
+model SecurityIncident {
+  id                       String                   @id @default(uuid())
+  tenantId                 String?                  @map("tenant_id")
+  title                    String
+  summary                  String
+  severity                 SecurityIncidentSeverity
+  status                   SecurityIncidentStatus   @default(OPEN)
+  detectedAt               DateTime                 @map("detected_at")
+  controllerAwareAt        DateTime                 @map("controller_aware_at")
+  affectedDataCategories   String[]                 @map("affected_data_categories")
+  affectedSubjectsEstimate Int?                     @map("affected_subjects_estimate")
+  riskRelevant             Boolean?                 @map("risk_relevant")
+  anpdNotifiedAt           DateTime?                @map("anpd_notified_at")
+  subjectsNotifiedAt       DateTime?                @map("subjects_notified_at")
+  resolutionSummary        String?                  @map("resolution_summary")
+  createdByUserId          String?                  @map("created_by_user_id")
+  createdAt                DateTime                 @default(now()) @map("created_at")
+  updatedAt                DateTime                 @updatedAt @map("updated_at")
+
+  tenant    Tenant? @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  createdBy User?   @relation("IncidentCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status])
+  @@index([severity])
+  @@index([controllerAwareAt])
+  @@map("security_incidents")
 }
 
 model ProductCategory {

@@ -53,6 +53,7 @@ export class AdminLayoutComponent implements OnInit {
     { labelKey: 'admin.layout.availability', icon: 'pi-clock', route: '/admin/disponibilidade' },
     { labelKey: 'admin.layout.reports', icon: 'pi-chart-line', route: '/admin/relatorios' },
     { labelKey: 'admin.menu.billing', icon: 'pi-credit-card', route: '/admin/assinatura' },
+    { labelKey: 'admin.menu.privacy', icon: 'pi-shield', route: '/admin/privacidade' },
     { labelKey: 'admin.menu.settings', icon: 'pi-cog', route: '/admin/configuracoes' }
   ];
 

@@ -100,6 +100,12 @@ export class OnboardingService {
         },
       });
 
+      await tx.dataRetentionPolicy.create({
+        data: {
+          tenantId: tenant.id,
+        },
+      });
+
       await tx.siteSetting.createMany({
         data: this.buildInitialSettings(tenant.id, data),
       });

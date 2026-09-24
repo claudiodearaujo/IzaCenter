@@ -37,6 +37,7 @@ services:
       SUPABASE_STORAGE_BUCKET: therapist-platform-local
       STRIPE_SECRET_KEY: sk_test_local_placeholder
       STRIPE_WEBHOOK_SECRET: whsec_local_placeholder
+      AUDIT_IP_HASH_SALT: ""
       SAAS_BILLING_ENABLED: "false"
       SAAS_PROFESSIONAL_PRICE_ID: ""
       SAAS_PROFESSIONAL_MONTHLY_PRICE_CENTS: ""

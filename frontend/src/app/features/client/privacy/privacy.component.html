@@ -1,0 +1,143 @@
+<section class="privacy-page">
+  <ds-page-header
+    title="Privacidade e meus dados"
+    description="Consulte, exporte e solicite o exercício dos seus direitos sobre dados pessoais.">
+    <div dsPageActions>
+      <ds-button
+        variant="secondary"
+        icon="pi-download"
+        [loading]="exporting()"
+        (click)="exportData()">
+        Exportar meus dados
+      </ds-button>
+    </div>
+  </ds-page-header>
+
+  <div class="privacy-notice">
+    <i class="pi pi-shield"></i>
+    <div>
+      <strong>Solicitações de eliminação não apagam dados automaticamente.</strong>
+      <p>
+        Alguns registros podem precisar ser preservados por obrigação legal, contratual ou outra
+        base legítima. A solicitação fica registrada para análise e resposta do responsável.
+      </p>
+    </div>
+  </div>
+
+  <div class="privacy-grid">
+    <ds-card padding="lg">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Novo pedido</span>
+          <h2>Exercer um direito</h2>
+          <p>Escolha o tipo de solicitação e acrescente contexto quando necessário.</p>
+        </div>
+      </div>
+
+      <div class="request-form">
+        <ds-form-field label="Tipo de solicitação" forId="privacyType">
+          <select id="privacyType" [(ngModel)]="requestType">
+            @for (item of requestTypes; track item.value) {
+              <option [value]="item.value">{{ item.label }}</option>
+            }
+          </select>
+        </ds-form-field>
+
+        <ds-form-field
+          label="Detalhes"
+          forId="privacyDetails"
+          hint="Evite incluir dados sensíveis que não sejam necessários para explicar o pedido.">
+          <textarea
+            id="privacyDetails"
+            rows="5"
+            [(ngModel)]="details"
+            placeholder="Descreva seu pedido, se necessário."></textarea>
+        </ds-form-field>
+
+        <div class="actions">
+          <ds-button
+            icon="pi-send"
+            [loading]="submitting()"
+            (click)="createRequest()">
+            Enviar solicitação
+          </ds-button>
+        </div>
+      </div>
+    </ds-card>
+
+    <ds-card padding="lg">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Canal de privacidade</span>
+          <h2>Responsável pelo atendimento</h2>
+          <p>Use este canal quando precisar complementar uma solicitação.</p>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <i class="pi pi-envelope"></i>
+        <div>
+          <strong>{{ contactValue(contact()?.name) || 'Contato de privacidade' }}</strong>
+          @if (contactValue(contact()?.email)) {
+            <a [href]="'mailto:' + contactValue(contact()?.email)">
+              {{ contactValue(contact()?.email) }}
+            </a>
+          } @else {
+            <span>Canal específico ainda não configurado.</span>
+          }
+          @if (contactValue(contact()?.url)) {
+            <a [href]="contactValue(contact()?.url)" target="_blank" rel="noopener noreferrer">
+              Abrir canal externo
+            </a>
+          }
+        </div>
+      </div>
+    </ds-card>
+  </div>
+
+  <ds-card padding="lg">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Histórico</span>
+        <h2>Minhas solicitações</h2>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <i class="pi pi-spinner pi-spin"></i>
+        <span>Carregando...</span>
+      </div>
+    } @else if (requests().length === 0) {
+      <ds-empty-state
+        icon="pi-shield"
+        title="Nenhuma solicitação registrada"
+        description="Quando você enviar um pedido de privacidade, o acompanhamento aparecerá aqui." />
+    } @else {
+      <div class="request-list">
+        @for (request of requests(); track request.id) {
+          <article class="request-item">
+            <div>
+              <div class="request-item__top">
+                <strong>{{ typeLabel(request.type) }}</strong>
+                <ds-badge [tone]="statusTone(request.status)">
+                  {{ statusLabel(request.status) }}
+                </ds-badge>
+              </div>
+              <small>Recebida em {{ formatDate(request.createdAt) }}</small>
+              @if (request.details) {
+                <p>{{ request.details }}</p>
+              }
+              @if (request.responseMessage) {
+                <div class="response">
+                  <span>Resposta</span>
+                  <p>{{ request.responseMessage }}</p>
+                </div>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </ds-card>
+</section>
