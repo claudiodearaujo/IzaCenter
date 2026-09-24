@@ -1,146 +1,126 @@
-<!-- apps/frontend/src/app/features/admin/cards/card-list/card-list.component.html -->
+<section class="cards-module-page">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">Módulo especializado</span>
+      <h1>{{ 'admin.cards.title' | translate }}</h1>
+      <p>{{ 'admin.cards.subtitle' | translate }}</p>
+    </div>
 
-<section class="py-8">
-  <div class="container-custom">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="heading-1 text-primary mb-2">
-          <i class="pi pi-th-large mr-3"></i>
-          {{ 'admin.cards.title' | translate }}
-        </h1>
-        <p class="text-secondary">{{ 'admin.cards.subtitle' | translate }}</p>
-      </div>
-      <div class="flex gap-3">
-        <button pButton class="btn-outline" (click)="generateDeck()">
-          <i class="pi pi-sync mr-2"></i>
+    <div class="page-actions">
+      <button type="button" class="secondary-button" (click)="generateDeck()">
+        <i class="pi pi-sync"></i>
+        {{ 'admin.cards.generateDeckButton' | translate }}
+      </button>
+      <button type="button" class="primary-button" (click)="openDialog()">
+        <i class="pi pi-plus"></i>
+        {{ 'admin.cards.newCard' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="module-note">
+    <i class="pi pi-info-circle"></i>
+    <p>
+      Este catálogo pertence a um módulo opcional de especialidade. Ele só deve aparecer em experiências
+      que utilizem explicitamente o módulo <code>tarot-cards</code>.
+    </p>
+  </div>
+
+  <div class="search-card">
+    <div class="search-control">
+      <i class="pi pi-search"></i>
+      <input
+        pInputText
+        [(ngModel)]="searchTerm"
+        [placeholder]="'admin.cards.searchPlaceholder' | translate" />
+    </div>
+    <span>{{ filteredCards.length }} item(ns)</span>
+  </div>
+
+  @if (loading()) {
+    <div class="cards-grid" role="status" aria-live="polite">
+      @for (i of [1,2,3,4,5,6,7,8,9,10,11,12]; track i) {
+        <article class="card-skeleton">
+          <div class="card-skeleton__media"></div>
+          <div class="card-skeleton__line"></div>
+          <div class="card-skeleton__line card-skeleton__line--short"></div>
+        </article>
+      }
+    </div>
+  } @else if (filteredCards.length === 0) {
+    <div class="empty-state">
+      <span><i class="pi pi-th-large"></i></span>
+      @if (searchTerm) {
+        <h2>{{ 'admin.cards.noCardsFound' | translate:{ term: searchTerm } }}</h2>
+      } @else {
+        <h2>{{ 'admin.cards.noCardsYet' | translate }}</h2>
+        <button type="button" class="secondary-button" (click)="generateDeck()">
+          <i class="pi pi-sync"></i>
           {{ 'admin.cards.generateDeckButton' | translate }}
         </button>
-        <button pButton class="btn-primary" (click)="openDialog()">
-          <i class="pi pi-plus mr-2"></i>
-          {{ 'admin.cards.newCard' | translate }}
-        </button>
-      </div>
+      }
     </div>
-
-    <!-- Search -->
-    <div class="glass-card p-4 mb-6">
-      <span class="p-input-icon-left w-full max-w-md">
-        <i class="pi pi-search"></i>
-        <input
-          pInputText
-          [(ngModel)]="searchTerm"
-          [placeholder]="'admin.cards.searchPlaceholder' | translate"
-          class="w-full"
-        />
-      </span>
-    </div>
-
-    <!-- Cards Grid -->
-    @if (loading()) {
-      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        @for (i of [1,2,3,4,5,6,7,8,9,10,11,12]; track i) {
-          <div class="glass-card animate-pulse">
-            <div class="aspect-[2/3] bg-primary/10"></div>
-            <div class="p-3">
-              <div class="h-4 bg-primary/10 rounded mb-2"></div>
-              <div class="h-3 bg-primary/10 rounded w-2/3"></div>
-            </div>
-          </div>
-        }
-      </div>
-    } @else if (filteredCards.length === 0) {
-      <div class="glass-card p-12 text-center">
-        <i class="pi pi-th-large text-5xl text-secondary/30 mb-4"></i>
-        @if (searchTerm) {
-          <p class="text-secondary">{{ 'admin.cards.noCardsFound' | translate:{ term: searchTerm } }}</p>
-        } @else {
-          <p class="text-secondary mb-4">{{ 'admin.cards.noCardsYet' | translate }}</p>
-          <button pButton class="btn-primary" (click)="generateDeck()">
-            <i class="pi pi-sync mr-2"></i>
-            {{ 'admin.cards.generateDeckButton' | translate }}
-          </button>
-        }
-      </div>
-    } @else {
-      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        @for (card of filteredCards; track card.id) {
-          <div class="glass-card overflow-hidden group cursor-pointer" (click)="openDialog(card)">
-            <!-- Card Image -->
-            <div class="relative">
+  } @else {
+    <div class="cards-grid">
+      @for (card of filteredCards; track card.id) {
+        <article class="domain-card">
+          <button type="button" class="domain-card__body" (click)="openDialog(card)">
+            <div class="domain-card__media">
               @if (card.imageUrl) {
-                <img
-                  [src]="card.imageUrl"
-                  [alt]="card.name"
-                  class="w-full aspect-[2/3] object-cover"
-                />
+                <img [src]="card.imageUrl" [alt]="card.name" />
               } @else {
-                <div class="w-full aspect-[2/3] bg-gradient-mystical flex items-center justify-center">
-                  <div class="text-center">
-                    <span class="text-4xl font-bold text-white">{{ card.number }}</span>
-                    <p class="text-white/60 text-sm mt-2">{{ 'admin.cards.noImage' | translate }}</p>
-                  </div>
+                <div class="domain-card__placeholder">
+                  <strong>{{ card.number }}</strong>
+                  <span>{{ 'admin.cards.noImage' | translate }}</span>
                 </div>
               }
-
-              <!-- Overlay on hover -->
-              <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                <button
-                  pButton
-                  class="p-button-rounded p-button-outlined"
-                  (click)="openDialog(card); $event.stopPropagation()"
-                >
-                  <i class="pi pi-pencil"></i>
-                </button>
-                <button
-                  pButton
-                  class="p-button-rounded p-button-danger p-button-outlined"
-                  (click)="confirmDelete(card); $event.stopPropagation()"
-                >
-                  <i class="pi pi-trash"></i>
-                </button>
-              </div>
             </div>
 
-            <!-- Card Info -->
-            <div class="p-3">
-              <h3 class="text-primary font-medium truncate">{{ card.name }}</h3>
-              <p class="text-secondary text-xs truncate">
+            <div class="domain-card__copy">
+              <span>Nº {{ card.number }}</span>
+              <h2>{{ card.name }}</h2>
+              <small [class.is-positive]="card.isPositive" [class.is-negative]="!card.isPositive">
                 {{ card.isPositive ? ('admin.cards.positive' | translate) : ('admin.cards.negative' | translate) }}
-              </p>
+              </small>
             </div>
+          </button>
+
+          <div class="domain-card__actions">
+            <button type="button" (click)="openDialog(card)" aria-label="Editar carta">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button
+              type="button"
+              class="danger"
+              (click)="confirmDelete(card)"
+              aria-label="Excluir carta">
+              <i class="pi pi-trash"></i>
+            </button>
           </div>
-        }
-      </div>
-    }
-  </div>
+        </article>
+      }
+    </div>
+  }
 </section>
 
-<!-- Edit/Create Dialog -->
 <p-dialog
   [(visible)]="dialogVisible"
   [modal]="true"
   [closable]="true"
-  [style]="{width: '90vw', maxWidth: '700px'}"
+  [style]="{width:'700px',maxWidth:'calc(100vw - 32px)'}"
   [header]="editingCard() ? ('admin.cards.editCard' | translate) : ('admin.cards.newCard' | translate)"
-  (onHide)="closeDialog()"
->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
-    <!-- Image -->
-    <div class="flex flex-col items-center">
-      <div class="w-full max-w-48 mb-4">
-        @if (imagePreview()) {
-          <img
-            [src]="imagePreview()"
-            alt="Preview"
-            class="w-full rounded-lg"
-          />
-        } @else {
-          <div class="w-full aspect-[2/3] bg-gradient-mystical rounded-lg flex items-center justify-center">
-            <i class="pi pi-image text-4xl text-white/50"></i>
-          </div>
-        }
-      </div>
+  (onHide)="closeDialog()">
+
+  <div class="card-editor">
+    <div class="card-editor__media">
+      @if (imagePreview()) {
+        <img [src]="imagePreview()" alt="Pré-visualização da carta" />
+      } @else {
+        <div class="editor-placeholder">
+          <i class="pi pi-image"></i>
+          <span>{{ 'admin.cards.noImage' | translate }}</span>
+        </div>
+      }
 
       <p-fileUpload
         mode="basic"
@@ -150,120 +130,109 @@
         [chooseLabel]="'admin.cards.chooseImage' | translate"
         [auto]="false"
         (onSelect)="onImageSelect($event)"
-        styleClass="w-full"
-      />
-      <p class="text-secondary/60 text-xs mt-2">{{ 'admin.cards.imageFormat' | translate }}</p>
+        styleClass="w-full" />
+
+      <small>{{ 'admin.cards.imageFormat' | translate }}</small>
     </div>
 
-    <!-- Form -->
-    <div class="space-y-4">
-      <div>
-        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.numberLabel' | translate }}</label>
-        <input
-          pInputText
-          type="number"
-          [(ngModel)]="form.number"
-          class="w-full"
-          min="1"
-          max="36"
-        />
+    <div class="card-editor__form">
+      <div class="two-columns">
+        <label class="field">
+          <span>{{ 'admin.cards.numberLabel' | translate }}</span>
+          <input pInputText type="number" [(ngModel)]="form.number" min="1" max="36" />
+        </label>
+
+        <label class="positive-field">
+          <span>{{ 'admin.cards.positiveCard' | translate }}</span>
+          <p-checkbox
+            [(ngModel)]="form.isPositive"
+            [binary]="true"
+            inputId="isPositive" />
+        </label>
       </div>
 
-      <div>
-        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.nameLabel' | translate }}</label>
+      <label class="field">
+        <span>{{ 'admin.cards.nameLabel' | translate }}</span>
         <input
           pInputText
           [(ngModel)]="form.name"
-          class="w-full"
-          [placeholder]="'admin.cards.namePlaceholder' | translate"
-        />
-      </div>
+          [placeholder]="'admin.cards.namePlaceholder' | translate" />
+      </label>
 
-      <div class="flex items-center gap-2">
-        <p-checkbox
-          [(ngModel)]="form.isPositive"
-          [binary]="true"
-          inputId="isPositive"
-        />
-        <label for="isPositive" class="text-secondary text-sm">{{ 'admin.cards.positiveCard' | translate }}</label>
-      </div>
-
-      <div>
-        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.generalMeaning' | translate }}</label>
+      <label class="field">
+        <span>{{ 'admin.cards.generalMeaning' | translate }}</span>
         <textarea
           pInputTextarea
           [(ngModel)]="form.generalMeaning"
           [rows]="3"
-          class="w-full"
-          [placeholder]="'admin.cards.generalMeaningPlaceholder' | translate"
-        ></textarea>
-      </div>
+          [placeholder]="'admin.cards.generalMeaningPlaceholder' | translate">
+        </textarea>
+      </label>
 
-      <div>
-        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.loveMeaning' | translate }}</label>
-        <textarea
-          pInputTextarea
-          [(ngModel)]="form.loveMeaning"
-          [rows]="2"
-          class="w-full"
-          [placeholder]="'admin.cards.loveMeaningPlaceholder' | translate"
-        ></textarea>
-      </div>
+      <div class="meaning-grid">
+        <label class="field">
+          <span>{{ 'admin.cards.loveMeaning' | translate }}</span>
+          <textarea
+            pInputTextarea
+            [(ngModel)]="form.loveMeaning"
+            [rows]="2"
+            [placeholder]="'admin.cards.loveMeaningPlaceholder' | translate">
+          </textarea>
+        </label>
 
-      <div>
-        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.workMeaning' | translate }}</label>
-        <textarea
-          pInputTextarea
-          [(ngModel)]="form.workMeaning"
-          [rows]="2"
-          class="w-full"
-          [placeholder]="'admin.cards.workMeaningPlaceholder' | translate"
-        ></textarea>
-      </div>
+        <label class="field">
+          <span>{{ 'admin.cards.workMeaning' | translate }}</span>
+          <textarea
+            pInputTextarea
+            [(ngModel)]="form.workMeaning"
+            [rows]="2"
+            [placeholder]="'admin.cards.workMeaningPlaceholder' | translate">
+          </textarea>
+        </label>
 
-      <div>
-        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.healthMeaning' | translate }}</label>
-        <textarea
-          pInputTextarea
-          [(ngModel)]="form.healthMeaning"
-          [rows]="2"
-          class="w-full"
-          [placeholder]="'admin.cards.healthMeaningPlaceholder' | translate"
-        ></textarea>
-      </div>
+        <label class="field">
+          <span>{{ 'admin.cards.healthMeaning' | translate }}</span>
+          <textarea
+            pInputTextarea
+            [(ngModel)]="form.healthMeaning"
+            [rows]="2"
+            [placeholder]="'admin.cards.healthMeaningPlaceholder' | translate">
+          </textarea>
+        </label>
 
-      <div>
-        <label class="block text-secondary text-sm mb-1">{{ 'admin.cards.moneyMeaning' | translate }}</label>
-        <textarea
-          pInputTextarea
-          [(ngModel)]="form.moneyMeaning"
-          [rows]="2"
-          class="w-full"
-          [placeholder]="'admin.cards.moneyMeaningPlaceholder' | translate"
-        ></textarea>
+        <label class="field">
+          <span>{{ 'admin.cards.moneyMeaning' | translate }}</span>
+          <textarea
+            pInputTextarea
+            [(ngModel)]="form.moneyMeaning"
+            [rows]="2"
+            [placeholder]="'admin.cards.moneyMeaningPlaceholder' | translate">
+          </textarea>
+        </label>
       </div>
     </div>
   </div>
 
   <ng-template pTemplate="footer">
-    <div class="flex justify-end gap-3 pt-4">
-      <button pButton class="btn-outline" (click)="closeDialog()">
+    <div class="dialog-actions">
+      <button type="button" class="secondary-button" (click)="closeDialog()">
         {{ 'common.cancel' | translate }}
       </button>
+
       <button
-        pButton
-        class="btn-primary"
-        [loading]="saving()"
-        (click)="saveCard()"
-      >
-        <i class="pi pi-save mr-2"></i>
+        type="button"
+        class="primary-button"
+        [disabled]="saving()"
+        (click)="saveCard()">
+        @if (saving()) {
+          <i class="pi pi-spinner pi-spin"></i>
+        } @else {
+          <i class="pi pi-save"></i>
+        }
         {{ editingCard() ? ('common.update' | translate) : ('common.create' | translate) }}
       </button>
     </div>
   </ng-template>
 </p-dialog>
 
-<p-confirmDialog
-  styleClass="custom-confirm-dialog"
-  [style]="{width: '400px'}"
-/>
+<p-confirmDialog [style]="{width:'400px',maxWidth:'calc(100vw - 32px)'}" />
