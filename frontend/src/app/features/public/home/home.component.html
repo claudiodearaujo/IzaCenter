@@ -1,120 +1,206 @@
-<section class="relative min-h-[82vh] flex items-center overflow-hidden px-4 sm:px-6 lg:px-8"
-  style="background: linear-gradient(to bottom right, var(--primary-50), white, var(--secondary-50));">
-  <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute top-20 left-10 w-64 h-64 rounded-full blur-3xl bg-primary-200/30"></div>
-    <div class="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl bg-secondary-200/30"></div>
-  </div>
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-    <div class="max-w-3xl mx-auto text-center" @fadeInUp>
-      <div class="w-20 h-20 mx-auto mb-6 rounded-3xl bg-primary-100 flex items-center justify-center">
-        <i class="pi pi-star text-3xl text-primary-700"></i>
-      </div>
-      <h1 class="text-4xl md:text-6xl font-serif font-bold text-neutral-900 mb-6 leading-tight">
+<section class="hero">
+  <div class="hero__ambient hero__ambient--one"></div>
+  <div class="hero__ambient hero__ambient--two"></div>
+
+  <div class="public-container hero__grid" @fadeInUp>
+    <div class="hero__copy">
+      <span class="eyebrow">
+        {{ publicSettings().professional.professionalTitle || 'Cuidado profissional' }}
+      </span>
+
+      <h1>
         {{ publicSettings().content.heroTitle || publicSettings().heroTitle }}
       </h1>
-      <p class="text-lg md:text-xl text-neutral-600 mb-8 leading-relaxed">
+
+      <p class="hero__lead">
         {{ publicSettings().content.heroSubtitle || publicSettings().heroSubtitle }}
       </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a [routerLink]="publicSettings().content.heroPrimaryCtaUrl || '/servicos'">
-          <p-button [label]="publicSettings().content.heroPrimaryCtaLabel || 'Conhecer serviços'" icon="pi pi-arrow-right" iconPos="right" size="large" />
-        </a>
-        <a [routerLink]="publicSettings().content.heroSecondaryCtaUrl || '/sobre'">
-          <p-button [label]="publicSettings().content.heroSecondaryCtaLabel || 'Conhecer o profissional'" [outlined]="true" size="large" />
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section class="py-24 px-4 sm:px-6 lg:px-8 bg-white">
-  <div class="container mx-auto">
-    <div class="grid md:grid-cols-2 gap-12 items-center">
-      <div class="relative">
-        <div class="aspect-square rounded-3xl overflow-hidden flex items-center justify-center shadow-lg bg-primary-50">
-          <img [src]="professionalImage()" [alt]="publicSettings().professional.displayName" class="w-full h-full object-cover" />
-        </div>
+      <div class="hero__actions">
+        <a
+          [routerLink]="publicSettings().content.heroPrimaryCtaUrl || '/servicos'"
+          class="public-button public-button--primary">
+          {{ publicSettings().content.heroPrimaryCtaLabel || 'Conhecer serviços' }}
+          <i class="pi pi-arrow-right"></i>
+        </a>
+
+        <a
+          [routerLink]="publicSettings().content.heroSecondaryCtaUrl || '/sobre'"
+          class="public-button public-button--secondary">
+          {{ publicSettings().content.heroSecondaryCtaLabel || 'Conhecer o profissional' }}
+        </a>
       </div>
-      <div>
-        <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">Sobre</span>
-        <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2 mb-3">
-          {{ publicSettings().content.aboutTitle || publicSettings().professional.displayName }}
-        </h2>
-        <p class="text-primary-700 font-medium mb-5">{{ publicSettings().professional.professionalTitle }}</p>
-        <div class="text-neutral-600 mb-6 leading-relaxed whitespace-pre-line">
-          {{ publicSettings().content.aboutContent || publicSettings().professional.bio || publicSettings().siteDescription }}
-        </div>
+
+      <div class="hero__trust">
         @if (publicSettings().professional.languages.length) {
-          <div class="flex flex-wrap gap-2 mb-6">
-            @for (language of publicSettings().professional.languages; track language) {
-              <span class="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm">{{ language }}</span>
-            }
+          <div class="trust-item">
+            <i class="pi pi-comments"></i>
+            <span>{{ publicSettings().professional.languages.join(' · ') }}</span>
           </div>
         }
-        <a routerLink="/sobre"><p-button label="Saiba mais" icon="pi pi-arrow-right" iconPos="right" [outlined]="true" /></a>
+
+        @if (primarySpecialties().length) {
+          <div class="trust-item">
+            <i class="pi pi-check-circle"></i>
+            <span>{{ primarySpecialties().length }} especialidade(s) em destaque</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="hero__visual">
+      <div class="hero__image-frame">
+        <img
+          [src]="professionalImage()"
+          [alt]="publicSettings().professional.displayName || publicSettings().siteName" />
+      </div>
+
+      <div class="hero__profile-card">
+        <span class="profile-dot"></span>
+        <div>
+          <strong>{{ publicSettings().professional.displayName || publicSettings().siteName }}</strong>
+          <small>{{ publicSettings().professional.professionalTitle }}</small>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="py-24 px-4 sm:px-6 lg:px-8 bg-neutral-50">
-  <div class="container mx-auto">
-    <div class="text-center mb-12">
-      <span class="text-primary-600 font-medium uppercase tracking-wide text-sm">Serviços</span>
-      <h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mt-2">{{ publicSettings().content.servicesTitle || 'Serviços' }}</h2>
-      <p class="text-neutral-600 mt-3 max-w-2xl mx-auto">{{ publicSettings().content.servicesSubtitle }}</p>
+<section class="public-section public-section--surface">
+  <div class="public-container about-grid">
+    <div class="about-media">
+      <img
+        [src]="professionalImage()"
+        [alt]="publicSettings().professional.displayName" />
     </div>
+
+    <div class="section-copy">
+      <span class="eyebrow">Sobre</span>
+      <h2>
+        {{ publicSettings().content.aboutTitle || publicSettings().professional.displayName }}
+      </h2>
+      <p class="section-copy__subtitle">
+        {{ publicSettings().professional.professionalTitle }}
+      </p>
+      <div class="section-copy__body">
+        {{ publicSettings().content.aboutContent || publicSettings().professional.bio || publicSettings().siteDescription }}
+      </div>
+
+      @if (primarySpecialties().length) {
+        <div class="specialty-chips">
+          @for (specialty of primarySpecialties(); track specialty.slug) {
+            <span>{{ specialty.name }}</span>
+          }
+        </div>
+      }
+
+      <a routerLink="/sobre" class="text-link">
+        Saiba mais
+        <i class="pi pi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="public-section public-section--muted">
+  <div class="public-container">
+    <div class="section-heading">
+      <span class="eyebrow">Serviços</span>
+      <h2>{{ publicSettings().content.servicesTitle || 'Serviços' }}</h2>
+      <p>{{ publicSettings().content.servicesSubtitle }}</p>
+    </div>
+
     @if (loadingServices()) {
-      <div class="grid md:grid-cols-3 gap-8">
-        @for (_ of [1,2,3]; track $index) { <div class="bg-white p-8 rounded-3xl"><p-skeleton height="12rem" /></div> }
+      <div class="service-grid">
+        @for (_ of [1,2,3]; track $index) {
+          <article class="service-card">
+            <p-skeleton height="10rem" />
+          </article>
+        }
       </div>
     } @else if (featuredProducts().length) {
-      <div class="grid md:grid-cols-3 gap-8" @listAnimation>
+      <div class="service-grid" @listAnimation>
         @for (service of featuredProducts(); track service.id) {
-          <a [routerLink]="['/loja', service.slug]" class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300">
-            @if (service.coverImageUrl) {
-              <img [src]="service.coverImageUrl" [alt]="service.name" class="w-full aspect-video object-cover rounded-2xl mb-5" />
-            } @else {
-              <div class="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center mb-5"><i class="pi pi-briefcase text-primary-700 text-xl"></i></div>
-            }
-            <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-3">{{ service.name }}</h3>
-            <p class="text-neutral-600 mb-4">{{ service.shortDescription || service.fullDescription }}</p>
-            <span class="text-primary-600 font-medium inline-flex items-center gap-1">Ver serviço <i class="pi pi-arrow-right text-sm"></i></span>
+          <a [routerLink]="['/loja', service.slug]" class="service-card">
+            <div class="service-card__media">
+              @if (service.coverImageUrl) {
+                <img [src]="service.coverImageUrl" [alt]="service.name" />
+              } @else {
+                <div class="service-card__placeholder">
+                  <i class="pi pi-briefcase"></i>
+                </div>
+              }
+            </div>
+
+            <div class="service-card__content">
+              <h3>{{ service.name }}</h3>
+              <p>{{ service.shortDescription || service.fullDescription }}</p>
+              <span>
+                Ver serviço
+                <i class="pi pi-arrow-right"></i>
+              </span>
+            </div>
           </a>
         }
       </div>
     } @else if (publicSettings().specialties.length) {
-      <div class="grid md:grid-cols-3 gap-8">
+      <div class="service-grid">
         @for (specialty of publicSettings().specialties.slice(0, 3); track specialty.slug) {
-          <div class="bg-white p-8 rounded-3xl shadow-sm">
-            <div class="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center mb-5"><i class="pi pi-check-circle text-primary-700 text-xl"></i></div>
-            <h3 class="text-xl font-serif font-semibold text-neutral-800 mb-3">{{ specialty.name }}</h3>
-            <p class="text-neutral-600">{{ specialty.description }}</p>
-          </div>
+          <article class="service-card service-card--static">
+            <div class="service-card__placeholder">
+              <i class="pi pi-check-circle"></i>
+            </div>
+            <div class="service-card__content">
+              <h3>{{ specialty.name }}</h3>
+              <p>{{ specialty.description }}</p>
+            </div>
+          </article>
         }
       </div>
     }
-    <div class="text-center mt-10"><a routerLink="/servicos"><p-button label="Ver todos os serviços" [outlined]="true" /></a></div>
+
+    <div class="section-action">
+      <a routerLink="/servicos" class="public-button public-button--secondary">
+        Ver todos os serviços
+        <i class="pi pi-arrow-right"></i>
+      </a>
+    </div>
   </div>
 </section>
 
 @if (publicSettings().enableTestimonials && testimonials().length) {
-  <section class="py-24 px-4 sm:px-6 lg:px-8 bg-white">
-    <div class="container mx-auto">
-      <div class="text-center mb-12"><h2 class="text-3xl md:text-4xl font-serif font-bold text-neutral-900">Depoimentos</h2></div>
-      <div class="grid md:grid-cols-3 gap-8">
-        @for (testimonial of testimonials(); track testimonial.id) { <app-testimonial-card [testimonial]="testimonial" /> }
+  <section class="public-section public-section--surface">
+    <div class="public-container">
+      <div class="section-heading">
+        <span class="eyebrow">Experiências</span>
+        <h2>O que clientes compartilham</h2>
+        <p>Relatos publicados com autorização.</p>
+      </div>
+
+      <div class="testimonial-grid">
+        @for (testimonial of testimonials(); track testimonial.id) {
+          <app-testimonial-card [testimonial]="testimonial" />
+        }
       </div>
     </div>
   </section>
 }
 
-<section class="py-24 px-4 sm:px-6 lg:px-8 text-white" style="background: var(--gradient-gold-rich);">
-  <div class="container mx-auto text-center">
-    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">{{ publicSettings().content.ctaTitle }}</h2>
-    <p class="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">{{ publicSettings().content.ctaSubtitle }}</p>
-    <a [routerLink]="publicSettings().content.ctaButtonUrl || '/servicos'">
-      <p-button [label]="publicSettings().content.ctaButtonLabel || 'Ver serviços'" icon="pi pi-arrow-right" size="large" severity="secondary" />
-    </a>
+<section class="public-section public-cta">
+  <div class="public-container">
+    <div class="public-cta__inner">
+      <div>
+        <span class="eyebrow eyebrow--light">Próximo passo</span>
+        <h2>{{ publicSettings().content.ctaTitle }}</h2>
+        <p>{{ publicSettings().content.ctaSubtitle }}</p>
+      </div>
+
+      <a
+        [routerLink]="publicSettings().content.ctaButtonUrl || '/servicos'"
+        class="public-button public-button--light">
+        {{ publicSettings().content.ctaButtonLabel || 'Ver serviços' }}
+        <i class="pi pi-arrow-right"></i>
+      </a>
+    </div>
   </div>
 </section>

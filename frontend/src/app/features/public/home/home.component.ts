@@ -1,7 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { fadeInUp, listAnimation } from '../../../shared/animations/fade.animation';
 import { TestimonialCardComponent, Testimonial } from '../../../shared/components/testimonial-card/testimonial-card.component';
@@ -13,10 +12,10 @@ import { DEFAULT_PUBLIC_SETTINGS, PublicSettingsStore } from '../../../core/serv
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, ButtonModule, SkeletonModule, TestimonialCardComponent],
+  imports: [CommonModule, RouterLink, SkeletonModule, TestimonialCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
-  animations: [fadeInUp, listAnimation]
+  animations: [fadeInUp, listAnimation],
 })
 export class HomeComponent implements OnInit {
   private publicSettingsStore = inject(PublicSettingsStore);
@@ -36,6 +35,10 @@ export class HomeComponent implements OnInit {
     'assets/images/professional-profile.svg'
   );
 
+  primarySpecialties = computed(() =>
+    this.publicSettings().specialties.slice(0, 3)
+  );
+
   ngOnInit(): void {
     this.publicSettingsStore.load().subscribe((settings) => {
       this.publicSettings.set(settings);
@@ -45,14 +48,15 @@ export class HomeComponent implements OnInit {
         description: settings.seo.metaDescription || settings.siteDescription,
         keywords: settings.seo.keywords.join(', '),
         image: settings.logoUrl,
-        url: window.location.origin + '/'
+        url: window.location.origin + '/',
       });
       this.seoService.setSchema([
         this.seoService.getOrganizationSchema(),
         this.seoService.getWebSiteSchema(),
-        this.seoService.getPersonSchema()
+        this.seoService.getPersonSchema(),
       ]);
     });
+
     this.loadServices();
     this.loadTestimonials();
   }
@@ -75,13 +79,15 @@ export class HomeComponent implements OnInit {
     this.loadingTestimonials.set(true);
     this.testimonialsService.findFeatured(3).subscribe({
       next: (response) => {
-        this.testimonials.set(response.data.map(t => ({
-          id: t.id,
-          clientName: t.clientName,
-          clientAvatarUrl: t.clientAvatarUrl,
-          content: t.content,
-          rating: t.rating,
-        })));
+        this.testimonials.set(
+          response.data.map((t) => ({
+            id: t.id,
+            clientName: t.clientName,
+            clientAvatarUrl: t.clientAvatarUrl,
+            content: t.content,
+            rating: t.rating,
+          }))
+        );
         this.loadingTestimonials.set(false);
       },
       error: () => {
