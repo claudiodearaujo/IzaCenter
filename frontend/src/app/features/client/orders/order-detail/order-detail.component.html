@@ -1,217 +1,178 @@
-<!-- apps/frontend/src/app/features/client/orders/order-detail/order-detail.component.html -->
+<section class="order-detail-page">
+  <a routerLink="/cliente/pedidos" class="back-link print-hidden">
+    <i class="pi pi-arrow-left"></i>
+    Voltar para pedidos
+  </a>
 
-<section class="py-8">
-  <div class="container-custom max-w-4xl">
-    <!-- Back Button -->
-    <a routerLink="/cliente/pedidos" class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6">
-      <i class="pi pi-arrow-left mr-2"></i>
-      Voltar para pedidos
-    </a>
+  @if (showSuccessBanner()) {
+    <div class="success-banner">
+      <span><i class="pi pi-check-circle"></i></span>
+      <div>
+        <strong>Pagamento confirmado</strong>
+        <p>Seu pedido foi recebido com sucesso. Você poderá acompanhar cada etapa por esta área.</p>
+      </div>
+    </div>
+  }
 
-    <!-- Sprint 1.1 — Banner de sucesso pós-pagamento -->
-    @if (showSuccessBanner()) {
-      <div class="flex items-center gap-4 p-5 mb-6 rounded-xl border border-green-500/40 bg-green-500/10 text-green-300">
-        <i class="pi pi-check-circle text-3xl flex-shrink-0"></i>
+  @if (loading()) {
+    <ds-card padding="lg">
+      <p-skeleton height="2.2rem" width="45%" styleClass="mb-3" />
+      <p-skeleton height="1rem" width="60%" styleClass="mb-6" />
+      <p-skeleton height="8rem" styleClass="mb-3" />
+      <p-skeleton height="8rem" />
+    </ds-card>
+  } @else if (error()) {
+    <ds-empty-state
+      title="Erro ao carregar pedido"
+      [description]="error() || ''"
+      icon="pi-exclamation-triangle">
+      <div dsEmptyActions>
+        <a routerLink="/cliente/pedidos" class="primary-link">Voltar para pedidos</a>
+      </div>
+    </ds-empty-state>
+  } @else if (order()) {
+    <ds-card padding="lg">
+      <div class="order-header">
         <div>
-          <p class="font-bold text-lg">Pagamento confirmado!</p>
-          <p class="text-sm opacity-80">Seu pedido foi recebido com sucesso. Em breve você receberá a confirmação por e-mail.</p>
+          <span class="eyebrow">Pedido</span>
+          <h1>#{{ order()?.orderNumber }}</h1>
+          <p>Realizado em {{ formatDate(order()!.createdAt) }}</p>
         </div>
-      </div>
-    }
 
-    @if (loading()) {
-      <!-- Loading State -->
-      <div class="glass-card p-8">
-        <p-skeleton height="2rem" width="40%" styleClass="mb-4" />
-        <p-skeleton height="1rem" width="60%" styleClass="mb-8" />
-        <p-skeleton height="8rem" styleClass="mb-4" />
-        <p-skeleton height="8rem" />
-      </div>
-    } @else if (error()) {
-      <!-- Error State -->
-      <div class="glass-card p-12 text-center">
-        <i class="pi pi-exclamation-triangle text-5xl text-red-400 mb-4"></i>
-        <h2 class="heading-2 text-primary mb-4">Erro ao carregar pedido</h2>
-        <p class="text-secondary mb-6">{{ error() }}</p>
-        <a routerLink="/cliente/pedidos" class="btn-primary inline-block">
-          Voltar para Pedidos
-        </a>
-      </div>
-    } @else if (order()) {
-      <!-- Order Header -->
-      <div class="glass-card p-6 mb-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 class="heading-1 text-primary mb-2">
-              Pedido #{{ order()?.orderNumber }}
-            </h1>
-            <p class="text-secondary">
-              Realizado em {{ formatDate(order()!.createdAt) }}
-            </p>
-          </div>
-          <div class="flex items-center gap-3">
-            <span 
-              class="inline-block px-4 py-2 rounded-lg text-sm font-medium border"
-              [class]="getStatusClass(order()!.status)"
-            >
-              {{ getStatusLabel(order()!.status) }}
-            </span>
-            <button
-              (click)="downloadPdf()"
-              class="btn-outline text-sm flex items-center gap-2 print:hidden"
-              [disabled]="downloadingPdf()"
-              [title]="'client.orders.detail.downloadPdf' | translate"
-            >
-              @if (downloadingPdf()) {
-                <i class="pi pi-spin pi-spinner"></i>
-              } @else {
-                <i class="pi pi-download"></i>
-              }
+        <div class="order-header__actions">
+          <ds-badge [tone]="getStatusTone(order()!.status)" [dot]="true">
+            {{ getStatusLabel(order()!.status) }}
+          </ds-badge>
+
+          <div class="print-hidden">
+            <ds-button
+              variant="secondary"
+              icon="pi-download"
+              [loading]="downloadingPdf()"
+              (click)="downloadPdf()">
               {{ 'client.orders.detail.downloadPdf' | translate }}
-            </button>
+            </ds-button>
           </div>
         </div>
       </div>
+    </ds-card>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Order Items -->
-        <div class="lg:col-span-2 space-y-4">
-          <h2 class="heading-3 text-primary">Itens do Pedido</h2>
+    <div class="order-layout">
+      <main class="order-items">
+        <h2>Itens do pedido</h2>
 
-          @for (item of order()?.items; track item.id) {
-            <div class="glass-card p-6">
-              <div class="flex gap-4">
-                <!-- Product Image -->
-                <div class="flex-shrink-0 w-20 h-20">
-                  @if (item.product.coverImageUrl) {
-                    <img 
-                      [src]="item.product.coverImageUrl" 
-                      [alt]="item.product.name"
-                      class="w-full h-full object-cover rounded-lg"
-                    />
-                  } @else {
-                    <div class="w-full h-full bg-gradient-mystical rounded-lg flex items-center justify-center">
-                      <i class="pi pi-star text-white/50 text-xl"></i>
-                    </div>
-                  }
-                </div>
-
-                <!-- Product Info -->
-                <div class="flex-1">
-                  <div class="flex items-start justify-between">
-                    <div>
-                      <h3 class="text-primary font-bold text-lg">{{ item.product.name }}</h3>
-                      <p class="text-secondary text-sm">
-                        {{ getServiceKindLabel(item.product.serviceKind, item.product.productType) }} • Qtd: {{ item.quantity }}
-                      </p>
-                    </div>
-                    <p class="text-accent font-bold">{{ item.price * item.quantity | currencyBrl }}</p>
-                  </div>
-
-                  <!-- Questions -->
-                  @if (item.questions && item.questions.length > 0) {
-                    <div class="mt-4 p-3 bg-dark/30 rounded-lg">
-                      <p class="text-secondary text-xs mb-1">Perguntas enviadas:</p>
-                      @for (question of item.questions; track $index) {
-                        <p class="text-primary text-sm italic">"{{ question }}"</p>
-                      }
-                    </div>
-                  }
-
-                  <!-- Reading Link -->
-                  @if (item.reading) {
-                    <div class="mt-4 flex items-center gap-4">
-                      <span 
-                        class="inline-block px-3 py-1 rounded-full text-xs font-medium"
-                        [class]="getStatusClass(item.reading.status)"
-                      >
-                        Entrega: {{ getStatusLabel(item.reading.status) }}
-                      </span>
-                      @if (item.reading.status === 'PUBLISHED') {
-                        <a 
-                          [routerLink]="['/cliente/entregas', item.reading.id]"
-                          class="text-accent hover:text-accent-light transition-colors text-sm"
-                        >
-                          Ver entrega <i class="pi pi-arrow-right ml-1"></i>
-                        </a>
-                      }
-                    </div>
-                  }
-                </div>
+        @for (item of order()?.items; track item.id) {
+          <ds-card padding="md">
+            <article class="order-item">
+              <div class="order-item__media">
+                @if (item.product.coverImageUrl) {
+                  <img [src]="item.product.coverImageUrl" [alt]="item.product.name" />
+                } @else {
+                  <div><i class="pi pi-briefcase"></i></div>
+                }
               </div>
-            </div>
-          }
-        </div>
 
-        <!-- Order Summary -->
-        <div class="space-y-6">
-          <!-- Payment Info -->
-          <div class="glass-card p-6">
-            <h3 class="heading-4 text-primary mb-4 flex items-center gap-2">
-              <i class="pi pi-credit-card"></i>
-              Pagamento
-            </h3>
-            <div class="space-y-3">
-              <div class="flex justify-between">
-                <span class="text-secondary">Método:</span>
-                <span class="text-primary">{{ getPaymentLabel(order()?.paymentMethod) }}</span>
+              <div class="order-item__body">
+                <div class="order-item__top">
+                  <div>
+                    <h3>{{ item.product.name }}</h3>
+                    <p>
+                      {{ getServiceKindLabel(item.product.serviceKind, item.product.productType) }}
+                      · Qtd: {{ item.quantity }}
+                    </p>
+                  </div>
+                  <strong>{{ item.price * item.quantity | currencyBrl }}</strong>
+                </div>
+
+                @if (item.questions?.length) {
+                  <div class="intake-block">
+                    <span>Informações enviadas</span>
+                    @for (question of item.questions; track $index) {
+                      <p>{{ question }}</p>
+                    }
+                  </div>
+                }
+
+                @if (item.reading) {
+                  <div class="delivery-row">
+                    <ds-badge [tone]="getStatusTone(item.reading.status)" [dot]="true">
+                      Entrega · {{ getStatusLabel(item.reading.status) }}
+                    </ds-badge>
+                    @if (item.reading.status === 'PUBLISHED') {
+                      <a [routerLink]="['/cliente/entregas', item.reading.id]">
+                        Abrir entrega
+                        <i class="pi pi-arrow-right"></i>
+                      </a>
+                    }
+                  </div>
+                }
+              </div>
+            </article>
+          </ds-card>
+        }
+      </main>
+
+      <aside class="order-aside">
+        <ds-card padding="lg">
+          <div class="aside-section">
+            <h2>Pagamento</h2>
+            <dl>
+              <div>
+                <dt>Método</dt>
+                <dd>{{ getPaymentLabel(order()?.paymentMethod) }}</dd>
               </div>
               @if (order()?.paidAt) {
-                <div class="flex justify-between">
-                  <span class="text-secondary">Pago em:</span>
-                  <span class="text-primary">{{ formatDate(order()!.paidAt!) }}</span>
+                <div>
+                  <dt>Pago em</dt>
+                  <dd>{{ formatDate(order()!.paidAt!) }}</dd>
                 </div>
               }
-            </div>
+            </dl>
           </div>
+        </ds-card>
 
-          <!-- Totals -->
-          <div class="glass-card p-6">
-            <h3 class="heading-4 text-primary mb-4 flex items-center gap-2">
-              <i class="pi pi-wallet"></i>
-              Resumo
-            </h3>
-            <div class="space-y-3 pb-4 border-b border-primary/10">
-              <div class="flex justify-between">
-                <span class="text-secondary">Subtotal:</span>
-                <span class="text-primary">{{ order()?.subtotal | currencyBrl }}</span>
+        <ds-card padding="lg">
+          <div class="aside-section">
+            <h2>Resumo</h2>
+            <dl>
+              <div>
+                <dt>Subtotal</dt>
+                <dd>{{ order()?.subtotal | currencyBrl }}</dd>
               </div>
               @if (order()?.discount && order()!.discount > 0) {
-                <div class="flex justify-between">
-                  <span class="text-secondary">Desconto:</span>
-                  <span class="text-accent">-{{ order()?.discount | currencyBrl }}</span>
+                <div>
+                  <dt>Desconto</dt>
+                  <dd class="discount">-{{ order()?.discount | currencyBrl }}</dd>
                 </div>
               }
-            </div>
-            <div class="flex justify-between pt-4">
-              <span class="text-primary font-bold">Total:</span>
-              <span class="text-accent font-bold text-xl">{{ order()?.total | currencyBrl }}</span>
-            </div>
+              <div class="total-row">
+                <dt>Total</dt>
+                <dd>{{ order()?.total | currencyBrl }}</dd>
+              </div>
+            </dl>
           </div>
+        </ds-card>
 
-          <!-- Notes -->
-          @if (order()?.notes) {
-            <div class="glass-card p-6">
-              <h3 class="heading-4 text-primary mb-4 flex items-center gap-2">
-                <i class="pi pi-info-circle"></i>
-                Observações
-              </h3>
-              <p class="text-secondary">{{ order()?.notes }}</p>
+        @if (order()?.notes) {
+          <ds-card padding="lg">
+            <div class="aside-section">
+              <h2>Observações</h2>
+              <p>{{ order()?.notes }}</p>
             </div>
-          }
+          </ds-card>
+        }
 
-          <!-- Help -->
-          <div class="glass-card p-6 text-center">
-            <i class="pi pi-question-circle text-3xl text-primary mb-3"></i>
-            <p class="text-secondary text-sm mb-3">
-              Dúvidas sobre seu pedido?
-            </p>
-            <a routerLink="/contato" class="btn-outline text-sm">
-              Fale Conosco
-            </a>
+        <ds-card padding="lg">
+          <div class="help-card print-hidden">
+            <span><i class="pi pi-question-circle"></i></span>
+            <div>
+              <h2>Dúvidas sobre seu pedido?</h2>
+              <p>Entre em contato e informe o número do pedido para facilitar o atendimento.</p>
+            </div>
+            <a routerLink="/contato">Fale conosco</a>
           </div>
-        </div>
-      </div>
-    }
-  </div>
+        </ds-card>
+      </aside>
+    </div>
+  }
 </section>
