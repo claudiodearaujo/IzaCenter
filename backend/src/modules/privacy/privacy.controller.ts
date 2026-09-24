@@ -7,6 +7,11 @@ function requestId(req: Request) {
   return (req as any).auditRequestId || req.headers['x-request-id']?.toString() || randomUUID();
 }
 
+function paramId(req: Request): string {
+  const value = paramId(req);
+  return Array.isArray(value) ? value[0] : value;
+}
+
 export class PrivacyController {
   async export(req: Request, res: Response, next: NextFunction) {
     try {
@@ -65,7 +70,7 @@ export class PrivacyController {
 
   async getRequest(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await privacyService.getRequest(req.tenant!.id, String(req.params.id));
+      const data = await privacyService.getRequest(req.tenant!.id, String(paramId(req)));
       res.json({ success: true, data });
     } catch (error) { next(error); }
   }
@@ -74,7 +79,7 @@ export class PrivacyController {
     try {
       const data = await privacyService.updateRequest(
         req.tenant!.id,
-        String(req.params.id),
+        String(paramId(req)),
         req.user!.id,
         req.body,
         requestId(req)
@@ -127,7 +132,7 @@ export class PrivacyController {
 
   async updateIncident(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await privacyService.updateIncident(req.tenant!.id, String(req.params.id), req.body);
+      const data = await privacyService.updateIncident(req.tenant!.id, String(paramId(req)), req.body);
       res.json({ success: true, data });
     } catch (error) { next(error); }
   }
