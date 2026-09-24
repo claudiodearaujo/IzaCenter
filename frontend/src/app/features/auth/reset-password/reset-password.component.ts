@@ -1,25 +1,35 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PasswordModule } from 'primeng/password';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import {
+  DsButtonComponent,
+  DsFormFieldComponent,
+} from '../../../shared/design-system';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, PasswordModule, TranslateModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    PasswordModule,
+    TranslateModule,
+    DsButtonComponent,
+    DsFormFieldComponent,
+  ],
   templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.css'
+  styleUrl: './reset-password.component.css',
 })
 export class ResetPasswordComponent implements OnInit {
   private authService = inject(AuthService);
   private notificationService = inject(NotificationService);
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
   private translate = inject(TranslateService);
 
   isLoading = signal(false);
@@ -33,7 +43,9 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.password !== this.form.confirmPassword) {
-      this.notificationService.showError(this.translate.instant('auth.messages.passwordMismatch'));
+      this.notificationService.showError(
+        this.translate.instant('auth.messages.passwordMismatch')
+      );
       return;
     }
 
@@ -44,9 +56,12 @@ export class ResetPasswordComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (error) => {
-        this.notificationService.showError(error.error?.message || this.translate.instant('auth.messages.invalidResetToken'));
+        this.notificationService.showError(
+          error.error?.message ||
+            this.translate.instant('auth.messages.invalidResetToken')
+        );
         this.isLoading.set(false);
-      }
+      },
     });
   }
 }
