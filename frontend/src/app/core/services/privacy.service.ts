@@ -80,6 +80,10 @@ export class PrivacyService {
     return this.api.get<ApiResponse<PrivacyContact>>('/privacy/contact');
   }
 
+  updateContact(data: { name: string; email: string; url?: string }) {
+    return this.api.patch<ApiResponse<PrivacyContact>>('/admin/privacy/contact', data);
+  }
+
   myRequests() {
     return this.api.get<ApiResponse<PrivacyRequest[]>>('/privacy/requests/me');
   }
@@ -136,5 +140,18 @@ export class PrivacyService {
     affectedDataCategories: string[];
   }) {
     return this.api.post<ApiResponse<SecurityIncident>>('/admin/privacy/incidents', data);
+  }
+
+  updateIncident(id: string, data: {
+    status?: string;
+    riskRelevant?: boolean | null;
+    anpdNotifiedAt?: string | null;
+    subjectsNotifiedAt?: string | null;
+    resolutionSummary?: string | null;
+  }) {
+    return this.api.patch<ApiResponse<SecurityIncident>>(
+      `/admin/privacy/incidents/${id}`,
+      data
+    );
   }
 }
