@@ -4,12 +4,10 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { Textarea } from 'primeng/textarea';
-import { FileUploadModule, FileUploadHandlerEvent } from 'primeng/fileupload';
+import { FileUploadModule } from 'primeng/fileupload';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { Checkbox } from 'primeng/checkbox';
@@ -24,8 +22,6 @@ import { NotificationService } from '../../../../core/services/notification.serv
   imports: [
     CommonModule,
     FormsModule,
-    ButtonModule,
-    TableModule,
     InputTextModule,
     DialogModule,
     Textarea,
