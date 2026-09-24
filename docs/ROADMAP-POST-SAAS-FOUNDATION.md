@@ -18,9 +18,9 @@ Levar o Therapist Platform de uma fundação SaaS funcional para um produto oper
 
 ## Sequência recomendada
 
-### P0 — Security Hardening v1
+### P0 — Security Hardening v1 🟡
 
-Objetivo: reduzir risco técnico antes de abrir produção ou cobrança real.
+PRD: [PRD-SECURITY-HARDENING-V1.md](PRD-SECURITY-HARDENING-V1.md)\n\nObjetivo: reduzir risco técnico antes de abrir produção ou cobrança real.
 
 Escopo:
 - inventário e triagem de Dependabot/dependency alerts;
