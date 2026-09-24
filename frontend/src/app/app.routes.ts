@@ -146,6 +146,10 @@ export const routes: Routes = [
       {
         path: 'perfil',
         loadComponent: () => import('./features/client/profile/profile.component').then(m => m.ProfileComponent)
+      },
+      {
+        path: 'privacidade',
+        loadComponent: () => import('./features/client/privacy/privacy.component').then(m => m.ClientPrivacyComponent)
       }
     ]
   },
@@ -232,6 +236,10 @@ export const routes: Routes = [
       {
         path: 'assinatura',
         loadComponent: () => import('./features/admin/billing/billing.component').then(m => m.BillingComponent)
+      },
+      {
+        path: 'privacidade',
+        loadComponent: () => import('./features/admin/privacy/privacy.component').then(m => m.AdminPrivacyComponent)
       }
     ]
   },
