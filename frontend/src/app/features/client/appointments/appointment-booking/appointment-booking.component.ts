@@ -1,18 +1,21 @@
-// apps/frontend/src/app/features/client/appointments/appointment-booking/appointment-booking.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { DatePicker } from 'primeng/datepicker';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { AppointmentsService, TimeSlot } from '../../../../core/services/appointments.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import {
+  DsButtonComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsFormFieldComponent,
+  DsPageHeaderComponent,
+} from '../../../../shared/design-system';
 
 @Component({
   selector: 'app-appointment-booking',
@@ -22,10 +25,13 @@ import { NotificationService } from '../../../../core/services/notification.serv
     FormsModule,
     RouterLink,
     TranslateModule,
-    ButtonModule,
     TextareaModule,
     DatePicker,
-    ProgressSpinnerModule,
+    DsButtonComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsFormFieldComponent,
+    DsPageHeaderComponent,
   ],
   templateUrl: './appointment-booking.component.html',
   styleUrl: './appointment-booking.component.css',
@@ -46,20 +52,20 @@ export class AppointmentBookingComponent implements OnInit {
 
   minDate = new Date();
 
-  ngOnInit() {
-    // set min date to tomorrow
+  ngOnInit(): void {
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate() + 1);
   }
 
-  onDateChange(date: Date | null) {
+  onDateChange(date: Date | null): void {
     if (!date) return;
+
     this.selectedDate.set(date);
     this.selectedSlot.set(null);
     this.loadSlots(date);
   }
 
-  loadSlots(date: Date) {
+  loadSlots(date: Date): void {
     this.loadingSlots.set(true);
     this.slots.set([]);
 
@@ -71,28 +77,29 @@ export class AppointmentBookingComponent implements OnInit {
       error: () => {
         this.slots.set([]);
         this.loadingSlots.set(false);
-        this.notification.error(this.translate.instant('client.booking.errorLoadingSlots'));
+        this.notification.error(
+          this.translate.instant('client.booking.errorLoadingSlots')
+        );
       },
     });
   }
 
-  selectSlot(slot: TimeSlot) {
+  selectSlot(slot: TimeSlot): void {
     if (!slot.available) return;
     this.selectedSlot.set(slot);
   }
 
-  get availableSlots() {
-    return this.slots().filter(s => s.available);
+  get availableSlots(): TimeSlot[] {
+    return this.slots().filter((slot) => slot.available);
   }
 
-  confirm() {
+  confirm(): void {
     const date = this.selectedDate();
     const slot = this.selectedSlot();
     if (!date || !slot) return;
 
     this.submitting.set(true);
 
-    // Format date as YYYY-MM-DD
     const dateStr = date.toLocaleDateString('sv');
 
     this.appointmentsService.create({
