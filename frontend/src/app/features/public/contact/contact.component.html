@@ -1,67 +1,116 @@
-<div class="py-16">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-16">
-      <div class="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center mx-auto mb-4">
-        <i class="pi pi-envelope text-2xl text-primary-700"></i>
-      </div>
-      <h1 class="text-4xl md:text-5xl font-serif font-bold text-neutral-900 mb-4">{{ 'contact.title' | translate }}</h1>
-      <p class="text-xl text-neutral-600 max-w-2xl mx-auto">Fale com {{ publicSettings().professional.displayName }} para tirar dúvidas sobre serviços e atendimentos.</p>
-    </div>
-    <div class="grid lg:grid-cols-2 gap-12">
-      <div class="bg-white rounded-3xl p-8 shadow-sm">
-        <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-6">{{ 'contact.form.title' | translate }}</h2>
-        <form (ngSubmit)="onSubmit()" class="space-y-6">
-          <div>
-            <label for="name" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'contact.form.name' | translate }}</label>
-            <input pInputText id="name" [(ngModel)]="form.name" name="name" class="w-full" [placeholder]="'contact.form.namePlaceholder' | translate" required />
-          </div>
-          <div>
-            <label for="email" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'contact.form.email' | translate }}</label>
-            <input pInputText id="email" [(ngModel)]="form.email" name="email" type="email" class="w-full" [placeholder]="'contact.form.emailPlaceholder' | translate" required />
-          </div>
-          <div>
-            <label for="subject" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'contact.form.subject' | translate }}</label>
-            <input pInputText id="subject" [(ngModel)]="form.subject" name="subject" class="w-full" [placeholder]="'contact.form.subjectPlaceholder' | translate" required />
-          </div>
-          <div>
-            <label for="message" class="block text-sm font-medium text-neutral-700 mb-2">{{ 'contact.form.message' | translate }}</label>
-            <textarea pTextarea id="message" [(ngModel)]="form.message" name="message" class="w-full" rows="5" [placeholder]="'contact.form.messagePlaceholder' | translate" required></textarea>
-          </div>
-          <p-button type="submit" [label]="'contact.form.submitButton' | translate" icon="pi pi-send" [loading]="isLoading()" styleClass="w-full" />
-        </form>
+<section class="contact-hero">
+  <div class="public-container">
+    <span class="eyebrow">Contato</span>
+    <h1>{{ 'contact.title' | translate }}</h1>
+    <p>
+      Fale com {{ publicSettings().professional.displayName }} para tirar dúvidas sobre serviços,
+      horários e formatos de atendimento.
+    </p>
+  </div>
+</section>
+
+<section class="contact-section">
+  <div class="public-container contact-grid">
+    <div class="contact-form-card">
+      <div class="card-heading">
+        <h2>{{ 'contact.form.title' | translate }}</h2>
+        <p>Envie sua mensagem e retornaremos pelos canais informados.</p>
       </div>
 
-      <div class="space-y-8">
-        <div class="bg-linear-to-br from-primary-50 to-secondary-50 rounded-3xl p-8">
-          <h2 class="text-2xl font-serif font-bold text-neutral-900 mb-6">{{ 'contact.info.title' | translate }}</h2>
-          @if (contactInfo().length) {
-            <div class="space-y-6">
-              @for (info of contactInfo(); track info.label) {
-                <div class="flex items-start gap-4">
-                  <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm"><i class="pi text-primary-600 text-lg" [class]="info.icon"></i></div>
-                  <div><p class="text-sm text-neutral-500">{{ info.label }}</p><p class="text-neutral-800 font-medium">{{ info.value }}</p></div>
-                </div>
-              }
-            </div>
+      <form (ngSubmit)="onSubmit()" class="contact-form">
+        <label>
+          <span>{{ 'contact.form.name' | translate }}</span>
+          <input
+            pInputText
+            [(ngModel)]="form.name"
+            name="name"
+            [placeholder]="'contact.form.namePlaceholder' | translate"
+            required />
+        </label>
+
+        <label>
+          <span>{{ 'contact.form.email' | translate }}</span>
+          <input
+            pInputText
+            [(ngModel)]="form.email"
+            name="email"
+            type="email"
+            [placeholder]="'contact.form.emailPlaceholder' | translate"
+            required />
+        </label>
+
+        <label>
+          <span>{{ 'contact.form.subject' | translate }}</span>
+          <input
+            pInputText
+            [(ngModel)]="form.subject"
+            name="subject"
+            [placeholder]="'contact.form.subjectPlaceholder' | translate"
+            required />
+        </label>
+
+        <label>
+          <span>{{ 'contact.form.message' | translate }}</span>
+          <textarea
+            pTextarea
+            [(ngModel)]="form.message"
+            name="message"
+            rows="6"
+            [placeholder]="'contact.form.messagePlaceholder' | translate"
+            required>
+          </textarea>
+        </label>
+
+        <button type="submit" class="submit-button" [disabled]="isLoading()">
+          @if (isLoading()) {
+            <i class="pi pi-spinner pi-spin"></i>
           } @else {
-            <p class="text-neutral-600">Os canais de contato ainda não foram configurados.</p>
+            <i class="pi pi-send"></i>
           }
-        </div>
+          {{ 'contact.form.submitButton' | translate }}
+        </button>
+      </form>
+    </div>
 
-        @if (socialLinks().length) {
-          <div class="bg-white rounded-3xl p-8 shadow-sm">
-            <h3 class="text-xl font-serif font-semibold text-neutral-900 mb-4">{{ 'contact.social.title' | translate }}</h3>
-            <div class="flex gap-4 flex-wrap">
-              @for (social of socialLinks(); track social.label) {
-                <a [href]="social.url" target="_blank" rel="noopener noreferrer" [attr.aria-label]="social.label"
-                  class="w-12 h-12 bg-primary-100 hover:bg-primary-200 rounded-xl flex items-center justify-center transition-colors">
-                  <i class="pi text-primary-700 text-xl" [class]="social.icon"></i>
-                </a>
-              }
-            </div>
+    <div class="contact-side">
+      <div class="contact-info-card">
+        <span class="eyebrow">Canais</span>
+        <h2>{{ 'contact.info.title' | translate }}</h2>
+
+        @if (contactInfo().length) {
+          <div class="contact-info-list">
+            @for (info of contactInfo(); track info.label) {
+              <div class="contact-info-item">
+                <span><i class="pi" [class]="info.icon"></i></span>
+                <div>
+                  <small>{{ info.label }}</small>
+                  <strong>{{ info.value }}</strong>
+                </div>
+              </div>
+            }
           </div>
+        } @else {
+          <p class="muted-text">Os canais de contato ainda não foram configurados.</p>
         }
       </div>
+
+      @if (socialLinks().length) {
+        <div class="social-card">
+          <h2>{{ 'contact.social.title' | translate }}</h2>
+          <div class="social-links">
+            @for (social of socialLinks(); track social.label) {
+              <a
+                [href]="social.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                [attr.aria-label]="social.label">
+                <i class="pi" [class]="social.icon"></i>
+                <span>{{ social.label }}</span>
+              </a>
+            }
+          </div>
+        </div>
+      }
     </div>
   </div>
-</div>
+</section>
