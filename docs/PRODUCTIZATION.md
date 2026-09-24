@@ -31,16 +31,16 @@ Prioridades:
 - templates de e-mail e PDF configuráveis;
 - identidade visual configurável.
 
-## Fase 3 — SaaS 🟡 em andamento
+## Fase 3 — SaaS ✅ concluída
 
 PRDs:
 - [PRD-SAAS-FOUNDATION-V1.md](PRD-SAAS-FOUNDATION-V1.md) — SaaS Foundation v1 ✅
 - [PRD-SAAS-DATA-ISOLATION-V2.md](PRD-SAAS-DATA-ISOLATION-V2.md) — SaaS Foundation v2 — Data Isolation ✅
 - [PRD-SAAS-ONBOARDING-BRANDING-V3.md](PRD-SAAS-ONBOARDING-BRANDING-V3.md) — SaaS Foundation v3 — Onboarding & Branding ✅
 - [PRD-SAAS-PLANS-BILLING-V4.md](PRD-SAAS-PLANS-BILLING-V4.md) — SaaS Foundation v4 — Plans & Billing ✅
-- [PRD-SAAS-LGPD-OPERATIONS-V5.md](PRD-SAAS-LGPD-OPERATIONS-V5.md) — SaaS Foundation v5 — LGPD & Operations 🟡
+- [PRD-SAAS-LGPD-OPERATIONS-V5.md](PRD-SAAS-LGPD-OPERATIONS-V5.md) — SaaS Foundation v5 — LGPD & Operations ✅
 
-A v1 instalou o contexto de tenant, memberships e settings tenant-scoped. A v2 concluiu o isolamento lógico dos agregados de negócio com backfill seguro do tenant legado. A v3 adicionou onboarding self-service do profissional, ownership tenant-scoped, seleção explícita de workspace e branding dinâmico. A v4 adicionou catálogo de planos, entitlements, lifecycle de assinatura, idempotência persistente de webhooks e cobrança SaaS isolada do comércio dos clientes. A v5 está implementando direitos do titular, auditoria persistente, retenção controlada e operação de incidentes.
+A v1 instalou o contexto de tenant, memberships e settings tenant-scoped. A v2 concluiu o isolamento lógico dos agregados de negócio com backfill seguro do tenant legado. A v3 adicionou onboarding self-service do profissional, ownership tenant-scoped, seleção explícita de workspace e branding dinâmico. A v4 adicionou catálogo de planos, entitlements, lifecycle de assinatura, idempotência persistente de webhooks e cobrança SaaS isolada do comércio dos clientes. A v5 concluiu direitos do titular, auditoria persistente, retenção controlada e operação de incidentes. A fundação SaaS está tecnicamente concluída; o roadmap passa agora para Production & Commercial Readiness.
 
 Prioridades:
 - isolamento de dados por tenant;
@@ -59,3 +59,10 @@ Prioridades:
 ## Segurança
 
 O arquivo local de ambiente do backend não deve ser versionado. Credenciais que já tenham sido publicadas anteriormente devem ser substituídas no provedor correspondente.
+
+
+## Fase 4 — Production & Commercial Readiness ⏳
+
+Roadmap: [ROADMAP-POST-SAAS-FOUNDATION.md](ROADMAP-POST-SAAS-FOUNDATION.md)
+
+Próxima prioridade: **Security Hardening v1**.
