@@ -1,36 +1,19 @@
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 px-4">
-  <div class="text-center max-w-lg">
-    <!-- 404 Illustration -->
-    <div class="mb-8">
-      <span class="text-8xl block mb-4">🔮</span>
-      <h1 class="text-9xl font-serif font-bold text-primary-600 leading-none">404</h1>
-    </div>
+<section class="not-found-page">
+  <div class="not-found-card">
+    <span class="not-found-icon"><i class="pi pi-compass"></i></span>
+    <span class="error-code">404</span>
+    <h1>{{ 'notFound.title' | translate }}</h1>
+    <p>{{ 'notFound.description' | translate }}</p>
 
-    <!-- Message -->
-    <h2 class="text-3xl font-serif font-bold text-neutral-900 mb-4">
-      {{ 'notFound.title' | translate }}
-    </h2>
-    <p class="text-neutral-600 text-lg mb-8">
-      {{ 'notFound.description' | translate }}
-    </p>
-
-    <!-- Actions -->
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a routerLink="/">
-        <p-button
-          [label]="'notFound.backHome' | translate"
-          icon="pi pi-home"
-          size="large"
-        />
+    <div class="not-found-actions">
+      <a routerLink="/" class="primary-link">
+        <i class="pi pi-home"></i>
+        {{ 'notFound.backHome' | translate }}
       </a>
-      <a routerLink="/loja">
-        <p-button
-          [label]="'notFound.browseShop' | translate"
-          icon="pi pi-shopping-bag"
-          [outlined]="true"
-          size="large"
-        />
+      <a routerLink="/loja" class="secondary-link">
+        <i class="pi pi-shopping-bag"></i>
+        {{ 'notFound.browseShop' | translate }}
       </a>
     </div>
   </div>
-</div>
+</section>

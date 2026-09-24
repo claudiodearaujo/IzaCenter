@@ -1,11 +1,7 @@
-// apps/frontend/src/app/features/shop/checkout-success/checkout-success.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-
-import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 
 import { ApiService } from '../../../core/services/api.service';
@@ -27,7 +23,6 @@ interface OrderSummary {
     CommonModule,
     RouterLink,
     TranslateModule,
-    ButtonModule,
     SkeletonModule,
     CurrencyBrlPipe,
   ],
@@ -42,7 +37,7 @@ export class CheckoutSuccessComponent implements OnInit {
   loading = signal(true);
   error = signal(false);
 
-  ngOnInit() {
+  ngOnInit(): void {
     const orderId = this.route.snapshot.queryParamMap.get('orderId');
     if (orderId) {
       this.loadOrder(orderId);
@@ -51,7 +46,7 @@ export class CheckoutSuccessComponent implements OnInit {
     }
   }
 
-  loadOrder(id: string) {
+  loadOrder(id: string): void {
     this.api.get<{ data: OrderSummary }>(`/users/me/orders/${id}`).subscribe({
       next: (response) => {
         this.order.set(response.data);
