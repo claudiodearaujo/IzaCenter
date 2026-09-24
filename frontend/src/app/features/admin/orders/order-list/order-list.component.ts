@@ -1,15 +1,11 @@
-// apps/frontend/src/app/features/admin/orders/order-list/order-list.component.ts
-
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { InputTextModule } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
-import { TagModule } from 'primeng/tag';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
@@ -18,6 +14,17 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { OrdersService, Order } from '../../../../core/services/orders.service';
 import { NotificationService } from '../../../../core/services/notification.service';
+import {
+  DsAvatarComponent,
+  DsBadgeComponent,
+  DsButtonComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+  DsFormFieldComponent,
+  DsPageHeaderComponent,
+} from '../../../../shared/design-system';
+
+type SemanticTone = 'neutral' | 'brand' | 'success' | 'warning' | 'error' | 'info';
 
 @Component({
   selector: 'app-admin-order-list',
@@ -25,16 +32,21 @@ import { NotificationService } from '../../../../core/services/notification.serv
   imports: [
     CommonModule,
     FormsModule,
-    ButtonModule,
     TableModule,
+    SkeletonModule,
     InputTextModule,
     Select,
-    TagModule,
-    SkeletonModule,
     DialogModule,
     ConfirmDialogModule,
     TooltipModule,
     TranslateModule,
+    DsAvatarComponent,
+    DsBadgeComponent,
+    DsButtonComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
+    DsFormFieldComponent,
+    DsPageHeaderComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './order-list.component.html',
@@ -49,22 +61,10 @@ export class AdminOrderListComponent implements OnInit {
   orders = signal<Order[]>([]);
   loading = signal(true);
   totalRecords = signal(0);
-
-  // Computed stats
-  pendingCount = computed(() =>
-    this.orders().filter(o => o.status === 'PENDING').length
-  );
-  paidCount = computed(() =>
-    this.orders().filter(o => o.status === 'PAID').length
-  );
-  completedCount = computed(() =>
-    this.orders().filter(o => o.status === 'COMPLETED').length
-  );
-  cancelledCount = computed(() =>
-    this.orders().filter(o => o.status === 'CANCELLED').length
-  );
+  stats = signal({ total: 0, pending: 0, completed: 0, revenue: 0 });
 
   selectedStatus: string | null = null;
+  selectedPaymentStatus: string | null = null;
   searchTerm = '';
 
   get statusOptions() {
@@ -79,17 +79,25 @@ export class AdminOrderListComponent implements OnInit {
     ];
   }
 
-  // Notes Dialog
+  paymentStatusOptions = [
+    { label: 'Todos os pagamentos', value: null },
+    { label: 'Pendente', value: 'PENDING' },
+    { label: 'Pago', value: 'SUCCEEDED' },
+    { label: 'Falhou', value: 'FAILED' },
+    { label: 'Reembolsado', value: 'REFUNDED' },
+  ];
+
   notesDialogVisible = signal(false);
   selectedOrder = signal<Order | null>(null);
   notes = '';
   saving = signal(false);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadOrders();
+    this.loadStats();
   }
 
-  loadOrders(event?: any) {
+  loadOrders(event?: any): void {
     this.loading.set(true);
 
     const params: any = {
@@ -97,13 +105,9 @@ export class AdminOrderListComponent implements OnInit {
       limit: event?.rows || 10,
     };
 
-    if (this.selectedStatus) {
-      params.status = this.selectedStatus;
-    }
-
-    if (this.searchTerm) {
-      params.search = this.searchTerm;
-    }
+    if (this.selectedStatus) params.status = this.selectedStatus;
+    if (this.selectedPaymentStatus) params.paymentStatus = this.selectedPaymentStatus;
+    if (this.searchTerm) params.search = this.searchTerm;
 
     this.ordersService.findAll(params).subscribe({
       next: (response) => {
@@ -118,7 +122,14 @@ export class AdminOrderListComponent implements OnInit {
     });
   }
 
-  onSearch() {
+  loadStats(): void {
+    this.ordersService.getStats().subscribe({
+      next: (response) => this.stats.set(response.data),
+      error: () => this.stats.set({ total: 0, pending: 0, completed: 0, revenue: 0 }),
+    });
+  }
+
+  onSearch(): void {
     this.loadOrders();
   }
 
@@ -134,16 +145,36 @@ export class AdminOrderListComponent implements OnInit {
     return labels[status] || status;
   }
 
-  getStatusSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-    const severities: Record<string, 'success' | 'info' | 'warn' | 'danger' | 'secondary'> = {
-      PENDING: 'warn',
+  getStatusTone(status: string): SemanticTone {
+    const tones: Record<string, SemanticTone> = {
+      PENDING: 'warning',
       PAID: 'info',
-      PROCESSING: 'info',
+      PROCESSING: 'brand',
       COMPLETED: 'success',
-      CANCELLED: 'danger',
-      REFUNDED: 'secondary',
+      CANCELLED: 'error',
+      REFUNDED: 'neutral',
     };
-    return severities[status] || 'info';
+    return tones[status] || 'neutral';
+  }
+
+  getPaymentStatusLabel(status: string): string {
+    const labels: Record<string, string> = {
+      PENDING: 'Pagamento pendente',
+      SUCCEEDED: 'Pago',
+      FAILED: 'Falhou',
+      REFUNDED: 'Reembolsado',
+    };
+    return labels[status] || status;
+  }
+
+  getPaymentStatusTone(status: string): SemanticTone {
+    const tones: Record<string, SemanticTone> = {
+      PENDING: 'warning',
+      SUCCEEDED: 'success',
+      FAILED: 'error',
+      REFUNDED: 'neutral',
+    };
+    return tones[status] || 'neutral';
   }
 
   formatDate(date: Date | string): string {
@@ -163,11 +194,12 @@ export class AdminOrderListComponent implements OnInit {
     }).format(value);
   }
 
-  updateStatus(id: string, status: string, message: string) {
+  updateStatus(id: string, status: string, message: string): void {
     this.ordersService.updateStatus(id, status).subscribe({
       next: () => {
         this.notification.success(message);
         this.loadOrders();
+        this.loadStats();
       },
       error: () => {
         this.notification.error(this.translate.instant('admin.orders.errorUpdatingStatus'));
@@ -175,34 +207,31 @@ export class AdminOrderListComponent implements OnInit {
     });
   }
 
-  openNotesDialog(order: Order) {
+  openNotesDialog(order: Order): void {
     this.selectedOrder.set(order);
     this.notes = order.adminNotes || '';
     this.notesDialogVisible.set(true);
   }
 
-  saveNotes() {
+  saveNotes(): void {
     if (!this.selectedOrder()) return;
-
     this.saving.set(true);
 
-    this.ordersService
-      .updateAdminNotes(this.selectedOrder()!.id, this.notes)
-      .subscribe({
-        next: () => {
-          this.notification.success(this.translate.instant('admin.orders.notesSaved'));
-          this.notesDialogVisible.set(false);
-          this.loadOrders();
-          this.saving.set(false);
-        },
-        error: () => {
-          this.notification.error(this.translate.instant('admin.orders.errorSaving'));
-          this.saving.set(false);
-        },
-      });
+    this.ordersService.updateAdminNotes(this.selectedOrder()!.id, this.notes).subscribe({
+      next: () => {
+        this.notification.success(this.translate.instant('admin.orders.notesSaved'));
+        this.notesDialogVisible.set(false);
+        this.loadOrders();
+        this.saving.set(false);
+      },
+      error: () => {
+        this.notification.error(this.translate.instant('admin.orders.errorSaving'));
+        this.saving.set(false);
+      },
+    });
   }
 
-  cancelOrder(order: Order) {
+  cancelOrder(order: Order): void {
     this.confirmationService.confirm({
       message: this.translate.instant('admin.orders.cancelConfirm'),
       header: this.translate.instant('admin.orders.confirmCancellation'),
