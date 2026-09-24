@@ -1,13 +1,17 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-import { DividerModule } from 'primeng/divider';
 
 import { Delivery } from '../../../../core/models/delivery.model';
 import { ReadingsService } from '../../../../core/services/readings.service';
 import { ApiService } from '../../../../core/services/api.service';
+import {
+  DsBadgeComponent,
+  DsButtonComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+} from '../../../../shared/design-system';
 
 @Component({
   selector: 'app-reading-detail',
@@ -15,9 +19,11 @@ import { ApiService } from '../../../../core/services/api.service';
   imports: [
     CommonModule,
     RouterLink,
-    ButtonModule,
     SkeletonModule,
-    DividerModule,
+    DsBadgeComponent,
+    DsButtonComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
   ],
   templateUrl: './reading-detail.component.html',
   styleUrl: './reading-detail.component.css',
@@ -34,14 +40,14 @@ export class ReadingDetailComponent implements OnInit {
   audioPlaying = signal(false);
   downloadingPdf = signal(false);
 
-  ngOnInit() {
+  ngOnInit(): void {
     const deliveryId = this.route.snapshot.paramMap.get('id');
     if (deliveryId) {
       this.loadDelivery(deliveryId);
     }
   }
 
-  loadDelivery(id: string) {
+  loadDelivery(id: string): void {
     this.loading.set(true);
 
     this.deliveriesService.getMyReadingById(id).subscribe({
@@ -50,6 +56,7 @@ export class ReadingDetailComponent implements OnInit {
           this.router.navigate(['/cliente/entregas']);
           return;
         }
+
         this.reading.set(response.data);
         this.loading.set(false);
       },

@@ -1,15 +1,17 @@
-// apps/frontend/src/app/features/client/orders/order-detail/order-detail.component.ts
-
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-
-import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 
 import { ApiService } from '../../../../core/services/api.service';
 import { CurrencyBrlPipe } from '../../../../shared/pipes/currency-brl.pipe';
+import {
+  DsBadgeComponent,
+  DsButtonComponent,
+  DsCardComponent,
+  DsEmptyStateComponent,
+} from '../../../../shared/design-system';
 
 interface OrderItem {
   id: string;
@@ -47,6 +49,8 @@ interface Order {
   };
 }
 
+type StatusTone = 'neutral' | 'brand' | 'success' | 'warning' | 'error' | 'info';
+
 @Component({
   selector: 'app-order-detail',
   standalone: true,
@@ -54,9 +58,12 @@ interface Order {
     CommonModule,
     RouterLink,
     TranslateModule,
-    ButtonModule,
     SkeletonModule,
     CurrencyBrlPipe,
+    DsBadgeComponent,
+    DsButtonComponent,
+    DsCardComponent,
+    DsEmptyStateComponent,
   ],
   templateUrl: './order-detail.component.html',
   styleUrl: './order-detail.component.css',
@@ -73,14 +80,12 @@ export class OrderDetailComponent implements OnInit {
   showSuccessBanner = signal(false);
   downloadingPdf = signal(false);
 
-  ngOnInit() {
+  ngOnInit(): void {
     const orderId = this.route.snapshot.paramMap.get('id');
-
-    // Sprint 1.1 — Feedback pós-pagamento
     const success = this.route.snapshot.queryParamMap.get('success');
+
     if (success === 'true') {
       this.showSuccessBanner.set(true);
-      // Limpa o query param da URL sem recarregar a página
       this.location.replaceState(`/cliente/pedidos/${orderId}`);
     }
 
@@ -89,7 +94,7 @@ export class OrderDetailComponent implements OnInit {
     }
   }
 
-  loadOrder(id: string) {
+  loadOrder(id: string): void {
     this.loading.set(true);
 
     this.api.get<{ data: Order }>(`/users/me/orders/${id}`).subscribe({
@@ -142,19 +147,19 @@ export class OrderDetailComponent implements OnInit {
     return labels[status] || status;
   }
 
-  getStatusClass(status: string): string {
-    const classes: Record<string, string> = {
-      PENDING: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50',
-      WAITING: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50',
-      PAID: 'bg-blue-500/20 text-blue-400 border-blue-500/50',
-      PROCESSING: 'bg-primary-500/20 text-primary-400 border-primary-500/50',
-      IN_PROGRESS: 'bg-primary-500/20 text-primary-400 border-primary-500/50',
-      COMPLETED: 'bg-green-500/20 text-green-400 border-green-500/50',
-      PUBLISHED: 'bg-green-500/20 text-green-400 border-green-500/50',
-      CANCELLED: 'bg-red-500/20 text-red-400 border-red-500/50',
-      REFUNDED: 'bg-red-500/20 text-red-400 border-red-500/50',
+  getStatusTone(status: string): StatusTone {
+    const tones: Record<string, StatusTone> = {
+      PENDING: 'warning',
+      WAITING: 'warning',
+      PAID: 'info',
+      PROCESSING: 'brand',
+      IN_PROGRESS: 'brand',
+      COMPLETED: 'success',
+      PUBLISHED: 'success',
+      CANCELLED: 'error',
+      REFUNDED: 'neutral',
     };
-    return classes[status] || 'bg-gray-500/20 text-gray-400 border-gray-500/50';
+    return tones[status] || 'neutral';
   }
 
   getPaymentLabel(method?: string): string {
@@ -163,7 +168,9 @@ export class OrderDetailComponent implements OnInit {
       pix: this.translate.instant('client.orders.detail.paymentPix'),
       boleto: this.translate.instant('client.orders.detail.paymentBoleto'),
     };
-    return method ? labels[method] || method : this.translate.instant('client.orders.detail.paymentNotInformed');
+    return method
+      ? labels[method] || method
+      : this.translate.instant('client.orders.detail.paymentNotInformed');
   }
 
   getServiceKindLabel(kind?: string, legacyType?: string): string {

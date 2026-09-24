@@ -1,142 +1,175 @@
-<section class="py-8 print:py-0">
-  <div class="container-custom max-w-4xl">
-    <a routerLink="/cliente/entregas"
-      class="inline-flex items-center text-secondary hover:text-primary transition-colors mb-6 print:hidden">
-      <i class="pi pi-arrow-left mr-2"></i>
-      Voltar para entregas
-    </a>
+<section class="delivery-detail-page">
+  <a routerLink="/cliente/entregas" class="back-link print-hidden">
+    <i class="pi pi-arrow-left"></i>
+    Voltar para entregas
+  </a>
 
-    @if (loading()) {
-      <div class="glass-card p-8">
-        <p-skeleton height="3rem" width="60%" styleClass="mb-4" />
-        <p-skeleton height="1rem" width="40%" styleClass="mb-8" />
-        <p-skeleton height="12rem" styleClass="mb-4" />
-        <p-skeleton height="12rem" />
+  @if (loading()) {
+    <ds-card padding="lg">
+      <p-skeleton height="2.2rem" width="58%" styleClass="mb-3" />
+      <p-skeleton height="1rem" width="38%" styleClass="mb-6" />
+      <p-skeleton height="12rem" styleClass="mb-3" />
+      <p-skeleton height="12rem" />
+    </ds-card>
+  } @else if (error()) {
+    <ds-empty-state
+      title="Erro ao carregar entrega"
+      [description]="error() || ''"
+      icon="pi-exclamation-triangle">
+      <div dsEmptyActions>
+        <a routerLink="/cliente/entregas" class="primary-link">Voltar para entregas</a>
       </div>
-    } @else if (error()) {
-      <div class="glass-card p-12 text-center">
-        <i class="pi pi-exclamation-triangle text-5xl text-red-400 mb-4"></i>
-        <h2 class="heading-2 text-primary mb-4">Erro ao carregar entrega</h2>
-        <p class="text-secondary mb-6">{{ error() }}</p>
-        <a routerLink="/cliente/entregas" class="btn-primary inline-block">Voltar para Entregas</a>
-      </div>
-    } @else if (reading()) {
-      <div class="glass-card p-8 mb-8 text-center">
-        <div class="w-20 h-20 bg-gradient-mystical rounded-full flex items-center justify-center mx-auto mb-6">
-          <i class="pi pi-file text-3xl text-white"></i>
+    </ds-empty-state>
+  } @else if (reading()) {
+    <ds-card padding="lg">
+      <div class="delivery-header">
+        <div class="delivery-header__icon">
+          <i class="pi pi-file"></i>
         </div>
-        <h1 class="heading-1 text-primary mb-3">
-          {{ reading()?.title || reading()?.product?.name || 'Entrega' }}
-        </h1>
-        <p class="text-secondary mb-2">{{ reading()?.product?.name }}</p>
-        @if (reading()?.publishedAt) {
-          <p class="text-secondary/60 text-sm">
-            Disponibilizada em {{ formatDate(reading()!.publishedAt!) }}
-          </p>
-        }
 
-        @if (reading()?.orderItem?.questions?.length) {
-          <div class="mt-6 p-4 bg-dark/30 rounded-lg max-w-lg mx-auto">
-            <p class="text-secondary text-sm mb-2">Informações fornecidas:</p>
-            @for (question of reading()?.orderItem?.questions ?? []; track $index) {
-              <p class="text-primary italic">{{ question }}</p>
+        <div class="delivery-header__copy">
+          <div class="delivery-header__meta">
+            <ds-badge tone="success" [dot]="true">Publicado</ds-badge>
+            @if (reading()?.publishedAt) {
+              <span>{{ formatDate(reading()!.publishedAt!) }}</span>
             }
           </div>
-        }
 
-        <div class="flex justify-center gap-4 mt-6 print:hidden">
-          @if (reading()?.audioUrl) {
-            <button class="btn-outline" (click)="audioPlaying.set(!audioPlaying())">
-              <i class="pi" [class]="audioPlaying() ? 'pi-pause' : 'pi-play'" class="mr-2"></i>
-              {{ audioPlaying() ? 'Pausar' : 'Ouvir' }} áudio
-            </button>
+          <h1>{{ reading()?.title || reading()?.product?.name || 'Entrega' }}</h1>
+
+          @if (reading()?.product?.name) {
+            <p>{{ reading()?.product?.name }}</p>
           }
-          <button class="btn-outline" (click)="downloadPdf()" [disabled]="downloadingPdf()">
-            <i class="pi" [class]="downloadingPdf() ? 'pi-spin pi-spinner' : 'pi-download'" class="mr-2"></i>
-            Baixar PDF
-          </button>
         </div>
 
-        @if (reading()?.audioUrl && audioPlaying()) {
-          <div class="mt-6 print:hidden">
-            <audio [src]="reading()?.audioUrl" controls autoplay class="w-full max-w-md mx-auto"></audio>
-          </div>
-        }
+        <div class="delivery-header__actions print-hidden">
+          @if (reading()?.audioUrl) {
+            <ds-button
+              variant="secondary"
+              [icon]="audioPlaying() ? 'pi-pause' : 'pi-play'"
+              (click)="audioPlaying.set(!audioPlaying())">
+              {{ audioPlaying() ? 'Pausar áudio' : 'Ouvir áudio' }}
+            </ds-button>
+          }
+
+          <ds-button
+            variant="secondary"
+            icon="pi-download"
+            [loading]="downloadingPdf()"
+            (click)="downloadPdf()">
+            Baixar PDF
+          </ds-button>
+        </div>
       </div>
 
-      @if (reading()?.content?.introduction) {
-        <div class="glass-card p-8 mb-8">
-          <h2 class="heading-3 text-primary mb-4">Introdução</h2>
-          <p class="text-secondary leading-relaxed whitespace-pre-line">{{ reading()?.content?.introduction }}</p>
+      @if (reading()?.orderItem?.questions?.length) {
+        <div class="intake-summary">
+          <span>Informações fornecidas</span>
+          @for (question of reading()?.orderItem?.questions ?? []; track $index) {
+            <p>{{ question }}</p>
+          }
         </div>
+      }
+
+      @if (reading()?.audioUrl && audioPlaying()) {
+        <div class="audio-shell print-hidden">
+          <audio [src]="reading()?.audioUrl" controls autoplay></audio>
+        </div>
+      }
+    </ds-card>
+
+    <div class="document-flow">
+      @if (reading()?.content?.introduction) {
+        <ds-card padding="lg">
+          <article class="document-section">
+            <span class="section-kicker">Introdução</span>
+            <p>{{ reading()?.content?.introduction }}</p>
+          </article>
+        </ds-card>
       }
 
       @if (reading()?.content?.body) {
-        <div class="glass-card p-8 mb-8">
-          <h2 class="heading-3 text-primary mb-4">Conteúdo</h2>
-          <p class="text-secondary leading-relaxed whitespace-pre-line">{{ reading()?.content?.body }}</p>
-        </div>
+        <ds-card padding="lg">
+          <article class="document-section">
+            <span class="section-kicker">Conteúdo</span>
+            <p>{{ reading()?.content?.body }}</p>
+          </article>
+        </ds-card>
       }
 
       @if (hasCardModule() && reading()?.cards?.length) {
-        <div class="glass-card p-8 mb-8">
-          <h2 class="heading-3 text-primary mb-6">Cartas</h2>
-          <div class="space-y-8">
-            @for (card of reading()?.cards ?? []; track card.id || card.cardId) {
-              <div class="card-item">
-                <div class="flex flex-col md:flex-row gap-6">
-                  <div class="shrink-0 w-full md:w-40">
-                    @if (card.card?.imageUrl) {
-                      <img [src]="card.card?.imageUrl" [alt]="card.card?.name || 'Carta'"
-                        class="w-full max-w-40 mx-auto rounded-lg shadow-lg" />
-                    }
-                  </div>
-                  <div class="flex-1">
-                    <span class="text-accent text-sm">{{ card.positionName || 'Posição ' + card.position }}</span>
-                    <h3 class="heading-4 text-primary">{{ card.card?.name }}</h3>
-                    @if (card.interpretation) {
-                      <p class="text-secondary leading-relaxed whitespace-pre-line mt-3">{{ card.interpretation }}</p>
-                    }
-                  </div>
-                </div>
-                @if (!$last) { <p-divider styleClass="my-8" /> }
+        <ds-card padding="lg">
+          <article class="document-section">
+            <div class="section-heading">
+              <div>
+                <span class="section-kicker">Módulo especializado</span>
+                <h2>Cartas</h2>
               </div>
-            }
-          </div>
-        </div>
+              <ds-badge tone="neutral">tarot-cards</ds-badge>
+            </div>
+
+            <div class="specialty-list">
+              @for (card of reading()?.cards ?? []; track card.id || card.cardId) {
+                <section class="specialty-item">
+                  @if (card.card?.imageUrl) {
+                    <div class="specialty-item__media">
+                      <img
+                        [src]="card.card?.imageUrl"
+                        [alt]="card.card?.name || 'Carta'" />
+                    </div>
+                  }
+
+                  <div class="specialty-item__copy">
+                    <span>{{ card.positionName || 'Posição ' + card.position }}</span>
+                    <h3>{{ card.card?.name }}</h3>
+                    @if (card.interpretation) {
+                      <p>{{ card.interpretation }}</p>
+                    }
+                  </div>
+                </section>
+              }
+            </div>
+          </article>
+        </ds-card>
       }
 
       @if (reading()?.content?.recommendations) {
-        <div class="glass-card p-8 mb-8">
-          <h2 class="heading-3 text-primary mb-4">Recomendações</h2>
-          <p class="text-secondary leading-relaxed whitespace-pre-line">{{ reading()?.content?.recommendations }}</p>
-        </div>
+        <ds-card padding="lg">
+          <article class="document-section document-section--accent">
+            <span class="section-kicker">Recomendações</span>
+            <p>{{ reading()?.content?.recommendations }}</p>
+          </article>
+        </ds-card>
       }
 
       @if (reading()?.content?.goals) {
-        <div class="glass-card p-8 mb-8">
-          <h2 class="heading-3 text-primary mb-4">Objetivos</h2>
-          <p class="text-secondary leading-relaxed whitespace-pre-line">{{ reading()?.content?.goals }}</p>
-        </div>
+        <ds-card padding="lg">
+          <article class="document-section">
+            <span class="section-kicker">Objetivos</span>
+            <p>{{ reading()?.content?.goals }}</p>
+          </article>
+        </ds-card>
       }
 
       @if (reading()?.content?.closing) {
-        <div class="glass-card p-8 mb-8">
-          <h2 class="heading-3 text-primary mb-4">Mensagem final</h2>
-          <p class="text-secondary leading-relaxed whitespace-pre-line">{{ reading()?.content?.closing }}</p>
-        </div>
+        <ds-card padding="lg">
+          <article class="document-section">
+            <span class="section-kicker">Mensagem final</span>
+            <p>{{ reading()?.content?.closing }}</p>
+          </article>
+        </ds-card>
       }
+    </div>
 
-      <div class="flex justify-center gap-4 mt-8 print:hidden">
-        <a routerLink="/cliente/entregas" class="btn-outline">
-          <i class="pi pi-arrow-left mr-2"></i>
-          Voltar para Entregas
-        </a>
-        <a routerLink="/loja" class="btn-primary">
-          <i class="pi pi-shopping-cart mr-2"></i>
-          Ver serviços
-        </a>
-      </div>
-    }
-  </div>
+    <div class="footer-actions print-hidden">
+      <a routerLink="/cliente/entregas" class="secondary-link">
+        <i class="pi pi-arrow-left"></i>
+        Voltar para entregas
+      </a>
+      <a routerLink="/loja" class="primary-link">
+        Ver serviços
+        <i class="pi pi-arrow-right"></i>
+      </a>
+    </div>
+  }
 </section>
