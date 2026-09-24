@@ -8,7 +8,7 @@ function requestId(req: Request) {
 }
 
 function paramId(req: Request): string {
-  const value = paramId(req);
+  const value = req.params.id;
   return Array.isArray(value) ? value[0] : value;
 }
 
