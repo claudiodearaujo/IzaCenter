@@ -1,15 +1,11 @@
-// apps/frontend/src/app/features/shop/product-detail/product-detail.component.ts
-
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { Tabs, TabList, Tab, TabPanels, TabPanel } from 'primeng/tabs';
 import { SkeletonModule } from 'primeng/skeleton';
-import { GalleriaModule } from 'primeng/galleria';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ApiService } from '../../../core/services/api.service';
@@ -25,7 +21,6 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
     CommonModule,
     RouterLink,
     FormsModule,
-    ButtonModule,
     TextareaModule,
     Tabs,
     TabList,
@@ -33,7 +28,6 @@ import { CurrencyBrlPipe } from '../../../shared/pipes/currency-brl.pipe';
     TabPanels,
     TabPanel,
     SkeletonModule,
-    GalleriaModule,
     CurrencyBrlPipe,
     TranslateModule,
   ],
@@ -51,11 +45,11 @@ export class ProductDetailComponent implements OnInit {
   product = signal<Product | null>(null);
   loading = signal(true);
   relatedProducts = signal<Product[]>([]);
-  
+
   question = signal('');
   addingToCart = signal(false);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.params.subscribe((params) => {
       if (params['slug']) {
         this.loadProduct(params['slug']);
@@ -63,9 +57,9 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
-  loadProduct(slug: string) {
+  loadProduct(slug: string): void {
     this.loading.set(true);
-    
+
     this.api.get<Product>(`/products/public/${slug}`).subscribe({
       next: (product) => {
         this.product.set(product);
@@ -74,26 +68,32 @@ export class ProductDetailComponent implements OnInit {
       },
       error: () => {
         this.loading.set(false);
-        this.notification.error(this.translate.instant('shop.productDetail.productNotFound'));
+        this.notification.error(
+          this.translate.instant('shop.productDetail.productNotFound')
+        );
         this.router.navigate(['/loja']);
       },
     });
   }
 
-  loadRelatedProducts(categoryId: string | undefined) {
+  loadRelatedProducts(categoryId: string | undefined): void {
     if (!categoryId) return;
 
-    this.api.get<{ data: Product[] }>('/products/public', {
-      params: { categoryId, limit: 4 },
-    }).subscribe({
-      next: (response) => {
-        const filtered = response.data.filter(p => p.id !== this.product()?.id);
-        this.relatedProducts.set(filtered.slice(0, 3));
-      },
-    });
+    this.api
+      .get<{ data: Product[] }>('/products/public', {
+        params: { categoryId, limit: 4 },
+      })
+      .subscribe({
+        next: (response) => {
+          const filtered = response.data.filter(
+            (p) => p.id !== this.product()?.id
+          );
+          this.relatedProducts.set(filtered.slice(0, 3));
+        },
+      });
   }
 
-  addToCart() {
+  addToCart(): void {
     const prod = this.product();
     if (!prod) return;
 
@@ -105,11 +105,13 @@ export class ProductDetailComponent implements OnInit {
       this.question() ? [this.question()] : []
     );
 
-    this.notification.success(this.translate.instant('shop.productDetail.productAdded'));
+    this.notification.success(
+      this.translate.instant('shop.productDetail.productAdded')
+    );
     this.addingToCart.set(false);
   }
 
-  buyNow() {
+  buyNow(): void {
     this.addToCart();
     this.router.navigate(['/loja/carrinho']);
   }
@@ -117,7 +119,9 @@ export class ProductDetailComponent implements OnInit {
   getDiscountPercentage(): number {
     const prod = this.product();
     if (!prod || !prod.originalPrice) return 0;
-    return Math.round(((prod.originalPrice - prod.price) / prod.originalPrice) * 100);
+    return Math.round(
+      ((prod.originalPrice - prod.price) / prod.originalPrice) * 100
+    );
   }
 
   getServiceKindLabel(kind: string): string {
@@ -139,6 +143,6 @@ export class ProductDetailComponent implements OnInit {
       VIDEO: 'Vídeo',
       MIXED: 'Formato misto',
     };
-    return format ? (labels[format] || format) : 'Digital';
+    return format ? labels[format] || format : 'Digital';
   }
 }
