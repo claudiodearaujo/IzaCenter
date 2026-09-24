@@ -1,6 +1,6 @@
 # PRD — SaaS Foundation v5: LGPD & Operations
 
-**Status:** 🟡 Implementação concluída — CI/deploy pendentes
+**Status:** ✅ Implementado, validado e implantado
 
 ## Objetivo
 
@@ -306,10 +306,29 @@ Após v5, a Fase 3 — SaaS Foundation estará tecnicamente concluída. O próxi
 - Limpeza destrutiva automática permanece desabilitada.
 - Billing SaaS permanece desligado no runtime local.
 
-### Gate ainda pendente
+### Fechamento operacional
 
-- CI remoto final da branch;
-- merge;
-- migration no Coolify;
-- smoke tests autenticados/anônimos do runtime;
-- encerramento formal do roadmap SaaS Foundation.
+- PR #115 mergeado na `main`: `981554e`.
+- CI do PR #115: Backend CI PASS · Frontend CI PASS · GitGuardian PASS · E2E corretamente skipped.
+- CI pós-merge da `main` no commit `981554e`: PASS.
+- Backend pós-merge: 24/24 suites, 359/359 testes PASS.
+- Migration `20260923233000_add_lgpd_operations_v5` aplicada com sucesso no PostgreSQL dedicado do Coolify.
+- Runtime com 9 migrations aplicadas.
+- Tabelas confirmadas: `privacy_requests`, `audit_events`, `data_retention_policies`, `security_incidents`.
+- Tenant `default` recebeu política de retenção `730 | 1825 | 90`.
+- Billing SaaS permanece desligado.
+- Backend, frontend e PostgreSQL: healthy.
+- Smoke autenticado:
+  - `GET /api/privacy/export`: 200 e sem campos sensíveis/IDs internos Stripe;
+  - `GET /api/admin/privacy/retention`: 200;
+  - `POST /api/privacy/requests`: 201;
+  - triagem administrativa: 200;
+  - `GET /api/admin/privacy/audit`: 200, contendo export e mudança de status;
+  - `GET /api/admin/privacy/incidents`: 200.
+- Dados criados apenas para smoke foram removidos ao final.
+- Smoke anônimo Tailscale:
+  - `/`: 200;
+  - `/cliente/privacidade` → `/auth/login`;
+  - `/admin/privacidade` → `/auth/login`.
+
+Com isso, a Fase 3 — SaaS Foundation está tecnicamente concluída.
