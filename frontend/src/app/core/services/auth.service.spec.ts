@@ -16,6 +16,11 @@ describe('AuthService', () => {
     email: 'test@example.com',
     fullName: 'Test User',
     role: 'CLIENT' as const,
+    preferredLanguage: 'pt-BR',
+    notificationEmail: true,
+    notificationWhatsapp: false,
+    createdAt: '2026-09-24T00:00:00Z',
+    updatedAt: '2026-09-24T00:00:00Z',
   };
 
   const mockAuthResponse = {
