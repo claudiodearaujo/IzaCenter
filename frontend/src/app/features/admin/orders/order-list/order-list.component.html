@@ -1,101 +1,84 @@
-<!-- apps/frontend/src/app/features/admin/orders/order-list/order-list.component.html -->
+<section class="orders-page">
+  <ds-page-header
+    [title]="'admin.orders.title' | translate"
+    [description]="'admin.orders.subtitle' | translate">
+  </ds-page-header>
 
-<section class="py-8">
-  <div class="container-custom">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="heading-1 text-primary mb-2">
-          <i class="pi pi-shopping-cart mr-3"></i>
-          {{ 'admin.orders.title' | translate }}
-        </h1>
-        <p class="text-secondary">{{ 'admin.orders.subtitle' | translate }}</p>
+  <div class="metrics-grid">
+    <ds-card padding="md">
+      <div class="metric">
+        <span class="metric__icon metric__icon--brand"><i class="pi pi-shopping-bag"></i></span>
+        <div>
+          <p class="metric__value">{{ stats().total }}</p>
+          <p class="metric__label">Pedidos</p>
+        </div>
+      </div>
+    </ds-card>
+
+    <ds-card padding="md">
+      <div class="metric">
+        <span class="metric__icon metric__icon--warning"><i class="pi pi-clock"></i></span>
+        <div>
+          <p class="metric__value">{{ stats().pending }}</p>
+          <p class="metric__label">Pendentes</p>
+        </div>
+      </div>
+    </ds-card>
+
+    <ds-card padding="md">
+      <div class="metric">
+        <span class="metric__icon metric__icon--success"><i class="pi pi-check-circle"></i></span>
+        <div>
+          <p class="metric__value">{{ stats().completed }}</p>
+          <p class="metric__label">Concluídos</p>
+        </div>
+      </div>
+    </ds-card>
+
+    <ds-card padding="md">
+      <div class="metric">
+        <span class="metric__icon metric__icon--success"><i class="pi pi-wallet"></i></span>
+        <div>
+          <p class="metric__value metric__value--currency">{{ formatCurrency(stats().revenue) }}</p>
+          <p class="metric__label">Receita</p>
+        </div>
+      </div>
+    </ds-card>
+  </div>
+
+  <ds-card padding="md">
+    <div class="filters">
+      <ds-form-field class="filters__search" [label]="'admin.orders.searchClient' | translate">
+        <span class="search-control">
+          <i class="pi pi-search"></i>
+          <input pInputText [(ngModel)]="searchTerm"
+            [placeholder]="'admin.orders.searchClient' | translate"
+            (keyup.enter)="onSearch()" />
+        </span>
+      </ds-form-field>
+
+      <ds-form-field label="Status do pedido">
+        <p-select [options]="statusOptions" [(ngModel)]="selectedStatus"
+          optionLabel="label" optionValue="value"
+          [placeholder]="'common.status' | translate"
+          (onChange)="onSearch()" styleClass="w-full" />
+      </ds-form-field>
+
+      <ds-form-field label="Pagamento">
+        <p-select [options]="paymentStatusOptions" [(ngModel)]="selectedPaymentStatus"
+          optionLabel="label" optionValue="value"
+          placeholder="Pagamento"
+          (onChange)="onSearch()" styleClass="w-full" />
+      </ds-form-field>
+
+      <div class="filters__action">
+        <ds-button icon="pi-search" (click)="onSearch()">{{ 'common.search' | translate }}</ds-button>
       </div>
     </div>
+  </ds-card>
 
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-      <div class="glass-card p-4 flex items-center gap-4">
-        <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-          <i class="pi pi-clock text-xl text-yellow-400"></i>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-primary">
-            {{ pendingCount() }}
-          </p>
-          <p class="text-secondary text-sm">{{ 'admin.orders.pending' | translate }}</p>
-        </div>
-      </div>
-      <div class="glass-card p-4 flex items-center gap-4">
-        <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-          <i class="pi pi-credit-card text-xl text-blue-400"></i>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-primary">
-            {{ paidCount() }}
-          </p>
-          <p class="text-secondary text-sm">{{ 'admin.orders.paid' | translate }}</p>
-        </div>
-      </div>
-      <div class="glass-card p-4 flex items-center gap-4">
-        <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-          <i class="pi pi-check-circle text-xl text-green-400"></i>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-primary">
-            {{ completedCount() }}
-          </p>
-          <p class="text-secondary text-sm">{{ 'admin.orders.completed' | translate }}</p>
-        </div>
-      </div>
-      <div class="glass-card p-4 flex items-center gap-4">
-        <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
-          <i class="pi pi-times-circle text-xl text-red-400"></i>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-primary">
-            {{ cancelledCount() }}
-          </p>
-          <p class="text-secondary text-sm">{{ 'admin.orders.cancelled' | translate }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Filters -->
-    <div class="glass-card p-4 mb-6">
-      <div class="flex flex-col md:flex-row gap-4">
-        <div class="flex-1">
-          <span class="p-input-icon-left w-full">
-            <i class="pi pi-search"></i>
-            <input
-              pInputText
-              [(ngModel)]="searchTerm"
-              [placeholder]="'admin.orders.searchClient' | translate"
-              class="w-full"
-              (keyup.enter)="onSearch()"
-            />
-          </span>
-        </div>
-        <div class="w-full md:w-48">
-          <p-select
-            [options]="statusOptions"
-            [(ngModel)]="selectedStatus"
-            optionLabel="label"
-            optionValue="value"
-            [placeholder]="'common.status' | translate"
-            (onChange)="onSearch()"
-            styleClass="w-full"
-          />
-        </div>
-        <button pButton class="btn-primary" (click)="onSearch()">
-          <i class="pi pi-search mr-2"></i>
-          {{ 'common.search' | translate }}
-        </button>
-      </div>
-    </div>
-
-    <!-- Table -->
-    <div class="glass-card overflow-hidden">
+  <ds-card padding="sm">
+    <div class="table-shell">
       <p-table
         [value]="orders()"
         [loading]="loading()"
@@ -104,168 +87,141 @@
         [totalRecords]="totalRecords()"
         [lazy]="true"
         (onLazyLoad)="loadOrders($event)"
-        [rowHover]="true"
-        styleClass="p-datatable-striped"
-      >
+        [rowHover]="true">
+
         <ng-template pTemplate="header">
           <tr>
             <th>{{ 'admin.orders.orderNumber' | translate }}</th>
             <th>{{ 'admin.orders.client' | translate }}</th>
             <th>{{ 'admin.orders.items' | translate }}</th>
             <th>{{ 'admin.orders.total' | translate }}</th>
-            <th>{{ 'common.status' | translate }}</th>
+            <th>Status</th>
+            <th>Pagamento</th>
             <th>{{ 'admin.orders.date' | translate }}</th>
             <th>{{ 'common.actions' | translate }}</th>
           </tr>
         </ng-template>
-        
+
         <ng-template pTemplate="loadingbody">
-          @for (_ of [1, 2, 3, 4, 5]; track $index) {
-            <tr>
-              @for (_ of [1, 2, 3, 4, 5, 6, 7]; track $index) {
-                <td><p-skeleton height="2rem" /></td>
-              }
-            </tr>
+          @for (_ of [1,2,3,4,5]; track $index) {
+            <tr>@for (_ of [1,2,3,4,5,6,7,8]; track $index) { <td><p-skeleton height="2rem" /></td> }</tr>
           }
         </ng-template>
+
         <ng-template pTemplate="body" let-order>
           <tr>
+            <td><strong class="order-number">{{ order.orderNumber }}</strong></td>
             <td>
-              <span class="text-primary font-medium">{{ order.orderNumber }}</span>
-            </td>
-            <td>
-              <div>
-                <p class="text-primary font-medium">{{ order.client?.fullName }}</p>
-                <p class="text-secondary text-xs">{{ order.client?.email }}</p>
+              <div class="person-cell">
+                <ds-avatar [name]="order.client?.fullName || 'Cliente'" size="sm" />
+                <div>
+                  <p class="cell-title">{{ order.client?.fullName }}</p>
+                  <p class="cell-subtitle">{{ order.client?.email }}</p>
+                </div>
               </div>
             </td>
             <td>
-              <div>
+              <div class="items-cell">
                 @for (item of order.items; track item.id) {
-                  <p class="text-primary text-sm">
-                    {{ item.quantity }}x {{ item.productName }}
-                  </p>
+                  <span>{{ item.quantity }}× {{ item.productName }}</span>
                 }
               </div>
             </td>
+            <td><strong class="amount">{{ formatCurrency(order.total) }}</strong></td>
             <td>
-              <span class="text-primary font-medium">{{ formatCurrency(order.total) }}</span>
+              <ds-badge [tone]="getStatusTone(order.status)" [dot]="true">
+                {{ getStatusLabel(order.status) }}
+              </ds-badge>
             </td>
             <td>
-              <p-tag
-                [value]="getStatusLabel(order.status)"
-                [severity]="getStatusSeverity(order.status)"
-              />
+              <ds-badge [tone]="getPaymentStatusTone(order.paymentStatus)" [dot]="true">
+                {{ getPaymentStatusLabel(order.paymentStatus) }}
+              </ds-badge>
             </td>
+            <td><span class="date-cell">{{ formatDate(order.createdAt) }}</span></td>
             <td>
-              <span class="text-primary">{{ formatDate(order.createdAt) }}</span>
-            </td>
-            <td>
-              <div class="flex gap-1">
+              <div class="row-actions">
                 @if (order.status === 'PAID') {
-                  <button
-                    pButton
-                    class="p-button-info p-button-sm"
+                  <button type="button" class="icon-action icon-action--brand"
                     [pTooltip]="'admin.orders.markProcessing' | translate"
-                    (click)="updateStatus(order.id, 'PROCESSING', translate.instant('admin.orders.processingSuccess'))"
-                  >
+                    (click)="updateStatus(order.id, 'PROCESSING', translate.instant('admin.orders.processingSuccess'))">
                     <i class="pi pi-sync"></i>
                   </button>
                 }
                 @if (order.status === 'PROCESSING') {
-                  <button
-                    pButton
-                    class="p-button-success p-button-sm"
+                  <button type="button" class="icon-action icon-action--success"
                     [pTooltip]="'admin.orders.markCompleted' | translate"
-                    (click)="updateStatus(order.id, 'COMPLETED', translate.instant('admin.orders.completedSuccess'))"
-                  >
+                    (click)="updateStatus(order.id, 'COMPLETED', translate.instant('admin.orders.completedSuccess'))">
                     <i class="pi pi-check-circle"></i>
                   </button>
                 }
                 @if (order.status !== 'CANCELLED' && order.status !== 'COMPLETED' && order.status !== 'REFUNDED') {
-                  <button
-                    pButton
-                    class="p-button-danger p-button-sm"
+                  <button type="button" class="icon-action icon-action--danger"
                     [pTooltip]="'common.cancel' | translate"
-                    (click)="cancelOrder(order)"
-                  >
+                    (click)="cancelOrder(order)">
                     <i class="pi pi-times"></i>
                   </button>
                 }
-                <button
-                  pButton
-                  class="p-button-text p-button-sm"
+                <button type="button" class="icon-action"
                   [pTooltip]="'admin.orders.notes' | translate"
-                  (click)="openNotesDialog(order)"
-                >
+                  (click)="openNotesDialog(order)">
                   <i class="pi pi-file-edit"></i>
                 </button>
               </div>
             </td>
           </tr>
         </ng-template>
+
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="7" class="text-center py-8">
-              <i class="pi pi-shopping-cart text-4xl text-secondary/30 mb-4"></i>
-              <p class="text-secondary">{{ 'admin.orders.noOrders' | translate }}</p>
+            <td colspan="8">
+              <ds-empty-state
+                [title]="'admin.orders.noOrders' | translate"
+                description="Ajuste os filtros ou aguarde novos pedidos."
+                icon="pi-shopping-bag">
+              </ds-empty-state>
             </td>
           </tr>
         </ng-template>
       </p-table>
     </div>
-  </div>
+  </ds-card>
 </section>
 
-<!-- Notes Dialog -->
 <p-dialog
   [(visible)]="notesDialogVisible"
   [modal]="true"
   [closable]="true"
-  [style]="{width: '500px'}"
-  [header]="'admin.orders.notesTitle' | translate"
->
-  <div class="space-y-4 p-2">
+  [style]="{width:'500px',maxWidth:'calc(100vw - 32px)'}"
+  [header]="'admin.orders.notesTitle' | translate">
+
+  <div class="dialog-content">
     @if (selectedOrder()) {
-      <div class="p-4 bg-dark/30 rounded-lg">
-        <p class="text-primary font-medium">{{ selectedOrder()?.client?.fullName }}</p>
-        <p class="text-secondary text-sm">
-          {{ selectedOrder()?.orderNumber }} — {{ formatDate(selectedOrder()!.createdAt) }}
-        </p>
+      <div class="order-summary">
+        <ds-avatar [name]="selectedOrder()?.client?.fullName || 'Cliente'" size="sm" />
+        <div>
+          <strong>{{ selectedOrder()?.client?.fullName }}</strong>
+          <span>{{ selectedOrder()?.orderNumber }} · {{ formatDate(selectedOrder()!.createdAt) }}</span>
+        </div>
       </div>
     }
 
-    <div>
-      <label class="block text-secondary text-sm mb-2">{{ 'admin.orders.notes' | translate }}</label>
-      <textarea
-        pInputTextarea
-        [(ngModel)]="notes"
-        [rows]="6"
-        class="w-full"
-        [placeholder]="'admin.orders.notesPlaceholder' | translate"
-      ></textarea>
-    </div>
+    <ds-form-field [label]="'admin.orders.notes' | translate">
+      <textarea pInputTextarea [(ngModel)]="notes" [rows]="6"
+        [placeholder]="'admin.orders.notesPlaceholder' | translate"></textarea>
+    </ds-form-field>
   </div>
 
   <ng-template pTemplate="footer">
-    <div class="flex justify-end gap-3 pt-4">
-      <button pButton class="btn-outline" (click)="notesDialogVisible.set(false)">
+    <div class="dialog-actions">
+      <ds-button variant="secondary" (click)="notesDialogVisible.set(false)">
         {{ 'common.cancel' | translate }}
-      </button>
-      <button
-        pButton
-        class="btn-primary"
-        [loading]="saving()"
-        (click)="saveNotes()"
-      >
-        <i class="pi pi-save mr-2"></i>
+      </ds-button>
+      <ds-button icon="pi-save" [loading]="saving()" (click)="saveNotes()">
         {{ 'common.save' | translate }}
-      </button>
+      </ds-button>
     </div>
   </ng-template>
 </p-dialog>
 
-<p-confirmDialog
-  styleClass="custom-confirm-dialog"
-  [style]="{width: '400px'}"
-/>
+<p-confirmDialog [style]="{width:'400px',maxWidth:'calc(100vw - 32px)'}" />
