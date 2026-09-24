@@ -63,6 +63,9 @@ export const env = {
   // Sentry (optional — error monitoring)
   SENTRY_DSN: process.env.SENTRY_DSN || '',
 
+  // Privacy / audit
+  AUDIT_IP_HASH_SALT: process.env.AUDIT_IP_HASH_SALT || '',
+
   // Helpers
   isDevelopment: process.env.NODE_ENV === 'development',
   isProduction: process.env.NODE_ENV === 'production',
