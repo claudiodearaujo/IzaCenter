@@ -113,7 +113,7 @@ export class ProductDetailComponent implements OnInit {
 
   buyNow(): void {
     this.addToCart();
-    this.router.navigate(['/loja/carrinho']);
+    this.router.navigate(['/carrinho']);
   }
 
   getDiscountPercentage(): number {
