@@ -56,6 +56,7 @@ Referências oficiais consultadas em 2026-09-24:
 - Sentry remove request, usuário, breadcrumb e detalhes de exceção sensíveis; tracing suspenso até política própria de minimização.
 - Logs de erros operacionais não imprimem exceções brutas; Prisma não imprime query/error SQL.
 - Nginx inclui CSP, HSTS, nosniff, proteção de frame e referrer. Estilos inline permanecem permitidos por compatibilidade Angular/branding; scripts inline não são permitidos. Verificar a política no navegador real antes de exposição pública.
+- Build Angular usa `inlineCritical=false`: evita o handler inline de carregamento de CSS bloqueado pela CSP, mantendo stylesheet externo.
 - Uploads ativos recebem rate limit, limites multipart, verificação de assinatura MIME e nomes gerados no servidor. Imagens são decodificadas/reencodadas com limite de pixels. Assinatura de arquivo não equivale a antivírus ou validação integral de codecs.
 - Erros críticos do Nginx ainda podem conter detalhes de request; validar política de coleta/retenção no runtime.
 
