@@ -58,7 +58,7 @@ export class PrivacyController {
 
   async getRequest(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await privacyService.getRequest(req.tenant!.id, req.params.id);
+      const data = await privacyService.getRequest(req.tenant!.id, String(req.params.id));
       res.json({ success: true, data });
     } catch (error) { next(error); }
   }
@@ -67,7 +67,7 @@ export class PrivacyController {
     try {
       const data = await privacyService.updateRequest(
         req.tenant!.id,
-        req.params.id,
+        String(req.params.id),
         req.user!.id,
         req.body,
         requestId(req)
@@ -120,7 +120,7 @@ export class PrivacyController {
 
   async updateIncident(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await privacyService.updateIncident(req.tenant!.id, req.params.id, req.body);
+      const data = await privacyService.updateIncident(req.tenant!.id, String(req.params.id), req.body);
       res.json({ success: true, data });
     } catch (error) { next(error); }
   }
