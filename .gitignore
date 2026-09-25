@@ -49,4 +49,5 @@ dist
 build
 /build
 backend/.env
+backend/.env.test
 backend/dist

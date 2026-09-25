@@ -17,6 +17,8 @@ export const testPrisma = new PrismaClient({
   adapter: testAdapter,
 });
 
+const DEFAULT_TENANT_ID = '00000000-0000-0000-0000-000000000001';
+
 /**
  * Clean all tables in the test database
  */
@@ -38,6 +40,14 @@ export async function cleanDatabase() {
       console.log('Error cleaning database:', error);
     }
   }
+
+  await testPrisma.tenant.create({
+    data: {
+      id: DEFAULT_TENANT_ID,
+      name: 'Integration Test Tenant',
+      slug: 'integration-test',
+    },
+  });
 }
 
 /**
@@ -68,6 +78,7 @@ export async function createTestCategory(data: {
       name: data.name || `Test Category ${Date.now()}`,
       slug: data.slug || `test-category-${Date.now()}`,
       isActive: true,
+      tenantId: DEFAULT_TENANT_ID,
     },
   });
 }
@@ -86,6 +97,7 @@ export async function createTestProduct(data: {
       categoryId: data.categoryId,
       productType: ProductType.QUESTION,
       isActive: true,
+      tenantId: DEFAULT_TENANT_ID,
     },
   });
 }
@@ -100,6 +112,7 @@ export async function createTestCard(data: {
       name: data.name || `Test Card ${Date.now()}`,
       keywords: ['test', 'card'],
       imageUrl: 'https://example.com/card.jpg',
+      tenantId: DEFAULT_TENANT_ID,
     },
   });
 }
@@ -121,6 +134,7 @@ export async function createTestOrder(data: {
       total,
       status: 'PENDING',
       paymentStatus: 'PENDING',
+      tenantId: DEFAULT_TENANT_ID,
       items: {
         create: data.items.map((item) => ({
           productId: item.productId,
