@@ -289,15 +289,15 @@ describe('SettingsService', () => {
   });
 
   describe('branding', () => {
-    it('should preserve legacy-compatible branding defaults', async () => {
+    it('should return Therapist Design System branding defaults', async () => {
       prismaMock.siteSetting.findUnique.mockResolvedValue(null);
 
       const result = await settingsService.getBranding();
 
-      expect(result.data.primaryColor).toBe('#F59E0B');
-      expect(result.data.secondaryColor).toBe('#EC4899');
-      expect(result.data.accentColor).toBe('#D4AF37');
-      expect(result.data.fontFamily).toContain('Nunito');
+      expect(result.data.primaryColor).toBe('#477762');
+      expect(result.data.secondaryColor).toBe('#D56546');
+      expect(result.data.accentColor).toBe('#52718C');
+      expect(result.data.fontFamily).toContain('Inter');
     });
 
     it('should persist branding in the requested tenant', async () => {
