@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit {
   loadDashboard(): void {
     this.loading.set(true);
 
-    this.api.get<{ data: DashboardStats }>('/users/me/stats').subscribe({
+    this.api.get<{ data: DashboardStats }>('/users/statistics').subscribe({
       next: (response) => this.stats.set(response.data),
       error: () => this.stats.set({
         totalOrders: 0,
@@ -85,14 +85,14 @@ export class DashboardComponent implements OnInit {
     });
 
     this.api
-      .get<{ data: RecentOrder[] }>('/users/me/orders', { params: { limit: 5 } })
+      .get<{ data: RecentOrder[] }>('/orders/my', { params: { limit: 5 } })
       .subscribe({
         next: (response) => this.recentOrders.set(response.data),
         error: () => this.recentOrders.set([]),
       });
 
     this.api
-      .get<{ data: RecentReading[] }>('/users/me/readings', { params: { limit: 5 } })
+      .get<{ data: RecentReading[] }>('/deliveries', { params: { limit: 5 } })
       .subscribe({
         next: (response) => {
           this.recentReadings.set(response.data);

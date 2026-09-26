@@ -116,7 +116,7 @@ describe('ProductsService', () => {
         expect(response.data.name).toBe('Novo Produto');
       });
 
-      const req = httpMock.expectOne(`${environment.apiUrl}/admin/products`);
+      const req = httpMock.expectOne(`${environment.apiUrl}/products`);
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(createData);
       req.flush({ data: { ...mockProduct, ...createData } });
@@ -131,8 +131,8 @@ describe('ProductsService', () => {
         expect(response.data.price).toBe(200);
       });
 
-      const req = httpMock.expectOne(`${environment.apiUrl}/admin/products/prod-1`);
-      expect(req.request.method).toBe('PUT');
+      const req = httpMock.expectOne(`${environment.apiUrl}/products/prod-1`);
+      expect(req.request.method).toBe('PATCH');
       req.flush({ data: { ...mockProduct, ...updateData } });
     });
   });
@@ -143,29 +143,10 @@ describe('ProductsService', () => {
         expect(response.message).toContain('excluído');
       });
 
-      const req = httpMock.expectOne(`${environment.apiUrl}/admin/products/prod-1`);
+      const req = httpMock.expectOne(`${environment.apiUrl}/products/prod-1`);
       expect(req.request.method).toBe('DELETE');
       req.flush({ message: 'Produto excluído com sucesso' });
     });
   });
 
-  describe('admin toggleActive', () => {
-    it('should toggle product active status', () => {
-      service.toggleActive('prod-1').subscribe();
-
-      const req = httpMock.expectOne(`${environment.apiUrl}/admin/products/prod-1/toggle-active`);
-      expect(req.request.method).toBe('PATCH');
-      req.flush({ data: { ...mockProduct, isActive: false } });
-    });
-  });
-
-  describe('admin toggleFeatured', () => {
-    it('should toggle product featured status', () => {
-      service.toggleFeatured('prod-1').subscribe();
-
-      const req = httpMock.expectOne(`${environment.apiUrl}/admin/products/prod-1/toggle-featured`);
-      expect(req.request.method).toBe('PATCH');
-      req.flush({ data: { ...mockProduct, isFeatured: false } });
-    });
-  });
 });

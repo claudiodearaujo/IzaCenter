@@ -50,7 +50,7 @@ describe('OrdersService', () => {
         expect(response.data).toEqual([mockOrder]);
       });
 
-      const req = httpMock.expectOne('/api/orders');
+      const req = httpMock.expectOne('/api/orders/my');
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });
@@ -64,7 +64,7 @@ describe('OrdersService', () => {
         expect(response.data).toEqual(mockOrder);
       });
 
-      const req = httpMock.expectOne('/api/orders/1');
+      const req = httpMock.expectOne('/api/orders/my/1');
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });
@@ -78,7 +78,7 @@ describe('OrdersService', () => {
         expect(response.data).toEqual([mockOrder]);
       });
 
-      const req = httpMock.expectOne('/api/admin/orders');
+      const req = httpMock.expectOne('/api/orders');
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });
@@ -91,7 +91,7 @@ describe('OrdersService', () => {
       });
 
       const req = httpMock.expectOne(req => 
-        req.url === '/api/admin/orders' && 
+        req.url === '/api/orders' &&
         req.params.get('status') === 'PENDING'
       );
       expect(req.request.method).toBe('GET');
@@ -107,7 +107,7 @@ describe('OrdersService', () => {
         expect(response.data).toEqual(mockOrder);
       });
 
-      const req = httpMock.expectOne('/api/admin/orders/1');
+      const req = httpMock.expectOne('/api/orders/1');
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });
@@ -121,7 +121,7 @@ describe('OrdersService', () => {
         expect(response.data.status).toBe('COMPLETED');
       });
 
-      const req = httpMock.expectOne('/api/admin/orders/1/status');
+      const req = httpMock.expectOne('/api/orders/1');
       expect(req.request.method).toBe('PATCH');
       expect(req.request.body).toEqual({ status: 'COMPLETED' });
       req.flush(mockResponse);
@@ -136,7 +136,7 @@ describe('OrdersService', () => {
         expect(response.data.adminNotes).toBe('Nota importante');
       });
 
-      const req = httpMock.expectOne('/api/admin/orders/1');
+      const req = httpMock.expectOne('/api/orders/1');
       expect(req.request.method).toBe('PATCH');
       expect(req.request.body).toEqual({ adminNotes: 'Nota importante' });
       req.flush(mockResponse);
@@ -146,13 +146,21 @@ describe('OrdersService', () => {
   describe('getStats', () => {
     it('should return order stats', () => {
       const mockStats = { total: 100, pending: 20, completed: 80, revenue: 5000 };
-      const mockResponse = { data: mockStats, success: true };
+      const mockResponse = {
+        data: {
+          totalOrders: 100,
+          paidOrders: 50,
+          revenue: 5000,
+          statusCounts: { PENDING: 20, COMPLETED: 80 },
+        },
+        success: true,
+      };
 
       service.getStats().subscribe(response => {
         expect(response.data).toEqual(mockStats);
       });
 
-      const req = httpMock.expectOne('/api/admin/orders/stats');
+      const req = httpMock.expectOne('/api/orders/statistics');
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });

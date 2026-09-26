@@ -1,7 +1,7 @@
 // apps/frontend/src/app/core/services/orders.service.ts
 
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ApiService, PaginatedResponse, ApiResponse } from './api.service';
 
 export interface Order {
@@ -51,12 +51,12 @@ export class OrdersService {
   private api = inject(ApiService);
 
   // Client methods
-  getMyOrders(): Observable<ApiResponse<Order[]>> {
-    return this.api.get<ApiResponse<Order[]>>('/orders');
+  getMyOrders(): Observable<PaginatedResponse<Order>> {
+    return this.api.get<PaginatedResponse<Order>>('/orders/my');
   }
 
   getMyOrderById(id: string): Observable<ApiResponse<Order>> {
-    return this.api.get<ApiResponse<Order>>(`/orders/${id}`);
+    return this.api.get<ApiResponse<Order>>(`/orders/my/${id}`);
   }
 
   // Admin methods
@@ -72,19 +72,19 @@ export class OrdersService {
     const queryParams: any = { ...params };
     if (params?.startDate) queryParams.startDate = params.startDate.toISOString();
     if (params?.endDate) queryParams.endDate = params.endDate.toISOString();
-    return this.api.get<PaginatedResponse<Order>>('/admin/orders', { params: queryParams });
+    return this.api.get<PaginatedResponse<Order>>('/orders', { params: queryParams });
   }
 
   findById(id: string): Observable<ApiResponse<Order>> {
-    return this.api.get<ApiResponse<Order>>(`/admin/orders/${id}`);
+    return this.api.get<ApiResponse<Order>>(`/orders/${id}`);
   }
 
   updateStatus(id: string, status: string): Observable<ApiResponse<Order>> {
-    return this.api.patch<ApiResponse<Order>>(`/admin/orders/${id}/status`, { status });
+    return this.api.patch<ApiResponse<Order>>(`/orders/${id}`, { status });
   }
 
   updateAdminNotes(id: string, adminNotes: string): Observable<ApiResponse<Order>> {
-    return this.api.patch<ApiResponse<Order>>(`/admin/orders/${id}`, { adminNotes });
+    return this.api.patch<ApiResponse<Order>>(`/orders/${id}`, { adminNotes });
   }
 
   getStats(): Observable<ApiResponse<{
@@ -93,6 +93,21 @@ export class OrdersService {
     completed: number;
     revenue: number;
   }>> {
-    return this.api.get('/admin/orders/stats');
+    return this.api.get<ApiResponse<{
+      totalOrders: number;
+      paidOrders: number;
+      revenue: number;
+      statusCounts: Record<string, number>;
+    }>>('/orders/statistics').pipe(
+      map((response) => ({
+        ...response,
+        data: {
+          total: response.data.totalOrders,
+          pending: response.data.statusCounts['PENDING'] || 0,
+          completed: response.data.statusCounts['COMPLETED'] || 0,
+          revenue: response.data.revenue,
+        },
+      }))
+    );
   }
 }

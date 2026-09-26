@@ -8,7 +8,7 @@ import { httpLogger } from './middlewares/http-logger.middleware';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 
-import { env } from './config/env';
+import { env, getAllowedFrontendOrigins } from './config/env';
 import { Sentry } from './config/sentry';
 import { notFoundHandler, errorHandler, generalLimiter, resolveTenant } from './middlewares';
 import { auditLogger } from './middlewares/audit.middleware';
@@ -49,9 +49,7 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: env.isDevelopment 
-    ? ['http://localhost:4200', 'http://127.0.0.1:4200']
-    : [env.FRONTEND_URL],
+  origin: getAllowedFrontendOrigins(),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Tenant-Slug'],

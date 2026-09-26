@@ -265,17 +265,34 @@ export class UsersService {
    * Get user statistics
    */
   async getStatistics(userId: string, tenantId = DEFAULT_TENANT_ID) {
-    const [ordersTotal, readingsCount, appointmentsCount] = await Promise.all([
+    const [
+      ordersTotal,
+      totalOrders,
+      readingsCount,
+      pendingReadings,
+      completedReadings,
+      appointmentsCount,
+      upcomingAppointments,
+    ] = await Promise.all([
       prisma.order.aggregate({
         where: { clientId: userId, tenantId, status: 'COMPLETED' },
         _sum: { total: true },
         _count: true,
       }),
+      prisma.order.count({ where: { clientId: userId, tenantId } }),
+      prisma.reading.count({ where: { clientId: userId, tenantId } }),
       prisma.reading.count({
-        where: { clientId: userId, tenantId },
+        where: { clientId: userId, tenantId, status: { in: ['PENDING', 'IN_PROGRESS'] } },
       }),
+      prisma.reading.count({ where: { clientId: userId, tenantId, status: 'PUBLISHED' } }),
+      prisma.appointment.count({ where: { clientId: userId, tenantId } }),
       prisma.appointment.count({
-        where: { clientId: userId, tenantId },
+        where: {
+          clientId: userId,
+          tenantId,
+          scheduledDate: { gte: new Date() },
+          status: { in: ['SCHEDULED', 'CONFIRMED'] },
+        },
       }),
     ]);
 
@@ -284,6 +301,10 @@ export class UsersService {
       ordersCount: ordersTotal._count,
       readingsCount,
       appointmentsCount,
+      totalOrders,
+      pendingReadings,
+      completedReadings,
+      upcomingAppointments,
     };
   }
 }

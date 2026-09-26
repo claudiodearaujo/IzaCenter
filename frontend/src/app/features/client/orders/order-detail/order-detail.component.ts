@@ -97,7 +97,7 @@ export class OrderDetailComponent implements OnInit {
   loadOrder(id: string): void {
     this.loading.set(true);
 
-    this.api.get<{ data: Order }>(`/users/me/orders/${id}`).subscribe({
+    this.api.get<{ data: Order }>(`/orders/my/${id}`).subscribe({
       next: (response) => {
         this.order.set(response.data);
         this.loading.set(false);

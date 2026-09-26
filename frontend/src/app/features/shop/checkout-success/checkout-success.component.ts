@@ -47,7 +47,7 @@ export class CheckoutSuccessComponent implements OnInit {
   }
 
   loadOrder(id: string): void {
-    this.api.get<{ data: OrderSummary }>(`/users/me/orders/${id}`).subscribe({
+    this.api.get<{ data: OrderSummary }>(`/orders/my/${id}`).subscribe({
       next: (response) => {
         this.order.set(response.data);
         this.loading.set(false);

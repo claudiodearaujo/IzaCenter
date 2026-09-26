@@ -74,7 +74,7 @@ export class OrderListComponent implements OnInit {
     this.loading.set(true);
 
     this.api
-      .get<OrdersResponse>('/users/me/orders', {
+      .get<OrdersResponse>('/orders/my', {
         params: {
           page: this.currentPage(),
           limit: this.pageSize,
