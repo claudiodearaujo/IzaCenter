@@ -26,6 +26,7 @@ Implementação validada no CI e implantada no Coolify local. Smoke HTTP, QA aut
 - Integração usa PostgreSQL 16 descartável no CI, aplica todas as migrations e valida isolamento e sessões por HTTP.
 - Unidade frontend passa a ser executada no CI, além de build.
 - Em 2026-09-26 a proteção da `main` foi confirmada pela API do GitHub: status checks em modo `strict` e nove checks obrigatórios — Backend CI, Frontend CI, SAST, Security integration, quatro Dependency audits e GitGuardian Security Checks.
+- A reconciliação com Dependabot identificou 111 alertas pertencentes exclusivamente aos exemplos vendorizados de `loki-mode` em `.cursor/.claude/.gemini`, fora do build, CI e imagens do produto. Eles foram triados individualmente como `not_used`, com justificativa auditável. Restaram cinco alertas abertos: três médios de `python-dotenv` nos skills `notebooklm` e dois baixos de Quill; nenhum alto/crítico aberto pertence ao produto.
 
 ## Configuração necessária antes do deploy
 
