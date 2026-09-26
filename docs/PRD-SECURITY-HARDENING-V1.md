@@ -1,8 +1,8 @@
 # PRD — Security Hardening v1
 
-**Status:** 🟡 Em andamento — SH-01 integrado; SH-02 a SH-05 implementados e validados no CI; gates operacionais pendentes.
-**Base inspecionada:** `972cd42fe41ee6ba93198a1a1b2c6986c7f97711`.
-**Data:** 2026-09-24.
+**Status:** 🟡 Em fechamento — SH-01 a SH-05 implementados; CI, proteção da `main`, deploy local e smoke HTTP validados. Bucket privado/mídias permanecem como gate operacional.
+**Base operacional validada:** `2c23f7aaaae465120d5200717ea2ab28a6770521`.
+**Data:** 2026-09-26.
 
 ## Objetivo
 

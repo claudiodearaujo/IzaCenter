@@ -2,7 +2,7 @@
 
 ## Estado
 
-Implementação validada no CI; implantação operacional pendente. Não declarar a trilha encerrada antes do smoke no Coolify, validação do armazenamento privado e confirmação dos checks obrigatórios na main.
+Implementação validada no CI e implantada no Coolify local. Smoke HTTP, QA autenticado e checks obrigatórios da `main` foram confirmados em 2026-09-26. A trilha ainda não deve ser declarada encerrada porque o armazenamento privado de mídias e o smoke de upload privado permanecem pendentes.
 
 ## Mudanças de comportamento
 
@@ -25,7 +25,7 @@ Implementação validada no CI; implantação operacional pendente. Não declara
 - SAST CodeQL security-extended com gate SARIF de severidade >=7/erro. Resultado ausente ou scanner com falha não passa.
 - Integração usa PostgreSQL 16 descartável no CI, aplica todas as migrations e valida isolamento e sessões por HTTP.
 - Unidade frontend passa a ser executada no CI, além de build.
-- GitHub retornou 403 na consulta de proteção da main. Os workflows executam os gates, mas sua obrigatoriedade contra merges externos precisa ser confirmada por administrador. Não foi enfraquecida nenhuma proteção.
+- Em 2026-09-26 a proteção da `main` foi confirmada pela API do GitHub: status checks em modo `strict` e nove checks obrigatórios — Backend CI, Frontend CI, SAST, Security integration, quatro Dependency audits e GitGuardian Security Checks.
 
 ## Configuração necessária antes do deploy
 
@@ -76,13 +76,25 @@ Referências oficiais consultadas em 2026-09-24:
 
 A migration é aditiva. Em falha, preferir correção para frente; preservar backup e tabelas de sessão. Rollback do binário antigo remove garantias de revogação, portanto restringir acesso ao ambiente e manter a exposição pública/cobrança desligadas. Não executar DROP em sessões/dados reais automaticamente.
 
+## Evidência operacional — 2026-09-26
+
+- Coolify local: PostgreSQL e backend permaneceram `healthy`; frontend reconstruído a partir da `main` e voltou `healthy` sem recriar banco ou volume.
+- `GET /`, `GET /health`, `GET /api/tenant/current` e `GET /api/settings/public`: HTTP 200.
+- Tailscale `:7443`: HTTP 200, sem alteração das regras existentes.
+- CSP, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY` e `Referrer-Policy: no-referrer` confirmados no Nginx.
+- Origem maliciosa em mutação de sessão: HTTP 403; mutação sem `X-Requested-With`: HTTP 403.
+- Backend não publica porta própria no host; tráfego externo continua entrando pelo frontend/proxy. `TRUST_PROXY_CIDRS` está configurado para a rede interna do proxy.
+- O ambiente local permanece `NODE_ENV=development`; por isso `/api/docs` está habilitado. A desativação de docs deve ser revalidada no futuro ambiente production.
+- QA autenticado e responsivo executado após o deploy; as rotas principais de Admin/Cliente/Público permaneceram navegáveis.
+- Proteção da `main` confirmada pela API do GitHub com os nove checks de segurança/CI obrigatórios e `strict=true`.
+
 ## Pendências externas
 
-- Máquina local/Coolify offline na verificação desta sessão: deploy e smoke não executados.
-- Proteção de branch não verificável com a permissão atual (403).
-- Bucket privado e migração de mídias legadas dependem de acesso/configuração reais.
+- O bucket privado real e a migração de mídias legadas continuam pendentes. O código recusa bucket público, mas o projeto Supabase dedicado não pôde ser provisionado no plano atual por limite de projetos ativos.
+- Consequentemente, o smoke de upload privado, negação da URL pública, signed URL e migração/checksum dos objetos legados ainda não pode ser aceito como evidência operacional.
+- Os gates específicos de produção — secrets reais, `NODE_ENV=production`, docs desabilitados e topologia final — pertencem ao futuro ambiente Production Operations e devem ser revalidados lá.
 
-Esses itens impedem marcar todos os gates de saída como concluídos, mesmo com código e CI verdes.
+O bloqueio remanescente do Security Hardening v1 é o armazenamento privado/mídias. Código, CI, proteção de branch, deploy local e smoke HTTP já possuem evidência.
 
 ## Evidência do PR #118
 
