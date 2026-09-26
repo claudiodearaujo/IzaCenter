@@ -102,31 +102,23 @@ export class ProductsService {
     page?: number;
     limit?: number;
   }): Observable<PaginatedResponse<Product>> {
-    return this.api.get<PaginatedResponse<Product>>('/admin/products', { params: params as any });
+    return this.api.get<PaginatedResponse<Product>>('/products', { params: params as any });
   }
 
   findById(id: string): Observable<ApiResponse<Product>> {
-    return this.api.get<ApiResponse<Product>>(`/admin/products/${id}`);
+    return this.api.get<ApiResponse<Product>>(`/products/${id}`);
   }
 
   create(data: CreateProductDTO): Observable<ApiResponse<Product>> {
-    return this.api.post<ApiResponse<Product>>('/admin/products', data);
+    return this.api.post<ApiResponse<Product>>('/products', data);
   }
 
   update(id: string, data: UpdateProductDTO): Observable<ApiResponse<Product>> {
-    return this.api.put<ApiResponse<Product>>(`/admin/products/${id}`, data);
+    return this.api.patch<ApiResponse<Product>>(`/products/${id}`, data);
   }
 
   delete(id: string): Observable<{ message: string }> {
-    return this.api.delete<{ message: string }>(`/admin/products/${id}`);
-  }
-
-  toggleActive(id: string): Observable<ApiResponse<Product>> {
-    return this.api.patch<ApiResponse<Product>>(`/admin/products/${id}/toggle-active`, {});
-  }
-
-  toggleFeatured(id: string): Observable<ApiResponse<Product>> {
-    return this.api.patch<ApiResponse<Product>>(`/admin/products/${id}/toggle-featured`, {});
+    return this.api.delete<{ message: string }>(`/products/${id}`);
   }
 
   uploadImage(file: File): Observable<{ url: string }> {

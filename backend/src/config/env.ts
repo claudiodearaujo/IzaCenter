@@ -61,6 +61,7 @@ export const env = {
   
   // URLs
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:4200',
+  CORS_ALLOWED_ORIGINS: (process.env.CORS_ALLOWED_ORIGINS || '').split(',').map(v => v.trim()).filter(Boolean),
   BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:3000',
   
   // WhatsApp (Evolution API)
@@ -136,6 +137,24 @@ if (env.isProduction) {
       );
     }
   }
+}
+
+export function getAllowedFrontendOrigins(): string[] {
+  const origins = new Set<string>();
+  const addOrigin = (value: string) => {
+    if (!value) return;
+    origins.add(new URL(value).origin);
+  };
+
+  addOrigin(env.FRONTEND_URL);
+  env.CORS_ALLOWED_ORIGINS.forEach(addOrigin);
+
+  if (env.isDevelopment) {
+    addOrigin('http://localhost:4200');
+    addOrigin('http://127.0.0.1:4200');
+  }
+
+  return [...origins];
 }
 
 export default env;

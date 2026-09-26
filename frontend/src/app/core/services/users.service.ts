@@ -54,9 +54,10 @@ export class UsersService {
   }
 
   changePassword(currentPassword: string, newPassword: string): Observable<{ message: string }> {
-    return this.api.post<{ message: string }>('/users/change-password', {
+    return this.api.post<{ message: string }>('/auth/change-password', {
       currentPassword,
-      newPassword
+      newPassword,
+      confirmPassword: newPassword,
     });
   }
 
@@ -67,31 +68,23 @@ export class UsersService {
     page?: number;
     limit?: number;
   }): Observable<PaginatedResponse<User>> {
-    return this.api.get<PaginatedResponse<User>>('/admin/users', { params: params as any });
+    return this.api.get<PaginatedResponse<User>>('/users', { params: params as any });
   }
 
   findById(id: string): Observable<ApiResponse<User>> {
-    return this.api.get<ApiResponse<User>>(`/admin/users/${id}`);
+    return this.api.get<ApiResponse<User>>(`/users/${id}`);
   }
 
   update(id: string, data: UpdateUserDTO): Observable<ApiResponse<User>> {
-    return this.api.patch<ApiResponse<User>>(`/admin/users/${id}`, data);
+    return this.api.patch<ApiResponse<User>>(`/users/${id}`, data);
   }
 
   updateRole(id: string, role: string): Observable<ApiResponse<User>> {
-    return this.api.patch<ApiResponse<User>>(`/admin/users/${id}/role`, { role });
+    return this.api.patch<ApiResponse<User>>(`/users/${id}`, { role });
   }
 
   delete(id: string): Observable<{ message: string }> {
-    return this.api.delete<{ message: string }>(`/admin/users/${id}`);
+    return this.api.delete<{ message: string }>(`/users/${id}`);
   }
 
-  getStats(): Observable<ApiResponse<{
-    total: number;
-    clients: number;
-    admins: number;
-    newThisMonth: number;
-  }>> {
-    return this.api.get('/admin/users/stats');
-  }
 }

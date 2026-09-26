@@ -33,6 +33,10 @@ Use `deploy/coolify.local.env.example` apenas como catálogo de variáveis.
 
 O stack sobe o backend com `NODE_ENV=development` para que integrações externas não sejam obrigatórias no ambiente local. Os defaults de Supabase, Stripe e SMTP permitem iniciar o sistema, mas funcionalidades que chamam esses provedores só funcionam quando credenciais locais/teste reais forem configuradas.
 
+Sessões usam cookie HttpOnly e proteção de origem. `FRONTEND_URL` é sempre permitido; origens adicionais devem ser declaradas explicitamente em `CORS_ALLOWED_ORIGINS`, separadas por vírgula. O compose local inclui por padrão `http://127.0.0.1:18080` e `http://localhost:18080`.
+
+Como o frontend Nginx encaminha `X-Forwarded-For`, configure `TRUST_PROXY_CIDRS` com o CIDR exato da rede dedicada do stack. Não use `true`, `0.0.0.0/0` nem uma faixa ampla sem necessidade; confirme o subnet com `docker network inspect`.
+
 O backend executa automaticamente:
 
 ```sh
@@ -63,6 +67,8 @@ http://<hostname-tailscale>:18080
 Se houver conflito na porta, ajuste `APP_PORT` no Coolify.
 
 Antes de adicionar uma regra HTTPS com `tailscale serve`, inspecione a configuração existente e preserve todos os serviços já publicados.
+
+Se o navegador acessar a aplicação por uma URL HTTPS do Tailscale, inclua a origem exata (esquema + host + porta) em `CORS_ALLOWED_ORIGINS`; não use wildcard. Exemplo: `https://host.tailnet.ts.net:7443`.
 
 
 ## CI, E2E e deploy

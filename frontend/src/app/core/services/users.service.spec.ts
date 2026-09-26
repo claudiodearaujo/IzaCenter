@@ -79,11 +79,12 @@ describe('UsersService', () => {
         expect(response.message).toBe('Senha alterada com sucesso');
       });
 
-      const req = httpMock.expectOne('/api/users/change-password');
+      const req = httpMock.expectOne('/api/auth/change-password');
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual({
         currentPassword: 'senhaAtual',
         newPassword: 'novaSenha',
+        confirmPassword: 'novaSenha',
       });
       req.flush(mockResponse);
     });
@@ -97,7 +98,7 @@ describe('UsersService', () => {
         expect(response.data).toEqual([mockUser]);
       });
 
-      const req = httpMock.expectOne('/api/admin/users');
+      const req = httpMock.expectOne('/api/users');
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });
@@ -110,7 +111,7 @@ describe('UsersService', () => {
       });
 
       const req = httpMock.expectOne(req =>
-        req.url === '/api/admin/users' &&
+        req.url === '/api/users' &&
         req.params.get('role') === 'CLIENT' &&
         req.params.get('search') === 'maria'
       );
@@ -127,7 +128,7 @@ describe('UsersService', () => {
         expect(response.data).toEqual(mockUser);
       });
 
-      const req = httpMock.expectOne('/api/admin/users/1');
+      const req = httpMock.expectOne('/api/users/1');
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
     });
@@ -142,7 +143,7 @@ describe('UsersService', () => {
         expect(response.data.notes).toBe('Cliente VIP');
       });
 
-      const req = httpMock.expectOne('/api/admin/users/1');
+      const req = httpMock.expectOne('/api/users/1');
       expect(req.request.method).toBe('PATCH');
       expect(req.request.body).toEqual(updateData);
       req.flush(mockResponse);

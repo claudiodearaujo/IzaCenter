@@ -66,6 +66,19 @@ describe('session security', () => {
     expect(sessionResponse(res, { accessToken: 'access', refreshToken: 'secret' })).toEqual({ accessToken: 'access' });
     expect(res.cookie).toHaveBeenCalledWith('therapist_refresh', 'secret', expect.objectContaining({ httpOnly: true, sameSite: 'strict' }));
   });
+  it('accepts an explicitly configured frontend origin', () => {
+    const origin = 'http://127.0.0.1:18080';
+    env.CORS_ALLOWED_ORIGINS.push(origin);
+    try {
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
+      const next = jest.fn();
+      protectSession({ headers: { origin, 'x-requested-with': 'XMLHttpRequest', 'sec-fetch-site': 'same-origin' } } as any, res, next);
+      expect(next).toHaveBeenCalledTimes(1);
+      expect(res.status).not.toHaveBeenCalled();
+    } finally {
+      env.CORS_ALLOWED_ORIGINS.splice(env.CORS_ALLOWED_ORIGINS.indexOf(origin), 1);
+    }
+  });
   it('rejects cross-site and missing non-simple header', () => {
     for (const headers of [{}, { origin: 'https://attacker.invalid', 'x-requested-with': 'XMLHttpRequest' }]) {
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn() } as any;
